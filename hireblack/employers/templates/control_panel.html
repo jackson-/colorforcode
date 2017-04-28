@@ -1,0 +1,60 @@
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>HireBlack.io</title>
+    <script src="{% static 'js/auth.js' %}"></script>
+    <script
+            src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"></link>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <a href="/user/signout"><button>Signout</button></a>
+    <h1>Welcome to HireBlack.io {{request.user.email}}</h1>
+    <h2>This is the employer user control panel</h2>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+      Create Job
+    </button>
+    {% if jobs %}
+        <ul>
+            {% for job in jobs %}
+                <li><a href="/employers/job/{{job.pk}}/">{{job.title}}</a></li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>You have no jobs...</p>
+    {% endif %}
+    <!-- Button trigger modal -->
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Create a Job</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="job_creation_form" method="POST" action="/employers/create/">
+                {% csrf_token %}
+                <label>Title</label>
+                <input name="title" type="text">
+                <label>Description</label>
+                <textarea name="description" form="job_creation_form" type="text"></textarea>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <input type="submit" form="job_creation_form" class="btn btn-primary" value="Save changes">
+          </div>
+        </div>
+      </div>
+    </div>
+</body>
+</html>
