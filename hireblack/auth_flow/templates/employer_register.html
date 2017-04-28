@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HireBlack.io</title>
+</head>
+<body>
+    <h1>Employer Signup</h1>
+    <form method="POST" action="/user/register/employer">
+        {% csrf_token %}
+        <label>Email</label>
+        <input type="email"  name="email"/>
+        <label>Password</label>
+        <input type="password" name="password"/>
+        <label>Role</label>
+        <input type="hidden" name="role" value="employer">
+        <input type="submit" value="Submit"/>
+    </form>
+    <a href="/user/login/employer">Login</a>
+</body>
+</html>
