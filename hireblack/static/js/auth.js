@@ -1,3 +1,0 @@
-function signout(e){
-    debugger;
-}
