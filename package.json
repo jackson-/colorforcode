@@ -2,10 +2,10 @@
   "version": "0.1.0",
   "private": true,
   "name": "test",
-  "author": "YOUR_NAME_HERE",
+  "author": "Devin Jackson & Chloe Rice",
   "repository": {
     "type": "git",
-    "url": "YOUR_REPO_URL_HERE"
+    "url": "https://github.com/jackson-/hireblack.io.git"
   },
   "keywords": [
     "react",
@@ -44,9 +44,9 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/chloerice/react-redux-router-node/issues"
+    "url": "https://github.com/jackson-/hireblack.io.git/issues"
   },
-  "homepage": "https://github.com/chloerice/react-redux-router-node#readme",
+  "homepage": "https://github.com/jackson-/hireblack.io.git#readme",
   "dependencies": {
     "axios": "^0.15.2",
     "bcryptjs": "^2.4.0",

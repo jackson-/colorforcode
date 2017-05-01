@@ -40,7 +40,7 @@ OAuth.setupStrategy({
   config: {
     clientID: env.LINKEDIN_API_ID,
     clientSecret: env.LINKEDIN_SECRET_KEY,
-    callbackURL: `YOUR_APP_BASE_URL_HERE/api/auth/login/linkedin`,
+    callbackURL: `https://127.0.0.1:1137/api/auth/login/linkedin`,
   },
   passport
 })
