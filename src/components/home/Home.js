@@ -5,7 +5,7 @@ import pkg from '../../../package.json'
 const Home = props => (
   <div className='Home'>
     <header className='Home-header'>
-      <h2>{`Welcome home, ${pkg.author.split(' ')[0]}`}</h2>
+      <h2>{`Welcome, ${pkg.authors}`}</h2>
     </header>
   </div>
 )

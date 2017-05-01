@@ -1,8 +1,8 @@
 {
   "version": "0.1.0",
   "private": true,
-  "name": "test",
-  "author": "Devin Jackson & Chloe Rice",
+  "name": "hireblack",
+  "authors": "Devin Jackson & Chloe Rice",
   "repository": {
     "type": "git",
     "url": "https://github.com/jackson-/hireblack.io.git"
@@ -23,7 +23,7 @@
   },
   "proxy": "http://localhost:1337/",
   "scripts": {
-    "start": "concurrently \"npm start\" \"node scripts/start.js\"",
+    "start": "concurrently \"npm run serve-dev\" \"node scripts/start.js\"",
     "build": "node scripts/build.js",
     "test-react": "node scripts/test.js --env=jsdom",
     "dev": "node dev",
@@ -38,9 +38,7 @@
     "test-node-watch": "npm run test-node -- --watch --reporter=min",
     "seed": "node db/seed.js",
     "deploy-heroku": "bin/deploy-heroku.sh",
-    "lint": "esw . --ignore-path .gitignore --ext '.js,.jsx'",
-    "lint-watch": "npm run lint -- -w",
-    "prepush": "npm run lint && npm run test-node"
+    "prepush": "npm run test-node && npm run test-react"
   },
   "license": "MIT",
   "bugs": {
