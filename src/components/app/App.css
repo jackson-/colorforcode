@@ -23,6 +23,7 @@ nav {
 }
 
 .navbar-brand {
+  margin: 8px 0 0 -10px;
   text-transform: capitalize;
   float: left;
   color: #000000;

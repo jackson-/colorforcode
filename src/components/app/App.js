@@ -1,7 +1,7 @@
 import React from 'react'
 import { NavLink, Link } from 'react-router-dom'
 import './App.css'
-import pkg from '../../../package.json'
+import navLogo from '../../img/hireblack-logo.svg'
 
 /*
   The .active class is being applied to '/' even when it isn't the current
@@ -16,7 +16,9 @@ const App = props => (
   <div className='App'>
     <nav>
       <Link to='/'>
-        <h2 className='navbar-brand'>{pkg.name}</h2>
+        <span className='navbar-brand'>
+          <img src={navLogo} alt='HireBlack logo' height='60px' width='60px'/>
+        </span>
       </Link>
       <ul className='navbar'>
         <li className='navbar-item'>
