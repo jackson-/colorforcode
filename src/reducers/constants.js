@@ -1,8 +1,8 @@
-/* ----------- POSTS ------------ */
-export const RECEIVE_POSTS = 'RECEIVE_POSTS'
+/* ----------- JOBS ------------ */
+export const RECEIVE_JOBS = 'RECEIVE_JOBS'
 
 /* ----------- LOADING ------------ */
-export const FETCH_POSTS = 'FETCH_POSTS'
-export const CREATE_POST = 'CREATE_POST'
-export const UPDATE_POST = 'UPDATE_POST'
-export const DELETE_POST = 'DELETE_POST'
+export const REQUEST_JOBS = 'REQUEST_JOBS'
+export const CREATE_JOB = 'CREATE_JOB'
+export const UPDATE_JOB = 'UPDATE_JOB'
+export const DELETE_JOB = 'DELETE_JOB'

@@ -2,7 +2,7 @@
 // and loading animations
 
 import {
-  FETCH_POSTS,
+  REQUEST_POSTS,
   CREATE_POST,
   UPDATE_POST,
   DELETE_POST,
@@ -11,7 +11,7 @@ import {
 
 const loadingReducer = (state = false, action) => {
   switch (action.type) {
-    case FETCH_POSTS: return true
+    case REQUEST_POSTS: return true
     case CREATE_POST: return true
     case UPDATE_POST: return true
     case DELETE_POST: return true
