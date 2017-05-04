@@ -24,8 +24,8 @@ export const creatingNewJob = jobPost => dispatch => {
   // create the new job
   axios.post('/api/jobs', jobPost)
   .then(res => res.data)
-  // if the job is successfully created, we fetch all the jobs to update jobs state
-  .then(createdJob => dispatch(gettingAllJobs()))
+  // if the job is successfully created, we receive the update to date jobs list
+  .then(jobs => dispatch(gettingAllJobs()))
   // otherwise we catch the error...
   .catch(err => console.error('Sorry, cuz. We couldn\'t create that job post...'))
 }

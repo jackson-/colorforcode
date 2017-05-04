@@ -1,4 +1,4 @@
-.PostNewJobForm-header {
-  padding-top: 75px;
-  color: #000000;
+
+textarea.form-control {
+  height: 30vh;
 }

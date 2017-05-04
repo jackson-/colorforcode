@@ -5,7 +5,7 @@ const db = require('APP/db')
 const {Job} = db
 
 module.exports = db => db.define('employer', {
-  company: {
+  name: {
     type: Sequelize.STRING,
     allowNull: false
   },

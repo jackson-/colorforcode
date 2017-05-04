@@ -9,7 +9,9 @@ class PostJobForm extends Component {
     super(props)
     this.state = {
       title: '',
-      description: ''
+      description: '',
+      name: '',
+      email: ''
     }
   }
 
@@ -20,33 +22,55 @@ class PostJobForm extends Component {
 
   handleSubmit = event => {
     event.preventDefault()
-    this.props.createJobPost(this.state)
+    const {name, email, title, description} = this.state
+    const employer = {name, email}
+    const job = {title, description}
+    this.props.createJobPost({employer, job})
   }
 
   render() {
+
     return (
       <div>
-        <h1 className='PostNewJobForm-header'>Create your job posting</h1>
-        <form onSubmit={this.handleSubmit}>
-          <FormGroup controlId='title'>
-            <ControlLabel>Title</ControlLabel>
+        <h1 className='PostJobForm-header'>Post a new job</h1>
+        <form className='PostJobForm-body' onSubmit={this.handleSubmit}>
+          <FormGroup controlId='name'>
+            <ControlLabel>Company Name</ControlLabel>
             <FormControl
-              type="text"
-              value={this.state.value}
-              placeholder="Enter a job title"
+              type='text'
+              value={this.state.name}
+              placeholder='e.g., AirCash'
+              onChange={this.handleChange('name')}
+            />
+          </FormGroup>
+          <FormGroup controlId='email'>
+            <ControlLabel>Email to receive applications</ControlLabel>
+            <FormControl
+              type='text'
+              value={this.state.email}
+              placeholder='e.g., hiring@aircash.io'
+              onChange={this.handleChange('email')}
+            />
+          </FormGroup>
+          <FormGroup controlId='title'>
+            <ControlLabel>Job Title</ControlLabel>
+            <FormControl
+              type='text'
+              value={this.state.title}
+              placeholder='e.g., Senior DevOps Engineer'
               onChange={this.handleChange('title')}
             />
           </FormGroup>
           <FormGroup controlId='description'>
-            <ControlLabel>Description</ControlLabel>
+            <ControlLabel>Job Description and Requirements</ControlLabel>
             <FormControl
-              type="text"
-              value={this.state.value}
-              placeholder="Enter a description"
+              type='text'
+              componentClass='textarea'
+              value={this.state.description}
               onChange={this.handleChange('description')}
             />
           </FormGroup>
-          <Button type='submit'>Post Job</Button>
+          <Button className='primary' type='submit'>Post Job</Button>
         </form>
       </div>
     )

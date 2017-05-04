@@ -1,7 +1,7 @@
 'use strict'
 
 const db = require('APP/db')
-const {Job} = db
+const {Job, Employer} = db
 
 module.exports = require('express').Router()
   .get('/', (req, res, next) => {
@@ -10,7 +10,16 @@ module.exports = require('express').Router()
     .catch(next)
   })
   .post('/', (req, res, next) => {
-    Job.create(req.body)
-    .then(job => res.json(job))
+    const {name, email} = req.body.employer
+    const job = req.body.job
+
+    Job.create(job)
+    .then(createdJob => {
+      return Employer.findOrCreate({
+        where: {name, email}
+      })
+      .spread((employer, created) => employer.addListings([createdJob]))
+    })
+    .then(updatedListings => res.sendStatus(201))
     .catch(next)
   })
