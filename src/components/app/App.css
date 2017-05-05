@@ -1,0 +1,43 @@
+.App {
+  text-align: left;
+  padding: 0 35px;
+}
+
+.App-header {
+  height: 60px;
+  padding: 20px;
+  color: #000000;
+}
+
+nav {
+  height: 60px;
+  width: 100%;
+  position: fixed;
+  top: 0;
+}
+
+.navbar {
+  list-style: none;
+  margin: 0;
+  padding: 0 35px;
+}
+
+.navbar-brand {
+  margin: 8px 0 0 -10px;
+  text-transform: capitalize;
+  float: left;
+  color: #000000;
+}
+
+.navbar-item a {
+  display: block;
+  float: right;
+  color: #000000;
+  padding: 20px 35px;
+  text-decoration: none;
+}
+
+a.active {
+  background: #000000;
+  color: #FFFFFF;
+}
