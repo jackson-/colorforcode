@@ -1,43 +1,48 @@
+
 .App {
   text-align: left;
-  padding: 0 35px;
 }
 
-.App-header {
-  height: 60px;
-  padding: 20px;
+@media (min-width: 425px) {
+  .App {
+    padding: 70px;
+  }
+}
+
+@media (max-width: 424px) {
+  .App {
+    padding: 70px 30px;
+  }
+}
+
+a {
   color: #000000;
 }
 
-nav {
-  height: 60px;
-  width: 100%;
-  position: fixed;
-  top: 0;
-}
-
-.navbar {
-  list-style: none;
-  margin: 0;
-  padding: 0 35px;
-}
-
-.navbar-brand {
-  margin: 8px 0 0 -10px;
-  text-transform: capitalize;
-  float: left;
-  color: #000000;
-}
-
-.navbar-item a {
-  display: block;
-  float: right;
-  color: #000000;
-  padding: 20px 35px;
+.active, a:hover, a:focus {
+  color: #D33737;
   text-decoration: none;
 }
 
-a.active {
+.icon-bar {
   background: #000000;
-  color: #FFFFFF;
+}
+
+.navbar-default {
+  background: #FFFFFF;
+  border: none;
+}
+
+.navbar-default .navbar-toggle,
+.navbar-default .navbar-toggle:focus {
+  margin-top: 15px;
+  border: none;
+  background: none;
+}
+
+.navbar-fixed-top .navbar-collapse {
+  text-align: center;
+  font-size: larger;
+  height: 100vh;
+  max-height: none;
 }

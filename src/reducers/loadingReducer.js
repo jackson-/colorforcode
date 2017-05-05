@@ -2,20 +2,20 @@
 // and loading animations
 
 import {
-  FETCH_POSTS,
-  CREATE_POST,
-  UPDATE_POST,
-  DELETE_POST,
-  RECEIVE_POSTS
+  REQUEST_JOBS,
+  CREATE_JOB,
+  UPDATE_JOB,
+  DELETE_JOB,
+  RECEIVE_JOBS
 } from './constants'
 
 const loadingReducer = (state = false, action) => {
   switch (action.type) {
-    case FETCH_POSTS: return true
-    case CREATE_POST: return true
-    case UPDATE_POST: return true
-    case DELETE_POST: return true
-    case RECEIVE_POSTS: return false
+    case REQUEST_JOBS: return true
+    case CREATE_JOB: return true
+    case UPDATE_JOB: return true
+    case DELETE_JOB: return true
+    case RECEIVE_JOBS: return false
     default: return state
   }
 }

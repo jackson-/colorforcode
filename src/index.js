@@ -7,6 +7,7 @@ import Container from './components/app/App'
 import Home from './components/home/Home'
 import About from './components/about/About'
 import './index.css'
+import PostNewJobForm from './components/jobs/PostNewJobForm'
 import store from './store'
 
 const App = () => (
@@ -16,6 +17,7 @@ const App = () => (
         <Switch>
           <Route exact strict path='/' component={Home} />
           <Route exact path='/about' component={About} />
+          <Route exact path='/post-new-job' component={PostNewJobForm}/>
         </Switch>
       </Container>
     </Router>
