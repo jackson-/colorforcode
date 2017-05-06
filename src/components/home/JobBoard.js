@@ -15,7 +15,7 @@ class JobBoard extends Component {
     this.props.jobs.forEach((job)=>{
       let url = "/job/"+job.id
       jobs.push(
-        <li>
+        <li key={job.id}>
           <NavLink to={url}>{job.title}</NavLink>
         </li>
       )
@@ -31,7 +31,7 @@ class JobBoard extends Component {
 }
 
 const mapStateToProps = state => ({
-  jobs:state.jobs
+  jobs:state.jobs.all
 })
 const mapDispatchToProps = dispatch => ({
   getJobs: post => dispatch(gettingAllJobs())

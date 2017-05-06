@@ -6,12 +6,16 @@ import {
   CREATE_JOB,
   UPDATE_JOB,
   DELETE_JOB,
-  RECEIVE_JOBS
+  RECEIVE_JOBS,
+  REQUEST_JOB,
+  DONE_LOADING
 } from './constants'
 
 const loadingReducer = (state = false, action) => {
   switch (action.type) {
+    case DONE_LOADING: return false
     case REQUEST_JOBS: return true
+    case REQUEST_JOB: return true
     case CREATE_JOB: return true
     case UPDATE_JOB: return true
     case DELETE_JOB: return true
