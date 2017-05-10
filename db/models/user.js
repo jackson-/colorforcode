@@ -2,20 +2,38 @@
 
 // bcrypt docs: https://www.npmjs.com/package/bcrypt
 const bcrypt = require('bcryptjs')
-const {STRING, TEXT, JSON, VIRTUAL} = require('sequelize')
+const {STRING, TEXT, JSON, VIRTUAL, INTEGER, ENUM, DATE} = require('sequelize')
 
 module.exports = db => db.define('user', {
-  formattedName: STRING,
+  id: {
+      autoIncrement: true,
+      primaryKey: true,
+      type: INTEGER
+  },
+  firstname: {
+      type: STRING,
+      notEmpty: true
+  },
+  lastname: {
+      type: STRING,
+      notEmpty: true
+  },
   pictureUrl: STRING,
   summary: TEXT,
   siteStandardProfileRequest: JSON,
   email: {
-    type: STRING,
-    validate: {
-      isEmail: true,
-      notEmpty: true,
-    }
+      type: STRING,
+      validate: {
+          isEmail: true,
+          notEmpty:true
+      }
   },
+  last_login: DATE,
+  status: {
+      type: ENUM('active', 'inactive'),
+      defaultValue: 'active'
+  },
+  formattedName: STRING,
   // We support oauth, so users may or may not have passwords.
   password_digest: STRING, // This column stores the hashed password in the DB, via the beforeCreate/beforeUpdate hooks
   password: VIRTUAL // Note that this is a virtual, and not actually stored in DB
