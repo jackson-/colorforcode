@@ -1,8 +1,6 @@
 import React from 'react'
-import { connect } from 'react-redux'
 import { NavLink } from 'react-router-dom'
 import { Button } from 'react-bootstrap'
-import { gettingAllJobs } from 'APP/src/reducers/actions/jobs'
 import './Home.css'
 import JobBoard from './JobBoard'
 import pkg from '../../../package.json'

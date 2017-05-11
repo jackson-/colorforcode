@@ -1,10 +1,8 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { NavLink } from 'react-router-dom'
-import { Button } from 'react-bootstrap'
 import { gettingAllJobs } from 'APP/src/reducers/actions/jobs'
 import './Home.css'
-import pkg from '../../../package.json'
 
 class JobBoard extends Component {
 
@@ -15,8 +13,11 @@ class JobBoard extends Component {
   render(){
     let jobs = [];
     this.props.jobs.forEach((job)=>{
+      let url = "/job/"+job.id
       jobs.push(
-        <li>{job.title}</li>
+        <li key={job.id}>
+          <NavLink to={url}>{job.title}</NavLink>
+        </li>
       )
     })
     return(
@@ -30,7 +31,7 @@ class JobBoard extends Component {
 }
 
 const mapStateToProps = state => ({
-  jobs:state.jobs
+  jobs:state.jobs.all
 })
 const mapDispatchToProps = dispatch => ({
   getJobs: post => dispatch(gettingAllJobs())

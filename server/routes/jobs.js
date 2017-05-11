@@ -23,3 +23,10 @@ module.exports = require('express').Router()
     .then(updatedListings => res.sendStatus(201))
     .catch(next)
   })
+  .get('/:id',
+    (req, res, next) =>
+      Job.findById(req.params.id, { include: [{ model: Employer}] })
+      .then(job => {
+        return res.json(job)
+      })
+      .catch(next))
