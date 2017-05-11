@@ -2,9 +2,10 @@ const app = require('APP')
 const {env} = app
 const debug = require('debug')(`${app.name}:auth`)
 const passport = require('passport')
-
+const bCrypt = require('bcrypt')
 const {User, OAuth} = require('APP/db')
 const auth = require('express').Router()
+const LocalStrategy = require('passport-local').Strategy;
 
 /*************************
  * Auth strategies
@@ -69,6 +70,37 @@ passport.deserializeUser(
 )
 
 // require.('passport-local').Strategy => a function we can use as a constructor, that takes in a callback
+passport.use('local-signup', new LocalStrategy({
+    usernameField:'email',
+    passwordField:'password',
+    passReqToCallback:true
+  },
+  (req, email, password, done) => {
+    const generateHash = (password) => {return bCrypt.hashSync(password, bCrypt.genSaltSync(8), null)};
+    User.findOne({
+          where: {
+              email: email
+          }
+      }).then(function(user) {
+          if (user){return done(null, false, {
+            message: 'That email is already taken'})}
+          else{
+            var userPassword = generateHash(password);
+            var data = {
+                    email: email,
+                    password: userPassword,
+                    firstname: req.body.firstname,
+                    lastname: req.body.lastname
+                };
+            User.create(data).then(function(newUser, created) {
+                if (!newUser) {return done(null, false);}
+                if (newUser) {return done(null, newUser);}
+            });
+          }
+      });
+    }
+));
+
 passport.use(new (require('passport-local').Strategy)(
   (email, password, done) => {
     debug('will authenticate user(email: "%s")', email)
@@ -95,6 +127,8 @@ passport.use(new (require('passport-local').Strategy)(
   }
 ))
 
+
+
 auth.get('/whoami', (req, res) => res.send(req.user))
 
 // POST requests for local login:
@@ -111,6 +145,19 @@ auth.get('/login/:strategy', (req, res, next) =>
     // Specify other config here
   })(req, res, next)
 )
+
+auth.post('/signup', (req, res, next) => {
+  passport.authenticate('local-signup', function(err, user, info) {
+    if (err) { return next(err); }
+    // Redirect if it fails
+    if (!user) { return res.redirect('http://www.google.com'); }
+    req.logIn(user, function(err) {
+      if (err) { return next(err); }
+      // Redirect if it succeeds
+      return res.redirect('http://localhost:3000');
+    });
+  })(req, res, next);
+});
 
 auth.post('/logout', (req, res) => {
   req.logout()

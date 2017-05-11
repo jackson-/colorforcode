@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap'
-import { loginUser } from 'APP/src/reducers/actions/users'
+import { creatingUser } from 'APP/src/reducers/actions/users'
+// import CreditCard from './CreditCard';
+// import './PostNewJobForm.css'
 
-
-class LoginForm extends Component {
+class RegisterForm extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -21,7 +22,7 @@ class LoginForm extends Component {
   handleSubmit = event => {
     event.preventDefault()
     const {email, password} = this.state
-    this.props.loginUser({email, password})
+    this.props.createUser({email, password})
   }
 
   render() {
@@ -56,9 +57,9 @@ class LoginForm extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  createUser: user => dispatch(loginUser(user))
+  createUser: user => dispatch(creatingUser(user))
 })
 
-const LoginFormContainer = connect(null, mapDispatchToProps)(LoginForm)
+const RegisterFormContainer = connect(null, mapDispatchToProps)(RegisterForm)
 
-export default LoginFormContainer
+export default RegisterFormContainer
