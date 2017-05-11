@@ -6,6 +6,8 @@ const chalk = require('chalk')
 const Sequelize = require('sequelize')
 
 const name = (app.env.DATABASE_NAME || app.name) + (app.isTesting ? '_test' : '')
+console.log("URL", app.env.DATABASE_URL)
+
 const url = app.env.DATABASE_URL || `postgres://postgres@localhost:5432/${name}`
 
 debug(chalk.yellow(`Opening database connection to ${url}`))

@@ -1,23 +1,15 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap'
-import { creatingNewJob } from 'APP/src/reducers/actions/jobs'
-// import CreditCard from './CreditCard';
-// import './PostNewJobForm.css'
-// console.log("CC", CreditCard)
-class PostJobForm extends Component {
+import { loginUser } from 'APP/src/reducers/actions/users'
+
+
+class LoginForm extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      title: '',
-      description: '',
-      name: '',
       email: '',
-      number: null,
-      exp_month: null,
-      exp_year: null,
-      cvc: null,
-      token: null,
+      password: ''
     }
   }
 
@@ -28,10 +20,8 @@ class PostJobForm extends Component {
 
   handleSubmit = event => {
     event.preventDefault()
-    const {name, email, title, description} = this.state
-    const employer = {name, email}
-    const job = {title, description}
-    this.props.createJobPost({employer, job})
+    const {email, password} = this.state
+    this.props.loginUser({email, password})
   }
 
   render() {
@@ -40,15 +30,6 @@ class PostJobForm extends Component {
       <div>
         <h1 className='PostJobForm-header'>Post a new job</h1>
         <form className='PostJobForm-body' onSubmit={this.handleSubmit}>
-          <FormGroup controlId='name'>
-            <ControlLabel>Company Name</ControlLabel>
-            <FormControl
-              type='text'
-              value={this.state.name}
-              placeholder='e.g., AirCash'
-              onChange={this.handleChange('name')}
-            />
-          </FormGroup>
           <FormGroup controlId='email'>
             <ControlLabel>Email to receive applications</ControlLabel>
             <FormControl
@@ -58,37 +39,26 @@ class PostJobForm extends Component {
               onChange={this.handleChange('email')}
             />
           </FormGroup>
-          <FormGroup controlId='title'>
+          <FormGroup controlId='password'>
             <ControlLabel>Job Title</ControlLabel>
             <FormControl
               type='text'
-              value={this.state.title}
-              placeholder='e.g., Senior DevOps Engineer'
-              onChange={this.handleChange('title')}
+              value={this.state.password}
+              placeholder='e.g., password123'
+              onChange={this.handleChange('password')}
             />
           </FormGroup>
-          <FormGroup controlId='description'>
-            <ControlLabel>Job Description and Requirements</ControlLabel>
-            <FormControl
-              type='text'
-              componentClass='textarea'
-              value={this.state.description}
-              onChange={this.handleChange('description')}
-            />
-          </FormGroup>
-          <Button className='primary' type='submit'>Post Job</Button>
+          <Button className='primary' type='submit'>Signup</Button>
         </form>
-        <CreditCard />
       </div>
     )
   }
 }
 
-const mapStateToProps = state => ({})
 const mapDispatchToProps = dispatch => ({
-  createJobPost: post => dispatch(creatingNewJob(post))
+  createUser: user => dispatch(loginUser(user))
 })
 
-const PostNewJobContainer = connect(mapStateToProps, mapDispatchToProps)(PostJobForm)
+const LoginFormContainer = connect(null, mapDispatchToProps)(LoginForm)
 
-export default PostNewJobContainer
+export default LoginFormContainer

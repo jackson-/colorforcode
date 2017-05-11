@@ -1,8 +1,15 @@
 import { RECEIVE_JOBS } from './constants'
+import { RECEIVE_JOB } from './constants'
 
-const jobsReducer = (state = [], action) => {
+const defaultState = {
+  all:[],
+  job:null
+}
+
+const jobsReducer = (state = defaultState, action) => {
   switch (action.type) {
-    case RECEIVE_JOBS: return action.jobs
+    case RECEIVE_JOB: return Object.assign({},{job:action.job});
+    case RECEIVE_JOBS: return {...state, all:action.jobs};
     default: return state
   }
 }
