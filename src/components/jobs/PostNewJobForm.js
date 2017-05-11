@@ -2,8 +2,9 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap'
 import { creatingNewJob } from 'APP/src/reducers/actions/jobs'
+import CreditCard from './CreditCard';
 import './PostNewJobForm.css'
-
+console.log("CC", CreditCard)
 class PostJobForm extends Component {
   constructor(props) {
     super(props)
@@ -11,7 +12,12 @@ class PostJobForm extends Component {
       title: '',
       description: '',
       name: '',
-      email: ''
+      email: '',
+      number: null,
+      exp_month: null,
+      exp_year: null,
+      cvc: null,
+      token: null,
     }
   }
 
@@ -72,6 +78,7 @@ class PostJobForm extends Component {
           </FormGroup>
           <Button className='primary' type='submit'>Post Job</Button>
         </form>
+        <CreditCard />
       </div>
     )
   }
