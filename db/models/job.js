@@ -34,10 +34,11 @@ module.exports = db => db.define('job', {
          })
 */
 
-module.exports.associations = (Job, {User, JobApplication}) => {
+module.exports.associations = (Job, {User, Employer, JobApplication}) => {
   Job.belongsToMany(User, {
     as: 'applicant',
     through: JobApplication,
     foreignKey: 'job_id'
-  })
+  }),
+  Job.belongsTo(Employer)
 }

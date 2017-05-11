@@ -6,7 +6,7 @@ import jobs from './jobsReducer'
 
 const rootReducer = combineReducers({
   loading,
-  jobs
+  jobs,
 })
 
 export default rootReducer
