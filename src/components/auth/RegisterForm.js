@@ -29,10 +29,10 @@ class RegisterForm extends Component {
 
     return (
       <div>
-        <h1 className='PostJobForm-header'>Post a new job</h1>
-        <form className='PostJobForm-body' onSubmit={this.handleSubmit}>
+        <h1 className='RegisterForm-header'>Register</h1>
+        <form className='RegisterForm-body' onSubmit={this.handleSubmit}>
           <FormGroup controlId='email'>
-            <ControlLabel>Email to receive applications</ControlLabel>
+            <ControlLabel>Email</ControlLabel>
             <FormControl
               type='text'
               value={this.state.email}
@@ -41,7 +41,7 @@ class RegisterForm extends Component {
             />
           </FormGroup>
           <FormGroup controlId='password'>
-            <ControlLabel>Job Title</ControlLabel>
+            <ControlLabel>Password</ControlLabel>
             <FormControl
               type='text'
               value={this.state.password}
@@ -49,7 +49,16 @@ class RegisterForm extends Component {
               onChange={this.handleChange('password')}
             />
           </FormGroup>
-          <Button className='primary' type='submit'>Signup</Button>
+          <FormGroup controlId='password'>
+            <ControlLabel>Confirm Password</ControlLabel>
+            <FormControl
+              type='text'
+              value={this.state.password}
+              placeholder='e.g., password123'
+              onChange={this.handleChange('password')}
+            />
+          </FormGroup>
+          <Button className='primary' type='submit'>Next</Button>
         </form>
       </div>
     )

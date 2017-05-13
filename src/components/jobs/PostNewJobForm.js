@@ -31,7 +31,8 @@ class PostJobForm extends Component {
     const {name, email, title, description} = this.state
     const employer = {name, email}
     const job = {title, description}
-    this.props.createJobPost({employer, job})
+    const token = this.refs.card.state.token
+    this.props.createJobPost({employer, job, token})
   }
 
   render() {
@@ -78,7 +79,7 @@ class PostJobForm extends Component {
           </FormGroup>
           <Button className='primary' type='submit'>Post Job</Button>
         </form>
-        <CreditCard />
+        <CreditCard ref='card' />
       </div>
     )
   }
