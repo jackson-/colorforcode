@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap'
-import { loginUser } from 'APP/src/reducers/actions/users'
+import { authenticatingUser } from 'APP/src/reducers/actions/auth'
 
 
 class LoginForm extends Component {
@@ -28,27 +28,27 @@ class LoginForm extends Component {
 
     return (
       <div>
-        <h1 className='PostJobForm-header'>Post a new job</h1>
+        <h1 className='PostJobForm-header'>Login</h1>
         <form className='PostJobForm-body' onSubmit={this.handleSubmit}>
           <FormGroup controlId='email'>
-            <ControlLabel>Email to receive applications</ControlLabel>
+            <ControlLabel>Email</ControlLabel>
             <FormControl
-              type='text'
+              type='email'
               value={this.state.email}
               placeholder='e.g., hiring@aircash.io'
               onChange={this.handleChange('email')}
             />
           </FormGroup>
           <FormGroup controlId='password'>
-            <ControlLabel>Job Title</ControlLabel>
+            <ControlLabel>Password</ControlLabel>
             <FormControl
-              type='text'
+              type='password'
               value={this.state.password}
               placeholder='e.g., password123'
               onChange={this.handleChange('password')}
             />
           </FormGroup>
-          <Button className='primary' type='submit'>Signup</Button>
+          <Button className='primary' type='submit'>Login</Button>
         </form>
       </div>
     )
@@ -56,7 +56,7 @@ class LoginForm extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  createUser: user => dispatch(loginUser(user))
+  loginUser: user => dispatch(authenticatingUser(user))
 })
 
 const LoginFormContainer = connect(null, mapDispatchToProps)(LoginForm)

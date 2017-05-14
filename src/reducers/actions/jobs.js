@@ -25,7 +25,6 @@ export const gettingAllJobs = () => dispatch => {
 
 export const gettingJob = job_id => dispatch => {
   dispatch(requestJob())
-  console.log("ID", job_id)
   axios.get('/api/jobs/'+job_id)
   .then(res => {
     return res.data

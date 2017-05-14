@@ -7,6 +7,8 @@ const {resolve} = require('path')
 const passport = require('passport')
 const PrettyError = require('pretty-error')
 const finalHandler = require('finalhandler')
+const db = require('../db')
+const {User} = db
 // PrettyError docs: https://www.npmjs.com/package/pretty-error
 
 // Bones has a symlink from node_modules/APP to the root of the app.
@@ -17,7 +19,7 @@ const finalHandler = require('finalhandler')
 const pkg = require('APP')
 
 const app = express()
-
+require('APP/config/passport/passport.js')(passport, User);
 if (!pkg.isProduction && !pkg.isTesting) {
   // Logging middleware (dev only)
   app.use(require('volleyball'))
@@ -50,7 +52,23 @@ module.exports = app
 
   // Serve static files from ../public
   .use(express.static(resolve(__dirname, '..', 'bundle')))
+  .use(function (req, res, next) {
+      // Website you wish to allow to connect
+      res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
 
+      // Request methods you wish to allow
+      res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+      // Request headers you wish to allow
+      res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type');
+
+      // Set to true if you need the website to include cookies in the requests sent
+      // to the API (e.g. in case you use sessions)
+      res.setHeader('Access-Control-Allow-Credentials', true);
+
+      // Pass to next layer of middleware
+      next();
+  })
   // Serve our api - ./api also requires in ../db, which syncs with our database
   .use('/api', require('./api'))
 

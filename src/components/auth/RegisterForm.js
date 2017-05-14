@@ -43,7 +43,7 @@ class RegisterForm extends Component {
           <FormGroup controlId='password'>
             <ControlLabel>Password</ControlLabel>
             <FormControl
-              type='text'
+              type='password'
               value={this.state.password}
               placeholder='e.g., password123'
               onChange={this.handleChange('password')}
@@ -52,7 +52,7 @@ class RegisterForm extends Component {
           <FormGroup controlId='password'>
             <ControlLabel>Confirm Password</ControlLabel>
             <FormControl
-              type='text'
+              type='password'
               value={this.state.password}
               placeholder='e.g., password123'
               onChange={this.handleChange('password')}

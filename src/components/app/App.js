@@ -32,6 +32,12 @@ const App = props => (
           <NavItem>
             <NavLink to='/about' isActive={onlyOneActiveMatch}>About</NavLink>
           </NavItem>
+          <NavItem>
+            <NavLink to='/login' isActive={onlyOneActiveMatch}>Login</NavLink>
+          </NavItem>
+          <NavItem>
+            <NavLink to='/register' isActive={onlyOneActiveMatch}>Register</NavLink>
+          </NavItem>
         </Nav>
       </Navbar.Collapse>
     </Navbar>
