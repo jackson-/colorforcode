@@ -5,10 +5,10 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const {resolve} = require('path')
 const passport = require('passport')
+const cors = require('cors')
 const PrettyError = require('pretty-error')
 const finalHandler = require('finalhandler')
 const db = require('../db')
-const {User} = db
 // PrettyError docs: https://www.npmjs.com/package/pretty-error
 
 // Bones has a symlink from node_modules/APP to the root of the app.
@@ -19,7 +19,7 @@ const {User} = db
 const pkg = require('APP')
 
 const app = express()
-require('APP/config/passport/passport.js')(passport, User);
+
 if (!pkg.isProduction && !pkg.isTesting) {
   // Logging middleware (dev only)
   app.use(require('volleyball'))
@@ -34,14 +34,15 @@ prettyError.skipNodeFiles()
 // Skip all the trace lines about express' core and sub-modules.
 prettyError.skipPackage('express')
 
-module.exports = app
+
   // Session middleware - compared to express-session (which is what's used in the Auther workshop), cookie-session stores sessions in a cookie, rather than some other type of session store.
   // Cookie-session docs: https://www.npmjs.com/package/cookie-session
-  .use(require('cookie-session')({
+  app.use(require('cookie-session')({
     name: 'session',
     keys: [process.env.SESSION_SECRET || 'an insecure secret key'],
   }))
-
+  //cors
+  .use(cors())
   // Body parsing middleware
   .use(bodyParser.urlencoded({ extended: true }))
   .use(bodyParser.json())
@@ -52,23 +53,6 @@ module.exports = app
 
   // Serve static files from ../public
   .use(express.static(resolve(__dirname, '..', 'bundle')))
-  .use(function (req, res, next) {
-      // Website you wish to allow to connect
-      res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-
-      // Request methods you wish to allow
-      res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-
-      // Request headers you wish to allow
-      res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type');
-
-      // Set to true if you need the website to include cookies in the requests sent
-      // to the API (e.g. in case you use sessions)
-      res.setHeader('Access-Control-Allow-Credentials', true);
-
-      // Pass to next layer of middleware
-      next();
-  })
   // Serve our api - ./api also requires in ../db, which syncs with our database
   .use('/api', require('./api'))
 
@@ -98,6 +82,7 @@ if (module === require.main) {
   // Start listening only if we're the main module.
   //
   // https://nodejs.org/api/modules.html#modules_accessing_the_main_module
+
   const server = app.listen(
     pkg.port,
     () => {
@@ -113,3 +98,4 @@ if (module === require.main) {
 // This check on line 64 is only starting the server if this file is being run directly by Node, and not required by another file.
 // Bones does this for testing reasons. If we're running our app in development or production, we've run it directly from Node using 'npm start'.
 // If we're testing, then we don't actually want to start the server; 'module === require.main' will luckily be false in that case, because we would be requiring in this file in our tests rather than running it directly.
+module.exports = {app}

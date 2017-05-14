@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom'
 import { Grid, Navbar, NavbarBrand, Nav, NavItem } from 'react-bootstrap'
 import './App.css'
 import navLogo from '../../img/hireblack-logo-no-border.svg'
+import { connect } from 'react-redux'
 
 /*
   The .active class is being applied to '/' even when it isn't the current
@@ -32,9 +33,11 @@ const App = props => (
           <NavItem>
             <NavLink to='/about' isActive={onlyOneActiveMatch}>About</NavLink>
           </NavItem>
-          <NavItem>
+          {!props.user &&
+            <NavItem>
             <NavLink to='/login' isActive={onlyOneActiveMatch}>Login</NavLink>
-          </NavItem>
+            </NavItem>
+          }
           <NavItem>
             <NavLink to='/register' isActive={onlyOneActiveMatch}>Register</NavLink>
           </NavItem>
@@ -46,5 +49,8 @@ const App = props => (
     </Grid>
   </div>
 )
-
-export default App
+const mapStateToProps = state => ({
+  user:state.users.current
+})
+const AppContainer = connect(mapStateToProps, null)(App)
+export default AppContainer

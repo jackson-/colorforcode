@@ -3,6 +3,7 @@
 const db = require('APP/db')
     , {User, Employer, Skill, Job, Promise, JobSkillRelationship} = db
     , {mapValues} = require('lodash')
+const bCrypt = require('bcrypt');
 function seedEverything() {
   const seeded = {
     users: users(),
@@ -15,18 +16,20 @@ function seedEverything() {
   return Promise.props(seeded)
 }
 
-
+const generateHash = function(password) {
+  return bCrypt.hashSync(password, bCrypt.genSaltSync(8), null);
+};
 
 const users = seed(User, {
   devin: {
     email: 'devin@123.com',
     name: 'Devin Jackson',
-    password: '123',
+    password: generateHash('123'),
   },
   chloe: {
     name: 'Chloe Rice',
     email: 'chloe@123.com',
-    password: '123'
+    password: generateHash('123')
   },
 })
 

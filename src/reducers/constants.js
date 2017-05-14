@@ -1,6 +1,7 @@
 /* ----------- RECEIVE ------------ */
 export const RECEIVE_JOBS = 'RECEIVE_JOBS'
 export const RECEIVE_USERS = 'RECEIVE_USERS'
+export const RECEIVE_USER = 'RECEIVE_USER'
 export const RECEIVE_JOB = 'RECEIVE_JOB'
 
 /* ----------- LOADING ------------ */

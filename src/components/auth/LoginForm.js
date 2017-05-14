@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap'
-import { authenticatingUser } from 'APP/src/reducers/actions/auth'
+import { authenticatingUser } from 'APP/src/reducers/actions/users'
 
 
 class LoginForm extends Component {
