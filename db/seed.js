@@ -1,32 +1,35 @@
 'use strict'
 
 const db = require('APP/db')
-    , {User, Employer, Skill, Job, Promise} = db
+    , {User, Employer, Skill, Job, Promise, JobSkillRelationship} = db
     , {mapValues} = require('lodash')
+const bCrypt = require('bcrypt');
 function seedEverything() {
   const seeded = {
     users: users(),
     employers: employers(),
     skills: skills(),
   }
-  console.log("")
   seeded.jobs = jobs(seeded)
+  seeded.relationships = relationships(seeded)
 
   return Promise.props(seeded)
 }
 
-
+const generateHash = function(password) {
+  return bCrypt.hashSync(password, bCrypt.genSaltSync(8), null);
+};
 
 const users = seed(User, {
   devin: {
     email: 'devin@123.com',
     name: 'Devin Jackson',
-    password: '123',
+    password: generateHash('123'),
   },
   chloe: {
     name: 'Chloe Rice',
     email: 'chloe@123.com',
-    password: '123'
+    password: generateHash('123')
   },
 })
 
@@ -45,8 +48,11 @@ const employers = seed(Employer, {
 
 const skills = seed(Skill, {
   react: {title: 'react', template:true},
-  angular: {title: 'angular', template:true},
+  mongo: {title: 'mongo', template:true},
   node: {title: 'node', template:true},
+  nginx: {title: 'nginx', template:true},
+  gunicorn: {title: 'gunicorn', template:true},
+  aws: {title: 'aws', template:true},
 })
 
 const jobs = seed(Job,
@@ -91,6 +97,44 @@ const jobs = seed(Job,
       compensation:'$100',
       travel_requirements:'None',
       remote:true,
+    },
+  })
+)
+
+const relationships = seed(JobSkillRelationship,
+  // We're specifying a function here, rather than just a rows object.
+  // Using a function lets us receive the previously-seeded rows (the seed
+  // function does this wiring for us).
+  //
+  // This lets us reference previously-created rows in order to create the join
+  // rows. We can reference them by the names we used above (which is why we used
+  // Objects above, rather than just arrays).
+  ({jobs, skills}) => ({
+    // The easiest way to seed associations seems to be to just create rows
+    // in the join table.
+    1: {
+      job_id: jobs.full_stack.id,
+      skill_id:skills.react.id,
+    },
+    2: {
+      job_id: jobs.full_stack.id,
+      skill_id:skills.mongo.id,
+    },
+    3: {
+      job_id: jobs.full_stack.id,
+      skill_id:skills.node.id,
+    },
+    4: {
+      job_id: jobs.dev_ops.id,
+      skill_id:skills.nginx.id,
+    },
+    5: {
+      job_id: jobs.dev_ops.id,
+      skill_id:skills.gunicorn.id,
+    },
+    6: {
+      job_id: jobs.dev_ops.id,
+      skill_id:skills.aws.id,
     },
   })
 )

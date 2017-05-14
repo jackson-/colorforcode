@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap'
-import { creatingUser } from 'APP/src/reducers/actions/users'
+import { creatingNewUser } from 'APP/src/reducers/actions/users'
 // import CreditCard from './CreditCard';
 // import './PostNewJobForm.css'
 
@@ -43,7 +43,7 @@ class RegisterForm extends Component {
           <FormGroup controlId='password'>
             <ControlLabel>Password</ControlLabel>
             <FormControl
-              type='text'
+              type='password'
               value={this.state.password}
               placeholder='e.g., password123'
               onChange={this.handleChange('password')}
@@ -52,7 +52,7 @@ class RegisterForm extends Component {
           <FormGroup controlId='password'>
             <ControlLabel>Confirm Password</ControlLabel>
             <FormControl
-              type='text'
+              type='password'
               value={this.state.password}
               placeholder='e.g., password123'
               onChange={this.handleChange('password')}
@@ -66,7 +66,7 @@ class RegisterForm extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  createUser: user => dispatch(creatingUser(user))
+  createUser: user => dispatch(creatingNewUser(user))
 })
 
 const RegisterFormContainer = connect(null, mapDispatchToProps)(RegisterForm)

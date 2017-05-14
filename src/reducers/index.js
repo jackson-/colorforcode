@@ -3,10 +3,13 @@ import { combineReducers } from 'redux'
 // add them to the combineReducers arguments
 import loading from './loadingReducer'
 import jobs from './jobsReducer'
+import users from './usersReducer'
+// import auth from './authReducer'
 
 const rootReducer = combineReducers({
   loading,
   jobs,
+  users
 })
 
 export default rootReducer

@@ -1,11 +1,16 @@
 import axios from 'axios'
-import { RECEIVE_USERS } from '../constants'
-import { createNewUser, requestAllUsers } from './loading'
+import { RECEIVE_USERS, RECEIVE_USER } from '../constants'
+import { authenticateUser, createNewUser, requestAllUsers, doneLoading } from './loading'
 
 /* --------- PURE ACTION CREATORS ---------*/
 export const receiveUsers = users => ({
   users,
   type: RECEIVE_USERS
+})
+
+export const receiveUser = user => ({
+  user,
+  type: RECEIVE_USER
 })
 
 /* --------- ASYNC ACTION CREATORS (THUNKS) ---------*/
@@ -28,4 +33,22 @@ export const creatingNewUser = user => dispatch => {
   .then(users => dispatch(gettingAllUsers()))
   // otherwise we catch the error...
   .catch(err => console.error('Sorry, cuz. We couldn\'t create that user...'))
+}
+
+export const authenticatingUser = user => dispatch => {
+  console.log('NEW SHIT')
+  dispatch(authenticateUser())
+  axios.post('/api/users/login', user)
+  .then(res => {
+    return res.data
+  })
+  .then(user => {
+    console.log("user", user)
+    dispatch(receiveUser(user))
+  })
+  .then(() => {
+    dispatch(doneLoading())
+  })
+  // .then(job => console.log("JOB", job))
+  .catch(err => console.log('Bitch I couldn\'t sign you in!'))
 }

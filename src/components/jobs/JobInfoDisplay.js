@@ -11,6 +11,15 @@ class JobInfoDisplay extends Component {
   render(){
     const job = this.props.job
     const employer = job ? this.props.job.employer : null
+    const skills = job ? this.props.job.skills : null
+    const skill_list = []
+    if( skills ) {
+      skills.forEach((skill) => {
+        skill_list.push(
+          <li>{skill.title}</li>
+        )
+      })
+    }
     return(
       <div id='job-display'>
         {this.props.loading === false && job &&
@@ -27,6 +36,9 @@ class JobInfoDisplay extends Component {
             <p>Compensation: {job.compensation}</p>
             <p>Travel Requirements: {job.travel_requirements}</p>
             <p>Posted Since: {job.created_at}</p>
+            {skills &&
+              <ul>{skill_list}</ul>
+            }
           </div>
         }
       </div>

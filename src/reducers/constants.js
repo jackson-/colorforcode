@@ -1,6 +1,7 @@
 /* ----------- RECEIVE ------------ */
 export const RECEIVE_JOBS = 'RECEIVE_JOBS'
 export const RECEIVE_USERS = 'RECEIVE_USERS'
+export const RECEIVE_USER = 'RECEIVE_USER'
 export const RECEIVE_JOB = 'RECEIVE_JOB'
 
 /* ----------- LOADING ------------ */
@@ -14,3 +15,5 @@ export const REQUEST_USER = 'REQUEST_USERS'
 export const CREATE_USER = 'CREATE_USER'
 export const UPDATE_USER = 'UPDATE_USER'
 export const DELETE_USER = 'DELETE_USER'
+export const AUTHENTICATE_USER = 'AUTHENTICATE_USER'
+export const REGISTER_USER = 'REGISTER_USER'

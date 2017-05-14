@@ -103,6 +103,7 @@ passport.use('local-signup', new LocalStrategy({
 
 passport.use(new (require('passport-local').Strategy)(
   (email, password, done) => {
+    console.log("LOGGIN SHIT")
     debug('will authenticate user(email: "%s")', email)
     User.findOne({
       where: {email},
@@ -146,7 +147,7 @@ auth.get('/login/:strategy', (req, res, next) =>
   })(req, res, next)
 )
 
-auth.post('/signup', (req, res, next) => {
+auth.post('/register', (req, res, next) => {
   passport.authenticate('local-signup', function(err, user, info) {
     if (err) { return next(err); }
     // Redirect if it fails

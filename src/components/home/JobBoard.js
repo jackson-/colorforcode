@@ -1,8 +1,9 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
-import { NavLink } from 'react-router-dom'
 import { gettingAllJobs } from 'APP/src/reducers/actions/jobs'
 import './Home.css'
+import { Link } from 'react-router-dom'
+
 
 class JobBoard extends Component {
 
@@ -16,7 +17,7 @@ class JobBoard extends Component {
       let url = "/job/"+job.id
       jobs.push(
         <li key={job.id}>
-          <a href={url}>{job.title}</a>
+          <Link to={url}>{job.title}</Link>
         </li>
       )
     })

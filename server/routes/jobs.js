@@ -7,7 +7,7 @@ var stripe = require("stripe")(
 //   "sk_test_BQokikJOvBiI2HlWgH4olfQ2"
 // );
 const db = require('APP/db')
-const {Job, Employer} = db
+const {Job, Employer, Skill} = db
 
 module.exports = require('express').Router()
   .get('/', (req, res, next) => {
@@ -39,8 +39,9 @@ module.exports = require('express').Router()
   })
   .get('/:id',
     (req, res, next) =>
-      Job.findById(req.params.id, { include: [{ model: Employer}] })
+      Job.findById(req.params.id, { include: [{ model: Employer}, { model: Skill}] })
       .then(job => {
+        console.log(job)
         return res.json(job)
       })
       .catch(next))

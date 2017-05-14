@@ -34,10 +34,7 @@ module.exports = db => db.define('skill', {
          })
 */
 
-module.exports.associations = (Skill, {User, Job, JobSkillRelationship}) => {
-  Skill.belongsToMany(Job, {
-    as: 'skills',
-    through: JobSkillRelationship,
-  })
+module.exports.associations = (Skill, {User, JobSkillRelationship, Job}) => {
+  Skill.belongsToMany(Job, {through: JobSkillRelationship})
   Skill.belongsTo(User)
 }
