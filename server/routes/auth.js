@@ -35,16 +35,16 @@ const LocalStrategy = require('passport-local').Strategy;
 
 // LinkedIn needs the LINKEDIN_API_ID and LINKEDIN_SECRET_KEY
 // environment variables.
-OAuth.setupStrategy({
-  provider: 'linkedin',
-  strategy: require('passport-linkedin').Strategy,
-  config: {
-    clientID: env.LINKEDIN_API_ID,
-    clientSecret: env.LINKEDIN_SECRET_KEY,
-    callbackURL: `https://127.0.0.1:1137/api/auth/login/linkedin`,
-  },
-  passport
-})
+// OAuth.setupStrategy({
+//   provider: 'linkedin',
+//   strategy: require('passport-linkedin').Strategy,
+//   config: {
+//     clientID: env.LINKEDIN_API_ID,
+//     clientSecret: env.LINKEDIN_SECRET_KEY,
+//     callbackURL: `https://127.0.0.1:1137/api/auth/login/linkedin`,
+//   },
+//   passport
+// })
 
 // Other passport configuration:
 // Passport review in the Week 6 Concept Review:
