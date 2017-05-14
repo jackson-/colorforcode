@@ -16,7 +16,7 @@ class JobBoard extends Component {
       let url = "/job/"+job.id
       jobs.push(
         <li key={job.id}>
-          <NavLink to={url}>{job.title}</NavLink>
+          <a href={url}>{job.title}</a>
         </li>
       )
     })
