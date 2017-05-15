@@ -22,6 +22,7 @@ class LoginForm extends Component {
     event.preventDefault()
     const {email, password} = this.state
     this.props.loginUser({email, password})
+    this.props.history.push('/')
   }
 
   render() {

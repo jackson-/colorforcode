@@ -1,6 +1,6 @@
 import React from 'react'
 import { render } from 'react-dom'
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
 import { Provider } from 'react-redux'
 
 import Container from './components/app/App'
@@ -13,14 +13,22 @@ import PostNewJobForm from './components/jobs/PostNewJobForm'
 import JobDetailPage from './components/jobs/JobDetailPage'
 import store from './store'
 
-
+const authTransition = function authTransition() {
+  let user = null
+  try {
+    user = sessionStorage.getItem('user')
+  } catch(exception){
+    console.log("ESXC", exception)
+  }
+  return user
+}
 
 const App = () => (
   <Provider store={store}>
     <Router>
       <Container>
         <Switch>
-          <Route exact strict path='/' component={Home} />
+          <Route exact strict path='/' render={() => (authTransition() ? (<Home />) : (<Redirect to="/login"/>))}/>
           <Route exact path='/about' component={About} />
           <Route exact path='/register' component={RegisterForm} />
           <Route exact path='/login' component={LoginForm} />

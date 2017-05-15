@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { RECEIVE_USERS, RECEIVE_USER } from '../constants'
 import { authenticateUser, createNewUser, requestAllUsers, doneLoading } from './loading'
-
+import {history} from 'react-router-dom'
 /* --------- PURE ACTION CREATORS ---------*/
 export const receiveUsers = users => ({
   users,
@@ -43,7 +43,9 @@ export const authenticatingUser = user => dispatch => {
     return res.data
   })
   .then(user => {
-    console.log("user", user)
+    console.log("USER", user)
+    sessionStorage.setItem('user', user.id)
+
     dispatch(receiveUser(user))
   })
   .then(() => {

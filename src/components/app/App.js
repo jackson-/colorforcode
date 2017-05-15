@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom'
 import { Grid, Navbar, NavbarBrand, Nav, NavItem } from 'react-bootstrap'
 import './App.css'
 import navLogo from '../../img/hireblack-logo-no-border.svg'
+import { withRouter } from 'react-router'
 import { connect } from 'react-redux'
 
 /*
@@ -14,7 +15,9 @@ const onlyOneActiveMatch = (match, location) => {
   if (match) return location.pathname === match.path
 }
 
-const App = props => (
+const App = props => {
+  console.log("PROPS", props)
+  return(
   <div>
     <Navbar fixedTop collapseOnSelect>
       <Navbar.Header>
@@ -33,14 +36,15 @@ const App = props => (
           <NavItem>
             <NavLink to='/about' isActive={onlyOneActiveMatch}>About</NavLink>
           </NavItem>
-          {!props.user &&
-            <NavItem>
-            <NavLink to='/login' isActive={onlyOneActiveMatch}>Login</NavLink>
+          {!props.user
+            ? <div><NavItem><NavLink to='/login' isActive={onlyOneActiveMatch}>Login</NavLink>
             </NavItem>
+            <NavItem>
+              <NavLink to='/register' isActive={onlyOneActiveMatch}>Register
+              </NavLink>
+            </NavItem></div>
+            : null
           }
-          <NavItem>
-            <NavLink to='/register' isActive={onlyOneActiveMatch}>Register</NavLink>
-          </NavItem>
         </Nav>
       </Navbar.Collapse>
     </Navbar>
@@ -48,9 +52,12 @@ const App = props => (
       { props.children && React.cloneElement(props.children, props) }
     </Grid>
   </div>
-)
+)}
+
 const mapStateToProps = state => ({
-  user:state.users.current
+  user: state.users.current
 })
+
 const AppContainer = connect(mapStateToProps, null)(App)
-export default AppContainer
+
+export default withRouter(AppContainer)
