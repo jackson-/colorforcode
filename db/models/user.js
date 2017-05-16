@@ -47,15 +47,6 @@ module.exports = db => db.define('user', {
   hooks: {
     beforeCreate: setEmailAndPassword,
     beforeUpdate: setEmailAndPassword,
-  },
-  defaultScope: {
-    attributes: {exclude: ['password_digest']}
-  },
-  instanceMethods: {
-    // This method is a Promisified bcrypt.compare
-    authenticate(plaintext) {
-      return bcrypt.compare(plaintext, this.password_digest)
-    }
   }
 })
 
