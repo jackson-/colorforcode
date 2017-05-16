@@ -1,7 +1,7 @@
 'use strict'
 
 var stripe = require("stripe")(
-  "sk_live_4QAwCdzRC5yNgAeR9ZOKTdbE"
+  "API_SECRET"
 );
 // var stripe = require("stripe")(
 //   "sk_test_BQokikJOvBiI2HlWgH4olfQ2"

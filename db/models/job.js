@@ -82,7 +82,6 @@ module.exports.associations = (Job, {User, Employer, JobApplication, Skill, JobS
     through: JobApplication,
     foreignKey: 'job_id'
   })
-  // Job.hasMany(Skill),
   Job.belongsToMany(Skill, {through: JobSkillRelationship})
   Job.belongsTo(Employer)
 }

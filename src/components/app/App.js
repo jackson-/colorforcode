@@ -37,13 +37,33 @@ const App = props => {
             <NavLink to='/about' isActive={onlyOneActiveMatch}>About</NavLink>
           </NavItem>
           {!props.user
-            ? <div><NavItem><NavLink to='/login' isActive={onlyOneActiveMatch}>Login</NavLink>
+            ? <div>
+            <NavItem><NavLink to='/login' isActive={onlyOneActiveMatch}>Login</NavLink>
             </NavItem>
             <NavItem>
               <NavLink to='/register' isActive={onlyOneActiveMatch}>Register
               </NavLink>
-            </NavItem></div>
-            : null
+            </NavItem>
+            <NavItem>
+              <NavLink to='/employer-login' isActive={onlyOneActiveMatch}>Employer Login
+              </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink to='/employer-register' isActive={onlyOneActiveMatch}>Employer Register
+              </NavLink>
+            </NavItem>
+            </div>
+            : <div>
+            <a href='http://localhost:1337/api/users/logout' isActive={onlyOneActiveMatch}>Logout</a>
+            <NavItem>
+              <NavLink to='/profile' isActive={onlyOneActiveMatch}>Profile
+              </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink to='/account' isActive={onlyOneActiveMatch}>Account
+              </NavLink>
+            </NavItem>
+            </div>
           }
         </Nav>
       </Navbar.Collapse>
