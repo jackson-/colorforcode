@@ -21,6 +21,10 @@ module.exports = db => db.define('user', {
   },
   work_auth: STRING,
   employment_type: ARRAY(STRING),
+  personal_site: STRING,
+  github: STRING,
+  linkedin: STRING,
+  twitter: STRING,
   status: {
       type: ENUM('active', 'inactive'),
       defaultValue: 'active'

@@ -20,6 +20,11 @@ class RegisterForm extends Component {
       zip_code: '',
       location: '',
       image_url: '',
+      company_site: '',
+      personal_site: '',
+      github: '',
+      linkedin: '',
+      twitter: '',
       work_auth: 'US Citizen',
       employment_type: new Set([])
     }

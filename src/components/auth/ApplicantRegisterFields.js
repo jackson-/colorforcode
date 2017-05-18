@@ -73,11 +73,43 @@ const ApplicantRegisterFields = props => (
       <Checkbox value='Internship'>Internship</Checkbox>
     </FormGroup>
     <FormGroup controlId='image_url'>
-      <ControlLabel>Profile Image Link</ControlLabel>
+      <ControlLabel>Profile Image URL</ControlLabel>
       <FormControl
         type='text'
         value={props.state.image_url}
         onChange={props.handleChange('image_url')}
+      />
+    </FormGroup>
+    <FormGroup controlId='personal_site'>
+      <ControlLabel>Personal Website (blog, portfolio, etc)</ControlLabel>
+      <FormControl
+        type='text'
+        value={props.state.personal_site}
+        onChange={props.handleChange('personal_site')}
+      />
+    </FormGroup>
+    <FormGroup controlId='github'>
+      <ControlLabel>Github URL</ControlLabel>
+      <FormControl
+        type='text'
+        value={props.state.github}
+        onChange={props.handleChange('github')}
+      />
+    </FormGroup>
+    <FormGroup controlId='linkedin'>
+      <ControlLabel>LinkedIn URL</ControlLabel>
+      <FormControl
+        type='text'
+        value={props.state.linkedin}
+        onChange={props.handleChange('linkedin')}
+      />
+    </FormGroup>
+    <FormGroup controlId='twitter'>
+      <ControlLabel>Twitter Handle</ControlLabel>
+      <FormControl
+        type='text'
+        value={props.state.twitter}
+        onChange={props.handleChange('twitter')}
       />
     </FormGroup>
   </div>
