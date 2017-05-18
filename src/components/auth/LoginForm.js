@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap'
-import { loginUser } from 'APP/src/reducers/actions/users'
-
+import { login } from 'APP/src/reducers/actions/users'
 
 class LoginForm extends Component {
   constructor(props) {
@@ -18,37 +17,43 @@ class LoginForm extends Component {
     this.setState({[type]: value})
   }
 
+  clearForm = () => {
+    this.setState({
+      email: '',
+      password: ''
+    })
+  }
+
   handleSubmit = event => {
     event.preventDefault()
     const {email, password} = this.state
-    this.props.loginUser({email, password})
+    this.clearForm()
+    this.props.loginUser(email, password)
   }
 
   render() {
 
     return (
       <div>
-        <h1 className='PostJobForm-header'>Post a new job</h1>
-        <form className='PostJobForm-body' onSubmit={this.handleSubmit}>
+        <h1 className='Login-header'>Applicant Login</h1>
+        <form className='Login-body' onSubmit={this.handleSubmit}>
           <FormGroup controlId='email'>
-            <ControlLabel>Email to receive applications</ControlLabel>
+            <ControlLabel>Email</ControlLabel>
             <FormControl
               type='text'
               value={this.state.email}
-              placeholder='e.g., hiring@aircash.io'
               onChange={this.handleChange('email')}
             />
           </FormGroup>
           <FormGroup controlId='password'>
-            <ControlLabel>Job Title</ControlLabel>
+            <ControlLabel>Password</ControlLabel>
             <FormControl
               type='text'
               value={this.state.password}
-              placeholder='e.g., password123'
               onChange={this.handleChange('password')}
             />
           </FormGroup>
-          <Button className='primary' type='submit'>Signup</Button>
+          <Button className='primary' type='submit'>Log In</Button>
         </form>
       </div>
     )
@@ -56,7 +61,7 @@ class LoginForm extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  createUser: user => dispatch(loginUser(user))
+  loginUser: (email, password) => dispatch(login(email, password))
 })
 
 const LoginFormContainer = connect(null, mapDispatchToProps)(LoginForm)

@@ -138,7 +138,7 @@ class RegisterForm extends Component {
             controlId='employment_type'
             name='employment_type'
             onChange={this.handleChange('employment_type')}>
-            <ControlLabel>Employment Type(s)</ControlLabel>
+            <ControlLabel>Desired Employment Type(s)</ControlLabel>
             <Checkbox value='Full-time'>Full-time</Checkbox>
             <Checkbox value='Part-time'>Part-time</Checkbox>
             <Checkbox value='Contract'>Contract</Checkbox>

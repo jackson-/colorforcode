@@ -1,6 +1,7 @@
 import React from 'react'
-import { NavLink } from 'react-router-dom'
-import { Grid, Navbar, NavbarBrand, Nav, NavItem } from 'react-bootstrap'
+import { LinkContainer } from 'react-router-bootstrap'
+import { Grid, Navbar, NavbarBrand, Nav,
+         NavItem, NavDropdown, MenuItem } from 'react-bootstrap'
 import './App.css'
 import navLogo from '../../img/hireblack-logo-no-border.svg'
 
@@ -18,26 +19,36 @@ const App = props => (
     <Navbar fixedTop collapseOnSelect>
       <Navbar.Header>
         <NavbarBrand>
-          <NavLink to='/'>
+          <LinkContainer to='/'>
             <img src={navLogo} alt='HireBlack logo' height='40px' width='40px'/>
-          </NavLink>
+          </LinkContainer>
         </NavbarBrand>
         <Navbar.Toggle />
       </Navbar.Header>
       <Navbar.Collapse>
         <Nav pullRight>
-          <NavItem>
-            <NavLink to='/' isActive={onlyOneActiveMatch}>Home</NavLink>
-          </NavItem>
-          <NavItem>
-            <NavLink to='/about' isActive={onlyOneActiveMatch}>About</NavLink>
-          </NavItem>
-          <NavItem>
-            <NavLink to='/login' isActive={onlyOneActiveMatch}>Login</NavLink>
-          </NavItem>
-          <NavItem>
-            <NavLink to='/register' isActive={onlyOneActiveMatch}>Register</NavLink>
-          </NavItem>
+          <LinkContainer eventKey={1} to='/' isActive={onlyOneActiveMatch}>
+            <NavItem>Home</NavItem>
+          </LinkContainer>
+          <LinkContainer eventKey={2} to='/about' isActive={onlyOneActiveMatch}>
+            <NavItem>About</NavItem>
+          </LinkContainer>
+          <NavDropdown eventKey={3} title='Login' id='login-dropdown'>
+            <LinkContainer eventKey={3.1} to='/employers/login'>
+              <MenuItem>Employers</MenuItem>
+            </LinkContainer>
+            <LinkContainer eventKey={3.2} to='/login'>
+              <MenuItem>Job Seekers</MenuItem>
+            </LinkContainer>
+          </NavDropdown>
+          <NavDropdown eventKey={4} title='Register' id='registration-dropdown'>
+            <LinkContainer eventKey={4.1} to='/employers/register'>
+              <MenuItem>Employers</MenuItem>
+            </LinkContainer>
+            <LinkContainer eventKey={4.2} to='/register'>
+              <MenuItem>Job Seekers</MenuItem>
+            </LinkContainer>
+          </NavDropdown>
         </Nav>
       </Navbar.Collapse>
     </Navbar>
