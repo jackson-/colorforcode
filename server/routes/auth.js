@@ -162,6 +162,8 @@ auth.post('/register', (req, res, next) => {
 
 auth.post('/logout', (req, res) => {
   req.logout()
+  // destroy the session
+  req.session = null
   res.redirect('/api/auth/whoami')
 })
 

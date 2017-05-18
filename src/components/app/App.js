@@ -1,10 +1,12 @@
 import React from 'react'
-import { NavLink } from 'react-router-dom'
-import { Grid, Navbar, NavbarBrand, Nav, NavItem } from 'react-bootstrap'
+import { LinkContainer } from 'react-router-bootstrap'
+import { Grid, Navbar, NavbarBrand, Nav,
+         NavItem, NavDropdown, MenuItem } from 'react-bootstrap'
 import './App.css'
 import navLogo from '../../img/hireblack-logo-no-border.svg'
-import { withRouter } from 'react-router'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
+import { logout } from '../../reducers/actions/users'
 
 /*
   The .active class is being applied to '/' even when it isn't the current
@@ -15,55 +17,44 @@ const onlyOneActiveMatch = (match, location) => {
   if (match) return location.pathname === match.path
 }
 
-const App = props => {
-  console.log("PROPS", props)
-  return(
+const App = props => (
   <div>
     <Navbar fixedTop collapseOnSelect>
       <Navbar.Header>
         <NavbarBrand>
-          <NavLink to='/'>
+          <LinkContainer to='/'>
             <img src={navLogo} alt='HireBlack logo' height='40px' width='40px'/>
-          </NavLink>
+          </LinkContainer>
         </NavbarBrand>
         <Navbar.Toggle />
       </Navbar.Header>
       <Navbar.Collapse>
         <Nav pullRight>
-          <NavItem>
-            <NavLink to='/' isActive={onlyOneActiveMatch}>Home</NavLink>
-          </NavItem>
-          <NavItem>
-            <NavLink to='/about' isActive={onlyOneActiveMatch}>About</NavLink>
-          </NavItem>
-          {!props.user
-            ? <div>
-            <NavItem><NavLink to='/login' isActive={onlyOneActiveMatch}>Login</NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink to='/register' isActive={onlyOneActiveMatch}>Register
-              </NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink to='/employer-login' isActive={onlyOneActiveMatch}>Employer Login
-              </NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink to='/employer-register' isActive={onlyOneActiveMatch}>Employer Register
-              </NavLink>
-            </NavItem>
-            </div>
-            : <div>
-            <a href='http://localhost:1337/api/users/logout' isActive={onlyOneActiveMatch}>Logout</a>
-            <NavItem>
-              <NavLink to='/profile' isActive={onlyOneActiveMatch}>Profile
-              </NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink to='/account' isActive={onlyOneActiveMatch}>Account
-              </NavLink>
-            </NavItem>
-            </div>
+          <LinkContainer eventKey={1} to='/' isActive={onlyOneActiveMatch}>
+            <NavItem>Home</NavItem>
+          </LinkContainer>
+          <LinkContainer eventKey={2} to='/about' isActive={onlyOneActiveMatch}>
+            <NavItem>About</NavItem>
+          </LinkContainer>
+          {
+            props.user
+              ? <NavDropdown eventKey={3} title='Account' id='account-dropdown'>
+                  <LinkContainer to='/dashboard'>
+                    <MenuItem eventKey={3.1}>Dashboard</MenuItem>
+                  </LinkContainer>
+                  <LinkContainer to='#' onClick={props.logoutUser(props.history)}>
+                    <MenuItem eventKey={3.2}>Logout</MenuItem>
+                  </LinkContainer>
+                </NavDropdown>
+
+              : <NavDropdown eventKey={3} title='Account' id='account-dropdown'>
+                  <LinkContainer to='/login'>
+                    <MenuItem eventKey={3.1}>Login</MenuItem>
+                  </LinkContainer>
+                  <LinkContainer to='/register'>
+                    <MenuItem eventKey={3.2}>Register</MenuItem>
+                  </LinkContainer>
+                </NavDropdown>
           }
         </Nav>
       </Navbar.Collapse>
@@ -72,12 +63,14 @@ const App = props => {
       { props.children && React.cloneElement(props.children, props) }
     </Grid>
   </div>
-)}
+)
 
 const mapStateToProps = state => ({
-  user: state.users.current
+  user: state.users.currentUser
 })
 
-const AppContainer = connect(mapStateToProps, null)(App)
+const mapDispatchToProps = dispatch => ({
+  logoutUser: (history) => () => dispatch(logout(history))
+})
 
-export default withRouter(AppContainer)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App))

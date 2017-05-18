@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap'
-import { authenticatingUser } from 'APP/src/reducers/actions/users'
-
+import { login } from 'APP/src/reducers/actions/users'
+import { withRouter } from 'react-router-dom'
 
 class LoginForm extends Component {
   constructor(props) {
@@ -18,25 +18,30 @@ class LoginForm extends Component {
     this.setState({[type]: value})
   }
 
+  clearForm = () => {
+    this.setState({
+      email: '',
+      password: ''
+    })
+  }
+
   handleSubmit = event => {
     event.preventDefault()
     const {email, password} = this.state
-    this.props.loginUser({email, password})
-    this.props.history.push('/')
+    this.clearForm()
+    this.props.loginUser(email, password, this.props.history)
   }
 
   render() {
-
     return (
       <div>
-        <h1 className='PostJobForm-header'>Login</h1>
-        <form className='PostJobForm-body' onSubmit={this.handleSubmit}>
+        <h1 className='Login-header'>Log in to access your dashboard</h1>
+        <form className='Login-body' onSubmit={this.handleSubmit}>
           <FormGroup controlId='email'>
             <ControlLabel>Email</ControlLabel>
             <FormControl
               type='email'
               value={this.state.email}
-              placeholder='e.g., hiring@aircash.io'
               onChange={this.handleChange('email')}
             />
           </FormGroup>
@@ -45,11 +50,10 @@ class LoginForm extends Component {
             <FormControl
               type='password'
               value={this.state.password}
-              placeholder='e.g., password123'
               onChange={this.handleChange('password')}
             />
           </FormGroup>
-          <Button className='primary' type='submit'>Login</Button>
+          <Button className='primary' type='submit'>Log In</Button>
         </form>
       </div>
     )
@@ -57,9 +61,9 @@ class LoginForm extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  loginUser: user => dispatch(authenticatingUser(user))
+  loginUser: (email, password, history) => dispatch(login(email, password, history))
 })
 
 const LoginFormContainer = connect(null, mapDispatchToProps)(LoginForm)
 
-export default LoginFormContainer
+export default withRouter(LoginFormContainer)

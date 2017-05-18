@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { gettingAllJobs } from 'APP/src/reducers/actions/jobs'
 import './Home.css'
@@ -39,6 +39,5 @@ const mapDispatchToProps = dispatch => ({
 })
 
 const JobBoardContainer = connect(mapStateToProps, mapDispatchToProps)(JobBoard)
-
 
 export default JobBoardContainer

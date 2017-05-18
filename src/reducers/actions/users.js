@@ -1,17 +1,24 @@
 import axios from 'axios'
-import { RECEIVE_USERS, RECEIVE_USER } from '../constants'
-import { authenticateUser, createNewUser, requestAllUsers, doneLoading } from './loading'
-import {history} from 'react-router-dom'
+import { RECEIVE_ALL_USERS, AUTHENTICATED } from '../constants'
+import { createNewUser, requestAllUsers } from './loading'
+
 /* --------- PURE ACTION CREATORS ---------*/
-export const receiveUsers = users => ({
+export const receiveAllUsers = users => ({
   users,
-  type: RECEIVE_USERS
+  loading: false,
+  type: RECEIVE_ALL_USERS
 })
 
-export const receiveUser = user => ({
+export const authenticated = user => ({
   user,
-  type: RECEIVE_USER
+  loading: false,
+  type: AUTHENTICATED
 })
+
+// export const receiveUser = user => ({
+//   user,
+//   type: RECEIVE_USER
+// })
 
 /* --------- ASYNC ACTION CREATORS (THUNKS) ---------*/
 
@@ -19,38 +26,66 @@ export const gettingAllUsers = () => dispatch => {
   dispatch(requestAllUsers())
   axios.get('/api/users')
   .then(res => res.data)
-  .then(users => dispatch(receiveUsers(users)))
-  .catch(err => console.log('Bitch I couldn\'t find the users!'))
+  .then(users => dispatch(receiveAllUsers(users)))
+  .catch(err => console.error(`Mang, I couldn't find any users! ${err.stack}`))
 }
 
-export const creatingNewUser = user => dispatch => {
+export const whoami = (history) => dispatch => {
+  axios.get('/api/auth/whoami')
+  .then(response => {
+    const user = response.data
+    dispatch(authenticated(user))
+    if (typeof user !== 'string') history.push('/dashboard')
+    else history.push('/login')
+  })
+  .catch(failed => {
+    dispatch(authenticated(null))
+  })
+}
+
+export const login = (username, password, history) => dispatch => {
+  axios.post('/api/auth/login/local', {username, password})
+  .then(() => dispatch(whoami(history)))
+  .catch(() => dispatch(whoami()))
+}
+
+export const logout = (history) => dispatch => {
+  axios.post('/api/auth/logout')
+  .then(() => dispatch(whoami(history)))
+  .catch(() => dispatch(whoami()))
+}
+
+export const creatingNewUser = (user, history) => dispatch => {
   //set loading state to true to trigger UI changes
   dispatch(createNewUser())
-  // create the new job
+  // create the new user
   axios.post('/api/users', user)
   .then(res => res.data)
   // if the user is successfully created, we receive the update to users list
-  .then(users => dispatch(gettingAllUsers()))
+  .then(newUser => {
+    dispatch(gettingAllUsers())
+    dispatch(login(newUser.email, newUser.password, history))
+  })
   // otherwise we catch the error...
-  .catch(err => console.error('Sorry, cuz. We couldn\'t create that user...'))
+  .catch(err => console.error(`Sorry, cuz. We couldn't create that user...${err.stack}`))
 }
 
-export const authenticatingUser = user => dispatch => {
-  console.log('NEW SHIT')
-  dispatch(authenticateUser())
-  axios.post('/api/users/login', user)
-  .then(res => {
-    return res.data
-  })
-  .then(user => {
-    console.log("USER", user)
-    sessionStorage.setItem('user', user.id)
-
-    dispatch(receiveUser(user))
-  })
-  .then(() => {
-    dispatch(doneLoading())
-  })
-  // .then(job => console.log("JOB", job))
-  .catch(err => console.log('Bitch I couldn\'t sign you in!'))
+export const creatingNewEmployer = employer => dispatch => {
+  axios.post('/api/employers', employer)
+  .then(res => res.data)
+  .catch(err => console.error(`Couldn't create employer ${employer.name}...${err.stack}`))
 }
+
+// export const authenticatingUser = user => dispatch => {
+//   dispatch(authenticateUser())
+//   axios.post('/api/users/login', user)
+//   .then(res => {
+//     return res.data
+//   })
+//   .then(user => {
+//     sessionStorage.setItem('user', user.id)
+//
+//     dispatch(receiveUser(user))
+//   })
+//   .catch(err => console.error(`Bitch I couldn't sign you in!...${err.stack}`))
+// }

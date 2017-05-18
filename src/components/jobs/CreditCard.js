@@ -2,9 +2,7 @@ import React from 'react';
 import Payment from 'payment';
 import { Row, Col, FormGroup, ControlLabel, Button, Alert } from 'react-bootstrap';
 import { getStripeToken } from './getStripeToken';
-import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap/dist/css/bootstrap-theme.css';
-import './CreditCardStyles.css'
+import './CreditCard.css'
 const Stripe = window.Stripe;
 Stripe.setPublishableKey('API_KEY');
 
@@ -123,12 +121,12 @@ export default class CreditCard extends React.Component {
 
   renderCardList() {
     return (<ul className="credit-card-list clearfix">
-      <li><i data-brand="visa" className="fa fa-cc-visa"></i></li>
-      <li><i data-brand="amex" className="fa fa-cc-amex"></i></li>
-      <li><i data-brand="mastercard" className="fa fa-cc-mastercard"></i></li>
-      <li><i data-brand="jcb" className="fa fa-cc-jcb"></i></li>
-      <li><i data-brand="discover" className="fa fa-cc-discover"></i></li>
-      <li><i data-brand="dinersclub" className="fa fa-cc-diners-club"></i></li>
+      <li><i data-brand="visa" className="fa fa-cc-visa cc-logo"></i></li>
+      <li><i data-brand="amex" className="fa fa-cc-amex cc-logo"></i></li>
+      <li><i data-brand="mastercard" className="fa fa-cc-mastercard cc-logo"></i></li>
+      <li><i data-brand="jcb" className="fa fa-cc-jcb cc-logo"></i></li>
+      <li><i data-brand="discover" className="fa fa-cc-discover cc-logo"></i></li>
+      <li><i data-brand="dinersclub" className="fa fa-cc-diners-club cc-logo"></i></li>
     </ul>);
   }
 
