@@ -5,22 +5,10 @@ const bcrypt = require('bcryptjs')
 const {STRING, TEXT, JSON, VIRTUAL, INTEGER, ENUM, DATE, ARRAY} = require('sequelize')
 
 module.exports = db => db.define('user', {
-  id: {
-      autoIncrement: true,
-      primaryKey: true,
-      type: INTEGER
-  },
-  first_name: {
-      type: STRING,
-      notEmpty: true
-  },
-  last_name: {
-      type: STRING,
-      notEmpty: true
-  },
+  first_name: STRING,
+  last_name: STRING,
   zip_code: STRING,
-  country: STRING,
-  city_state: STRING,
+  location: STRING,
   picture_url: STRING,
   email: {
       type: STRING,
@@ -29,14 +17,8 @@ module.exports = db => db.define('user', {
           notEmpty:true
       }
   },
-  last_login: DATE,
   work_auth: STRING,
-  employment_type: {
-      type: ARRAY(STRING),
-  },
-  work_experience: {
-      type: ARRAY(JSON),
-  },
+  employment_type: ARRAY(STRING),
   status: {
       type: ENUM('active', 'inactive'),
       defaultValue: 'active'

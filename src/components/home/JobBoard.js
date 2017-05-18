@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { NavLink } from 'react-router-dom'
 import { gettingAllJobs } from 'APP/src/reducers/actions/jobs'
@@ -38,6 +38,5 @@ const mapDispatchToProps = dispatch => ({
 })
 
 const JobBoardContainer = connect(mapStateToProps, mapDispatchToProps)(JobBoard)
-
 
 export default JobBoardContainer
