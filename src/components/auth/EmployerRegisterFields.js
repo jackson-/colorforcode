@@ -35,6 +35,14 @@ const EmployerRegisterFields = props => (
         onChange={props.handleChange('company_name')}
       />
     </FormGroup>
+    <FormGroup controlId='image_url'>
+      <ControlLabel>Logo Image Link</ControlLabel>
+      <FormControl
+        type='text'
+        value={props.state.image_url}
+        onChange={props.handleChange('image_url')}
+      />
+    </FormGroup>
   </div>
 )
 

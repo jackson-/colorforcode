@@ -72,6 +72,14 @@ const ApplicantRegisterFields = props => (
       <Checkbox value='Contract to Hire'>Contract to Hire</Checkbox>
       <Checkbox value='Internship'>Internship</Checkbox>
     </FormGroup>
+    <FormGroup controlId='image_url'>
+      <ControlLabel>Profile Image Link</ControlLabel>
+      <FormControl
+        type='text'
+        value={props.state.image_url}
+        onChange={props.handleChange('image_url')}
+      />
+    </FormGroup>
   </div>
 )
 

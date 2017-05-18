@@ -31,10 +31,22 @@ const App = () => (
     <Router>
       <Container>
         <Switch>
-          <Route exact strict path='/' render={() => (authTransition() ? (<Home />) : (<Redirect to="/login"/>))}/>
+          <Route exact strict path='/' component={Home}/>
           <Route exact path='/about' component={About} />
-          <Route exact path='/register' component={RegisterForm} />
-          <Route exact path='/login' component={LoginForm} />
+          <Route exact path='/register' render={
+            (props) => {
+              return props.user
+                ? <Redirect to='/dashboard' />
+              : <RegisterForm />
+            }}
+          />
+          <Route exact path='/login' render={
+            (props) => {
+              return props.user
+                ? <Redirect to='/dashboard' />
+                : <LoginForm />
+            }}
+          />
           <Route exact path='/post-new-job' component={PostNewJobForm}/>
           <Route exact path='/job/:id' component={JobDetailPage} />
         </Switch>

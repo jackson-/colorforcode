@@ -18,7 +18,7 @@ class RegisterForm extends Component {
       last_name: '',
       zip_code: '',
       location: '',
-      picture_url: '',
+      image_url: '',
       work_auth: 'US Citizen',
       employment_type: new Set([])
     }
@@ -59,9 +59,9 @@ class RegisterForm extends Component {
       last_name: '',
       zip_code: '',
       location: '',
-      picture_url: '',
+      image_url: '',
       work_auth: 'US Citizen',
-      employment_type: new Set([]),
+      employment_type: new Set([])
     })
   }
 
@@ -83,8 +83,8 @@ class RegisterForm extends Component {
   }
 
   isInvalid = () => {
-    const { is_employer, email, password, passwordConfirm } = this.state
-    return !(is_employer && email && password && passwordConfirm)
+    const { email, password, passwordConfirm } = this.state
+    return !(email && password && passwordConfirm)
   }
 
   handleSubmit = event => {
@@ -107,6 +107,7 @@ class RegisterForm extends Component {
   }
 
   render() {
+    console.log(this.state)
     return (
       <div>
         <h1 className='RegisterForm-header'>Register</h1>
