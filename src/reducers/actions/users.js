@@ -76,17 +76,3 @@ export const creatingNewEmployer = employer => dispatch => {
   .then(res => res.data)
   .catch(err => console.error(`Couldn't create employer ${employer.name}...${err.stack}`))
 }
-
-// export const authenticatingUser = user => dispatch => {
-//   dispatch(authenticateUser())
-//   axios.post('/api/users/login', user)
-//   .then(res => {
-//     return res.data
-//   })
-//   .then(user => {
-//     sessionStorage.setItem('user', user.id)
-//
-//     dispatch(receiveUser(user))
-//   })
-//   .catch(err => console.error(`Bitch I couldn't sign you in!...${err.stack}`))
-// }

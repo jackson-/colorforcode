@@ -106,20 +106,17 @@ passport.use('local-signin', new LocalStrategy({
     passwordField:'password',
   },
   (email, password, done) => {
-    console.log("LOGGIN SHIT", email, password)
     debug('will authenticate user(email: "%s")', email)
     User.findOne({
       where: {email},
       attributes: {include: ['password_digest']}
     }).then(user => {
-        console.log("USER", user)
         if (!user) {
           debug('authenticate user(email: "%s") did fail: no such user', email)
           return done(null, false, { message: 'Login incorrect' })
         }
         user.authenticate(password)
           .then(ok => {
-            console.log("OK", ok)
             if (!ok) {
               debug('authenticate user(email: "%s") did fail: bad password')
               return done(null, false, { message: 'Login incorrect' })
@@ -141,9 +138,6 @@ auth.post('/login/local', passport.authenticate('local-signin', {
   successRedirect:'/'
 }))
 
-// auth.post('/login/local', (req, res) => {
-//   console.log("REQ", req.body)
-// })
 
 // GET requests for OAuth login:
 // Register this route as a callback URL with OAuth provider
