@@ -2,8 +2,6 @@ import React from 'react';
 import Payment from 'payment';
 import { Row, Col, FormGroup, ControlLabel, Button, Alert } from 'react-bootstrap';
 import { getStripeToken } from './getStripeToken';
-import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap/dist/css/bootstrap-theme.css';
 import './CreditCardStyles.css'
 const Stripe = window.Stripe;
 Stripe.setPublishableKey('API_KEY');

@@ -16,7 +16,7 @@ import EmployerLoginForm from './components/auth/EmployerLoginForm'
 import EmployerRegisterForm from './components/auth/EmployerRegisterForm'
 import store from './store'
 
-const authTransition = function authTransition() {
+const authTransition = () => {
   let user = null
   try {
     user = sessionStorage.getItem('user')
@@ -37,9 +37,9 @@ const App = () => (
           <Route exact path='/login' component={LoginForm} />
           <Route exact path='/post-new-job' component={PostNewJobForm}/>
           <Route exact path='/job/:id' component={JobDetailPage} />
-          <Route exact path='/employer-login' component={EmployerLoginForm} />
-          <Route exact path='/employer-register' component={EmployerRegisterForm} />
-          <Route exact path='/employer-dashboard' component={EmployerDashboard}/>
+          <Route exact path='/employer/login' component={EmployerLoginForm} />
+          <Route exact path='/employer/register' component={EmployerRegisterForm} />
+          {/* <Route exact path='/employer/dashboard' component={EmployerDashboard} /> */}
         </Switch>
       </Container>
     </Router>
