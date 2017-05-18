@@ -55,7 +55,7 @@ export const logout = (history) => dispatch => {
   .catch(() => dispatch(whoami()))
 }
 
-export const creatingNewUser = user => dispatch => {
+export const creatingNewUser = (user, history) => dispatch => {
   //set loading state to true to trigger UI changes
   dispatch(createNewUser())
   // create the new user
@@ -64,7 +64,7 @@ export const creatingNewUser = user => dispatch => {
   // if the user is successfully created, we receive the update to users list
   .then(newUser => {
     dispatch(gettingAllUsers())
-    dispatch(login(newUser.email, newUser.password))
+    dispatch(login(newUser.email, newUser.password, history))
   })
   // otherwise we catch the error...
   .catch(err => console.error(`Sorry, cuz. We couldn't create that user...${err.stack}`))

@@ -5,6 +5,7 @@ import axios from 'axios'
 import { creatingNewUser, creatingNewEmployer } from 'APP/src/reducers/actions/users'
 import EmployerFields from './EmployerRegisterFields'
 import ApplicantFields from './ApplicantRegisterFields'
+import { withRouter } from 'react-router-dom'
 
 class RegisterForm extends Component {
   constructor(props) {
@@ -103,11 +104,10 @@ class RegisterForm extends Component {
     }
 
     this.clearForm()
-    this.props.createUser(newUser)
+    this.props.createUser(newUser, this.props.history)
   }
 
   render() {
-    console.log(this.state)
     return (
       <div>
         <h1 className='RegisterForm-header'>Register</h1>
@@ -136,10 +136,10 @@ class RegisterForm extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  createUser: user => dispatch(creatingNewUser(user)),
+  createUser: (user, history) => dispatch(creatingNewUser(user, history)),
   createEmployer: employer => dispatch(creatingNewEmployer(employer))
 })
 
 const RegisterFormContainer = connect(null, mapDispatchToProps)(RegisterForm)
 
-export default RegisterFormContainer
+export default withRouter(RegisterFormContainer)

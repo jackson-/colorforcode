@@ -1,6 +1,6 @@
 import React from 'react'
 import { render } from 'react-dom'
-import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import { Provider } from 'react-redux'
 
 import Container from './components/app/App'
@@ -33,21 +33,9 @@ const App = () => (
         <Switch>
           <Route exact strict path='/' component={Home}/>
           <Route exact path='/about' component={About} />
-          <Route exact path='/register' render={
-            (props) => {
-              return props.user
-                ? <Redirect push to='/dashboard' />
-              : <RegisterForm />
-            }}
-          />
-          <Route exact path='/login' render={
-            (props) => {
-              return props.user
-                ? <Redirect push to='/dashboard' />
-                : <LoginForm />
-            }}
-          />
-          <Route exact path='/post-new-job' component={PostNewJobForm}/>
+          <Route exact path='/register' component={RegisterForm} />
+          <Route exact path='/login' component={LoginForm} />
+          <Route exact path='/post-new-job' component={PostNewJobForm} />
           <Route exact path='/job/:id' component={JobDetailPage} />
         </Switch>
       </Container>
