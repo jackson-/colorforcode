@@ -35,16 +35,16 @@ const LocalStrategy = require('passport-local').Strategy;
 
 // LinkedIn needs the LINKEDIN_API_ID and LINKEDIN_SECRET_KEY
 // environment variables.
-OAuth.setupStrategy({
-  provider: 'linkedin',
-  strategy: require('passport-linkedin').Strategy,
-  config: {
-    clientID: env.LINKEDIN_API_ID,
-    clientSecret: env.LINKEDIN_SECRET_KEY,
-    callbackURL: `https://127.0.0.1:1137/api/auth/login/linkedin`,
-  },
-  passport
-})
+// OAuth.setupStrategy({
+//   provider: 'linkedin',
+//   strategy: require('passport-linkedin').Strategy,
+//   config: {
+//     clientID: env.LINKEDIN_API_ID,
+//     clientSecret: env.LINKEDIN_SECRET_KEY,
+//     callbackURL: `https://127.0.0.1:1137/api/auth/login/linkedin`,
+//   },
+//   passport
+// })
 
 // Other passport configuration:
 // Passport review in the Week 6 Concept Review:
@@ -103,6 +103,7 @@ passport.use('local-signup', new LocalStrategy({
 
 passport.use(new (require('passport-local').Strategy)(
   (email, password, done) => {
+    console.log("LOGGIN SHIT")
     debug('will authenticate user(email: "%s")', email)
     User.findOne({
       where: {email},
@@ -146,7 +147,7 @@ auth.get('/login/:strategy', (req, res, next) =>
   })(req, res, next)
 )
 
-auth.post('/signup', (req, res, next) => {
+auth.post('/register', (req, res, next) => {
   passport.authenticate('local-signup', function(err, user, info) {
     if (err) { return next(err); }
     // Redirect if it fails

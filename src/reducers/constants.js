@@ -16,3 +16,6 @@ export const DELETE_USER = 'DELETE_USER'
 /* ----------- USERS ------------ */
 export const AUTHENTICATED = 'AUTHENTICATED'
 export const RECEIVE_ALL_USERS = 'RECEIVE_ALL_USERS'
+
+// export const AUTHENTICATE_USER = 'AUTHENTICATE_USER'
+// export const REGISTER_USER = 'REGISTER_USER'

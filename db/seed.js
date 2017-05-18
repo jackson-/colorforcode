@@ -1,40 +1,61 @@
 'use strict'
 
 const db = require('APP/db')
-    , {User, Thing, Favorite, Promise} = db
+    , {User, Employer, Skill, Job, Promise, JobSkillRelationship} = db
     , {mapValues} = require('lodash')
-
+const bCrypt = require('bcrypt');
 function seedEverything() {
   const seeded = {
     users: users(),
-    things: things(),
+    employers: employers(),
+    skills: skills(),
   }
-
-  seeded.favorites = favorites(seeded)
+  seeded.jobs = jobs(seeded)
+  seeded.relationships = relationships(seeded)
 
   return Promise.props(seeded)
 }
 
+const generateHash = function(password) {
+  return bCrypt.hashSync(password, bCrypt.genSaltSync(8), null);
+};
+
 const users = seed(User, {
-  god: {
-    email: 'god@example.com',
-    name: 'So many names',
-    password: '1234',
+  devin: {
+    email: 'devin@123.com',
+    name: 'Devin Jackson',
+    password: generateHash('123'),
   },
-  barack: {
-    name: 'Barack Obama',
-    email: 'barack@example.gov',
-    password: '1234'
+  chloe: {
+    name: 'Chloe Rice',
+    email: 'chloe@123.com',
+    password: generateHash('123')
   },
 })
 
-const things = seed(Thing, {
-  surfing: {name: 'surfing'},
-  smiting: {name: 'smiting'},
-  puppies: {name: 'puppies'},
+const employers = seed(Employer, {
+  airbnb: {
+    email: 'emp1@123.com',
+    name: 'AirBnB',
+    password: '123',
+  },
+  google: {
+    name: 'Google',
+    email: 'emp2@123.com',
+    password: '123'
+  },
 })
 
-const favorites = seed(Favorite,
+const skills = seed(Skill, {
+  react: {title: 'react', template:true},
+  mongo: {title: 'mongo', template:true},
+  node: {title: 'node', template:true},
+  nginx: {title: 'nginx', template:true},
+  gunicorn: {title: 'gunicorn', template:true},
+  aws: {title: 'aws', template:true},
+})
+
+const jobs = seed(Job,
   // We're specifying a function here, rather than just a rows object.
   // Using a function lets us receive the previously-seeded rows (the seed
   // function does this wiring for us).
@@ -42,32 +63,84 @@ const favorites = seed(Favorite,
   // This lets us reference previously-created rows in order to create the join
   // rows. We can reference them by the names we used above (which is why we used
   // Objects above, rather than just arrays).
-  ({users, things}) => ({
+  ({users, employers, skills}) => ({
     // The easiest way to seed associations seems to be to just create rows
     // in the join table.
-    'obama loves surfing': {
-      user_id: users.barack.id,    // users.barack is an instance of the User model
-                                   // that we created in the user seed above.
-                                   // The seed function wires the promises so that it'll
-                                   // have been created already.
-      thing_id: things.surfing.id  // Same thing for things.
+    'full_stack': {
+      employer_id: employers.google.id,
+      title:'Full Stack Dev',
+      description:'This is ajob for a full stack dev',
+      application_method:'email',
+      application_emails:['emp1@123.com', 'emp2@123.com'],
+      city:'Brooklyn',
+      state:'NY',
+      country:'United States',
+      zip_code:'11207',
+      employment_types:['Full-time', 'Part-time'],
+      pay_rate:'Hourly',
+      compensation:'$80',
+      travel_requirements:'None',
+      remote:false,
     },
-    'god is into smiting': {
-      user_id: users.god.id,
-      thing_id: things.smiting.id
+    'dev_ops': {
+      employer_id: employers.airbnb.id,
+      title:'DevOps',
+      description:'This is a job for a devops dude',
+      application_method:'email',
+      application_emails:['emp1@123.com', 'emp2@123.com'],
+      city:null,
+      state:null,
+      country: null,
+      zip_code:null,
+      employment_types:['Full-time'],
+      pay_rate:'Hourly',
+      compensation:'$100',
+      travel_requirements:'None',
+      remote:true,
     },
-    'obama loves puppies': {
-      user_id: users.barack.id,
-      thing_id: things.puppies.id
+  })
+)
+
+const relationships = seed(JobSkillRelationship,
+  // We're specifying a function here, rather than just a rows object.
+  // Using a function lets us receive the previously-seeded rows (the seed
+  // function does this wiring for us).
+  //
+  // This lets us reference previously-created rows in order to create the join
+  // rows. We can reference them by the names we used above (which is why we used
+  // Objects above, rather than just arrays).
+  ({jobs, skills}) => ({
+    // The easiest way to seed associations seems to be to just create rows
+    // in the join table.
+    1: {
+      job_id: jobs.full_stack.id,
+      skill_id:skills.react.id,
     },
-    'god loves puppies': {
-      user_id: users.god.id,
-      thing_id: things.puppies.id
+    2: {
+      job_id: jobs.full_stack.id,
+      skill_id:skills.mongo.id,
+    },
+    3: {
+      job_id: jobs.full_stack.id,
+      skill_id:skills.node.id,
+    },
+    4: {
+      job_id: jobs.dev_ops.id,
+      skill_id:skills.nginx.id,
+    },
+    5: {
+      job_id: jobs.dev_ops.id,
+      skill_id:skills.gunicorn.id,
+    },
+    6: {
+      job_id: jobs.dev_ops.id,
+      skill_id:skills.aws.id,
     },
   })
 )
 
 if (module === require.main) {
+  console.log('seeding')
   db.didSync
     .then(() => db.sync({force: true}))
     .then(seedEverything)
@@ -107,7 +180,6 @@ function seed(Model, rows) {
             typeof other === 'function' ? other() : other)
       ).then(rows)
     }
-
     return Promise.resolve(rows)
       .then(rows => Promise.props(
         Object.keys(rows)
@@ -135,4 +207,4 @@ function seed(Model, rows) {
   }
 }
 
-module.exports = Object.assign(seed, {users, things, favorites})
+module.exports = Object.assign(seed, {users, employers, jobs, skills})

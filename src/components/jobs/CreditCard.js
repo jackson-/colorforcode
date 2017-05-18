@@ -4,7 +4,7 @@ import { Row, Col, FormGroup, ControlLabel, Button, Alert } from 'react-bootstra
 import { getStripeToken } from './getStripeToken';
 import './CreditCardStyles.css'
 const Stripe = window.Stripe;
-Stripe.setPublishableKey('pk_live_4QAwpaoVBzVulPQEDGuxeNqf');
+Stripe.setPublishableKey('API_KEY');
 
 export default class CreditCard extends React.Component {
   constructor(props) {

@@ -4,7 +4,7 @@ import { FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap'
 import { creatingNewJob } from 'APP/src/reducers/actions/jobs'
 import CreditCard from './CreditCard';
 import './PostNewJobForm.css'
-console.log("CC", CreditCard)
+
 class PostJobForm extends Component {
   constructor(props) {
     super(props)

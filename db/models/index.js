@@ -16,7 +16,9 @@ const metaModels = {
   User: require('./user'),
   Employer: require('./employer'),
   Job: require('./job'),
-  JobApplication: require('./job_application')
+  JobApplication: require('./job_application'),
+  JobSkillRelationship: require('./job_skill_relationship'),
+  Skill: require('./skill'),
 }
 
 const {mapValues} = require('lodash')

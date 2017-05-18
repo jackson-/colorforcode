@@ -29,18 +29,19 @@ class LoginForm extends Component {
     const {email, password} = this.state
     this.clearForm()
     this.props.loginUser(email, password)
+    this.props.history.push('/')
   }
 
   render() {
 
     return (
       <div>
-        <h1 className='Login-header'>Sign in to access your dashboard</h1>
+        <h1 className='Login-header'>Log in to access your dashboard</h1>
         <form className='Login-body' onSubmit={this.handleSubmit}>
           <FormGroup controlId='email'>
             <ControlLabel>Email</ControlLabel>
             <FormControl
-              type='text'
+              type='email'
               value={this.state.email}
               onChange={this.handleChange('email')}
             />
@@ -48,7 +49,7 @@ class LoginForm extends Component {
           <FormGroup controlId='password'>
             <ControlLabel>Password</ControlLabel>
             <FormControl
-              type='text'
+              type='password'
               value={this.state.password}
               onChange={this.handleChange('password')}
             />

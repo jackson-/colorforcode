@@ -15,6 +15,11 @@ export const authenticated = user => ({
   type: AUTHENTICATED
 })
 
+// export const receiveUser = user => ({
+//   user,
+//   type: RECEIVE_USER
+// })
+
 /* --------- ASYNC ACTION CREATORS (THUNKS) ---------*/
 
 export const gettingAllUsers = () => dispatch => {
@@ -64,8 +69,19 @@ export const creatingNewUser = user => dispatch => {
 export const creatingNewEmployer = employer => dispatch => {
   axios.post('/api/employers', employer)
   .then(res => res.data)
-  .then(newEmployer => {
-    // do some stuff...
-  })
   .catch(err => console.error(`Couldn't create employer ${employer.name}...${err.stack}`))
 }
+
+// export const authenticatingUser = user => dispatch => {
+//   dispatch(authenticateUser())
+//   axios.post('/api/users/login', user)
+//   .then(res => {
+//     return res.data
+//   })
+//   .then(user => {
+//     sessionStorage.setItem('user', user.id)
+//
+//     dispatch(receiveUser(user))
+//   })
+//   .catch(err => console.error(`Bitch I couldn't sign you in!...${err.stack}`))
+// }
