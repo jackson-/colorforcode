@@ -35,7 +35,7 @@ class LoginForm extends Component {
 
     return (
       <div>
-        <h1 className='Login-header'>Applicant Login</h1>
+        <h1 className='Login-header'>Sign in to access your dashboard</h1>
         <form className='Login-body' onSubmit={this.handleSubmit}>
           <FormGroup controlId='email'>
             <ControlLabel>Email</ControlLabel>

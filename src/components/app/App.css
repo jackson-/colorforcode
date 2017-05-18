@@ -33,6 +33,10 @@ a {
   border: none;
 }
 
+.navbar-brand {
+  padding: 5px 0 0 0;
+}
+
 .navbar-default .navbar-toggle,
 .navbar-default .navbar-toggle:focus {
   margin-top: 15px;

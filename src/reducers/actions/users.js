@@ -60,3 +60,12 @@ export const creatingNewUser = user => dispatch => {
   // otherwise we catch the error...
   .catch(err => console.error(`Sorry, cuz. We couldn't create that user...${err.stack}`))
 }
+
+export const creatingNewEmployer = employer => dispatch => {
+  axios.post('/api/employers', employer)
+  .then(res => res.data)
+  .then(newEmployer => {
+    // do some stuff...
+  })
+  .catch(err => console.error(`Couldn't create employer ${employer.name}...${err.stack}`))
+}

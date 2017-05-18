@@ -4,6 +4,9 @@ import { Grid, Navbar, NavbarBrand, Nav,
          NavItem, NavDropdown, MenuItem } from 'react-bootstrap'
 import './App.css'
 import navLogo from '../../img/hireblack-logo-no-border.svg'
+import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
+import { logout } from '../../reducers/actions/users'
 
 /*
   The .active class is being applied to '/' even when it isn't the current
@@ -33,22 +36,26 @@ const App = props => (
           <LinkContainer eventKey={2} to='/about' isActive={onlyOneActiveMatch}>
             <NavItem>About</NavItem>
           </LinkContainer>
-          <NavDropdown eventKey={3} title='Login' id='login-dropdown'>
-            <LinkContainer eventKey={3.1} to='/employers/login'>
-              <MenuItem>Employers</MenuItem>
-            </LinkContainer>
-            <LinkContainer eventKey={3.2} to='/login'>
-              <MenuItem>Job Seekers</MenuItem>
-            </LinkContainer>
-          </NavDropdown>
-          <NavDropdown eventKey={4} title='Register' id='registration-dropdown'>
-            <LinkContainer eventKey={4.1} to='/employers/register'>
-              <MenuItem>Employers</MenuItem>
-            </LinkContainer>
-            <LinkContainer eventKey={4.2} to='/register'>
-              <MenuItem>Job Seekers</MenuItem>
-            </LinkContainer>
-          </NavDropdown>
+          {
+            props.user
+              ? <NavDropdown eventKey={3} title='Account' id='account-dropdown'>
+                  <LinkContainer to='/dashboard'>
+                    <MenuItem eventKey={3.1}>Dashboard</MenuItem>
+                  </LinkContainer>
+                  <LinkContainer to='#' onClick={props.logoutUser}>
+                    <MenuItem eventKey={3.2}>Logout</MenuItem>
+                  </LinkContainer>
+                </NavDropdown>
+
+              : <NavDropdown eventKey={3} title='Account' id='account-dropdown'>
+                  <LinkContainer to='/login'>
+                    <MenuItem eventKey={3.1}>Login</MenuItem>
+                  </LinkContainer>
+                  <LinkContainer to='/register'>
+                    <MenuItem eventKey={3.2}>Register</MenuItem>
+                  </LinkContainer>
+                </NavDropdown>
+          }
         </Nav>
       </Navbar.Collapse>
     </Navbar>
@@ -58,4 +65,12 @@ const App = props => (
   </div>
 )
 
-export default App
+const mapStateToProps = state => ({
+  user: state.users.currentUser
+})
+
+const mapDispatchToProps = dispatch => ({
+  logoutUser: () => dispatch(logout())
+})
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App))

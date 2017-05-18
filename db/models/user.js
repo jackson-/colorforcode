@@ -2,14 +2,16 @@
 
 // bcrypt docs: https://www.npmjs.com/package/bcrypt
 const bcrypt = require('bcryptjs')
-const {STRING, TEXT, JSON, VIRTUAL, INTEGER, ENUM, DATE, ARRAY} = require('sequelize')
+const {STRING, TEXT, JSON, VIRTUAL, BOOLEAN,
+       INTEGER, ENUM, DATE, ARRAY} = require('sequelize')
 
 module.exports = db => db.define('user', {
   first_name: STRING,
   last_name: STRING,
+  is_employer: BOOLEAN,
   zip_code: STRING,
   location: STRING,
-  picture_url: STRING,
+  image_url: STRING,
   email: {
       type: STRING,
       validate: {
@@ -63,7 +65,8 @@ module.exports = db => db.define('user', {
          })
 */
 
-module.exports.associations = (User, {OAuth, Job, JobApplication}) => {
+module.exports.associations = (User, {OAuth, Job, JobApplication, Employer}) => {
+  User.belongsTo(Employer)
   User.hasOne(OAuth)
   User.belongsToMany(Job, {
     as: 'applications',

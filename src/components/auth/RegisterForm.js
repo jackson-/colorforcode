@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { FormGroup, ControlLabel, FormControl, Checkbox, Button } from 'react-bootstrap'
-import { creatingNewUser } from 'APP/src/reducers/actions/users'
+import { FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap'
 import axios from 'axios'
+import { creatingNewUser, creatingNewEmployer } from 'APP/src/reducers/actions/users'
+import EmployerFields from './EmployerRegisterFields'
+import ApplicantFields from './ApplicantRegisterFields'
 
 class RegisterForm extends Component {
   constructor(props) {
@@ -11,13 +13,14 @@ class RegisterForm extends Component {
       email: '',
       password: '',
       passwordConfirm: '',
+      company_name: '',
       first_name: '',
       last_name: '',
       zip_code: '',
       location: '',
       picture_url: '',
       work_auth: 'US Citizen',
-      employment_type: new Set()
+      employment_type: new Set([])
     }
   }
 
@@ -51,101 +54,80 @@ class RegisterForm extends Component {
       email: '',
       password: '',
       passwordConfirm: '',
+      company_name: '',
       first_name: '',
       last_name: '',
       zip_code: '',
       location: '',
       picture_url: '',
       work_auth: 'US Citizen',
-      employment_type: new Set(),
+      employment_type: new Set([]),
     })
+  }
+
+  toggleAccountType = event => {
+    const type = event.target.value
+    if (type === 'applicant') {
+      this.setState({
+        is_employer: false,
+        showApplicant: true,
+        showEmployer: false
+      })
+    } else {
+      this.setState({
+        is_employer: true,
+        showEmployer: true,
+        showApplicant: false
+      })
+    }
+  }
+
+  isInvalid = () => {
+    const { is_employer, email, password, passwordConfirm } = this.state
+    return !(is_employer && email && password && passwordConfirm)
   }
 
   handleSubmit = event => {
     event.preventDefault()
     const newUser = {...this.state}
-    const employment_type = [...newUser.employment_type]
-    newUser.employment_type = employment_type
+    // turn the set into an array (postgres rejects sets)
+    newUser.employment_type = [...newUser.employment_type]
+
+    if (this.state.is_employer) {
+      const {company_name, email} = this.state
+      const newEmployer = {
+        email,
+        name: company_name,
+      }
+      this.props.createEmployer(newEmployer)
+    }
+
     this.clearForm()
     this.props.createUser(newUser)
   }
 
   render() {
-
     return (
       <div>
         <h1 className='RegisterForm-header'>Register</h1>
         <form className='RegisterForm-body' onSubmit={this.handleSubmit}>
-          <FormGroup controlId='email'>
-            <ControlLabel>Email</ControlLabel>
-            <FormControl
-              type='text'
-              value={this.state.email}
-              onChange={this.handleChange('email')}
-            />
-          </FormGroup>
-          <FormGroup controlId='password'>
-            <ControlLabel>Password</ControlLabel>
-            <FormControl
-              type='text'
-              value={this.state.password}
-              onChange={this.handleChange('password')}
-            />
-          </FormGroup>
-          <FormGroup controlId='passwordConfirm'>
-            <ControlLabel>Confirm Password</ControlLabel>
-            <FormControl
-              type='text'
-              value={this.state.passwordConfirm}
-              onChange={this.handleChange('passwordConfirm')}
-            />
-          </FormGroup>
-          <FormGroup controlId='first_name'>
-            <ControlLabel>First Name</ControlLabel>
-            <FormControl
-              type='text'
-              value={this.state.first_name}
-              onChange={this.handleChange('first_name')}
-            />
-          </FormGroup>
-          <FormGroup controlId='last_name'>
-            <ControlLabel>Last Name</ControlLabel>
-            <FormControl
-              type='text'
-              value={this.state.last_name}
-              onChange={this.handleChange('last_name')}
-            />
-          </FormGroup>
-          {/* with zip_code we auto find user's city, state and country */}
-          <FormGroup controlId='zip_code'>
-            <ControlLabel>Zip Code</ControlLabel>
-            <FormControl
-              type='tel'
-              value={this.state.zip_code}
-              onChange={this.handleChange('zip_code')}
-            />
-          </FormGroup>
-          <FormGroup controlId='work_auth' onChange={this.handleChange('work_auth')}>
-            <ControlLabel>Work Authorization</ControlLabel>
+          <FormGroup controlId='is_employer' onChange={this.toggleAccountType}>
+            <ControlLabel>What type of account would you like to create?</ControlLabel>
             <FormControl componentClass="select">
-              <option value='US Citizen'>US Citizen</option>
-              <option value='Canadian Citizen'>Canadian Citizen</option>
-              <option value='Require Sponsorship'>need H1B Visa</option>
-              <option value='Green Card'>Green Card</option>
+              <option>select an account type</option>
+              <option value='employer'>Employer</option>
+              <option value='applicant'>Applicant</option>
             </FormControl>
           </FormGroup>
-          <FormGroup
-            controlId='employment_type'
-            name='employment_type'
-            onChange={this.handleChange('employment_type')}>
-            <ControlLabel>Desired Employment Type(s)</ControlLabel>
-            <Checkbox value='Full-time'>Full-time</Checkbox>
-            <Checkbox value='Part-time'>Part-time</Checkbox>
-            <Checkbox value='Contract'>Contract</Checkbox>
-            <Checkbox value='Contract to Hire'>Contract to Hire</Checkbox>
-            <Checkbox value='Internship'>Internship</Checkbox>
-          </FormGroup>
-          <Button className='primary' type='submit'>Next</Button>
+          {
+            this.state.showEmployer
+            && <EmployerFields state={this.state} handleChange={this.handleChange}/>
+          }
+          {
+            this.state.showApplicant
+            && <ApplicantFields state={this.state} handleChange={this.handleChange}/>
+          }
+          <Button disabled={this.isInvalid()} className='primary' type='submit'>Create Account</Button>
         </form>
       </div>
     )
@@ -153,7 +135,8 @@ class RegisterForm extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  createUser: user => dispatch(creatingNewUser(user))
+  createUser: user => dispatch(creatingNewUser(user)),
+  createEmployer: employer => dispatch(creatingNewEmployer(employer))
 })
 
 const RegisterFormContainer = connect(null, mapDispatchToProps)(RegisterForm)
