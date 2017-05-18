@@ -43,8 +43,9 @@ export const whoami = (history) => dispatch => {
   })
 }
 
-export const login = (username, password, history) => dispatch => {
-  axios.post('/api/auth/login/local', {username, password})
+export const login = (email, password, history) => dispatch => {
+  debugger;
+  axios.post('/api/auth/login/local', {email, password})
   .then(() => dispatch(whoami(history)))
   .catch(() => dispatch(whoami()))
 }

@@ -44,6 +44,7 @@ module.exports = db => db.define('user', {
   instanceMethods: {
     // This method is a Promisified bcrypt.compare
     authenticate(plaintext) {
+      console.log("TEXT", plaintext, this.password_digest)
       return bcrypt.compare(plaintext, this.password_digest)
     }
   }
