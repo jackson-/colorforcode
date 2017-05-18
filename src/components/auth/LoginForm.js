@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap'
 import { login } from 'APP/src/reducers/actions/users'
+import { withRouter } from 'react-router-dom'
 
 class LoginForm extends Component {
   constructor(props) {
@@ -28,12 +29,10 @@ class LoginForm extends Component {
     event.preventDefault()
     const {email, password} = this.state
     this.clearForm()
-    this.props.loginUser(email, password)
-    this.props.history.push('/')
+    this.props.loginUser(email, password, this.props.history)
   }
 
   render() {
-
     return (
       <div>
         <h1 className='Login-header'>Log in to access your dashboard</h1>
@@ -62,9 +61,9 @@ class LoginForm extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  loginUser: (email, password) => dispatch(login(email, password))
+  loginUser: (email, password, history) => dispatch(login(email, password, history))
 })
 
 const LoginFormContainer = connect(null, mapDispatchToProps)(LoginForm)
 
-export default LoginFormContainer
+export default withRouter(LoginFormContainer)

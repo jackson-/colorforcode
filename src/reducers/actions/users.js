@@ -30,24 +30,28 @@ export const gettingAllUsers = () => dispatch => {
   .catch(err => console.error(`Mang, I couldn't find any users! ${err.stack}`))
 }
 
-export const whoami = () => dispatch => {
+export const whoami = (history) => dispatch => {
   axios.get('/api/auth/whoami')
   .then(response => {
     const user = response.data
     dispatch(authenticated(user))
+    if (typeof user !== 'string') history.push('/dashboard')
+    else history.push('/login')
   })
-  .catch(failed => dispatch(authenticated(null)))
+  .catch(failed => {
+    dispatch(authenticated(null))
+  })
 }
 
-export const login = (username, password) => dispatch => {
+export const login = (username, password, history) => dispatch => {
   axios.post('/api/auth/login/local', {username, password})
-  .then(() => dispatch(whoami()))
+  .then(() => dispatch(whoami(history)))
   .catch(() => dispatch(whoami()))
 }
 
-export const logout = () => dispatch => {
+export const logout = (history) => dispatch => {
   axios.post('/api/auth/logout')
-  .then(() => dispatch(whoami()))
+  .then(() => dispatch(whoami(history)))
   .catch(() => dispatch(whoami()))
 }
 

@@ -16,15 +16,15 @@ import JobDetailPage from './components/jobs/JobDetailPage'
 import store from './store'
 import './index.css'
 
-const authTransition = function() {
-  let user = null
-  try {
-    user = sessionStorage.getItem('user')
-  } catch(exception){
-    console.error("ESXC", exception.stack)
-  }
-  return user
-}
+// const authTransition = function() {
+//   let user = null
+//   try {
+//     user = sessionStorage.getItem('user')
+//   } catch(exception){
+//     console.error("ESXC", exception.stack)
+//   }
+//   return user
+// }
 
 const App = () => (
   <Provider store={store}>
@@ -36,14 +36,14 @@ const App = () => (
           <Route exact path='/register' render={
             (props) => {
               return props.user
-                ? <Redirect to='/dashboard' />
+                ? <Redirect push to='/dashboard' />
               : <RegisterForm />
             }}
           />
           <Route exact path='/login' render={
             (props) => {
               return props.user
-                ? <Redirect to='/dashboard' />
+                ? <Redirect push to='/dashboard' />
                 : <LoginForm />
             }}
           />

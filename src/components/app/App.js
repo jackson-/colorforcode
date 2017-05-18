@@ -42,7 +42,7 @@ const App = props => (
                   <LinkContainer to='/dashboard'>
                     <MenuItem eventKey={3.1}>Dashboard</MenuItem>
                   </LinkContainer>
-                  <LinkContainer to='#' onClick={props.logoutUser}>
+                  <LinkContainer to='#' onClick={props.logoutUser(props.history)}>
                     <MenuItem eventKey={3.2}>Logout</MenuItem>
                   </LinkContainer>
                 </NavDropdown>
@@ -70,7 +70,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  logoutUser: () => dispatch(logout())
+  logoutUser: (history) => () => dispatch(logout(history))
 })
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App))
