@@ -14,7 +14,6 @@ import { logout } from '../../reducers/actions/users'
   corrects for that.
 */
 const onlyOneActiveMatch = (match, location) => {
-  console.log('Match: ', match, 'Location: ', location)
   if (match) return location.pathname === match.path
   else return false
 }
