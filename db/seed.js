@@ -1,9 +1,10 @@
 'use strict'
 
 const db = require('APP/db')
-    , {User, Employer, Skill, Job, Promise, JobSkillRelationship} = db
-    , {mapValues} = require('lodash')
+const {User, Employer, Skill, Job, Promise, JobSkillRelationship} = db
+const {mapValues} = require('lodash')
 const bCrypt = require('bcrypt');
+
 function seedEverything() {
   const seeded = {
     users: users(),
@@ -29,7 +30,7 @@ const users = seed(User, {
   chloe: {
     name: 'Chloe Rice',
     email: 'chloe@123.com',
-    password: generateHash('123')
+    password: generateHash('12345')
   },
 })
 

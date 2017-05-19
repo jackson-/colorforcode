@@ -2,5 +2,4 @@
 
 const {ENUM} = require('sequelize')
 
-module.exports = db => db.define('jobSkillRelationship', {
-})
+module.exports = db => db.define('jobSkillRelationship', {})

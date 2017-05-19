@@ -101,20 +101,21 @@ passport.use('local-signup', new LocalStrategy({
     }
 ));
 
-passport.use(new (require('passport-local').Strategy)(
+passport.use('local-signin', new LocalStrategy({
+    usernameField:'email',
+    passwordField:'password',
+  },
   (email, password, done) => {
-    console.log("LOGGIN SHIT")
     debug('will authenticate user(email: "%s")', email)
     User.findOne({
       where: {email},
       attributes: {include: ['password_digest']}
-    })
-      .then(user => {
+    }).then(user => {
         if (!user) {
           debug('authenticate user(email: "%s") did fail: no such user', email)
           return done(null, false, { message: 'Login incorrect' })
         }
-        return user.authenticate(password)
+        user.authenticate(password)
           .then(ok => {
             if (!ok) {
               debug('authenticate user(email: "%s") did fail: bad password')
@@ -133,7 +134,10 @@ passport.use(new (require('passport-local').Strategy)(
 auth.get('/whoami', (req, res) => res.send(req.user))
 
 // POST requests for local login:
-auth.post('/login/local', passport.authenticate('local', {successRedirect: '/'}))
+auth.post('/login/local', passport.authenticate('local-signin', {
+  successRedirect:'/'
+}))
+
 
 // GET requests for OAuth login:
 // Register this route as a callback URL with OAuth provider
@@ -162,6 +166,8 @@ auth.post('/register', (req, res, next) => {
 
 auth.post('/logout', (req, res) => {
   req.logout()
+  // destroy the session
+  req.session = null
   res.redirect('/api/auth/whoami')
 })
 

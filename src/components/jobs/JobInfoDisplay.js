@@ -1,10 +1,10 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
-import { gettingJob } from 'APP/src/reducers/actions/jobs'
+import { gettingJobById } from 'APP/src/reducers/actions/jobs'
 
 class JobInfoDisplay extends Component {
 
-  componentWillMount(){
+  componentDidMount(){
     this.props.getJob(this.props.job_id);
   }
 
@@ -13,10 +13,10 @@ class JobInfoDisplay extends Component {
     const employer = job ? this.props.job.employer : null
     const skills = job ? this.props.job.skills : null
     const skill_list = []
-    if( skills ) {
+    if (skills) {
       skills.forEach((skill) => {
         skill_list.push(
-          <li>{skill.title}</li>
+          <li key={skill.id}>{skill.title}</li>
         )
       })
     }
@@ -36,9 +36,8 @@ class JobInfoDisplay extends Component {
             <p>Compensation: {job.compensation}</p>
             <p>Travel Requirements: {job.travel_requirements}</p>
             <p>Posted Since: {job.created_at}</p>
-            {skills &&
-              <ul>{skill_list}</ul>
-            }
+
+            {skills && <ul>{skill_list.map(skill => skill)}</ul>}
           </div>
         }
       </div>
@@ -47,15 +46,14 @@ class JobInfoDisplay extends Component {
 }
 
 const mapStateToProps = state => ({
-  job:state.jobs.job,
-  loading:state.loading
+  job: state.jobs.currentJob,
+  loading: state.loading
 })
 
 const mapDispatchToProps = dispatch => ({
-  getJob: job_id => dispatch(gettingJob(job_id))
+  getJob: job_id => dispatch(gettingJobById(job_id))
 })
 
 const JobInfoDisplayContainer = connect(mapStateToProps, mapDispatchToProps)(JobInfoDisplay)
-
 
 export default JobInfoDisplayContainer

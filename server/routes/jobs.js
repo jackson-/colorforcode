@@ -40,8 +40,5 @@ module.exports = require('express').Router()
   .get('/:id',
     (req, res, next) =>
       Job.findById(req.params.id, { include: [{ model: Employer}, { model: Skill}] })
-      .then(job => {
-        console.log(job)
-        return res.json(job)
-      })
+      .then(job => res.json(job))
       .catch(next))

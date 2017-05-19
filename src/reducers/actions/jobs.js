@@ -1,15 +1,17 @@
 import axios from 'axios'
-import { RECEIVE_JOBS, RECEIVE_JOB } from '../constants'
-import { createNewJob, requestAllJobs, requestJob, doneLoading } from './loading'
+import { RECEIVE_ALL_JOBS, RECEIVE_JOB } from '../constants'
+import { createNewJob, requestAllJobs, requestJob } from './loading'
 
 /* --------- PURE ACTION CREATORS ---------*/
 export const receiveJob = job => ({
-  job:job,
+  job,
+  loading: false,
   type: RECEIVE_JOB
 })
-export const receiveJobs = jobs => ({
-  jobs:jobs,
-  type: RECEIVE_JOBS
+export const receiveAllJobs = jobs => ({
+  jobs,
+  loading: false,
+  type: RECEIVE_ALL_JOBS
 })
 
 
@@ -19,24 +21,18 @@ export const gettingAllJobs = () => dispatch => {
   dispatch(requestAllJobs())
   axios.get('/api/jobs')
   .then(res => res.data)
-  .then(jobs => dispatch(receiveJobs(jobs)))
-  .catch(err => console.log('Bitch I couldn\'t find the jobs!'))
+  .then(jobs => dispatch(receiveAllJobs(jobs)))
+  .catch(err => console.error(`Mang, I couldn't find the jobs! ${err.stack}`))
 }
 
-export const gettingJob = job_id => dispatch => {
+export const gettingJobById = job_id => dispatch => {
   dispatch(requestJob())
-  axios.get('/api/jobs/'+job_id)
-  .then(res => {
-    return res.data
-  })
+  axios.get(`/api/jobs/${job_id}`)
+  .then(res => res.data)
   .then(job => {
     dispatch(receiveJob(job))
   })
-  .then(() => {
-    dispatch(doneLoading())
-  })
-  // .then(job => console.log("JOB", job))
-  .catch(err => console.log('Bitch I couldn\'t find the job!'))
+  .catch(err => console.error(`Mang I couldn't find the job! ${err.stack}`))
 }
 
 export const creatingNewJob = jobPost => dispatch => {
@@ -48,5 +44,5 @@ export const creatingNewJob = jobPost => dispatch => {
   // if the job is successfully created, we receive the update to date jobs list
   .then(jobs => dispatch(gettingAllJobs()))
   // otherwise we catch the error...
-  .catch(err => console.error('Sorry, cuz. We couldn\'t create that job post...'))
+  .catch(err => console.error(`Sorry, cuz. We couldn't create that job post...${err.stack}`))
 }

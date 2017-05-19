@@ -1,17 +1,24 @@
-import { RECEIVE_USERS, RECEIVE_USER } from './constants'
+import { RECEIVE_ALL_USERS, AUTHENTICATED } from './constants'
 
-const defaultState = {
-  all:[],
-  current:null
+const initialState = {
+  all: [],
+  currentUser: null
 }
 
-const jobsReducer = (state = defaultState, action) => {
+const usersReducer = (state = initialState, action) => {
   switch (action.type) {
-    case RECEIVE_USERS: return {all:action.users}
-    case RECEIVE_USER: {console.log("ACTION", action)
-      return {current:action.user}}
+    case RECEIVE_ALL_USERS: return {
+      all: action.users,
+      currentUser: {...state.currentUser} || null
+    }
+
+    case AUTHENTICATED: return {
+      all: [...state.all],
+      currentUser: action.user
+    }
+
     default: return state
   }
 }
 
-export default jobsReducer
+export default usersReducer

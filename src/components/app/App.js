@@ -1,10 +1,11 @@
 import React from 'react'
 import { LinkContainer } from 'react-router-bootstrap'
-import { Grid, Navbar, NavbarBrand, Nav, NavItem } from 'react-bootstrap'
+import { Grid, Navbar, NavbarBrand, Nav,
+         NavItem, NavDropdown, MenuItem } from 'react-bootstrap'
 import './App.css'
 import navLogo from '../../img/hireblack-logo-no-border.svg'
-import { withRouter } from 'react-router'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
 import { logout } from '../../reducers/actions/users'
 
 /*
@@ -28,44 +29,32 @@ const App = props => (
         <Navbar.Toggle />
       </Navbar.Header>
       <Navbar.Collapse>
-        <Nav>
-          <LinkContainer to='/'>
+        <Nav pullRight>
+          <LinkContainer eventKey={1} to='/' isActive={onlyOneActiveMatch}>
             <NavItem>Home</NavItem>
           </LinkContainer>
-          <LinkContainer to='/about'>
+          <LinkContainer eventKey={2} to='/about' isActive={onlyOneActiveMatch}>
             <NavItem>About</NavItem>
           </LinkContainer>
           {
-            !props.user
-              ? <div>
+            props.user
+              ? <NavDropdown eventKey={3} title='Account' id='account-dropdown'>
+                  <LinkContainer to='/dashboard'>
+                    <MenuItem eventKey={3.1}>Dashboard</MenuItem>
+                  </LinkContainer>
+                  <LinkContainer to='#' onClick={props.logoutUser(props.history)}>
+                    <MenuItem eventKey={3.2}>Logout</MenuItem>
+                  </LinkContainer>
+                </NavDropdown>
+
+              : <NavDropdown eventKey={3} title='Account' id='account-dropdown'>
                   <LinkContainer to='/login'>
-                    <NavItem>Login</NavItem>
+                    <MenuItem eventKey={3.1}>Login</MenuItem>
                   </LinkContainer>
-
                   <LinkContainer to='/register'>
-                    <NavItem>Register</NavItem>
+                    <MenuItem eventKey={3.2}>Register</MenuItem>
                   </LinkContainer>
-
-                  <LinkContainer to='/employer/login'>
-                    <NavItem>Employer Login</NavItem>
-                  </LinkContainer>
-
-                  <LinkContainer to='/employer/register'>
-                    <NavItem>Employer Register</NavItem>
-                  </LinkContainer>
-
-                </div>
-              : <div>
-                  <NavItem>Logout</NavItem>
-
-                  <LinkContainer to='/profile'>
-                    <NavItem>Profile</NavItem>
-                  </LinkContainer>
-
-                  <LinkContainer to='/account'>
-                    <NavItem>Account</NavItem>
-                  </LinkContainer>
-                </div>
+                </NavDropdown>
           }
         </Nav>
       </Navbar.Collapse>
@@ -77,13 +66,11 @@ const App = props => (
 )
 
 const mapStateToProps = state => ({
-  user: state.users.current
+  user: state.users.currentUser
 })
 
 const mapDispatchToProps = dispatch => ({
-  logOut: () => dispatch(logout())
+  logoutUser: (history) => () => dispatch(logout(history))
 })
 
-const AppContainer = connect(mapStateToProps, mapDispatchToProps)(App)
-
-export default withRouter(AppContainer)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App))

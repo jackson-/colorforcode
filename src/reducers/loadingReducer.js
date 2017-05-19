@@ -1,25 +1,28 @@
 // example loading reducer, useful for UI state changes like button text
 // and loading animations
 
-import {
-  REQUEST_JOBS,
-  CREATE_JOB,
-  UPDATE_JOB,
-  DELETE_JOB,
-  RECEIVE_JOBS,
-  REQUEST_JOB,
-  DONE_LOADING
-} from './constants'
+import { REQUEST_ALL_JOBS, REQUEST_JOB, CREATE_JOB,
+         UPDATE_JOB, DELETE_JOB, RECEIVE_ALL_JOBS, RECEIVE_JOB,
+         RECEIVE_ALL_USERS, AUTHENTICATED,
+         CREATE_USER, UPDATE_USER, DELETE_USER, REQUEST_ALL_USERS } from './constants'
 
 const loadingReducer = (state = false, action) => {
   switch (action.type) {
-    case DONE_LOADING: return false
-    case REQUEST_JOBS: return true
-    case REQUEST_JOB: return true
-    case CREATE_JOB: return true
-    case UPDATE_JOB: return true
-    case DELETE_JOB: return true
-    case RECEIVE_JOBS: return false
+    case REQUEST_ALL_JOBS: return action.loading
+    case REQUEST_JOB: return action.loading
+    case CREATE_JOB: return action.loading
+    case UPDATE_JOB: return action.loading
+    case DELETE_JOB: return action.loading
+    case RECEIVE_ALL_JOBS: return action.loading
+    case RECEIVE_JOB: return action.loading
+
+    case REQUEST_ALL_USERS: return action.loading
+    case CREATE_USER: return action.loading
+    case UPDATE_USER: return action.loading
+    case DELETE_USER: return action.loading
+    case RECEIVE_ALL_USERS: return action.loading
+    case AUTHENTICATED: return action.loading
+
     default: return state
   }
 }

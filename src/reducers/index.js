@@ -4,7 +4,6 @@ import { combineReducers } from 'redux'
 import loading from './loadingReducer'
 import jobs from './jobsReducer'
 import users from './usersReducer'
-// import auth from './authReducer'
 
 const rootReducer = combineReducers({
   loading,

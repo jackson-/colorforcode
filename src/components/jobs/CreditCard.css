@@ -14,10 +14,10 @@ h5 {
   span:first-child { margin-right: 15px; }
 }
 
-li {
+.cc-logo {
   float: left;
   color: #aaa;
-  font-size: 26px;
+  font-size: 26px !important;
 
   &:not(:last-child) {
     margin-right: 10px;
