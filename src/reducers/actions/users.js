@@ -43,8 +43,8 @@ export const whoami = (history) => dispatch => {
   })
 }
 
-export const login = (username, password, history) => dispatch => {
-  axios.post('/api/auth/login/local', {username, password})
+export const login = (email, password, history) => dispatch => {
+  axios.post('/api/auth/login/local', {email, password})
   .then(() => dispatch(whoami(history)))
   .catch(() => dispatch(whoami()))
 }
@@ -75,17 +75,3 @@ export const creatingNewEmployer = employer => dispatch => {
   .then(res => res.data)
   .catch(err => console.error(`Couldn't create employer ${employer.name}...${err.stack}`))
 }
-
-// export const authenticatingUser = user => dispatch => {
-//   dispatch(authenticateUser())
-//   axios.post('/api/users/login', user)
-//   .then(res => {
-//     return res.data
-//   })
-//   .then(user => {
-//     sessionStorage.setItem('user', user.id)
-//
-//     dispatch(receiveUser(user))
-//   })
-//   .catch(err => console.error(`Bitch I couldn't sign you in!...${err.stack}`))
-// }
