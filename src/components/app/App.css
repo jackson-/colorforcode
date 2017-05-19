@@ -50,3 +50,16 @@ a {
   height: 100vh;
   max-height: none;
 }
+
+.dropdown-menu {
+  text-align: center;
+  min-width: 0;
+}
+
+/* desktop only dropdown open on hover */
+@media only screen
+and (min-width: 768px) {
+  .dropdown:hover .dropdown-menu {
+    display: block;
+  }
+}
