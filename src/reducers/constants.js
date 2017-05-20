@@ -4,6 +4,8 @@ export const RECEIVE_JOB = 'RECEIVE_JOB'
 
 /* ----------- LOADING ------------ */
 export const REQUEST_ALL_JOBS = 'REQUEST_ALL_JOBS'
+export const REQUEST_ALL_SKILLS = 'REQUEST_ALL_SKILLS'
+export const RECEIVE_ALL_SKILLS = 'RECEIVE_ALL_SKILLS'
 export const REQUEST_JOB = 'REQUEST_JOB'
 export const CREATE_JOB = 'CREATE_JOB'
 export const UPDATE_JOB = 'UPDATE_JOB'
