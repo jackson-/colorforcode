@@ -134,9 +134,16 @@ passport.use('local-signin', new LocalStrategy({
 auth.get('/whoami', (req, res) => res.send(req.user))
 
 // POST requests for local login:
-auth.post('/login/local', passport.authenticate('local-signin', {
-  successRedirect:'/'
-}))
+auth.post('/login/local', (req, res, next) => {
+  passport.authenticate('local-signin', (err, user, info) => {
+    if(err){
+      res.redirect('http://localhost:3000/dashboard')
+    }
+    if(user){
+      res.json(user)
+    }
+  })
+});
 
 
 // GET requests for OAuth login:
