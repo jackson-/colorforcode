@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { RECEIVE_USERS, RECEIVE_USER } from '../constants'
 import { authenticateEmployer, createNewEmployer, requestAllEmployers, doneLoading } from './loading'
-import {history} from 'react-router-dom'
+
 /* --------- PURE ACTION CREATORS ---------*/
 export const receiveEmployers = employers => ({
   employers,

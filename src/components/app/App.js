@@ -15,6 +15,7 @@ import { logout } from '../../reducers/actions/users'
 */
 const onlyOneActiveMatch = (match, location) => {
   if (match) return location.pathname === match.path
+  else return false
 }
 
 const App = props => (
@@ -38,23 +39,27 @@ const App = props => (
           </LinkContainer>
           {
             props.user
-              ? <NavDropdown eventKey={3} title='Account' id='account-dropdown'>
-                  <LinkContainer to='/dashboard'>
-                    <MenuItem eventKey={3.1}>Dashboard</MenuItem>
-                  </LinkContainer>
-                  <LinkContainer to='#' onClick={props.logoutUser(props.history)}>
-                    <MenuItem eventKey={3.2}>Logout</MenuItem>
-                  </LinkContainer>
-                </NavDropdown>
+              ? <LinkContainer to='#' eventKey={3} className='dropdown-hover'>
+                  <NavDropdown title='Account' id='account-dropdown'>
+                    <LinkContainer to='/dashboard' eventKey={3.1}>
+                      <MenuItem>Dashboard</MenuItem>
+                    </LinkContainer>
+                    <LinkContainer to='#' eventKey={3.2} onClick={props.logoutUser(props.history)}>
+                      <MenuItem >Logout</MenuItem>
+                    </LinkContainer>
+                  </NavDropdown>
+                </LinkContainer>
 
-              : <NavDropdown eventKey={3} title='Account' id='account-dropdown'>
-                  <LinkContainer to='/login'>
-                    <MenuItem eventKey={3.1}>Login</MenuItem>
-                  </LinkContainer>
-                  <LinkContainer to='/register'>
-                    <MenuItem eventKey={3.2}>Register</MenuItem>
-                  </LinkContainer>
-                </NavDropdown>
+              : <LinkContainer to='#' eventKey={3} className='dropdown-hover'>
+                  <NavDropdown title='Account' id='account-dropdown'>
+                    <LinkContainer to='/login' eventKey={3.1}>
+                      <MenuItem>Login</MenuItem>
+                    </LinkContainer>
+                    <LinkContainer to='/register' eventKey={3.2}>
+                      <MenuItem>Register</MenuItem>
+                    </LinkContainer>
+                  </NavDropdown>
+                </LinkContainer>
           }
         </Nav>
       </Navbar.Collapse>

@@ -7,8 +7,9 @@ node_modules/*
 # Compiled Assets
 /build
 
-# NPM errors
+# errors/logs
 npm-debug.log
+yarn-error.log
 
 # Misc
 .DS_Store
