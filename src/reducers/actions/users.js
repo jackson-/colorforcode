@@ -31,10 +31,12 @@ export const gettingAllUsers = () => dispatch => {
 }
 
 export const whoami = (history) => dispatch => {
+  debugger;
   axios.get('/api/auth/whoami')
   .then(response => {
     const user = response.data
     dispatch(authenticated(user))
+    console.log("USER", user)
     if (typeof user !== 'string') history.push('/dashboard')
     else history.push('/login')
   })
@@ -44,11 +46,9 @@ export const whoami = (history) => dispatch => {
 }
 
 export const login = (email, password, history) => dispatch => {
+  debugger;
   axios.post('/api/auth/login/local', {email, password})
-  .then((user) => {
-    debugger;
-    console.log("USER", user)
-  })
+  .then(() => dispatch(whoami(history)))
   .catch(() => dispatch(whoami()))
 }
 
@@ -60,6 +60,7 @@ export const logout = (history) => dispatch => {
 
 export const creatingNewUser = (user, history) => dispatch => {
   //set loading state to true to trigger UI changes
+  debugger;
   dispatch(createNewUser())
   // create the new user
   axios.post('/api/users', user)
