@@ -6,7 +6,7 @@ const {Skill, Employer} = db
 module.exports = require('express').Router()
   .get('/', (req, res, next) => {
     Skill.findAll()
-    .then(jobs => res.json(jobs))
+    .then(skills => res.json(skills))
     .catch(next)
   })
   .post('/', (req, res, next) => {

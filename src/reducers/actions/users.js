@@ -23,6 +23,7 @@ export const authenticated = user => ({
 /* --------- ASYNC ACTION CREATORS (THUNKS) ---------*/
 
 export const gettingAllUsers = () => dispatch => {
+  debugger;
   dispatch(requestAllUsers())
   axios.get('/api/users')
   .then(res => res.data)
@@ -68,6 +69,7 @@ export const creatingNewUser = (user, history) => dispatch => {
   .then(newUser => {
     dispatch(gettingAllUsers())
     dispatch(login(newUser.email, newUser.password, history))
+    dispatch(whoami(history))
   })
   // otherwise we catch the error...
   .catch(err => console.error(`Sorry, cuz. We couldn't create that user...${err.stack}`))

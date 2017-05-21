@@ -131,8 +131,6 @@ passport.use('local-signin', new LocalStrategy({
   }
 ))
 
-
-
 auth.get('/whoami', (req, res) => res.send(req.user))
 
 // POST requests for local login:
