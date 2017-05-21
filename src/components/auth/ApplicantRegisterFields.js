@@ -32,6 +32,7 @@ const ApplicantRegisterFields = props => (
         onChange={props.handleChange('passwordConfirm')}
       />
       <FormControl.Feedback />
+      {props.validate() === 'error' ? <HelpBlock>Passwords do not match</HelpBlock> : null}
     </FormGroup>
     <FormGroup controlId='first_name'>
       <ControlLabel>First Name</ControlLabel>
@@ -48,7 +49,6 @@ const ApplicantRegisterFields = props => (
         value={props.state.last_name}
         onChange={props.handleChange('last_name')}
       />
-    {props.validate() === 'error' ? <HelpBlock>Passwords do not match</HelpBlock> : null}
     </FormGroup>
     {/* with zip_code we auto find user's city, state and country */}
     <FormGroup controlId='zip_code'>
