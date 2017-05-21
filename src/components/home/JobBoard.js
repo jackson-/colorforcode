@@ -6,6 +6,9 @@ import JobList from './JobList.js'
 import './Home.css'
 import { Link } from 'react-router-dom'
 import VirtualizedSelect from 'react-virtualized-select'
+import 'react-select/dist/react-select.css'
+import 'react-virtualized/styles.css'
+import 'react-virtualized-select/styles.css'
 
 function arrowRenderer () {
 	return (
