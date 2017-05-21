@@ -19,5 +19,5 @@ export const DELETE_USER = 'DELETE_USER'
 export const AUTHENTICATED = 'AUTHENTICATED'
 export const RECEIVE_ALL_USERS = 'RECEIVE_ALL_USERS'
 
-// export const AUTHENTICATE_USER = 'AUTHENTICATE_USER'
-// export const REGISTER_USER = 'REGISTER_USER'
+/* ------------ ROUTER STATE ------------ */ 
+export const RECEIVE_ROUTER_STATE = 'RECEIVE_ROUTER_STATE'

@@ -6,19 +6,20 @@ const {User, Employer} = db
 module.exports = require('express').Router()
 
   .get('/', (req, res, next) =>
-    User.findAll()
+    User.findAll({include: [Employer]})
     .then(users => res.json(users))
     .catch(next))
   .post('/', (req, res, next) =>
     User.create(req.body)
     .then(user => {
       if (user.is_employer) {
-        return Employer.findOne({
+        return Employer.findOrCreate({
           where: {
-            name: req.body.company_name
+            name: req.body.company_name,
+            company_site: req.body.company_site
           }
         })
-        .then(employer => user.setEmployer(employer.id))
+        .spread((employer, created) => user.setEmployer(employer.id))
       } else {
         res.status(201).json(user)
       }

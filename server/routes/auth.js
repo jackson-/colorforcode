@@ -3,7 +3,7 @@ const {env} = app
 const debug = require('debug')(`${app.name}:auth`)
 const passport = require('passport')
 const bCrypt = require('bcrypt')
-const {User, OAuth} = require('APP/db')
+const {User, OAuth, Employer} = require('APP/db')
 const auth = require('express').Router()
 const LocalStrategy = require('passport-local').Strategy;
 
@@ -56,7 +56,9 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser(
   (id, done) => {
     debug('will deserialize user.id=%d', id)
-    User.findById(id)
+    User.findById(id, {
+      include: [Employer]
+    })
       .then(user => {
         if (!user) debug('deserialize retrieved null user for id=%d', id)
         else debug('deserialize did ok user.id=%d', id)
@@ -129,15 +131,12 @@ passport.use('local-signin', new LocalStrategy({
   }
 ))
 
-
-
 auth.get('/whoami', (req, res) => res.send(req.user))
 
 // POST requests for local login:
 auth.post('/login/local', passport.authenticate('local-signin', {
   successRedirect:'/'
 }));
-
 
 // GET requests for OAuth login:
 // Register this route as a callback URL with OAuth provider
@@ -150,19 +149,6 @@ auth.get('/login/:strategy', (req, res, next) =>
     // Specify other config here
   })(req, res, next)
 )
-
-auth.post('/register', (req, res, next) => {
-  passport.authenticate('local-signup', function(err, user, info) {
-    if (err) { return next(err); }
-    // Redirect if it fails
-    if (!user) { return res.redirect('http://www.google.com'); }
-    req.logIn(user, function(err) {
-      if (err) { return next(err); }
-      // Redirect if it succeeds
-      return res.redirect('http://localhost:3000');
-    });
-  })(req, res, next);
-});
 
 auth.post('/logout', (req, res) => {
   req.logout()

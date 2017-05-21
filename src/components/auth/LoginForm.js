@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap'
+import { FormGroup, ControlLabel, FormControl, Button, Alert } from 'react-bootstrap'
 import { login } from 'APP/src/reducers/actions/users'
-import { withRouter } from 'react-router-dom'
 
 class LoginForm extends Component {
   constructor(props) {
@@ -25,9 +24,14 @@ class LoginForm extends Component {
     })
   }
 
+  isInvalid = () => {
+    const { email, password } = this.state
+    return !(email && password)
+  }
+
   handleSubmit = event => {
     event.preventDefault()
-    const {email, password} = this.state
+    const { email, password } = this.state
     this.clearForm()
     this.props.loginUser(email, password, this.props.history)
   }
@@ -53,7 +57,9 @@ class LoginForm extends Component {
               onChange={this.handleChange('password')}
             />
           </FormGroup>
-          <Button className='primary' type='submit'>Log In</Button>
+          <Button disabled={this.isInvalid()} className='primary' type='submit'>
+            Log In
+          </Button>
         </form>
       </div>
     )
@@ -66,4 +72,4 @@ const mapDispatchToProps = dispatch => ({
 
 const LoginFormContainer = connect(null, mapDispatchToProps)(LoginForm)
 
-export default withRouter(LoginFormContainer)
+export default LoginFormContainer

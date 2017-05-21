@@ -32,19 +32,17 @@ export const gettingAllUsers = () => dispatch => {
 }
 
 export const whoami = (history) => dispatch => {
-  debugger;
-  console.log("WHOAMI")
   axios.get('/api/auth/whoami')
   .then(response => {
     const user = response.data
-    console.log("DATA")
     dispatch(authenticated(user))
-    console.log("USER", typeof user)
-    if (typeof user !== 'string') history.push('/dashboard')
-    else history.push('/login')
+    if (history) {
+      typeof user !== 'string'
+        ? history.push('/dashboard')
+        : history.push('/login')
+    }
   })
-  .catch(failed => {
-    console.log("ERRROR", failed)
+  .catch(err => {
     dispatch(authenticated(null))
   })
 }
@@ -52,13 +50,13 @@ export const whoami = (history) => dispatch => {
 export const login = (email, password, history) => dispatch => {
   axios.post('/api/auth/login/local', {email, password})
   .then(() => dispatch(whoami(history)))
-  .catch(() => dispatch(whoami()))
+  .catch(() => dispatch(whoami(history)))
 }
 
 export const logout = (history) => dispatch => {
   axios.post('/api/auth/logout')
   .then(() => dispatch(whoami(history)))
-  .catch(() => dispatch(whoami()))
+  .catch(() => dispatch(whoami(history)))
 }
 
 export const creatingNewUser = (user, history) => dispatch => {
@@ -67,7 +65,7 @@ export const creatingNewUser = (user, history) => dispatch => {
   // create the new user
   axios.post('/api/users', user)
   .then(res => res.data)
-  // if the user is successfully created, we receive the update to users list
+  // if the user is successfully created, we receive the updated to users list
   .then(newUser => {
     dispatch(gettingAllUsers())
     dispatch(login(newUser.email, newUser.password, history))
