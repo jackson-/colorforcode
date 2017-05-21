@@ -60,7 +60,6 @@ class LoginForm extends Component {
           <Button disabled={this.isInvalid()} className='primary' type='submit'>
             Log In
           </Button>
-          {this.state.showError && <Alert bsStyle='danger'>{this.state.error}</Alert>}
         </form>
       </div>
     )
