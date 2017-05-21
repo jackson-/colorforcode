@@ -6,7 +6,6 @@ const {Job} = db
 
 module.exports = db => db.define('employer', {
   name: STRING,
-  email: STRING,
   company_site: STRING
 }, {
   instanceMethods: {

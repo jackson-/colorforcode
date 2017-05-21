@@ -31,41 +31,40 @@ export const gettingAllUsers = () => dispatch => {
 }
 
 export const whoami = (history) => dispatch => {
-  debugger;
   axios.get('/api/auth/whoami')
   .then(response => {
     const user = response.data
     dispatch(authenticated(user))
-    console.log("USER", user)
-    if (typeof user !== 'string') history.push('/dashboard')
-    else history.push('/login')
+    if (history) {
+      typeof user !== 'string'
+        ? history.push('/dashboard')
+        : history.push('/login')
+    }
   })
-  .catch(failed => {
+  .catch(err => {
     dispatch(authenticated(null))
   })
 }
 
 export const login = (email, password, history) => dispatch => {
-  debugger;
   axios.post('/api/auth/login/local', {email, password})
   .then(() => dispatch(whoami(history)))
-  .catch(() => dispatch(whoami()))
+  .catch(() => dispatch(whoami(history)))
 }
 
 export const logout = (history) => dispatch => {
   axios.post('/api/auth/logout')
   .then(() => dispatch(whoami(history)))
-  .catch(() => dispatch(whoami()))
+  .catch(() => dispatch(whoami(history)))
 }
 
 export const creatingNewUser = (user, history) => dispatch => {
   //set loading state to true to trigger UI changes
-  debugger;
   dispatch(createNewUser())
   // create the new user
   axios.post('/api/users', user)
   .then(res => res.data)
-  // if the user is successfully created, we receive the update to users list
+  // if the user is successfully created, we receive the updated to users list
   .then(newUser => {
     dispatch(gettingAllUsers())
     dispatch(login(newUser.email, newUser.password, history))

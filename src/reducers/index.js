@@ -4,11 +4,13 @@ import { combineReducers } from 'redux'
 import loading from './loadingReducer'
 import jobs from './jobsReducer'
 import users from './usersReducer'
+import router from './routerReducer'
 
 const rootReducer = combineReducers({
   loading,
   jobs,
-  users
+  users,
+  router
 })
 
 export default rootReducer

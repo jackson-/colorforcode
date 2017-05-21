@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap'
 import axios from 'axios'
-import { creatingNewUser, creatingNewEmployer } from 'APP/src/reducers/actions/users'
+import { creatingNewUser } from 'APP/src/reducers/actions/users'
 import EmployerFields from './EmployerRegisterFields'
 import ApplicantFields from './ApplicantRegisterFields'
 import { withRouter } from 'react-router-dom'
@@ -15,6 +15,7 @@ class RegisterForm extends Component {
       password: '',
       passwordConfirm: '',
       company_name: '',
+      company_role: '',
       first_name: '',
       last_name: '',
       zip_code: '',
@@ -25,7 +26,7 @@ class RegisterForm extends Component {
       github: '',
       linkedin: '',
       twitter: '',
-      work_auth: 'US Citizen',
+      work_auth: '',
       employment_type: new Set([])
     }
   }
@@ -50,6 +51,10 @@ class RegisterForm extends Component {
         : this.state.employment_type.add(value)
       const employment_type = new Set([...this.state.employment_type])
       this.setState({employment_type})
+    } else if (type === 'work_auth' || type === 'company_role') {
+      value === 'select'
+        ? this.setState({[type]: ''})
+        : this.setState({[type]: value})
     } else {
       this.setState({[type]: value})
     }
@@ -61,12 +66,18 @@ class RegisterForm extends Component {
       password: '',
       passwordConfirm: '',
       company_name: '',
+      company_role: '',
       first_name: '',
       last_name: '',
       zip_code: '',
       location: '',
       image_url: '',
-      work_auth: 'US Citizen',
+      company_site: '',
+      personal_site: '',
+      github: '',
+      linkedin: '',
+      twitter: '',
+      work_auth: '',
       employment_type: new Set([])
     })
   }
@@ -88,9 +99,51 @@ class RegisterForm extends Component {
     }
   }
 
+  getValidationState() {
+    const { password, passwordConfirm } = this.state
+    if (password === '' || passwordConfirm === '') return null
+    else if (password === passwordConfirm) return 'success'
+    else return 'error'
+  }
+
   isInvalid = () => {
-    const { email, password, passwordConfirm } = this.state
-    return !(email && password && passwordConfirm)
+    const {
+      first_name,
+      last_name,
+      company_name,
+      company_site,
+      company_role,
+      email,
+      password,
+      passwordConfirm,
+      zip_code,
+      location,
+      work_auth
+    } = this.state
+
+    if (this.state.is_employer) {
+      return password === passwordConfirm &&
+        !(
+          first_name &&
+          last_name &&
+          company_name &&
+          company_role &&
+          company_site &&
+          password &&
+          email
+        )
+    } else {
+      return password === passwordConfirm &&
+        !(
+          first_name &&
+          last_name &&
+          password &&
+          email &&
+          zip_code &&
+          location &&
+          work_auth
+        )
+    }
   }
 
   handleSubmit = event => {
@@ -98,16 +151,6 @@ class RegisterForm extends Component {
     const newUser = {...this.state}
     // turn the set into an array (postgres rejects sets)
     newUser.employment_type = [...newUser.employment_type]
-
-    if (this.state.is_employer) {
-      const {company_name, email} = this.state
-      const newEmployer = {
-        email,
-        name: company_name,
-      }
-      this.props.createEmployer(newEmployer)
-    }
-
     this.clearForm()
     this.props.createUser(newUser, this.props.history)
   }
@@ -126,12 +169,20 @@ class RegisterForm extends Component {
             </FormControl>
           </FormGroup>
           {
-            this.state.showEmployer
-            && <EmployerFields state={this.state} handleChange={this.handleChange}/>
+            this.state.showEmployer &&
+            <EmployerFields
+              state={this.state}
+              handleChange={this.handleChange}
+              validate={this.getValidationState}
+            />
           }
           {
-            this.state.showApplicant
-            && <ApplicantFields state={this.state} handleChange={this.handleChange}/>
+            this.state.showApplicant &&
+            <ApplicantFields
+              state={this.state}
+              handleChange={this.handleChange}
+              validate={this.getValidationState}
+            />
           }
           <Button disabled={this.isInvalid()} className='primary' type='submit'>Create Account</Button>
         </form>
@@ -141,8 +192,7 @@ class RegisterForm extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  createUser: (user, history) => dispatch(creatingNewUser(user, history)),
-  createEmployer: employer => dispatch(creatingNewEmployer(employer))
+  createUser: (user, history) => dispatch(creatingNewUser(user, history))
 })
 
 const RegisterFormContainer = connect(null, mapDispatchToProps)(RegisterForm)
