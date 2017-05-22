@@ -12,10 +12,6 @@ module.exports = db => db.define('job', {
     type: Sequelize.TEXT,
     allowNull: false
   },
-  application_method: {
-    type: Sequelize.TEXT,
-    allowNull: false
-  },
   application_emails: {
     type: Sequelize.ARRAY(Sequelize.TEXT),
   },

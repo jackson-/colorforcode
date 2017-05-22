@@ -1,6 +1,6 @@
 import axios from 'axios'
-import { RECEIVE_ALL_JOBS, RECEIVE_JOB } from '../constants'
-import { createNewJob, requestAllJobs, requestJob } from './loading'
+import { RECEIVE_ALL_JOBS, RECEIVE_JOB, RECEIVE_USER_JOBS } from '../constants'
+import { createNewJob, requestAllJobs, requestJob, requestUserJobs } from './loading'
 
 /* --------- PURE ACTION CREATORS ---------*/
 export const receiveJob = job => ({
@@ -13,6 +13,11 @@ export const receiveAllJobs = jobs => ({
   loading: false,
   type: RECEIVE_ALL_JOBS
 })
+export const receiveUserJobs = jobs => ({
+  jobs,
+  loading: false,
+  type: RECEIVE_USER_JOBS
+})
 
 
 /* --------- ASYNC ACTION CREATORS (THUNKS) ---------*/
@@ -22,6 +27,14 @@ export const gettingAllJobs = () => dispatch => {
   axios.get('/api/jobs')
   .then(res => res.data)
   .then(jobs => dispatch(receiveAllJobs(jobs)))
+  .catch(err => console.error(`Mang, I couldn't find the jobs! ${err.stack}`))
+}
+
+export const gettingUserJobs = (id) => dispatch => {
+  dispatch(requestUserJobs())
+  axios.get('/api/jobs/employer/'+id)
+  .then(res => res.data)
+  .then(jobs => dispatch(receiveUserJobs(jobs)))
   .catch(err => console.error(`Mang, I couldn't find the jobs! ${err.stack}`))
 }
 

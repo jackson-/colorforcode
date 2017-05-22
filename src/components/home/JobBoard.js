@@ -121,7 +121,7 @@ class JobBoard extends Component {
               multi={true}
               options={skills}
               onInputChange={(data) => this._handleChange(data)}
-              onChange={(selectValue) => this._selectSkill( selectValue, 'select' )}
+              onChange={(selectValue) => this._selectSkill( selectValue )}
               value={this.state.selectValue}
               placeholder="Search For Jobs"
             />

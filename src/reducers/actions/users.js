@@ -23,7 +23,6 @@ export const authenticated = user => ({
 /* --------- ASYNC ACTION CREATORS (THUNKS) ---------*/
 
 export const gettingAllUsers = () => dispatch => {
-  debugger;
   dispatch(requestAllUsers())
   axios.get('/api/users')
   .then(res => res.data)
