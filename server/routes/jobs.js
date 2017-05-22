@@ -11,7 +11,7 @@ const {Job, Employer, Skill} = db
 
 module.exports = require('express').Router()
   .get('/', (req, res, next) => {
-    Job.findAll()
+    Job.findAll({ include: [{ model: Employer}, { model: Skill}] })
     .then(jobs => res.json(jobs))
     .catch(next)
   })
@@ -41,4 +41,9 @@ module.exports = require('express').Router()
     (req, res, next) =>
       Job.findById(req.params.id, { include: [{ model: Employer}, { model: Skill}] })
       .then(job => res.json(job))
+      .catch(next))
+  .get('/employer/:id',
+    (req, res, next) =>
+      Job.findAll({ where:{employer_id:req.params.id},include: [{ model: Employer}, { model: Skill}] })
+      .then(jobs => res.json(jobs))
       .catch(next))

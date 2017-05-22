@@ -63,20 +63,35 @@ class JobBoard extends Component {
 		}
 	}
 
+  _checkForSkill(job, skill){
+    return job.skills.some((s) => {
+      return s.id === parseInt(skill, 10)
+    })
+  }
+
   _selectSkill(data){
 		let skill_ids = data.split(',');
+    let new_skills = []
 		var viz = [];
-		if(skill_ids[0] != ""){
-			viz = this.state.a_templates.filter((job) => {
+		if(skill_ids[0] !== ""){
+			viz = this.props.jobs.filter((job) => {
+        console.log("JOB", job)
 				return skill_ids.every((skill) => {
-					return job.skills.indexOf(skill) >= 0;
+					return this._checkForSkill(job, skill);
 				});
+			});
+      skill_ids.forEach((sk_id) => {
+				this.props.skills.forEach((s) => {
+          if(s.id === parseInt(sk_id, 10)){
+            new_skills.push({label:s.title, value:s.id})
+          }
+        })
 			});
 		} else {
 			viz = this.props.jobs;
 		}
 		let new_state = Object.assign({}, this.state,
-			 {selectValue:data, selected_skills:skill_ids, visible_jobs:viz})
+			 {selectValue:new_skills, selected_skills:skill_ids, visible_jobs:viz})
 		this.setState(new_state);
 	}
 
@@ -106,7 +121,7 @@ class JobBoard extends Component {
               multi={true}
               options={skills}
               onInputChange={(data) => this._handleChange(data)}
-              onChange={(selectValue) => this._selectSkill( selectValue, 'select' )}
+              onChange={(selectValue) => this._selectSkill( selectValue )}
               value={this.state.selectValue}
               placeholder="Search For Jobs"
             />
@@ -118,7 +133,6 @@ class JobBoard extends Component {
 
 const mapStateToProps = state => ({
   jobs:state.jobs.all,
-  selected_skills:state.skills.selected,
   skills:state.skills.all
 })
 

@@ -9,8 +9,7 @@ const Home = (props) => {
   return(
     <div className='Home'>
       <header className='Home-header'>
-        <h2>{`Welcome, ${pkg.authors}`}</h2>
-        <NavLink to='/post-new-job'><Button>Post a new job</Button></NavLink>
+        <h2>Welcome to HireBlack</h2>
       </header>
 
       <JobBoard />
