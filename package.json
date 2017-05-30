@@ -26,7 +26,7 @@
     "start": "concurrently \"npm run serve-dev\" \"node scripts/start.js\"",
     "build": "node scripts/build.js",
     "test-react": "node scripts/test.js --env=jsdom",
-    "dev": "node dev",
+    "dev": "          node dev",
     "validate": "check-node-version --node '>= 6.10.2'",
     "setup": "./bin/setup",
     "prep": "npm run validate && npm run setup",
