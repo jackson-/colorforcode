@@ -22,7 +22,7 @@ class JobBoard extends Component {
   constructor(props){
     super(props)
     this.state = {
-      selectValue:"",
+      selectValue:[],
       selected_skills:[],
       visible_jobs:[],
     }
@@ -47,7 +47,7 @@ class JobBoard extends Component {
 			} else {
 				viz = this.props.jobs
 			}
-			let new_state = Object.assign({}, this.state, {visible_jobs:viz})
+			let new_state = Object.assign({}, this.state, {visible_jobs:viz, selectValue:input})
 			this.setState(new_state);
 		} else {
 			var viz = [];
@@ -58,7 +58,7 @@ class JobBoard extends Component {
 					id:jobs[i]['id']})
 				}
 			}
-			let new_state = Object.assign({}, this.state, {visible_jobs:viz})
+			let new_state = Object.assign({}, this.state, {visible_jobs:viz, selectValue:input})
 			this.setState(new_state);
 		}
 	}
@@ -110,6 +110,7 @@ class JobBoard extends Component {
     return(
       <div id='job-board'>
       <VirtualizedSelect
+							className='job_searchbar'
               arrowRenderer={arrowRenderer}
               autofocus
               clearable={true}

@@ -15,6 +15,18 @@ function arrowRenderer () {
 		<span></span>
 	);
 }
+const states = [
+	'AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','HI','ID','IL','IN','IA','KS',
+	'KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY',
+	'NC','ND','MP','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA',
+	"WV",'WI','WY']
+
+const job_types = [
+  {label:"Full Time",value:"Full Time"},
+  {label:"Part Time",value:"Part Time"},
+  {label:"Contract",value:"Contract"},
+  {label:"Third Pary",value:"Third Party"},
+]
 
 class PostJobForm extends Component {
   constructor(props) {
@@ -27,9 +39,12 @@ class PostJobForm extends Component {
       application_url:'',
       city:'',
       zip_code:'',
+      selectValue:[],
+      jobValue:[],
       number: null,
       exp_month: null,
       exp_year: null,
+			remote:false,
       cvc: null,
       token: null,
       app_method:'email'
@@ -39,6 +54,11 @@ class PostJobForm extends Component {
   componentWillMount(){
     this.props.getSkills()
   }
+
+	toggleRemote(){
+		const remote = !this.state.remote
+		this.setState({state:remote})
+	}
 
   switchAppMethod(method){
     this.setState({app_method:method})
@@ -51,15 +71,34 @@ class PostJobForm extends Component {
 
   handleSubmit = event => {
     event.preventDefault()
+		const that = this
     const {title, description} = this.state
     const employer = {}
-    employer.name = this.props.user.employer.name
-    employer.email = this.props.user.email
+    employer.id = this.props.user.employer.id
     const job = {title, description}
-    job.application_email = this.props.user.employer.name
-    // const token = this.refs.card.state.token
+    job.application_emails = [this.state.application_email, this.state.cc_email]
+		job.application_url = this.state.application_url
+		job.city = this.state.city
+		job.state = this.refs.state.value
+		job.country = "United States of America"
+		job.zip_code = this.state.zip_code
+		job.remote = this.state.remote
+		job.pay_rate = this.refs.pay_rate.value
+		job.compensation = this.refs.compensation.value
+		job.travel_requirements = this.refs.travel_requirements.value
+
+		job.employment_types = []
+		this.state.jobValue.forEach((jt)=>{
+			job.employment_types.push(jt.label)
+		})
+		job.skills = []
+		this.state.selectValue.forEach((skill)=>{
+			job.skills.push(skill.value)
+		})
+
+		// const token = this.refs.card.state.token
     const token = ""
-    debugger;
+		debugger;
     this.props.createJobPost({employer, job, token})
   }
 
@@ -82,11 +121,30 @@ class PostJobForm extends Component {
 		this.setState(new_state);
 	}
 
+  _selectJobType(data){
+		let type_ids = data.split(',');
+    let new_types = []
+    if(type_ids[0] !== ""){
+      type_ids.forEach((t) => {
+        new_types.push({label:t, value:t})
+      })
+    }else {
+      new_types = []
+    }
+		let new_state = Object.assign({}, this.state,
+			 {jobValue:new_types, selected_skills:type_ids})
+		this.setState(new_state);
+	}
+
   render() {
+		let state_options = []
     let skills = []
     console.log("PORPS", this.props)
     this.props.skills.forEach((s) => {
       skills.push({label:s.title, value:s.id})
+    })
+		states.forEach((s) => {
+      state_options.push(<option>{s}</option>)
     })
     return (
       <div>
@@ -102,20 +160,20 @@ class PostJobForm extends Component {
             />
           </FormGroup>
           <VirtualizedSelect
-                  arrowRenderer={arrowRenderer}
-                  autofocus
-                  clearable={true}
-                  searchable={true}
-                  simpleValue
-                  labelKey='label'
-                  valueKey='value'
-                  ref="job_search"
-                  multi={true}
-                  options={skills}
-                  onChange={(data) => this._selectSkill(data)}
-                  value={this.state.selectValue}
-                  placeholder="Skills"
-                />
+            arrowRenderer={arrowRenderer}
+            autofocus
+            clearable={true}
+            searchable={true}
+            simpleValue
+            labelKey='label'
+            valueKey='value'
+            ref="job_search"
+            multi={true}
+            options={skills}
+            onChange={(data) => this._selectSkill(data)}
+            value={this.state.selectValue}
+            placeholder="Skills"
+          />
           <FormGroup controlId='description'>
             <ControlLabel>Job Description and Requirements</ControlLabel>
             <FormControl
@@ -161,6 +219,12 @@ class PostJobForm extends Component {
               onChange={this.handleChange('city')}
             />
           </FormGroup>
+					<FormGroup controlId='state'>
+						<ControlLabel>State</ControlLabel>
+						<select ref='state' placeholder='State'>
+							{state_options}
+						</select>
+					</FormGroup>
           <FormGroup controlId='zip_code'>
             <ControlLabel>Zip Code</ControlLabel>
             <FormControl
@@ -170,6 +234,49 @@ class PostJobForm extends Component {
               onChange={this.handleChange('zip_code')}
             />
           </FormGroup>
+					<FormGroup controlId='job_types'>
+						<ControlLabel>Job Types</ControlLabel>
+	          <VirtualizedSelect
+	                  arrowRenderer={arrowRenderer}
+	                  autofocus
+	                  searchable={false}
+	                  simpleValue
+	                  labelKey='label'
+	                  valueKey='value'
+	                  ref="job_search"
+	                  multi={true}
+	                  options={job_types}
+	                  onChange={(data) => this._selectJobType(data)}
+	                  value={this.state.jobValue}
+	                  placeholder="Job Types"
+	                />
+					</FormGroup>
+					<FormGroup controlId='pay_rate'>
+						<ControlLabel>Pay Rate *</ControlLabel>
+						<select ref='pay_rate'>
+							<option>Salary</option>
+							<option>Hourly</option>
+						</select>
+					</FormGroup>
+					<FormGroup controlId='compensation'>
+						<ControlLabel>Compensation *</ControlLabel>
+						<input ref='compensation' type='text' placeholder='$50/hr'/>
+					</FormGroup>
+					<FormGroup controlId='travel_requirements'>
+						<ControlLabel>Travel Requirements</ControlLabel>
+						<select ref='travel_requirements' placeholder='Travel Requirements'>
+							<option>None</option>
+							<option>Occasional</option>
+							<option>25%</option>
+							<option>50%</option>
+							<option>75%</option>
+							<option>100%</option>
+						</select>
+					</FormGroup>
+					<FormGroup controlId='rmeote'>
+						<ControlLabel>Tellecomute:</ControlLabel>
+						<input ref='remote' type='checkbox' onClick={this.toggleRemote.bind(this)}/>
+					</FormGroup>
           <Button className='primary' type='submit'>Post Job</Button>
         </form>
         <CreditCard ref='card' />

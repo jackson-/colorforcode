@@ -7,7 +7,7 @@ var stripe = require("stripe")(
 //   "sk_test_BQokikJOvBiI2HlWgH4olfQ2"
 // );
 const db = require('APP/db')
-const {Job, Employer, Skill} = db
+const {Job, Employer, Skill, JobSkillRelationship} = db
 
 module.exports = require('express').Router()
   .get('/', (req, res, next) => {
@@ -16,9 +16,11 @@ module.exports = require('express').Router()
     .catch(next)
   })
   .post('/', (req, res, next) => {
-    const {name, email} = req.body.employer
+    const {id} = req.body.employer
     const job = req.body.job
-    // const token = req.body.token
+    console.log("JOB", job)
+    const skills = req.body.skills
+    // const  token = req.body.token
     // stripe.charges.create({
     //   amount: 2,
     //   currency: "usd",
@@ -27,10 +29,14 @@ module.exports = require('express').Router()
     // }, function(err, charge) {
     //   console.log("ERR", err, "CAHRGE", charge)
     // });
-    Job.create(job)
+    Job.create(
+      job)
     .then(createdJob => {
+      job.skills.forEach((skill) => {
+        JobSkillRelationship.create({skill_id:skill, job_id:createdJob.id})
+      })
       return Employer.findOrCreate({
-        where: {name, email}
+        where: {id}
       })
       .spread((employer, created) => employer.addListings([createdJob]))
     })
