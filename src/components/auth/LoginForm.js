@@ -39,7 +39,7 @@ class LoginForm extends Component {
   render() {
     return (
       <div>
-        <h1 className='Login-header'>Log in to access your dashboard</h1>
+        <h1 className='Login-header'>Log In</h1>
         <form className='Login-body' onSubmit={this.handleSubmit}>
           <FormGroup controlId='email'>
             <ControlLabel>Email</ControlLabel>

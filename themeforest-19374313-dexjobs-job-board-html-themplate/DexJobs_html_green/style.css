@@ -1,13 +1,13 @@
  /*------------------------------------------
 Project Name : Dexim Jobs
-Desgined By  : DeximLabs.com
+Designed By  : DeximLabs.com
 Developed By : DeximLabs.com;
 Date        :  January/17;
 
 Table Of Index
 ------------------
 1. Base css
-2. Login buttons 
+2. Login buttons
 3. Mobile Menu
 4. Header Section
 5. Animations
@@ -18,7 +18,7 @@ Table Of Index
 10. Main Container
 11. Tabs Filters
 12. Filters Result
-13. Continer Blue Section
+13. Container Blue Section
 14. Jobs Conter
 15. Price Tag
 16. Pricing Table
@@ -45,17 +45,19 @@ Table Of Index
 ------------------------------------------*/
 
 
- @import url(assets/webcss/custom_fonts.css);
+@import url(assets/webcss/custom_fonts.css);
 
 body {
-    background: #f9f9f9;	
+  background: #f9f9f9;
 	font-family: OpenSansSemibold;
 	font-size:21px;
 }
+
 body.modal-open {
 	overflow: overlay;
 	padding: 0 !important;
 }
+
 /*/////Logo//////////*/
 .logo {
     float: left;
@@ -155,7 +157,7 @@ h5 {
 ul li {
 	font-family:OpenSansRegular;
 	font-size:16px;
-	padding-bottom:12px;	
+	padding-bottom:12px;
 }
 .img-responsive {
 }
@@ -187,8 +189,8 @@ input[type="submit"],
 /*////////////////////////*/
 .navbar-fixed-top {
 	padding: 29px 0;
-	
 }
+
 .fixed-header .navbar-fixed-top {
     background: #fff;
     box-shadow: 0 0 1px #d6d6d6;
@@ -198,6 +200,7 @@ input[type="submit"],
 nav.navbar.home {
     margin: 0;
 }
+
 .header_banner {
 	position: relative;
 	z-index: 1;
@@ -274,7 +277,7 @@ ul.dropdown-menu li a {
     border-bottom: 1px solid #e9e9e9;
 }
 .nav>li:hover a,
-.nav>li>a:focus, 
+.nav>li>a:focus,
 .nav>li>a:hover,
 .nav li.active a {
     color: #12cd6a;
@@ -367,7 +370,7 @@ color: #333333;
 ::-moz-placeholder {  /* Firefox 19+ */
  	color: #333 !important;
 }
-:-ms-input-placeholder {  
+:-ms-input-placeholder {
  	color: #333 !important;
  }
 .jobs_filters button .glyphicon {
@@ -407,7 +410,7 @@ color: #333333;
 .select2-results {
     overflow: auto;
     margin-right: 15px;
-	height: 186px;	
+	height: 186px;
 	padding: 0;
 }
 .jobs_filters .tiny_scrolling li a {
@@ -424,7 +427,7 @@ color: #333333;
     padding: 0;
 	list-style: none;
 }
-.open>.dropdown-toggle.btn-default:focus, 
+.open>.dropdown-toggle.btn-default:focus,
 .open>.dropdown-toggle.btn-default:hover,.btn-default:hover,
 .open>.dropdown-toggle.btn-default {
     background: #fff !important;
@@ -542,7 +545,7 @@ color: #333333;
     -moz-transition: all 0.1s ease-in-out;
     transition: all 0.1s ease-in-out;
     transition-duration: 0.2s;
- 
+
 }
 .filter-result .company-left-info {
     float: left;
@@ -574,7 +577,7 @@ background: #12cd6a none repeat scroll 0 0;
     line-height: normal;
 
     padding: 5px 11px;
-    
+
 }
 .filter-result .location {
     width: 100%;
@@ -584,7 +587,7 @@ background: #12cd6a none repeat scroll 0 0;
     font-size: 12px;
     line-height: normal;
     color: #333;
- 
+
 }
 .data-job {
     text-align: left;
@@ -708,7 +711,7 @@ color: #ffffff;
     padding: 0;
 	width: 100%;
 }
-#counter li:first-child, 
+#counter li:first-child,
 .how_work #counter li:first-child{
     padding-left: 0;
 }
@@ -1121,7 +1124,7 @@ color: #ffffff;
 /*////////////////////Inner Page/////////////*/
 .blue-banner {
 	background:#12cd6a;
-    
+
 }
 .green-banner {
     background:#12cd6a;
@@ -1132,7 +1135,7 @@ color: #ffffff;
     margin-top: 103px;
 }
 .page-title .white-heading {
- 
+
      font-family: OpenSansRegular;
     text-align: left;
     font-size: 49px;
@@ -1214,7 +1217,7 @@ background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
 .dashboard {
     background: #ffffff none repeat scroll 0 0;
     border-bottom: 1px solid #eee;
-    
+
 }
 .user-data {
 	display: table;
@@ -1443,7 +1446,7 @@ ul.simple li {
 }
 .subscribe {
     text-align: center;
-	
+
 }
 .subscribe a {
     color: #2a2a2a;
@@ -1558,7 +1561,7 @@ ul.simple li {
 .title-image .section-title:after {
 	content: "";
 	position: absolute;
-	
+
 	bottom: 0;
 	width: 100%;
 	height: 1px;
@@ -1574,9 +1577,9 @@ ul.simple li {
 .title-image  .user-data .seprator:before {
 	background: #fff;
 	opacity: 0.20;
-	
+
 }
-.title-image .page-title .job-admin, 
+.title-image .page-title .job-admin,
 .title-image .page-title .favourite {
     color: #333;
 }
@@ -1607,7 +1610,7 @@ ul.top_filters li input[type="checkbox"] {
     left: 0;
     opacity: 0;
     z-index: 2;
-	
+
 }
 
 ul.top_filters li label {
@@ -1717,7 +1720,7 @@ ul.top_filters li input[type="checkbox"]:checked + label:after {
 }
 /*/////////////Job list style 3////////////////*/
 .style3 .jobs_filters {
-   
+
 }
 .main-container.list-style3 {
     padding: 33px 0;
@@ -1806,7 +1809,7 @@ ul.top_filters li input[type="checkbox"]:checked + label:after {
 #jobs-slider .owl-controls div:hover {
 	color: #12cd6a ;
 }
-#jobs-slider .item .overlay, 
+#jobs-slider .item .overlay,
 #jobs-slider .item .slider-botom {
     width: 100%;
     padding: 0 34px;
@@ -1937,7 +1940,7 @@ border: 1px solid #12cd6a;
     left: 0;
 	z-index: -1;
 }
-.how_work:after{ 
+.how_work:after{
 
 }
 .how_work:before {
@@ -2079,7 +2082,7 @@ ul.alphabet li {
     color: #fff;
 	text-decoration:none;
     border-radius: 33px;
-	
+
 }
 #form-style-2 .form-group {
     float: left;
@@ -2301,12 +2304,12 @@ ul.social li a {
 .deximJobs_tabs .sidebar .widget li .label.register {
     background: #333;
     width: initial;
-    padding: 15px 40px;} 
-	
+    padding: 15px 40px;}
+
 	.fa.fa-clock-o, .fa.fa-child, .fa.fa-check-circle-o {
     font-size: 26px;
 }
-	
+
 /*//////////////Post A Job/////////////*/
 .page-title .capital h5 {
     text-transform: uppercase;
@@ -2457,7 +2460,7 @@ body ul.select2-results li {padding: 11px 14px;
 #form-style-2 ::-moz-placeholder {  /* Firefox 19+ */
  	color: #888e94 !important;
 }
-#form-style-2 :-ms-input-placeholder {  
+#form-style-2 :-ms-input-placeholder {
  	color: #888e94 !important;
  }
 #form-style-2 .main-container {
@@ -2559,7 +2562,7 @@ background: #12cd6a none repeat scroll 0 0;
     color: #fff;
     font-family: LatoLight;
     font-size: 20px;
-}	
+}
 .center-small {
     width: initial;
     font-size: 15px;
@@ -2732,7 +2735,7 @@ ul.order-table {
     float: left;
     border: 1px solid #e2e2e2;
     margin-bottom:0px;
-	
+
 }
 
 ul.order-table > li {
@@ -2755,7 +2758,7 @@ ul.order-table li ul li {
 	padding-bottom: 0;
 }
 ul.order-table li strong {
-	font-family: OpenSansBold;      
+	font-family: OpenSansBold;
 	font-size: 15px;
 }
 .order-items ul.order-table li ul li {
@@ -3094,7 +3097,7 @@ form#search input[type="submit"] {
 form#search .form-group.submit {
 	padding: 0;
 }
-form#search .form-group.submit .glyphicon, 
+form#search .form-group.submit .glyphicon,
 form#search .form-group.submit input[type="submit"] {
     position: absolute;
     color: #fff;
@@ -3107,7 +3110,7 @@ form#search .form-group.submit input[type="submit"] {
     font-size: 16px;
 }
 .posts-list .post {
-    
+
     padding-bottom: 0;
     margin-bottom: 0;
 }
@@ -3346,7 +3349,7 @@ span.login-ins {
     -webkit-animation: spin 2s linear infinite; /* Chrome, Opera 15+, Safari 5+ */
     animation: spin 2s linear infinite; /* Chrome, Firefox 16+, IE 10+, Opera */
 }
- 
+
 #loader:before {
     content: "";
     position: absolute;
@@ -3360,7 +3363,7 @@ span.login-ins {
     -webkit-animation: spin 3s linear infinite; /* Chrome, Opera 15+, Safari 5+ */
       animation: spin 3s linear infinite; /* Chrome, Firefox 16+, IE 10+, Opera */
 }
- 
+
 #loader:after {
     content: "";
     position: absolute;
@@ -3375,7 +3378,7 @@ span.login-ins {
       animation: spin 1.5s linear infinite; /* Chrome, Firefox 16+, IE 10+, Opera */
 }
 #loadessr {background: #d9d9d9; position: absolute; width: 100%; height: 100%; z-index: 999999; }
- 
+
 @-webkit-keyframes spin {
     0%   {
         -webkit-transform: rotate(0deg);  /* Chrome, Opera 15+, Safari 3.1+ */

@@ -38,7 +38,7 @@ class App extends Component {
             <Navbar.Toggle />
           </Navbar.Header>
           <Navbar.Collapse>
-            <Nav pullRight>
+            <Nav>
               <LinkContainer eventKey={1} to='/' isActive={onlyOneActiveMatch}>
                 <NavItem>Home</NavItem>
               </LinkContainer>
@@ -69,6 +69,11 @@ class App extends Component {
                       </NavDropdown>
                     </LinkContainer>
               }
+            </Nav>
+            <Nav pullRight>
+              <LinkContainer to='/post-new-job'>
+                <NavItem>Post a job</NavItem>
+              </LinkContainer>
             </Nav>
           </Navbar.Collapse>
         </Navbar>
