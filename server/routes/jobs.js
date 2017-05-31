@@ -7,7 +7,7 @@ var stripe = require("stripe")(
 //   "sk_test_BQokikJOvBiI2HlWgH4olfQ2"
 // );
 const db = require('APP/db')
-const {Job, Employer, Skill, JobSkillRelationship} = db
+const {Job, Employer, Skill, JobSkillRelationship, JobApplication} = db
 
 module.exports = require('express').Router()
   .get('/', (req, res, next) => {
@@ -41,6 +41,16 @@ module.exports = require('express').Router()
       .spread((employer, created) => employer.addListings([createdJob]))
     })
     .then(updatedListings => res.sendStatus(201))
+    .catch(next)
+  })
+  .post('/apply', (req, res, next) => {
+    const user_id = req.body.user_id
+    const job_id = req.body.job_id
+    JobApplication.create(
+        {application_id:user_id,
+        job_id}
+      )
+    .then(application => res.sendStatus(201))
     .catch(next)
   })
   .get('/:id',
