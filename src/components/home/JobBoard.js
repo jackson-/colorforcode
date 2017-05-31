@@ -46,7 +46,7 @@ class JobBoard extends Component {
 			} else {
 				viz = this.props.jobs
 			}
-			let new_state = Object.assign({}, this.state, {visible_jobs:viz})
+			let new_state = Object.assign({}, this.state, {visible_jobs:viz, selectValue:input})
 			this.setState(new_state);
 		} else {
 			if(skill_ids.length > 0){
@@ -62,7 +62,7 @@ class JobBoard extends Component {
 					id:viz[i]['id']})
 				}
 			}
-			let new_state = Object.assign({}, this.state, {visible_jobs:viz})
+			let new_state = Object.assign({}, this.state, {visible_jobs:viz, selectValue:input})
 			this.setState(new_state);
 		}
 	}
