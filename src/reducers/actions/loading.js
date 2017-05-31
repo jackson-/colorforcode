@@ -1,6 +1,7 @@
 import { CREATE_JOB, UPDATE_JOB, DELETE_JOB, REQUEST_JOB,
          REQUEST_ALL_JOBS, CREATE_USER, UPDATE_USER,
-         DELETE_USER, REQUEST_ALL_USERS, REQUEST_ALL_SKILLS, REQUEST_USER_JOBS  } from '../constants'
+         DELETE_USER, REQUEST_ALL_USERS, REQUEST_ALL_SKILLS,
+          REQUEST_USER_JOBS, APPLY_TO_JOB, APPLIED_TO_JOB  } from '../constants'
 
 /* --------- PURE ACTION CREATORS ---------*/
 
@@ -31,6 +32,16 @@ export const requestAllJobs = () => ({
 
 export const requestUserJobs = () => ({
   type: REQUEST_USER_JOBS,
+  loading: true
+})
+
+export const applyToJob = () => ({
+  type: APPLY_TO_JOB,
+  loading: true
+})
+
+export const appliedToJob = () => ({
+  type: APPLIED_TO_JOB,
   loading: true
 })
 
