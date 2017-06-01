@@ -18,8 +18,6 @@ module.exports = require('express').Router()
   .post('/', (req, res, next) => {
     const {id} = req.body.employer
     const job = req.body.job
-    console.log("JOB", job)
-    const skills = req.body.skills
     // const  token = req.body.token
     // stripe.charges.create({
     //   amount: 2,
@@ -43,6 +41,18 @@ module.exports = require('express').Router()
     .then(updatedListings => res.sendStatus(201))
     .catch(next)
   })
+  .post('/update', (req, res, next) => {
+    const job = req.body.job
+    Job.create(
+      job)
+    .then(createdJob => {
+      job.skills.forEach((skill) => {
+        JobSkillRelationship.findOrCreate({skill_id:skill, job_id:createdJob.id})
+      })
+      return res.sendStatus(201)
+    })
+    .catch(next)
+  })
   .post('/apply', (req, res, next) => {
     const user_id = req.body.user_id
     const job_id = req.body.job_id
@@ -59,7 +69,9 @@ module.exports = require('express').Router()
       .then(job => res.json(job))
       .catch(next))
   .get('/employer/:id',
-    (req, res, next) =>
+    (req, res, next) => {
+      console.log("ID", req.params.id)
       Job.findAll({ where:{employer_id:req.params.id},include: [{ model: Employer}, { model: Skill}] })
       .then(jobs => res.json(jobs))
-      .catch(next))
+      .catch(next)
+    })
