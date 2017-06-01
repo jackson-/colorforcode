@@ -26,6 +26,10 @@ class App extends Component {
   }
 
   render () {
+    let dashboard_url = null
+    if(this.props.user){
+      dashboard_url = this.props.user.employer ? "/dashboard/employer" : "/dashboard"
+    }
     return (
       <div>
         <Navbar fixedTop collapseOnSelect>
@@ -49,7 +53,7 @@ class App extends Component {
                 this.props.user
                   ? <LinkContainer to='#' eventKey={3} className='dropdown-hover'>
                       <NavDropdown title='Account' id='account-dropdown'>
-                        <LinkContainer to='/dashboard' eventKey={3.1}>
+                        <LinkContainer to={dashboard_url} eventKey={3.1}>
                           <MenuItem>Dashboard</MenuItem>
                         </LinkContainer>
                         <LinkContainer to='#' eventKey={3.2} onClick={this.props.logoutUser(this.props.history)}>

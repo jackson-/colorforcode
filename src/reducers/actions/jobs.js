@@ -44,9 +44,10 @@ export const applyingToJob = (user_id, job_id, history) => dispatch => {
   .catch(err => console.error(`Mang, I couldn't apply to the job! ${err.stack}`))
 }
 
-export const gettingUserJobs = (id) => dispatch => {
+export const gettingUserJobs = (employer) => dispatch => {
+  console.log('here');
   dispatch(requestUserJobs())
-  axios.get('/api/jobs/employer/'+id)
+  axios.get('/api/jobs/employer/'+employer.id)
   .then(res => res.data)
   .then(jobs => dispatch(receiveUserJobs(jobs)))
   .catch(err => console.error(`Mang, I couldn't find the jobs! ${err.stack}`))
