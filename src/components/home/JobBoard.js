@@ -21,9 +21,9 @@ class JobBoard extends Component {
   constructor(props){
     super(props)
     this.state = {
-      selectValue:[],
-      selected_skills:[],
-      visible_jobs:[],
+      selectValue: [],
+      selected_skills: [],
+      visible_jobs: [],
     }
   }
 
@@ -33,12 +33,12 @@ class JobBoard extends Component {
   }
 
   _handleChange(input){
-		var viz;
-		var skill_ids = this.state.selected_skills;
+		let viz = [];
+		let skill_ids = this.state.selected_skills;
 
-		if(input === "" || input === null){
+		if (input === "" || input === null) {
 
-			if(skill_ids.length > 0){
+			if (skill_ids.length > 0) {
 				viz = this.state.visible_jobs.filter((job) => {
 					return skill_ids.every((skill) => {
 						return job.skills.indexOf(skill) >= 0;
@@ -50,19 +50,20 @@ class JobBoard extends Component {
 			let new_state = Object.assign({}, this.state, {visible_jobs:viz, selectValue:input})
 			this.setState(new_state);
 		} else {
-			if(skill_ids.length > 0){
+			if (skill_ids.length > 0) {
 				viz = this.state.visible_jobs.filter((job) => {
 					return skill_ids.every((skill) => {
 						return job.skills.indexOf(skill) >= 0;
 					});
 				})
 			}
+
 			for(let i=0; i < viz.length; i++){
-				if(viz[i]['title'].toLowerCase().includes(input)){
-					viz.push({title:viz[i]['title'],
-					id:viz[i]['id']})
+				if (viz[i]['title'].toLowerCase().includes(input)) {
+					viz.push({title: viz[i]['title'], id: viz[i]['id']})
 				}
 			}
+
 			let new_state = Object.assign({}, this.state, {visible_jobs:viz, selectValue:input})
 			this.setState(new_state);
 		}
@@ -141,9 +142,9 @@ class JobBoard extends Component {
 }
 
 const mapStateToProps = state => ({
-  jobs:state.jobs.all,
-  skills:state.skills.all,
-	loading:state.loading
+  jobs: state.jobs.all,
+  skills: state.skills.all,
+	loading: state.loading
 })
 
 const mapDispatchToProps = dispatch => ({
