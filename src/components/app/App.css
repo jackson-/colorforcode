@@ -1,30 +1,43 @@
-.App {
-  text-align: left;
-}
-
-@media (min-width: 425px) {
-  .App {
-    padding: 70px;
-  }
-}
-
-@media (max-width: 424px) {
-  .App {
-    padding: 70px 30px;
-  }
-}
-
-a {
-  color: #000000;
-}
+@import url(../../fonts.css);
 
 .active, a:hover, a:focus {
-  color: #D33737;
-  text-decoration: none;
+  color: #12CD6A;
+}
+
+.navbar {
+  background: #FFFFFF;
+}
+
+.nav a {
+  color: #333333;
+  font-family: Open Sans Bold;
+  font-size: 15px;
+  text-transform: uppercase;
+}
+
+.navbar-default .navbar-nav>li>a {
+  color: #333333;
+  margin-top: 6px;
+}
+
+.navbar-default .navbar-nav>.active>a,
+.navbar-default .navbar-nav>.active>a:hover,
+.navbar-default .navbar-nav>.active>a:focus,
+.navbar-default .navbar-nav>li>a:hover,
+.navbar-default .navbar-nav>li:active a,
+.dropdown-menu>li.active a,
+.dropdown-menu>li.active a:hover,
+.dropdown-menu>li>a:hover,
+.dropdown-menu>li>:hover,
+.dropdown-menu>li>a:focus {
+  color: #12CD6A;
+  background: none;
+  transition: all 0.1s ease-in-out;
+  transition-duration: 0.2s;
 }
 
 .navbar-default .navbar-toggle .icon-bar {
-  background: #000000;
+  background: #333333;
   height: 3px;
 }
 
@@ -35,13 +48,14 @@ a {
 
 .navbar-brand {
   padding: 0;
-  margin-left: 20px;
+  margin: 6px 15px;
+  cursor: pointer;
 }
 
 .navbar-default .navbar-toggle,
 .navbar-default .navbar-toggle:hover,
 .navbar-default .navbar-toggle:focus {
-  margin-top: 8px;
+  margin: 14px;
   border: none;
   background: none;
 }
@@ -51,11 +65,13 @@ a {
   font-size: larger;
   height: 100vh;
   max-height: none;
+  width: inherit;
 }
 
 .dropdown-menu {
   text-align: center;
   min-width: 0;
+  border: none;
 }
 
 /* desktop only dropdown open on hover */
@@ -63,5 +79,29 @@ a {
 and (min-width: 768px) {
   .dropdown:hover .dropdown-menu {
     display: block;
+    transition: all 0.1s ease-in-out;
+    transition-duration: 0.2s;
   }
+}
+
+.button-oval {
+  margin: 8px 0;
+  padding: 12px 30px;
+  font-size: 13px !important;
+  border: solid 2px #12CD6A;
+  border-radius: 25px;
+}
+
+.button-oval:hover,
+.button-oval:focus,
+.button-oval:active:focus,
+.button-oval.active,
+.button-oval.active:hover,
+.button-oval.active:focus {
+  background: #12CD6A;
+  border: solid 2px #12CD6A;
+  color: #FFFFFF;
+  box-shadow: none;
+  transition: all 0.1s ease-in-out;
+  transition-duration: 0.2s;
 }

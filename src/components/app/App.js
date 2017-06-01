@@ -72,7 +72,7 @@ class App extends Component {
             </Nav>
             <Nav pullRight>
               <LinkContainer to='/post-new-job'>
-                <NavItem>Post a job</NavItem>
+                <NavItem><span className='button-oval'>Post a job</span></NavItem>
               </LinkContainer>
             </Nav>
           </Navbar.Collapse>
