@@ -37,16 +37,19 @@ class PostJobForm extends Component {
       title: '',
       description: '',
       application_email: '',
-      cc_email:'',
+      cc_email: '',
       application_url:'',
       city:'',
+      state: '',
       zip_code:'',
       selectValue:[],
       jobValue:[],
+      pay_rate: '',
+      compensation_type: 'Salary',
+      travel_requirements: 'None',
       number: null,
       exp_month: null,
       exp_year: null,
-			remote:false,
       cvc: null,
       token: null,
       app_method:'email'
@@ -71,36 +74,59 @@ class PostJobForm extends Component {
     this.setState({[type]: value})
   }
 
+  clearForm = () => {
+    this.setState({
+        title: '',
+        description: '',
+        application_email: '',
+        cc_email: '',
+        application_url:'',
+        city:'',
+        state: '',
+        zip_code:'',
+        selectValue:[],
+        jobValue:[],
+        pay_rate: '',
+        compensation_type: 'Salary',
+        travel_requirements: 'None',
+        number: null,
+        exp_month: null,
+        exp_year: null,
+        cvc: null,
+        token: null,
+        app_method:'email'
+    })
+  }
+
   handleSubmit = event => {
     event.preventDefault()
-    const {title, description} = this.state
-    const employer = {}
-    employer.id = this.props.user.employer.id
-    const job = {title, description}
-    job.application_emails = [this.state.application_email, this.state.cc_email]
-		job.application_url = this.state.application_url
-		job.city = this.state.city
-		job.state = this.refs.state.value
-		job.country = "United States of America"
-		job.zip_code = this.state.zip_code
-		job.remote = this.state.remote
-		job.pay_rate = this.refs.pay_rate.value
-		job.compensation = this.refs.compensation.value
-		job.travel_requirements = this.refs.travel_requirements.value
+    const { title, description, application_url,
+      city, state, zip_code, selectValue, jobValue,
+      pay_rate, compensation_type, travel_requirements,
+      number, exp_month, exp_year, cvc, app_method,
+      application_email, cc_email } = this.state
 
+    const job = { title, description, application_url,
+      city, state, zip_code, selectValue, jobValue,
+      pay_rate, compensation_type, travel_requirements,
+      number, exp_month, exp_year, cvc, app_method }
+
+    job.application_emails = [application_email, cc_email]
+
+    job.employer_id = this.props.user.employer.id
 		job.employment_types = []
 		this.state.jobValue.forEach((jt)=>{
 			job.employment_types.push(jt.label)
 		})
-		job.skills = []
+
+		const skills = []
 		this.state.selectValue.forEach((skill)=>{
-			job.skills.push(skill.value)
+			skills.push(skill.value)
 		})
 
 		// const token = this.refs.card.state.token
-    const token = ""
-		debugger;
-    this.props.createJobPost({employer, job, token})
+    this.clearForm()
+    this.props.createJobPost({job, skills})
   }
 
   _selectSkill(data){
@@ -146,7 +172,7 @@ class PostJobForm extends Component {
     })
 
 		states.forEach((s, idx) => {
-      state_options.push(<option key={idx}>{s}</option>)
+      state_options.push(<option key={idx} value={s}>{s}</option>)
     })
 
     return (
@@ -221,7 +247,7 @@ class PostJobForm extends Component {
           </FormGroup>
 					<FormGroup controlId='state'>
 						<ControlLabel>State</ControlLabel>
-						<FormControl componentClass="select" ref='state' placeholder='State'>
+						<FormControl componentClass="select">
 							{state_options}
 						</FormControl>
 					</FormGroup>
@@ -252,23 +278,27 @@ class PostJobForm extends Component {
 					<FormGroup controlId='compensation'>
 						<ControlLabel>Compensation Type</ControlLabel>
 						<FormControl componentClass='select' ref='compensation'>
-							<option>Salary</option>
-							<option>Hourly</option>
+							<option value='Salary'>Salary</option>
+							<option value='Hourly'>Hourly</option>
 						</FormControl>
 					</FormGroup>
 					<FormGroup controlId='pay_rate'>
 						<ControlLabel>Pay Rate</ControlLabel>
-						<FormControl ref='pay_rate'/>
+						<FormControl
+              type='phone'
+              value={this.state.pay_rate}
+              onChange={this.handleChange('pay_rate')}
+            />
 					</FormGroup>
 					<FormGroup controlId='travel_requirements'>
 						<ControlLabel>Travel Requirements</ControlLabel>
 						<FormControl componentClass='select' ref='travel_requirements'>
-							<option>None</option>
-							<option>Occasional</option>
-							<option>25%</option>
-							<option>50%</option>
-							<option>75%</option>
-							<option>100%</option>
+							<option value='None'>None</option>
+							<option value='Occasional'>Occasional</option>
+							<option value='25%'>25%</option>
+							<option value='50%'>50%</option>
+							<option value='75%'>75%</option>
+							<option value='100%'>100%</option>
 						</FormControl>
 					</FormGroup>
           <Button className='primary' type='submit'>Post Job</Button>

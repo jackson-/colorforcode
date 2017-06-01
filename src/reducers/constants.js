@@ -5,6 +5,8 @@ export const RECEIVE_USER_JOBS = 'RECEIVE_USER_JOBS'
 
 /* ----------- LOADING ------------ */
 export const REQUEST_ALL_JOBS = 'REQUEST_ALL_JOBS'
+export const APPLY_TO_JOB = 'APPLY_TO_JOB'
+export const APPLIED_TO_JOB = 'APPLIED_TO_JOB'
 export const REQUEST_USER_JOBS = 'REQUEST_USER_JOBS'
 export const REQUEST_ALL_SKILLS = 'REQUEST_ALL_SKILLS'
 export const RECEIVE_ALL_SKILLS = 'RECEIVE_ALL_SKILLS'

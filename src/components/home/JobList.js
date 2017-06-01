@@ -7,14 +7,16 @@ class JobList extends Component {
 
   render(){
     let jobs = [];
-    this.props.jobs.forEach((job)=>{
-      let url = "/job/"+job.id
-      jobs.push(
-        <li key={job.id}>
+    if(this.props.jobs){
+      this.props.jobs.forEach((job)=>{
+        let url = "/job/"+job.id
+        jobs.push(
+          <li key={job.id}>
           <Link to={url}>{job.title}</Link>
-        </li>
-      )
-    })
+          </li>
+        )
+      })
+    }
     return(
       <div className='JobBoard-cards'>
         <ul>
