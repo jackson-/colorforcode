@@ -4,15 +4,18 @@ import { Button } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { gettingUserJobs } from '../../reducers/actions/jobs'
+import { whoami } from '../../reducers/actions/users'
 
 class Dashboard extends Component {
 
-  componentWillMount(){
-    this.props.getJobs()
+  componentWillReceiveProps(){
+    console.log("pORPS", this.props)
+    if(this.props.user && !this.props.jobs){
+      this.props.getJobs(this.props.user.employer)
+    }
   }
 
   render(){
-    console.log("pORPS", this.props)
     let activity = []
     const open = 6
     const paused = 1
@@ -27,7 +30,7 @@ class Dashboard extends Component {
       hired:18
     }
     let my_jobs = [];
-    this.props.jobs.forEach((job)=>{
+    this.props.jobs && this.props.jobs.forEach((job)=>{
       let url = "/job/"+job.id
       my_jobs.push(
         <li key={job.id}>
@@ -86,7 +89,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  getJobs: (history) => () => dispatch(gettingUserJobs(history)),
+  getJobs: (employer) => dispatch(gettingUserJobs(employer)),
+  getUser:() => dispatch(whoami()),
 })
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Dashboard))

@@ -1,6 +1,6 @@
 import axios from 'axios'
-import { RECEIVE_ALL_JOBS, RECEIVE_JOB, RECEIVE_USER_JOBS } from '../constants'
-import { createNewJob, requestAllJobs, requestJob, requestUserJobs } from './loading'
+import { RECEIVE_ALL_JOBS, RECEIVE_JOB, RECEIVE_USER_JOBS, APPLIED_TO_JOB } from '../constants'
+import { createNewJob, requestAllJobs, requestJob, requestUserJobs, applyToJob } from './loading'
 
 /* --------- PURE ACTION CREATORS ---------*/
 export const receiveJob = job => ({
@@ -18,6 +18,10 @@ export const receiveUserJobs = jobs => ({
   loading: false,
   type: RECEIVE_USER_JOBS
 })
+export const appliedToJob = () => ({
+  loading: false,
+  type: APPLIED_TO_JOB
+})
 
 
 /* --------- ASYNC ACTION CREATORS (THUNKS) ---------*/
@@ -30,9 +34,20 @@ export const gettingAllJobs = () => dispatch => {
   .catch(err => console.error(`Mang, I couldn't find the jobs! ${err.stack}`))
 }
 
-export const gettingUserJobs = (id) => dispatch => {
+export const applyingToJob = (user_id, job_id, history) => dispatch => {
+  dispatch(applyToJob())
+  axios.post('/api/jobs/apply', {user_id, job_id})
+  .then(() => {
+    dispatch(appliedToJob())
+    history.push('/')
+  })
+  .catch(err => console.error(`Mang, I couldn't apply to the job! ${err.stack}`))
+}
+
+export const gettingUserJobs = (employer) => dispatch => {
+  console.log('here');
   dispatch(requestUserJobs())
-  axios.get('/api/jobs/employer/'+id)
+  axios.get('/api/jobs/employer/'+employer.id)
   .then(res => res.data)
   .then(jobs => dispatch(receiveUserJobs(jobs)))
   .catch(err => console.error(`Mang, I couldn't find the jobs! ${err.stack}`))

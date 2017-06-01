@@ -189,6 +189,10 @@ input[type="submit"],
 /*////////////////////////*/
 .navbar-fixed-top {
 	padding: 29px 0;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 7d413562ae4e4f79f7044e621d1ca25296d07464
 }
 
 .fixed-header .navbar-fixed-top {
@@ -916,7 +920,7 @@ background: #fa2328 none repeat scroll 0 0;
     font-family: LatoRegular;
     font-size: 13px;
     line-height: 29px;
-    margin-bottom: 19px;x;
+    margin-bottom: 19px;
 }
 .posts-list .post-meta .readmore {
     border: 1px solid #12cd6a;

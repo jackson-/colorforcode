@@ -3,7 +3,7 @@ import { RECEIVE_ALL_JOBS, RECEIVE_JOB, RECEIVE_USER_JOBS } from './constants'
 const initialState = {
   all: [],
   currentJob: null,
-  user_jobs:[]
+  user_jobs:null
 }
 
 const jobsReducer = (state=initialState, action) => {
