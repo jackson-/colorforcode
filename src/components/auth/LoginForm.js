@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { FormGroup, ControlLabel, FormControl, Button, Alert } from 'react-bootstrap'
+import { FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap'
 import { login } from 'APP/src/reducers/actions/users'
 
 class LoginForm extends Component {

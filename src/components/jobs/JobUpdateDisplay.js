@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap'
-import { creatingNewJob } from 'APP/src/reducers/actions/jobs'
-import { gettingAllSkills } from 'APP/src/reducers/actions/skills'
+import { updatingJob } from 'APP/src/reducers/actions/skills'
 import CreditCard from './CreditCard';
 import './PostNewJobForm.css'
 import VirtualizedSelect from 'react-virtualized-select'
@@ -28,31 +27,52 @@ const job_types = [
   {label:"Third Pary",value:"Third Party"},
 ]
 
-class PostJobForm extends Component {
+class JobUpdateDisplay extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      title: '',
-      description: '',
-      application_email: '',
-      cc_email:'',
-      application_url:'',
-      city:'',
-      zip_code:'',
-      selectValue:[],
-      jobValue:[],
-      number: null,
-      exp_month: null,
-      exp_year: null,
-			remote:false,
-      cvc: null,
-      token: null,
-      app_method:'email'
+    this.state = {job:{
+        title: '',
+        description: '',
+        application_email: '',
+        cc_email:'',
+        application_url:'',
+        city:'',
+        zip_code:'',
+        selectValue:[],
+        jobValue:[],
+        number: null,
+        exp_month: null,
+        exp_year: null,
+  			remote:false,
+        cvc: null,
+        token: null,
+        app_method:'email'
+      }
     }
   }
 
-  componentWillMount(){
-    this.props.getSkills()
+  componentWillReceiveProps(nextProps){
+    const prop_job = nextProps.job;
+    if(prop_job && Object.keys(this.state.job).length === 0){
+      let job = {
+          title: prop_job.title,
+          description: prop_job.description,
+          application_email: '',
+          cc_email:'',
+          application_url:prop_job.application_url,
+          city:prop_job.city,
+          zip_code:prop_job.zip_code,
+          selectValue:[],
+          jobValue:[],
+          number: null,
+          exp_month: null,
+          exp_year: null,
+    			remote:false,
+          cvc: null,
+          token: null,
+          app_method:'email'
+        }
+    }
   }
 
 	toggleRemote(){
@@ -98,7 +118,7 @@ class PostJobForm extends Component {
 		// const token = this.refs.card.state.token
     const token = ""
 		debugger;
-    this.props.createJobPost({employer, job, token})
+    this.props.updateJob({employer, job, token})
   }
 
   _selectSkill(data){
@@ -138,12 +158,11 @@ class PostJobForm extends Component {
   render() {
 		let state_options = []
     let skills = []
-    console.log("PORPS", this.props)
     this.props.skills.forEach((s) => {
       skills.push({label:s.title, value:s.id})
     })
 		states.forEach((s) => {
-      state_options.push(<option>{s}</option>)
+      state_options.push(<option key={s}>{s}</option>)
     })
     return (
       <div>
@@ -284,15 +303,4 @@ class PostJobForm extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  user: state.users.currentUser,
-  skills: state.skills.all
-})
-const mapDispatchToProps = dispatch => ({
-  createJobPost: post => dispatch(creatingNewJob(post)),
-  getSkills: post => dispatch(gettingAllSkills())
-})
-
-const PostNewJobContainer = connect(mapStateToProps, mapDispatchToProps)(PostJobForm)
-
-export default PostNewJobContainer
+export default JobUpdateDisplay

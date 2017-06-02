@@ -9,7 +9,6 @@ import { whoami } from '../../reducers/actions/users'
 class Dashboard extends Component {
 
   componentWillReceiveProps(){
-    console.log("pORPS", this.props)
     if(this.props.user && !this.props.jobs){
       this.props.getJobs(this.props.user.employer)
     }

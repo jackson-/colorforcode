@@ -1,12 +1,9 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
-import { gettingJobById, applyingToJob } from 'APP/src/reducers/actions/jobs'
+import { applyingToJob } from 'APP/src/reducers/actions/jobs'
 
 class JobInfoDisplay extends Component {
 
-  componentDidMount(){
-    this.props.getJob(this.props.job_id);
-  }
 
   applyToJob(){
     this.props.sendApplication(this.props.user.id, this.props.job.id, this.props.history)
@@ -53,14 +50,10 @@ class JobInfoDisplay extends Component {
 }
 
 const mapStateToProps = state => ({
-  user:state.users.currentUser,
-  job: state.jobs.currentJob,
-  loading: state.loading,
   history: state.router.history,
 })
 
 const mapDispatchToProps = dispatch => ({
-  getJob: job_id => dispatch(gettingJobById(job_id)),
   sendApplication: (user_id, job_id, history) => dispatch(applyingToJob(user_id, job_id, history)),
 })
 

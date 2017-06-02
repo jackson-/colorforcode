@@ -1,7 +1,7 @@
 import { RECEIVE_ALL_JOBS, RECEIVE_JOB, RECEIVE_USER_JOBS } from './constants'
 
 const initialState = {
-  all: [],
+  all: null,
   currentJob: null,
   user_jobs:null
 }

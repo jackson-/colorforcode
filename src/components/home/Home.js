@@ -1,9 +1,6 @@
 import React from 'react'
-import { NavLink } from 'react-router-dom'
-import { Button } from 'react-bootstrap'
 import './Home.css'
 import JobBoard from './JobBoard'
-import pkg from '../../../package.json'
 
 const Home = (props) => {
   return(

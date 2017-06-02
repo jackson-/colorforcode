@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { RECEIVE_ALL_SKILLS, AUTHENTICATED } from '../constants'
+import { RECEIVE_ALL_SKILLS } from '../constants'
 import { requestAllSkills } from './loading'
 
 /* --------- PURE ACTION CREATORS ---------*/
