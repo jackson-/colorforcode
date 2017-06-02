@@ -1,12 +1,59 @@
+@import url(../../fonts.css);
+
 .Home {
   text-align: center;
 }
 
 .Home-header {
-  padding-top: 75px;
-  color: #000000;
+  padding-top: 60px;
+  z-index: -4;
 }
 
 .job_searchbar {
   margin-bottom:20%
+}
+
+.Home-hero {
+  padding: 0;
+  width: 100%;
+  height: calc(100vh - 60px);
+  margin: 0;
+  border-radius: 0px !important;
+  background: url("../../img/hero.jpg") no-repeat;
+  background-size: cover;
+  background-position: top;
+}
+
+.parallax-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.5);
+  width: 100%;
+  height: 100vh;
+  padding: 22% 15px 0;
+  color: #EEEEEE;
+  font-family: Lato Black;
+}
+
+.tagline {
+  font-size: 58px;
+}
+
+.JobBoard {
+  min-height: 100vh;
+  background: #EEEEEE;
+  z-index: 2;
+  padding: 15px;
+}
+
+.JobBoard-search {
+  margin: 25px auto;
+}
+
+@media only screen
+and (max-width: 500px) {
+  .Home-hero {
+    background-position: right;
+  }
 }

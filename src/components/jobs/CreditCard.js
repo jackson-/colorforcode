@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { Component } from 'react';
 import Payment from 'payment';
-import { Row, Col, FormGroup, ControlLabel, Button, Alert } from 'react-bootstrap';
+import { FormGroup, FormControl, ControlLabel, Button } from 'react-bootstrap';
 import { getStripeToken } from './getStripeToken';
+import Card from './Card'
+import CardLogos from './CardLogos'
 import './CreditCard.css'
 const Stripe = window.Stripe;
 Stripe.setPublishableKey('API_KEY');
 
-export default class CreditCard extends React.Component {
+export default class CreditCard extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -46,64 +48,14 @@ export default class CreditCard extends React.Component {
     });
   }
 
-  renderCard() {
-    const { number, exp_month, exp_year, cvc, token } = this.state;
-    return number ? (<Alert bsStyle="info">
-      <h5>{ number }</h5>
-      <p className="exp-cvc">
-        <span>{ exp_month }/{ exp_year }</span>
-        <span>{ cvc }</span>
-      </p>
-      <em>{ token }</em>
-    </Alert>) : '';
-  }
-
   resetCard() {
-    this.setState({ number: null, exp_month: null, exp_year: null, cvc: null, token: null });
-  }
-
-  renderCardForm() {
-    return (<form className="CardForm" onSubmit={ this.handleSubmit }>
-      <Row>
-        <Col xs={ 12 }>
-          <FormGroup>
-            <ControlLabel>Card Number</ControlLabel>
-            <input
-              onKeyUp={ this.setCardType }
-              className="form-control"
-              type="text"
-              ref="number"
-              placeholder="Card Number"
-            />
-          </FormGroup>
-        </Col>
-      </Row>
-      <Row>
-        <Col xs={ 6 } sm={ 5 }>
-          <FormGroup>
-            <ControlLabel>Expiration</ControlLabel>
-            <input
-              className="form-control text-center"
-              type="text"
-              ref="expiration"
-              placeholder="MM/YYYY"
-            />
-          </FormGroup>
-        </Col>
-        <Col xs={ 6 } sm={ 4 } smOffset={ 3 }>
-          <FormGroup>
-            <ControlLabel>CVC</ControlLabel>
-            <input
-              className="form-control text-center"
-              type="text"
-              ref="cvc"
-              placeholder="CVC"
-            />
-          </FormGroup>
-        </Col>
-      </Row>
-      <Button type="submit" bsStyle="success" block>Generate Token</Button>
-    </form>);
+    this.setState({
+      number: null,
+      exp_month: null,
+      exp_year: null,
+      cvc: null,
+      token: null
+    });
   }
 
   setCardType(event) {
@@ -119,17 +71,6 @@ export default class CreditCard extends React.Component {
     });
   }
 
-  renderCardList() {
-    return (<ul className="credit-card-list clearfix">
-      <li><i data-brand="visa" className="fa fa-cc-visa cc-logo"></i></li>
-      <li><i data-brand="amex" className="fa fa-cc-amex cc-logo"></i></li>
-      <li><i data-brand="mastercard" className="fa fa-cc-mastercard cc-logo"></i></li>
-      <li><i data-brand="jcb" className="fa fa-cc-jcb cc-logo"></i></li>
-      <li><i data-brand="discover" className="fa fa-cc-discover cc-logo"></i></li>
-      <li><i data-brand="dinersclub" className="fa fa-cc-diners-club cc-logo"></i></li>
-    </ul>);
-  }
-
   componentDidMount() {
     const { number, expiration, cvc } = this.refs;
     Payment.formatCardNumber(number);
@@ -138,11 +79,40 @@ export default class CreditCard extends React.Component {
   }
 
   render() {
-    return (<div className="CreditCard">
-      { this.renderCardList() }
-      { this.renderCardForm() }
-      { this.renderCard() }
-    </div>);
+    const { number, exp_month, exp_year, cvc, token } = this.state;
+
+    return (
+      <div className="CreditCard">
+        <CardLogos />
+        <form className="CardForm" onSubmit={ this.handleSubmit }>
+          <FormGroup>
+            <ControlLabel>Card Number</ControlLabel>
+            <FormControl onKeyUp={this.setCardType} ref="number" />
+          </FormGroup>
+          <FormGroup>
+            <ControlLabel>Expiration</ControlLabel>
+            <FormGroup type='phone' ref="expiration">
+              <FormControl className='exp-cvc' placeholder='MM/YYYY' />
+            </FormGroup>
+          </FormGroup>
+          <FormGroup>
+            <ControlLabel>CVC</ControlLabel>
+            <FormControl type='phone' ref="cvc" className='exp-cvc' />
+          </FormGroup>
+          <Button type="submit" block>Generate Token</Button>
+        </form>
+        {
+          number &&
+          <Card
+            number={number}
+            exp_month={exp_month}
+            exp_year={exp_year}
+            cvc={cvc}
+            token={token}
+          />
+        }
+      </div>
+    )
   }
 }
 

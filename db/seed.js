@@ -1,7 +1,8 @@
 'use strict'
 
 const db = require('APP/db')
-const {User, Employer, Skill, Job, Promise, JobSkillRelationship} = db
+const {User, Employer, Skill, Job} = db
+const Promise = require('bluebird')
 const {mapValues} = require('lodash')
 const bCrypt = require('bcrypt');
 
@@ -30,20 +31,32 @@ const users = seed(User, {
   chloe: {
     name: 'Chloe Rice',
     email: 'chloe@123.com',
-    password: generateHash('12345')
+    password: generateHash('123')
+  },
+  hb1: {
+    name: 'Devin Blackson',
+    email: 'devin@hireblack.com',
+    password: generateHash('123')
+  },
+  hb2: {
+    name: 'Chloe Ice',
+    email: 'chloe@hireblack.com',
+    password: generateHash('123')
   },
 })
 
 const employers = seed(Employer, {
   airbnb: {
-    email: 'emp1@123.com',
     name: 'AirBnB',
-    password: '123',
+    company_site: 'http://www.airbnb.com',
   },
   google: {
     name: 'Google',
-    email: 'emp2@123.com',
-    password: '123'
+    company_site: 'http://www.google.com'
+  },
+  hireblack: {
+    name: 'HireBlack',
+    company_site: 'http://www.hireblack.io'
   },
 })
 
@@ -68,23 +81,23 @@ const jobs = seed(Job,
     // The easiest way to seed associations seems to be to just create rows
     // in the join table.
     'full_stack': {
-      employer_id: employers.google.id,
+      employer_id: employers.hireblack.id,
       title:'Full Stack Dev',
       description:'This is ajob for a full stack dev',
       application_method:'email',
       application_emails:['emp1@123.com', 'emp2@123.com'],
       city:'Brooklyn',
       state:'NY',
-      country:'United States',
+      country:'US',
       zip_code:'11207',
       employment_types:['Full-time', 'Part-time'],
-      pay_rate:'Hourly',
-      compensation:'$80',
+      compensation_type:'Hourly',
+      pay_rate:'$80',
       travel_requirements:'None',
       remote:false,
     },
     'dev_ops': {
-      employer_id: employers.airbnb.id,
+      employer_id: employers.hireblack.id,
       title:'DevOps',
       description:'This is a job for a devops dude',
       application_method:'email',
@@ -93,16 +106,15 @@ const jobs = seed(Job,
       state:null,
       country: null,
       zip_code:null,
-      employment_types:['Full-time'],
-      pay_rate:'Hourly',
-      compensation:'$100',
-      travel_requirements:'None',
-      remote:true,
+      employment_types:['Full-time', 'Remote'],
+      compensation_type:'Hourly',
+      pay_rate:'$100',
+      travel_requirements:'None'
     },
   })
 )
 
-const relationships = seed(JobSkillRelationship,
+const relationships = seed(Job,
   // We're specifying a function here, rather than just a rows object.
   // Using a function lets us receive the previously-seeded rows (the seed
   // function does this wiring for us).
@@ -110,34 +122,18 @@ const relationships = seed(JobSkillRelationship,
   // This lets us reference previously-created rows in order to create the join
   // rows. We can reference them by the names we used above (which is why we used
   // Objects above, rather than just arrays).
-  ({jobs, skills}) => ({
-    // The easiest way to seed associations seems to be to just create rows
-    // in the join table.
-    1: {
-      job_id: jobs.full_stack.id,
-      skill_id:skills.react.id,
-    },
-    2: {
-      job_id: jobs.full_stack.id,
-      skill_id:skills.mongo.id,
-    },
-    3: {
-      job_id: jobs.full_stack.id,
-      skill_id:skills.node.id,
-    },
-    4: {
-      job_id: jobs.dev_ops.id,
-      skill_id:skills.nginx.id,
-    },
-    5: {
-      job_id: jobs.dev_ops.id,
-      skill_id:skills.gunicorn.id,
-    },
-    6: {
-      job_id: jobs.dev_ops.id,
-      skill_id:skills.aws.id,
-    },
-  })
+  ({jobs}) => {
+    const job1 = jobs.full_stack
+    const job2 = jobs.dev_ops
+    const skills = {
+      1: [1, 2, 3],
+      2: [4, 5, 6]
+    }
+
+    const jobArray = [job1, job2]
+    return Promise.props(jobArray, (job) => job.addSkills(skills[`${job.get().id}`]))
+    .then(success => console.log(success))
+  }
 )
 
 if (module === require.main) {

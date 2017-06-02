@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap'
+import { Row, FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap'
 import { login } from 'APP/src/reducers/actions/users'
+import './Form.css'
 
 class LoginForm extends Component {
   constructor(props) {
@@ -38,9 +39,9 @@ class LoginForm extends Component {
 
   render() {
     return (
-      <div>
-        <h1 className='Login-header'>Log in to access your dashboard</h1>
-        <form className='Login-body' onSubmit={this.handleSubmit}>
+      <Row className='LoginForm'>
+        <h1 className='LoginForm-header'>Log In</h1>
+        <form className='LoginForm-body' onSubmit={this.handleSubmit}>
           <FormGroup controlId='email'>
             <ControlLabel>Email</ControlLabel>
             <FormControl
@@ -61,7 +62,7 @@ class LoginForm extends Component {
             Log In
           </Button>
         </form>
-      </div>
+      </Row>
     )
   }
 }

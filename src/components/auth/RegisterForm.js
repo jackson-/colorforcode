@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap'
+import { Row, FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap'
 import axios from 'axios'
 import { creatingNewUser } from 'APP/src/reducers/actions/users'
 import EmployerFields from './EmployerRegisterFields'
 import ApplicantFields from './ApplicantRegisterFields'
 import { withRouter } from 'react-router-dom'
+import './Form.css'
 
 class RegisterForm extends Component {
   constructor(props) {
@@ -157,7 +158,7 @@ class RegisterForm extends Component {
 
   render() {
     return (
-      <div>
+      <Row className='RegisterForm'>
         <h1 className='RegisterForm-header'>Register</h1>
         <form className='RegisterForm-body' onSubmit={this.handleSubmit}>
           <FormGroup controlId='is_employer' onChange={this.toggleAccountType}>
@@ -186,7 +187,7 @@ class RegisterForm extends Component {
           }
           <Button disabled={this.isInvalid()} className='primary' type='submit'>Create Account</Button>
         </form>
-      </div>
+      </Row>
     )
   }
 }

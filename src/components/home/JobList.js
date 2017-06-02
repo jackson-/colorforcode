@@ -18,7 +18,7 @@ class JobList extends Component {
       })
     }
     return(
-      <div id='job-board'>
+      <div className='JobBoard-cards'>
         <ul>
           {jobs}
         </ul>

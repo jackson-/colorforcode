@@ -13,6 +13,9 @@ class JobDetailPage extends Component {
 
   render(){
     const user = this.props.user
+    const that = this
+    console.log("PROPS", this.props)
+    debugger;
     return(
       <div className='JobDetailPage'>
         {!this.props.loading &&

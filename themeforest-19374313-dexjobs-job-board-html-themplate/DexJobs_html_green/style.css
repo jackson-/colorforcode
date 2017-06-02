@@ -1,6 +1,6 @@
  /*------------------------------------------
 Project Name : Dexim Jobs
-Desgined By  : DeximLabs.com
+Designed By  : DeximLabs.com
 Developed By : DeximLabs.com;
 Date        :  January/17;
 
@@ -18,7 +18,7 @@ Table Of Index
 10. Main Container
 11. Tabs Filters
 12. Filters Result
-13. Continer Blue Section
+13. Container Blue Section
 14. Jobs Conter
 15. Price Tag
 16. Pricing Table
@@ -45,17 +45,23 @@ Table Of Index
 ------------------------------------------*/
 
 
- @import url(assets/webcss/custom_fonts.css);
+@import url(assets/webcss/custom_fonts.css);
 
 body {
+<<<<<<< HEAD
+  background: #f9f9f9;
+=======
     background: #f9f9f9;
+>>>>>>> 7d413562ae4e4f79f7044e621d1ca25296d07464
 	font-family: OpenSansSemibold;
 	font-size:21px;
 }
+
 body.modal-open {
 	overflow: overlay;
 	padding: 0 !important;
 }
+
 /*/////Logo//////////*/
 .logo {
     float: left;
@@ -99,7 +105,7 @@ body.modal-open {
 .logins span {
 background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
     border: 2px solid #12cd6a;
-    border-radius: 26px;
+    border-radius: 25px;
     color: #232323;
     font-family: OpenSansBold;
     font-size: 13px;
@@ -187,8 +193,12 @@ input[type="submit"],
 /*////////////////////////*/
 .navbar-fixed-top {
 	padding: 29px 0;
+<<<<<<< HEAD
+=======
 
+>>>>>>> 7d413562ae4e4f79f7044e621d1ca25296d07464
 }
+
 .fixed-header .navbar-fixed-top {
     background: #fff;
     box-shadow: 0 0 1px #d6d6d6;
@@ -198,6 +208,7 @@ input[type="submit"],
 nav.navbar.home {
     margin: 0;
 }
+
 .header_banner {
 	position: relative;
 	z-index: 1;
@@ -288,7 +299,7 @@ ul.tiny_scrolling li a {
     border-bottom: 1px solid #e9e9e9;
 }
 ul.dropdown-menu li a:hover {
-    color: #12cd6a !important;
+  color: #12cd6a !important;
 	text-decoration: none;
 }
 ul.dropdown-menu li:last-child a {
@@ -343,7 +354,7 @@ color: #333333;
 .jobs_filters .container {
     padding: 0;
 }
-.jobs_filters .filters_feilds, .jobs_filters .form-group input {
+.jobs_filters .filters_fields, .jobs_filters .form-group input {
     width: 100%;
     text-align: left;
     border: none;
