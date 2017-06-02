@@ -2,54 +2,11 @@
 
 const {STRING} = require('sequelize')
 const db = require('APP/db')
-const {Job, User} = db
+const {Job, User, Skill} = db
 
 module.exports = db => db.define('employer', {
   name: STRING,
   company_site: STRING
-}, {
-  instanceMethods: {
-    addListings: function(listingsArray) {
-      const creatingNewJobs = listingsArray.length > 1
-        ? Job.bulkCreate(listingsArray)
-        : Job.create(listingsArray[0])
-
-      creatingNewJobs
-      .then(newListings => {
-        return this.getListings()
-        .then(oldListings => {
-          const all = Array.isArray(newListings)
-            ? oldListings.concat(newListings)
-            : oldListings.push(newListings)
-          return employer.setListings(all)
-          // ^'set' would unassociate old job listings while associating new ones
-          //  if we didn't concatenate them with the already associated listings
-          // This returns a promise that if successful resolves to an array of
-          // the employer's listings.
-        })
-      })
-    },
-    addRecruiters: function(recruiterArray) {
-      const creatingNewRecruiters = recruiterArray.length > 1
-        ? User.bulkCreate(recruiterArray)
-        : User.create(recruiterArray[0])
-
-      creatingNewRecruiters
-      .then(newRecruiters => {
-        return this.getRecruiters()
-        .then(oldRecruiters => {
-          const all = Array.isArray(newRecruiters)
-            ? oldRecruiters.concat(newRecruiters)
-            : oldRecruiters.push(newRecruiters)
-          return employer.setRecruiters(all)
-          // ^'set' would unassociate old recruiters while associating new ones
-          //  if we didn't concatenate them with the already associated recruiters.
-          // This returns a promise that if successful resolves to an array of
-          // the employer's recruiters.
-        })
-      })
-    }
-  }
 })
 
 // One to Many associations add a [source]_id column to the target table.

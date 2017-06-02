@@ -1,0 +1,82 @@
+@import url(../../fonts.css);
+
+.RegisterForm, .LoginForm {
+  padding: 70px 10%;
+  background: #12CD6A;
+  min-height: 100vh;
+  color: #FFFFFF;
+}
+
+.RegisterForm-header,
+.LoginForm-header {
+  color: #FFFFFF;
+  font-family: Lato Bold;
+  text-transform: uppercase;
+  margin: 16px 0;
+}
+
+.PostJobForm {
+  padding: 70px 10%;
+  min-height: 100vh;
+}
+
+.PostJobForm-header {
+  font-family: Lato Bold;
+  text-transform: uppercase;
+  margin: 16px 0;
+}
+
+.Select--multi .Select-value {
+  background: rgba(18,205,106, 0.08);
+  border: solid 1px rgba(18,205,106, 0.24);
+  color: #12CD6A;
+}
+
+.Select, .Select.control,
+.form-group input,
+.form-group select {
+  text-align: left;
+  font-family: Open Sans Semibold;
+  font-size: 14px;
+  color: #333;
+  width: auto;
+  height: 42px;
+  max-width: 500px;
+  min-width: 280px;
+  border: 0;
+}
+
+.Select div {
+  border: 0;
+}
+
+.form-group textarea {
+  text-align: left;
+  font-family: Open Sans Semibold;
+  font-size: 14px;
+  color: #333;
+  height: 400px;
+  width: 600px;
+  border: none;
+}
+
+.form-group label, label, .checkbox label {
+  font-family: Lato Regular;
+  font-size: 14px;
+  font-weight: bolder;
+  padding: 0;
+}
+
+.checkbox input[type=checkbox] {
+  width: 20px !important;
+  min-width: 0;
+  margin: -10px 0 0 120px;
+  padding: 5px;
+}
+
+@media only screen
+and (max-width: 768px) {
+  .form-group textarea {
+    width: 80vw;
+  }
+}

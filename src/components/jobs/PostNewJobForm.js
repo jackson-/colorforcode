@@ -1,14 +1,14 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap'
+import { Row, FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap'
 import { creatingNewJob } from 'APP/src/reducers/actions/jobs'
 import { gettingAllSkills } from 'APP/src/reducers/actions/skills'
 import CreditCard from './CreditCard';
-import './PostNewJobForm.css'
 import VirtualizedSelect from 'react-virtualized-select'
 import 'react-select/dist/react-select.css'
 import 'react-virtualized/styles.css'
 import 'react-virtualized-select/styles.css'
+import '../auth/Form.css'
 
 function arrowRenderer () {
 	return (
@@ -22,10 +22,12 @@ const states = [
 	"WV",'WI','WY']
 
 const job_types = [
-  {label:"Full Time",value:"Full Time"},
-  {label:"Part Time",value:"Part Time"},
-  {label:"Contract",value:"Contract"},
-  {label:"Third Pary",value:"Third Party"},
+  {label:"Full Time", value:"Full Time"},
+  {label:"Part Time", value:"Part Time"},
+  {label:"Contract", value:"Contract"},
+  {label:"Contract to Hire", value:"Contract to Hire"},
+  {label:"Internship", value:"Internship"},
+  {label:"Remote", value:"Remote"}
 ]
 
 class PostJobForm extends Component {
@@ -35,23 +37,26 @@ class PostJobForm extends Component {
       title: '',
       description: '',
       application_email: '',
-      cc_email:'',
+      cc_email: '',
       application_url:'',
       city:'',
+      state: '',
       zip_code:'',
       selectValue:[],
       jobValue:[],
+      pay_rate: '',
+      compensation_type: 'Salary',
+      travel_requirements: 'None',
       number: null,
       exp_month: null,
       exp_year: null,
-			remote:false,
       cvc: null,
       token: null,
       app_method:'email'
     }
   }
 
-  componentWillMount(){
+  componentDidMount(){
     this.props.getSkills()
   }
 
@@ -69,37 +74,59 @@ class PostJobForm extends Component {
     this.setState({[type]: value})
   }
 
+  clearForm = () => {
+    this.setState({
+        title: '',
+        description: '',
+        application_email: '',
+        cc_email: '',
+        application_url:'',
+        city:'',
+        state: '',
+        zip_code:'',
+        selectValue:[],
+        jobValue:[],
+        pay_rate: '',
+        compensation_type: 'Salary',
+        travel_requirements: 'None',
+        number: null,
+        exp_month: null,
+        exp_year: null,
+        cvc: null,
+        token: null,
+        app_method:'email'
+    })
+  }
+
   handleSubmit = event => {
     event.preventDefault()
-		const that = this
-    const {title, description} = this.state
-    const employer = {}
-    employer.id = this.props.user.employer.id
-    const job = {title, description}
-    job.application_emails = [this.state.application_email, this.state.cc_email]
-		job.application_url = this.state.application_url
-		job.city = this.state.city
-		job.state = this.refs.state.value
-		job.country = "United States of America"
-		job.zip_code = this.state.zip_code
-		job.remote = this.state.remote
-		job.pay_rate = this.refs.pay_rate.value
-		job.compensation = this.refs.compensation.value
-		job.travel_requirements = this.refs.travel_requirements.value
+    const { title, description, application_url,
+      city, state, zip_code, selectValue, jobValue,
+      pay_rate, compensation_type, travel_requirements,
+      number, exp_month, exp_year, cvc, app_method,
+      application_email, cc_email } = this.state
 
+    const job = { title, description, application_url,
+      city, state, zip_code, selectValue, jobValue,
+      pay_rate, compensation_type, travel_requirements,
+      number, exp_month, exp_year, cvc, app_method }
+
+    job.application_emails = [application_email, cc_email]
+
+    job.employer_id = this.props.user.employer.id
 		job.employment_types = []
 		this.state.jobValue.forEach((jt)=>{
 			job.employment_types.push(jt.label)
 		})
-		job.skills = []
+
+		const skills = []
 		this.state.selectValue.forEach((skill)=>{
-			job.skills.push(skill.value)
+			skills.push(skill.value)
 		})
 
 		// const token = this.refs.card.state.token
-    const token = ""
-		debugger;
-    this.props.createJobPost({employer, job, token})
+    this.clearForm()
+    this.props.createJobPost({job, skills})
   }
 
   _selectSkill(data){
@@ -139,26 +166,30 @@ class PostJobForm extends Component {
   render() {
 		let state_options = []
     let skills = []
-    console.log("PORPS", this.props)
-    this.props.skills.forEach((s) => {
+
+    this.props.skills.forEach(s => {
       skills.push({label:s.title, value:s.id})
     })
-		states.forEach((s) => {
-      state_options.push(<option>{s}</option>)
+
+		states.forEach((s, idx) => {
+      state_options.push(<option key={idx} value={s}>{s}</option>)
     })
+
     return (
-      <div>
+      <Row className='PostJobForm'>
         <h1 className='PostJobForm-header'>Post a new job</h1>
         <form className='PostJobForm-body' onSubmit={this.handleSubmit}>
           <FormGroup controlId='title'>
             <ControlLabel>Job Title</ControlLabel>
             <FormControl
-            type='text'
-            value={this.state.title}
-            placeholder='e.g., Senior DevOps Engineer'
-            onChange={this.handleChange('title')}
+              type='text'
+              value={this.state.title}
+              onChange={this.handleChange('title')}
             />
           </FormGroup>
+          <ControlLabel>
+            Required Skills (type below and hit 'Enter' to select and 'Backspace to deselect')
+          </ControlLabel>
           <VirtualizedSelect
             arrowRenderer={arrowRenderer}
             autofocus
@@ -172,7 +203,6 @@ class PostJobForm extends Component {
             options={skills}
             onChange={(data) => this._selectSkill(data)}
             value={this.state.selectValue}
-            placeholder="Skills"
           />
           <FormGroup controlId='description'>
             <ControlLabel>Job Description and Requirements</ControlLabel>
@@ -188,7 +218,6 @@ class PostJobForm extends Component {
             <FormControl
               type='email'
               value={this.state.application_email}
-              placeholder='e.g., hiring@aircash.io'
               onChange={this.handleChange('application_email')}
             />
           </FormGroup>
@@ -197,7 +226,6 @@ class PostJobForm extends Component {
             <FormControl
               type='email'
               value={this.state.cc_email}
-              placeholder='e.g., hiring@aircash.io'
               onChange={this.handleChange('cc_email')}
             />
           </FormGroup>
@@ -206,7 +234,6 @@ class PostJobForm extends Component {
             <FormControl
               type='url'
               value={this.state.application_url}
-              placeholder='e.g., hiring@aircash.io'
               onChange={this.handleChange('application_url')}
             />
           </FormGroup>
@@ -215,72 +242,69 @@ class PostJobForm extends Component {
             <FormControl
               type='city'
               value={this.state.city}
-              placeholder='e.g., NY'
               onChange={this.handleChange('city')}
             />
           </FormGroup>
 					<FormGroup controlId='state'>
 						<ControlLabel>State</ControlLabel>
-						<select ref='state' placeholder='State'>
+						<FormControl componentClass="select">
 							{state_options}
-						</select>
+						</FormControl>
 					</FormGroup>
           <FormGroup controlId='zip_code'>
             <ControlLabel>Zip Code</ControlLabel>
             <FormControl
-              type='zip_code'
+              type='phone'
               value={this.state.zip_code}
-              placeholder='e.g., zip_code'
               onChange={this.handleChange('zip_code')}
             />
           </FormGroup>
 					<FormGroup controlId='job_types'>
-						<ControlLabel>Job Types</ControlLabel>
+						<ControlLabel>Job Types (select all that apply)</ControlLabel>
 	          <VirtualizedSelect
-	                  arrowRenderer={arrowRenderer}
-	                  autofocus
-	                  searchable={false}
-	                  simpleValue
-	                  labelKey='label'
-	                  valueKey='value'
-	                  ref="job_search"
-	                  multi={true}
-	                  options={job_types}
-	                  onChange={(data) => this._selectJobType(data)}
-	                  value={this.state.jobValue}
-	                  placeholder="Job Types"
-	                />
-					</FormGroup>
-					<FormGroup controlId='pay_rate'>
-						<ControlLabel>Pay Rate *</ControlLabel>
-						<select ref='pay_rate'>
-							<option>Salary</option>
-							<option>Hourly</option>
-						</select>
+              arrowRenderer={arrowRenderer}
+              autofocus
+              searchable={false}
+              simpleValue
+              labelKey='label'
+              valueKey='value'
+              ref="job_search"
+              multi={true}
+              options={job_types}
+              onChange={(data) => this._selectJobType(data)}
+              value={this.state.jobValue}
+            />
 					</FormGroup>
 					<FormGroup controlId='compensation'>
-						<ControlLabel>Compensation *</ControlLabel>
-						<input ref='compensation' type='text' placeholder='$50/hr'/>
+						<ControlLabel>Compensation Type</ControlLabel>
+						<FormControl componentClass='select' ref='compensation'>
+							<option value='Salary'>Salary</option>
+							<option value='Hourly'>Hourly</option>
+						</FormControl>
+					</FormGroup>
+					<FormGroup controlId='pay_rate'>
+						<ControlLabel>Pay Rate</ControlLabel>
+						<FormControl
+              type='phone'
+              value={this.state.pay_rate}
+              onChange={this.handleChange('pay_rate')}
+            />
 					</FormGroup>
 					<FormGroup controlId='travel_requirements'>
 						<ControlLabel>Travel Requirements</ControlLabel>
-						<select ref='travel_requirements' placeholder='Travel Requirements'>
-							<option>None</option>
-							<option>Occasional</option>
-							<option>25%</option>
-							<option>50%</option>
-							<option>75%</option>
-							<option>100%</option>
-						</select>
-					</FormGroup>
-					<FormGroup controlId='rmeote'>
-						<ControlLabel>Tellecomute:</ControlLabel>
-						<input ref='remote' type='checkbox' onClick={this.toggleRemote.bind(this)}/>
+						<FormControl componentClass='select' ref='travel_requirements'>
+							<option value='None'>None</option>
+							<option value='Occasional'>Occasional</option>
+							<option value='25%'>25%</option>
+							<option value='50%'>50%</option>
+							<option value='75%'>75%</option>
+							<option value='100%'>100%</option>
+						</FormControl>
 					</FormGroup>
           <Button className='primary' type='submit'>Post Job</Button>
         </form>
         <CreditCard ref='card' />
-      </div>
+      </Row>
     )
   }
 }

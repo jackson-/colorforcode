@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
 import './Home.css'
 import { Link } from 'react-router-dom'
 
@@ -19,7 +18,7 @@ class JobList extends Component {
       })
     }
     return(
-      <div id='job-board'>
+      <div className='JobBoard-cards'>
         <ul>
           {jobs}
         </ul>
