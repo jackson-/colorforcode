@@ -52,7 +52,8 @@ class PostJobForm extends Component {
       exp_year: null,
       cvc: null,
       token: null,
-      app_method:'email'
+      app_method:'email',
+			remote:false,
     }
   }
 
@@ -104,15 +105,13 @@ class PostJobForm extends Component {
       city, state, zip_code, selectValue, jobValue,
       pay_rate, compensation_type, travel_requirements,
       number, exp_month, exp_year, cvc, app_method,
-      application_email, cc_email } = this.state
+      application_email, cc_email, remote } = this.state
 
     const job = { title, description, application_url,
       city, state, zip_code, selectValue, jobValue,
       pay_rate, compensation_type, travel_requirements,
-      number, exp_month, exp_year, cvc, app_method }
+      number, exp_month, exp_year, cvc, app_method, application_email, cc_email, remote }
 
-    job.application_emails = [application_email, cc_email]
-		
     job.employer_id = this.props.user.employer.id
 		job.employment_types = []
 		this.state.jobValue.forEach((jt)=>{
@@ -301,6 +300,7 @@ class PostJobForm extends Component {
 							<option value='100%'>100%</option>
 						</FormControl>
 					</FormGroup>
+					<input type='checkbox' checked={this.state.checked}/>
           <Button className='primary' type='submit'>Post Job</Button>
         </form>
         <CreditCard ref='card' />

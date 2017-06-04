@@ -10,7 +10,7 @@ import RegisterForm from './components/auth/RegisterForm'
 import LoginForm from './components/auth/LoginForm'
 import PostNewJobForm from './components/jobs/PostNewJobForm'
 import JobDetailPage from './components/jobs/JobDetailPage'
-import Dashboard from './components/employers/Dashboard'
+import Dashboard from './components/dashboard/Dashboard'
 // import EmployerLoginForm from './components/auth/EmployerLoginForm'
 // import EmployerRegisterForm from './components/auth/EmployerRegisterForm'
 import store from './store'
@@ -37,7 +37,7 @@ const App = () => (
           <Route exact path='/login' component={LoginForm} />
           <Route exact path='/post-new-job' component={PostNewJobForm} />
           <Route exact path='/job/:id' component={JobDetailPage} />
-          <Route exact path='/dashboard/employer' component={Dashboard} />
+          <Route exact path='/dashboard' component={Dashboard} />
         </Switch>
       </Container>
     </Router>

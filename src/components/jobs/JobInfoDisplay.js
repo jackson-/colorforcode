@@ -3,8 +3,6 @@ import { connect } from 'react-redux'
 import { applyingToJob } from 'APP/src/reducers/actions/jobs'
 
 class JobInfoDisplay extends Component {
-
-
   applyToJob(){
     this.props.sendApplication(this.props.user.id, this.props.job.id, this.props.history)
   }
@@ -21,9 +19,9 @@ class JobInfoDisplay extends Component {
         )
       })
     }
+    console.log("PROPS", this.props)
     return(
       <div id='job-display'>
-        {this.props.loading === false && job &&
           <div>
             <h1>Title: {job.title}</h1>
             {employer &&
@@ -43,7 +41,6 @@ class JobInfoDisplay extends Component {
               <button onClick={this.applyToJob.bind(this)}>Apply</button>
             }
           </div>
-        }
       </div>
     )
   }

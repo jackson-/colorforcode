@@ -1,33 +1,28 @@
 import React, {Component} from 'react'
 import JobInfoDisplay from './JobInfoDisplay';
 import JobUpdateDisplay from './JobUpdateDisplay';
-import { gettingAllSkills } from 'APP/src/reducers/actions/skills'
 import { gettingJobById } from 'APP/src/reducers/actions/jobs'
 import { connect } from 'react-redux'
 
 class JobDetailPage extends Component {
   componentDidMount(){
     this.props.getJob(this.props.match.params.id);
-    this.props.getSkills();
   }
 
   render(){
     const user = this.props.user
-    const that = this
-    console.log("PROPS", this.props)
-    debugger;
     return(
       <div className='JobDetailPage'>
-        {!this.props.loading &&
+        {!this.props.loading && this.props.job && this.props.skills &&
           <div>
-            {user && user.employer &&
+            {user && user.is_employer &&
               <JobUpdateDisplay user={user} skills={this.props.skills} job={this.props.job}/>
             }
-            {user && !user.employer &&
-              <JobInfoDisplay user={user} skills={this.props.skills} job_id={this.props.job} />
+            {user && !user.is_employer &&
+              <JobInfoDisplay user={user} skills={this.props.skills} job={this.props.job} />
             }
-            {!user &&
-              <JobInfoDisplay user={user} skills={this.props.skills} job_id={this.props.job} />
+            {user === "" &&
+              <JobInfoDisplay user={null} skills={this.props.skills} job={this.props.job} />
             }
           </div>
         }
@@ -40,7 +35,6 @@ class JobDetailPage extends Component {
   )}
 }
 
-
 const mapStateToProps = state => ({
   user: state.users.currentUser,
   skills: state.skills.all,
@@ -49,7 +43,6 @@ const mapStateToProps = state => ({
 })
 const mapDispatchToProps = dispatch => ({
   getJob: job_id => dispatch(gettingJobById(job_id)),
-  getSkills: post => dispatch(gettingAllSkills()),
 })
 
 const JobDetailPageContainer = connect(mapStateToProps, mapDispatchToProps)(JobDetailPage)

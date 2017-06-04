@@ -6,7 +6,7 @@ import { withRouter } from 'react-router-dom'
 import { gettingUserJobs } from '../../reducers/actions/jobs'
 import { whoami } from '../../reducers/actions/users'
 
-class Dashboard extends Component {
+class EmployerDashboard extends Component {
 
   componentWillReceiveProps(){
     if(this.props.user && !this.props.jobs){
@@ -89,7 +89,6 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   getJobs: (employer) => dispatch(gettingUserJobs(employer)),
-  getUser:() => dispatch(whoami()),
 })
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Dashboard))
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(EmployerDashboard))

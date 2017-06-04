@@ -29,48 +29,23 @@ const job_types = [
 class JobUpdateDisplay extends Component {
   constructor(props) {
     super(props)
-    this.state = {job:{
-        title: '',
-        description: '',
-        application_email: '',
-        cc_email:'',
-        application_url:'',
-        city:'',
-        zip_code:'',
-        selectValue:[],
-        jobValue:[],
-        number: null,
-        exp_month: null,
-        exp_year: null,
-  			remote:false,
-        cvc: null,
-        token: null,
-        app_method:'email'
-      }
-    }
-  }
-
-  componentWillReceiveProps(nextProps){
-    const prop_job = nextProps.job;
-    if(prop_job && Object.keys(this.state.job).length === 0){
-      let job = {
-          title: prop_job.title,
-          description: prop_job.description,
-          application_email: '',
-          cc_email:'',
-          application_url:prop_job.application_url,
-          city:prop_job.city,
-          zip_code:prop_job.zip_code,
-          selectValue:[],
-          jobValue:[],
-          number: null,
-          exp_month: null,
-          exp_year: null,
-    			remote:false,
-          cvc: null,
-          token: null,
-          app_method:'email'
-        }
+    this.state = {
+        title: this.props.job.title || '',
+        description: this.props.job.description || '',
+        application_email: this.props.job.application_email || '',
+        cc_email:this.props.job.cc_email || '',
+        application_url:this.props.job.application_url || '',
+        city:this.props.job.city || '',
+        zip_code:this.props.job.zip_code || '',
+        selectValue:this.props.job.selectValue || '',
+        jobValue:this.props.job.jobValue || '',
+        number: this.props.job.number || null,
+        exp_month: this.props.job.exp_month || null,
+        exp_year: this.props.job.exp_year || null,
+  			remote:this.props.job.remote || false,
+        cvc: this.props.job.cvc || null,
+        token: this.props.job.token || null,
+        app_method:this.props.job.app_method || 'email'
     }
   }
 
@@ -268,16 +243,20 @@ class JobUpdateDisplay extends Component {
 	                  placeholder="Job Types"
 	                />
 					</FormGroup>
-					<FormGroup controlId='pay_rate'>
-						<ControlLabel>Pay Rate *</ControlLabel>
-						<select ref='pay_rate'>
-							<option>Salary</option>
-							<option>Hourly</option>
-						</select>
-					</FormGroup>
 					<FormGroup controlId='compensation'>
-						<ControlLabel>Compensation *</ControlLabel>
-						<input ref='compensation' type='text' placeholder='$50/hr'/>
+						<ControlLabel>Compensation Type</ControlLabel>
+						<FormControl componentClass='select' ref='compensation'>
+							<option value='Salary'>Salary</option>
+							<option value='Hourly'>Hourly</option>
+						</FormControl>
+					</FormGroup>
+					<FormGroup controlId='pay_rate'>
+						<ControlLabel>Pay Rate</ControlLabel>
+						<FormControl
+              type='phone'
+              value={this.state.pay_rate}
+              onChange={this.handleChange('pay_rate')}
+            />
 					</FormGroup>
 					<FormGroup controlId='travel_requirements'>
 						<ControlLabel>Travel Requirements</ControlLabel>
@@ -290,13 +269,12 @@ class JobUpdateDisplay extends Component {
 							<option>100%</option>
 						</select>
 					</FormGroup>
-					<FormGroup controlId='rmeote'>
+					<FormGroup controlId='remote'>
 						<ControlLabel>Tellecomute:</ControlLabel>
 						<input ref='remote' type='checkbox' onClick={this.toggleRemote.bind(this)}/>
 					</FormGroup>
-          <Button className='primary' type='submit'>Post Job</Button>
+          <Button className='primary' type='submit'>Update Job</Button>
         </form>
-        <CreditCard ref='card' />
       </div>
     )
   }

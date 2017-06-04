@@ -11,8 +11,11 @@ module.exports = db => db.define('job', {
     type: Sequelize.TEXT,
     allowNull: false
   },
-  application_emails: {
-    type: Sequelize.ARRAY(Sequelize.STRING),
+  application_email: {
+    type: Sequelize.STRING,
+  },
+  cc_email: {
+    type: Sequelize.STRING,
   },
   application_url: {
     type: Sequelize.STRING,
@@ -41,6 +44,9 @@ module.exports = db => db.define('job', {
   travel_requirements: {
     type: Sequelize.STRING
   },
+  remote: {
+    type: Sequelize.BOOLEAN
+  }
 })
 
 // Belongs to Many associations create a join table.
