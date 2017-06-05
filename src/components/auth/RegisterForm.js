@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Row, FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap'
+import { Row, Col, FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap'
 import axios from 'axios'
 import { creatingNewUser } from 'APP/src/reducers/actions/users'
 import EmployerFields from './EmployerRegisterFields'
@@ -51,6 +51,7 @@ class RegisterForm extends Component {
         ? this.state.employment_type.delete(value)
         : this.state.employment_type.add(value)
       const employment_type = new Set([...this.state.employment_type])
+      /* ^Using a Set instead of an array because we need the data values to be unique */
       this.setState({employment_type})
     } else if (type === 'work_auth' || type === 'company_role') {
       value === 'select'
@@ -159,34 +160,36 @@ class RegisterForm extends Component {
   render() {
     return (
       <Row className='RegisterForm'>
-        <h1 className='RegisterForm-header'>Register</h1>
-        <form className='RegisterForm-body' onSubmit={this.handleSubmit}>
-          <FormGroup controlId='is_employer' onChange={this.toggleAccountType}>
-            <ControlLabel>What type of account would you like to create?</ControlLabel>
-            <FormControl componentClass="select">
-              <option>select an account type</option>
-              <option value='employer'>Employer</option>
-              <option value='applicant'>Applicant</option>
-            </FormControl>
-          </FormGroup>
-          {
-            this.state.showEmployer &&
-            <EmployerFields
-              state={this.state}
-              handleChange={this.handleChange}
-              validate={this.getValidationState}
-            />
-          }
-          {
-            this.state.showApplicant &&
-            <ApplicantFields
-              state={this.state}
-              handleChange={this.handleChange}
-              validate={this.getValidationState}
-            />
-          }
-          <Button disabled={this.isInvalid()} className='primary' type='submit'>Create Account</Button>
-        </form>
+        <Col xs={12} sm={6} md={6} lg={6}>
+          <h1 className='RegisterForm-header'>Register</h1>
+          <form className='RegisterForm-body' onSubmit={this.handleSubmit}>
+            <FormGroup controlId='is_employer' onChange={this.toggleAccountType}>
+              <ControlLabel>What type of account would you like to create?</ControlLabel>
+              <FormControl componentClass="select">
+                <option>select an account type</option>
+                <option value='employer'>Employer</option>
+                <option value='applicant'>Applicant</option>
+              </FormControl>
+            </FormGroup>
+            {
+              this.state.showEmployer &&
+              <EmployerFields
+                state={this.state}
+                handleChange={this.handleChange}
+                validate={this.getValidationState}
+              />
+            }
+            {
+              this.state.showApplicant &&
+              <ApplicantFields
+                state={this.state}
+                handleChange={this.handleChange}
+                validate={this.getValidationState}
+              />
+            }
+            <Button disabled={this.isInvalid()} className='primary' type='submit'>Create Account</Button>
+          </form>
+        </Col>
       </Row>
     )
   }

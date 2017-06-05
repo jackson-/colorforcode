@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import Payment from 'payment';
-import { FormGroup, FormControl, ControlLabel, Button } from 'react-bootstrap';
+import { Col, FormGroup, FormControl, ControlLabel, Button } from 'react-bootstrap';
 import { getStripeToken } from './getStripeToken';
 import Card from './Card'
 import CardLogos from './CardLogos'
 import './CreditCard.css'
+import '../auth/Form.css'
 const Stripe = window.Stripe;
 Stripe.setPublishableKey('API_KEY');
 
@@ -82,25 +83,22 @@ export default class CreditCard extends Component {
     const { number, exp_month, exp_year, cvc, token } = this.state;
 
     return (
-      <div className="CreditCard">
+      <div className="CreditCardForm-body">
         <CardLogos />
-        <form className="CardForm" onSubmit={ this.handleSubmit }>
-          <FormGroup>
-            <ControlLabel>Card Number</ControlLabel>
-            <FormControl onKeyUp={this.setCardType} ref="number" />
+        <FormGroup>
+          <ControlLabel>Card Number</ControlLabel>
+          <FormControl onKeyUp={this.setCardType} ref="number" />
+        </FormGroup>
+        <FormGroup>
+          <ControlLabel>Expiration</ControlLabel>
+          <FormGroup type='phone' ref="expiration">
+            <FormControl className='exp-cvc' placeholder='MM/YYYY' />
           </FormGroup>
-          <FormGroup>
-            <ControlLabel>Expiration</ControlLabel>
-            <FormGroup type='phone' ref="expiration">
-              <FormControl className='exp-cvc' placeholder='MM/YYYY' />
-            </FormGroup>
-          </FormGroup>
-          <FormGroup>
-            <ControlLabel>CVC</ControlLabel>
-            <FormControl type='phone' ref="cvc" className='exp-cvc' />
-          </FormGroup>
-          <Button type="submit" block>Generate Token</Button>
-        </form>
+        </FormGroup>
+        <FormGroup>
+          <ControlLabel>CVC</ControlLabel>
+          <FormControl type='phone' ref="cvc" className='exp-cvc' />
+        </FormGroup>
         {
           number &&
           <Card
@@ -115,5 +113,3 @@ export default class CreditCard extends Component {
     )
   }
 }
-
-CreditCard.propTypes = {};

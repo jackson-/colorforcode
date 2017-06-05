@@ -117,7 +117,6 @@ class JobBoard extends Component {
   			<VirtualizedSelect
     			className='JobBoard-search'
     			arrowRenderer={arrowRenderer}
-    			autofocus
     			clearable={true}
     			searchable={true}
     			simpleValue
