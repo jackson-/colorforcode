@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Row, Col, FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap'
 import { creatingNewJob } from 'APP/src/reducers/actions/jobs'
 import { gettingAllSkills } from 'APP/src/reducers/actions/skills'
-import CreditCard from './CreditCard';
+import CreditCardFormControls from './CreditCard';
 import VirtualizedSelect from 'react-virtualized-select'
 import 'react-select/dist/react-select.css'
 import 'react-virtualized/styles.css'
@@ -299,7 +299,7 @@ class PostJobForm extends Component {
   							<option value='100%'>100%</option>
   						</FormControl>
   					</FormGroup>
-            <CreditCard ref='card' />
+            <CreditCardFormControls ref='card' />
             <Button className='primary' type='submit'>Post Job</Button>
           </form>
         </Col>
