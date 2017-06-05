@@ -69,13 +69,16 @@ module.exports = db => db.define('user', {
          })
 */
 
-module.exports.associations = (User, {OAuth, Job, JobApplication, Employer}) => {
+module.exports.associations = (User, {OAuth, Job, Skill, Employer}) => {
   User.belongsTo(Employer)
   User.hasOne(OAuth)
+  User.belongsToMany(Skill, {
+    through: 'UserSkill'
+  })
   User.belongsToMany(Job, {
-    as: 'applications',
-    through: JobApplication,
-    foreignKey: 'application_id'
+    as: 'Applications',
+    through: 'JobApplication',
+    foreignKey: 'applicant_id'
   })
 }
 

@@ -11,44 +11,42 @@ module.exports = db => db.define('job', {
     type: Sequelize.TEXT,
     allowNull: false
   },
-  application_emails: {
-    type: Sequelize.ARRAY(Sequelize.TEXT),
+  application_email: {
+    type: Sequelize.STRING,
+  },
+  cc_email: {
+    type: Sequelize.STRING,
   },
   application_url: {
-    type: Sequelize.TEXT,
+    type: Sequelize.STRING,
   },
   city: {
-    type: Sequelize.TEXT,
+    type: Sequelize.STRING,
   },
   state: {
-    type: Sequelize.TEXT,
+    type: Sequelize.STRING,
   },
   country: {
-    type: Sequelize.TEXT,
+    type: Sequelize.STRING,
   },
   zip_code: {
-    type: Sequelize.TEXT,
-  },
-  remote: {
-    type: Sequelize.BOOLEAN,
-    allowNull: false
+    type: Sequelize.STRING,
   },
   employment_types: {
-    type: Sequelize.ARRAY(Sequelize.TEXT),
-    allowNull: false
+    type: Sequelize.ARRAY(Sequelize.STRING)
   },
   pay_rate: {
-    type: Sequelize.TEXT,
-    allowNull: false
+    type: Sequelize.STRING
   },
-  compensation: {
-    type: Sequelize.TEXT,
-    allowNull: false
+  compensation_type: {
+    type: Sequelize.STRING
   },
   travel_requirements: {
-    type: Sequelize.TEXT,
-    allowNull: false
+    type: Sequelize.STRING
   },
+  remote: {
+    type: Sequelize.BOOLEAN
+  }
 })
 
 // Belongs to Many associations create a join table.
@@ -71,12 +69,13 @@ module.exports = db => db.define('job', {
          })
 */
 
-module.exports.associations = (Job, {User, Employer, JobApplication, Skill, JobSkillRelationship}) => {
+module.exports.associations = (Job, {User, Employer, Skill}) => {
   Job.belongsToMany(User, {
     as: 'applicant',
-    through: JobApplication,
-    foreignKey: 'job_id'
+    through: 'JobApplication'
   })
-  Job.belongsToMany(Skill, {through: JobSkillRelationship})
+  Job.belongsToMany(Skill, {
+    through: 'JobSkill'
+  })
   Job.belongsTo(Employer)
 }

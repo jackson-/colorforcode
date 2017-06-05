@@ -62,7 +62,7 @@ const ApplicantRegisterFields = props => (
     </FormGroup>
     <FormGroup controlId='work_auth' onChange={props.handleChange('work_auth')}>
       <ControlLabel>Work Authorization</ControlLabel>
-      <FormControl componentClass="select" required>
+      <FormControl componentClass="select">
         <option>select</option>
         <option value='US Citizen'>US Citizen</option>
         <option value='Canadian Citizen'>Canadian Citizen</option>

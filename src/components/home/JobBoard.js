@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { Row } from 'react-bootstrap'
 import { gettingAllJobs } from 'APP/src/reducers/actions/jobs'
 import { gettingAllSkills } from 'APP/src/reducers/actions/skills'
 import JobList from './JobList.js'
@@ -15,29 +16,29 @@ function arrowRenderer () {
 	);
 }
 
-
 class JobBoard extends Component {
 
   constructor(props){
     super(props)
     this.state = {
-      selectValue:[],
-      selected_skills:[],
-      visible_jobs:[],
+      selectValue: [],
+      selected_skills: [],
+      visible_jobs: [],
     }
-
   }
 
-  componentWillMount(){
+  componentDidMount(){
     this.props.getJobs();
     this.props.getSkills();
   }
 
   _handleChange(input){
-		var viz = [];
-		var skill_ids = this.state.selected_skills;
-		if(input === "" || input == null){
-			if(skill_ids.length > 0){
+		let viz = [];
+		let skill_ids = this.state.selected_skills;
+
+		if (input === "" || input === null) {
+
+			if (skill_ids.length > 0) {
 				viz = this.state.visible_jobs.filter((job) => {
 					return skill_ids.every((skill) => {
 						return job.skills.indexOf(skill) >= 0;
@@ -49,19 +50,20 @@ class JobBoard extends Component {
 			let new_state = Object.assign({}, this.state, {visible_jobs:viz, selectValue:input})
 			this.setState(new_state);
 		} else {
-			if(skill_ids.length > 0){
+			if (skill_ids.length > 0) {
 				viz = this.state.visible_jobs.filter((job) => {
 					return skill_ids.every((skill) => {
 						return job.skills.indexOf(skill) >= 0;
 					});
 				})
 			}
+
 			for(let i=0; i < viz.length; i++){
-				if(viz[i]['title'].toLowerCase().includes(input)){
-					viz.push({title:viz[i]['title'],
-					id:viz[i]['id']})
+				if (viz[i]['title'].toLowerCase().includes(input)) {
+					viz.push({title: viz[i]['title'], id: viz[i]['id']})
 				}
 			}
+
 			let new_state = Object.assign({}, this.state, {visible_jobs:viz, selectValue:input})
 			this.setState(new_state);
 		}
@@ -109,39 +111,40 @@ class JobBoard extends Component {
     this.props.skills.forEach((skill) => {
 			skills.push({label:skill.title, value:skill.id})
 		})
-    return(
-      <div id='job-board'>
-			<VirtualizedSelect
-			className='job_searchbar'
-			arrowRenderer={arrowRenderer}
-			autofocus
-			clearable={true}
-			searchable={true}
-			simpleValue
-			labelKey='label'
-			valueKey='value'
-			ref="job_search"
-			multi={true}
-			options={skills}
-			onInputChange={(data) => this._handleChange(data)}
-			onChange={(selectValue) => this._selectSkill( selectValue )}
-			value={this.state.selectValue}
-			placeholder="Search For Jobs"
-			/>
-			{this.props.loading ?
-				<p>Loading....</p>:
-	        <JobList jobs={visible_jobs} />
-			}
 
-      </div>
+    return (
+      <Row className='JobBoard'>
+  			<VirtualizedSelect
+    			className='JobBoard-search'
+    			arrowRenderer={arrowRenderer}
+    			autofocus
+    			clearable={true}
+    			searchable={true}
+    			simpleValue
+    			labelKey='label'
+    			valueKey='value'
+    			ref="job_search"
+    			multi={true}
+    			options={skills}
+    			onInputChange={(data) => this._handleChange(data)}
+    			onChange={(selectValue) => this._selectSkill( selectValue )}
+    			value={this.state.selectValue}
+    			placeholder="Filter Jobs..."
+  			/>
+  			{
+          this.props.loading
+            ? <p>Loading....</p>
+            : <JobList jobs={visible_jobs} />
+  			}
+      </Row>
     )
   }
 }
 
 const mapStateToProps = state => ({
-  jobs:state.jobs.all,
-  skills:state.skills.all,
-	loading:state.loading
+  jobs: state.jobs.all,
+  skills: state.skills.all,
+	loading: state.loading
 })
 
 const mapDispatchToProps = dispatch => ({

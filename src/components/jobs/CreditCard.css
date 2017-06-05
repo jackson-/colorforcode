@@ -1,17 +1,13 @@
 .CreditCard {
   max-width: 400px;
 }
+
 .alert {
   margin-top: 20px;
 }
 
 h5 {
   margin-top: 0px;
-}
-
-.exp-cvc {
-  margin-bottom: 5px;
-  span:first-child { margin-right: 15px; }
 }
 
 .cc-logo {
@@ -22,6 +18,11 @@ h5 {
   &:not(:last-child) {
     margin-right: 10px;
   }
+}
+
+.exp-cvc {
+  width: 90px !important;
+  min-width: 0 !important;
 }
 
 .credit-card-list {

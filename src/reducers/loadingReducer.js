@@ -4,7 +4,7 @@
 import { REQUEST_ALL_JOBS, REQUEST_JOB, CREATE_JOB,
          UPDATE_JOB, DELETE_JOB, RECEIVE_ALL_JOBS, RECEIVE_JOB,
          RECEIVE_ALL_USERS, AUTHENTICATED,
-         CREATE_USER, UPDATE_USER, DELETE_USER, REQUEST_ALL_USERS } from './constants'
+         CREATE_USER, UPDATE_USER, DELETE_USER, REQUEST_ALL_USERS, RECEIVE_ALL_SKILLS } from './constants'
 
 const loadingReducer = (state = false, action) => {
   switch (action.type) {
@@ -14,7 +14,7 @@ const loadingReducer = (state = false, action) => {
     case UPDATE_JOB: return action.loading
     case DELETE_JOB: return action.loading
     case RECEIVE_ALL_JOBS: return action.loading
-    case RECEIVE_JOB: return action.loading
+    case RECEIVE_ALL_SKILLS: return action.loading
 
     case REQUEST_ALL_USERS: return action.loading
     case CREATE_USER: return action.loading
