@@ -22,6 +22,7 @@
   background: url("../../img/hero.jpg") no-repeat;
   background-size: cover;
   background-position: top;
+  background-attachment: fixed;
 }
 
 .parallax-content {
