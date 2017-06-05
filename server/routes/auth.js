@@ -3,6 +3,7 @@ const {env} = app
 const debug = require('debug')(`${app.name}:auth`)
 const passport = require('passport')
 const bCrypt = require('bcrypt')
+const bc = require('bcryptjs')
 const {User, OAuth, Employer} = require('APP/db')
 const auth = require('express').Router()
 const LocalStrategy = require('passport-local').Strategy;
@@ -117,6 +118,9 @@ passport.use('local-signin', new LocalStrategy({
           debug('authenticate user(email: "%s") did fail: no such user', email)
           return done(null, false, { message: 'Login incorrect' })
         }
+        bc.compare('123', user.password_digest).then((ok) => {
+          console.log("OK", ok)
+        })
         user.authenticate(password)
           .then(ok => {
             if (!ok) {
