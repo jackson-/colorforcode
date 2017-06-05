@@ -21,6 +21,8 @@ export const gettingAllSkills = () => dispatch => {
   dispatch(requestAllSkills())
   axios.get('/api/skills')
   .then(res => res.data)
-  .then(skills => dispatch(receiveAllSkills(skills)))
+  .then(skills => {
+    dispatch(receiveAllSkills(skills))}
+  )
   .catch(err => console.error(`Mang, I couldn't find any skills! ${err.stack}`))
 }

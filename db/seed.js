@@ -4,7 +4,6 @@ const db = require('APP/db')
 const {User, Employer, Skill, Job} = db
 const Promise = require('bluebird')
 const {mapValues} = require('lodash')
-const bCrypt = require('bcrypt');
 
 function seedEverything() {
   const seeded = {
@@ -13,38 +12,51 @@ function seedEverything() {
     skills: skills(),
   }
   seeded.jobs = jobs(seeded)
-  seeded.relationships = relationships(seeded)
+  // seeded.relationships = relationships(seeded)
 
   return Promise.props(seeded)
 }
 
-const generateHash = function(password) {
-  return bCrypt.hashSync(password, bCrypt.genSaltSync(8), null);
-};
 
-const users = seed(User, {
-  devin: {
-    email: 'devin@123.com',
-    name: 'Devin Jackson',
-    password: generateHash('123'),
-  },
-  chloe: {
-    name: 'Chloe Rice',
-    email: 'chloe@123.com',
-    password: generateHash('12345')
-  },
-})
+const users = seed(User,
+  ({users, employers, skills}) => ({
+      devin: {
+        email: 'devin@123.com',
+        name:'Devin Jackson',
+        password: '123',
+      },
+      chloe: {
+        name: 'Chloe Rice',
+        email: 'chloe@123.com',
+        password: '123'
+      },
+      hb1: {
+        name: 'Devin Blackson',
+        email: 'devin@hireblack.io',
+        password: '123',
+        is_employer:true,
+      },
+      hb2: {
+        name: 'Chloe Ice',
+        email: 'chloe@hireblack.io',
+        password: '123',
+        is_employer:true,
+
+      },
+}))
 
 const employers = seed(Employer, {
   airbnb: {
-    email: 'emp1@123.com',
     name: 'AirBnB',
-    password: '123',
+    company_site: 'http://www.airbnb.com',
   },
   google: {
     name: 'Google',
-    email: 'emp2@123.com',
-    password: '123'
+    company_site: 'http://www.google.com'
+  },
+  hireblack: {
+    name: 'HireBlack',
+    company_site: 'http://www.hireblack.io'
   },
 })
 
@@ -65,15 +77,17 @@ const jobs = seed(Job,
   // This lets us reference previously-created rows in order to create the join
   // rows. We can reference them by the names we used above (which is why we used
   // Objects above, rather than just arrays).
-  ({users, employers, skills}) => ({
+  ({users, employers, skills}) => {
+    return ({
     // The easiest way to seed associations seems to be to just create rows
     // in the join table.
     'full_stack': {
-      employer_id: employers.google.id,
+      employer_id: employers.hireblack.id,
       title:'Full Stack Dev',
-      description:'This is ajob for a full stack dev',
-      application_method:'email',
-      application_emails:['emp1@123.com', 'emp2@123.com'],
+      description:'This is a job for a full stack dev',
+      application_url:null,
+      application_email:'emp1@123.com',
+      cc_email: 'emp2@123.com',
       city:'Brooklyn',
       state:'NY',
       country:'US',
@@ -85,21 +99,24 @@ const jobs = seed(Job,
       remote:false,
     },
     'dev_ops': {
-      employer_id: employers.airbnb.id,
+      employer_id: employers.hireblack.id,
       title:'DevOps',
       description:'This is a job for a devops dude',
-      application_method:'email',
-      application_emails:['emp1@123.com', 'emp2@123.com'],
+      application_url:null,
+      application_email:'emp1@123.com',
+      cc_email: 'emp2@123.com',
       city:null,
       state:null,
       country: null,
       zip_code:null,
+      remote:true,
       employment_types:['Full-time', 'Remote'],
       compensation_type:'Hourly',
       pay_rate:'$100',
       travel_requirements:'None'
     },
   })
+}
 )
 
 const relationships = seed(Job,
@@ -166,7 +183,9 @@ function seed(Model, rows) {
       ).then(rows)
     }
     return Promise.resolve(rows)
-      .then(rows => Promise.props(
+      .then(rows => {
+        console.log("ROWS", rows)
+        return Promise.props(
         Object.keys(rows)
           .map(key => {
             const row = rows[key]
@@ -182,7 +201,7 @@ function seed(Model, rows) {
             {}
           )
         )
-      )
+      })
       .then(seeded => {
         console.log(`Seeded ${Object.keys(seeded).length} ${Model.name} OK`)
         return seeded

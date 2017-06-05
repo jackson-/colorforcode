@@ -34,6 +34,7 @@ export const whoami = (history) => dispatch => {
   axios.get('/api/auth/whoami')
   .then(response => {
     const user = response.data
+    console.log("USER", user)
     dispatch(authenticated(user))
     if (history) {
       typeof user !== 'string'

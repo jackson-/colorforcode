@@ -1,11 +1,10 @@
 import axios from 'axios'
 import { RECEIVE_ALL_JOBS, RECEIVE_JOB, RECEIVE_USER_JOBS, APPLIED_TO_JOB } from '../constants'
 import { createNewJob, requestAllJobs, requestJob, requestUserJobs, applyToJob } from './loading'
-
+import { gettingAllSkills } from './skills'
 /* --------- PURE ACTION CREATORS ---------*/
 export const receiveJob = job => ({
   job,
-  loading: false,
   type: RECEIVE_JOB
 })
 export const receiveAllJobs = jobs => ({
@@ -59,6 +58,7 @@ export const gettingJobById = job_id => dispatch => {
   .then(res => res.data)
   .then(job => {
     dispatch(receiveJob(job))
+    dispatch(gettingAllSkills())
   })
   .catch(err => console.error(`Mang I couldn't find the job! ${err.stack}`))
 }

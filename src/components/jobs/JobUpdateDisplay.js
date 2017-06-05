@@ -1,14 +1,12 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Row, FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap'
-import { creatingNewJob } from 'APP/src/reducers/actions/jobs'
-import { gettingAllSkills } from 'APP/src/reducers/actions/skills'
+import { FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap'
+import { updatingJob } from 'APP/src/reducers/actions/skills'
 import CreditCard from './CreditCard';
 import VirtualizedSelect from 'react-virtualized-select'
 import 'react-select/dist/react-select.css'
 import 'react-virtualized/styles.css'
 import 'react-virtualized-select/styles.css'
-import '../auth/Form.css'
 
 function arrowRenderer () {
 	return (
@@ -22,43 +20,33 @@ const states = [
 	"WV",'WI','WY']
 
 const job_types = [
-  {label:"Full Time", value:"Full Time"},
-  {label:"Part Time", value:"Part Time"},
-  {label:"Contract", value:"Contract"},
-  {label:"Contract to Hire", value:"Contract to Hire"},
-  {label:"Internship", value:"Internship"},
-  {label:"Remote", value:"Remote"}
+  {label:"Full Time",value:"Full Time"},
+  {label:"Part Time",value:"Part Time"},
+  {label:"Contract",value:"Contract"},
+  {label:"Third Pary",value:"Third Party"},
 ]
 
-class PostJobForm extends Component {
+class JobUpdateDisplay extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      title: '',
-      description: '',
-      application_email: '',
-      cc_email: '',
-      application_url:'',
-      city:'',
-      state: '',
-      zip_code:'',
-      selectValue:[],
-      jobValue:[],
-      pay_rate: '',
-      compensation_type: 'Salary',
-      travel_requirements: 'None',
-      number: null,
-      exp_month: null,
-      exp_year: null,
-      cvc: null,
-      token: null,
-      app_method:'email',
-			remote:false,
+        title: this.props.job.title || '',
+        description: this.props.job.description || '',
+        application_email: this.props.job.application_email || '',
+        cc_email:this.props.job.cc_email || '',
+        application_url:this.props.job.application_url || '',
+        city:this.props.job.city || '',
+        zip_code:this.props.job.zip_code || '',
+        selectValue:this.props.job.selectValue || '',
+        jobValue:this.props.job.jobValue || '',
+        number: this.props.job.number || null,
+        exp_month: this.props.job.exp_month || null,
+        exp_year: this.props.job.exp_year || null,
+  			remote:this.props.job.remote || false,
+        cvc: this.props.job.cvc || null,
+        token: this.props.job.token || null,
+        app_method:this.props.job.app_method || 'email'
     }
-  }
-
-  componentDidMount(){
-    this.props.getSkills()
   }
 
 	toggleRemote(){
@@ -75,57 +63,36 @@ class PostJobForm extends Component {
     this.setState({[type]: value})
   }
 
-  clearForm = () => {
-    this.setState({
-        title: '',
-        description: '',
-        application_email: '',
-        cc_email: '',
-        application_url:'',
-        city:'',
-        state: '',
-        zip_code:'',
-        selectValue:[],
-        jobValue:[],
-        pay_rate: '',
-        compensation_type: 'Salary',
-        travel_requirements: 'None',
-        number: null,
-        exp_month: null,
-        exp_year: null,
-        cvc: null,
-        token: null,
-        app_method:'email'
-    })
-  }
-
   handleSubmit = event => {
     event.preventDefault()
-    const { title, description, application_url,
-      city, state, zip_code, selectValue, jobValue,
-      pay_rate, compensation_type, travel_requirements,
-      number, exp_month, exp_year, cvc, app_method,
-      application_email, cc_email, remote } = this.state
+    const {title, description} = this.state
+    const employer = {}
+    employer.id = this.props.user.employer.id
+    const job = {title, description}
+    job.application_emails = [this.state.application_email, this.state.cc_email]
+		job.application_url = this.state.application_url
+		job.city = this.state.city
+		job.state = this.refs.state.value
+		job.country = "United States of America"
+		job.zip_code = this.state.zip_code
+		job.remote = this.state.remote
+		job.pay_rate = this.refs.pay_rate.value
+		job.compensation = this.refs.compensation.value
+		job.travel_requirements = this.refs.travel_requirements.value
 
-    const job = { title, description, application_url,
-      city, state, zip_code, selectValue, jobValue,
-      pay_rate, compensation_type, travel_requirements,
-      number, exp_month, exp_year, cvc, app_method, application_email, cc_email, remote }
-
-    job.employer_id = this.props.user.employer.id
 		job.employment_types = []
 		this.state.jobValue.forEach((jt)=>{
 			job.employment_types.push(jt.label)
 		})
-
-		const skills = []
+		job.skills = []
 		this.state.selectValue.forEach((skill)=>{
-			skills.push(skill.value)
+			job.skills.push(skill.value)
 		})
 
 		// const token = this.refs.card.state.token
-    this.clearForm()
-    this.props.createJobPost({job, skills})
+    const token = ""
+		debugger;
+    this.props.updateJob({employer, job, token})
   }
 
   _selectSkill(data){
@@ -165,30 +132,25 @@ class PostJobForm extends Component {
   render() {
 		let state_options = []
     let skills = []
-
-    this.props.skills.forEach(s => {
+    this.props.skills.forEach((s) => {
       skills.push({label:s.title, value:s.id})
     })
-
-		states.forEach((s, idx) => {
-      state_options.push(<option key={idx} value={s}>{s}</option>)
+		states.forEach((s) => {
+      state_options.push(<option key={s}>{s}</option>)
     })
-
     return (
-      <Row className='PostJobForm'>
+      <div>
         <h1 className='PostJobForm-header'>Post a new job</h1>
         <form className='PostJobForm-body' onSubmit={this.handleSubmit}>
           <FormGroup controlId='title'>
             <ControlLabel>Job Title</ControlLabel>
             <FormControl
-              type='text'
-              value={this.state.title}
-              onChange={this.handleChange('title')}
+            type='text'
+            value={this.state.title}
+            placeholder='e.g., Senior DevOps Engineer'
+            onChange={this.handleChange('title')}
             />
           </FormGroup>
-          <ControlLabel>
-            Required Skills (type below and hit 'Enter' to select and 'Backspace to deselect')
-          </ControlLabel>
           <VirtualizedSelect
             arrowRenderer={arrowRenderer}
             autofocus
@@ -202,6 +164,7 @@ class PostJobForm extends Component {
             options={skills}
             onChange={(data) => this._selectSkill(data)}
             value={this.state.selectValue}
+            placeholder="Skills"
           />
           <FormGroup controlId='description'>
             <ControlLabel>Job Description and Requirements</ControlLabel>
@@ -217,6 +180,7 @@ class PostJobForm extends Component {
             <FormControl
               type='email'
               value={this.state.application_email}
+              placeholder='e.g., hiring@aircash.io'
               onChange={this.handleChange('application_email')}
             />
           </FormGroup>
@@ -225,6 +189,7 @@ class PostJobForm extends Component {
             <FormControl
               type='email'
               value={this.state.cc_email}
+              placeholder='e.g., hiring@aircash.io'
               onChange={this.handleChange('cc_email')}
             />
           </FormGroup>
@@ -233,6 +198,7 @@ class PostJobForm extends Component {
             <FormControl
               type='url'
               value={this.state.application_url}
+              placeholder='e.g., hiring@aircash.io'
               onChange={this.handleChange('application_url')}
             />
           </FormGroup>
@@ -241,38 +207,41 @@ class PostJobForm extends Component {
             <FormControl
               type='city'
               value={this.state.city}
+              placeholder='e.g., NY'
               onChange={this.handleChange('city')}
             />
           </FormGroup>
 					<FormGroup controlId='state'>
 						<ControlLabel>State</ControlLabel>
-						<FormControl componentClass="select">
+						<select ref='state' placeholder='State'>
 							{state_options}
-						</FormControl>
+						</select>
 					</FormGroup>
           <FormGroup controlId='zip_code'>
             <ControlLabel>Zip Code</ControlLabel>
             <FormControl
-              type='phone'
+              type='zip_code'
               value={this.state.zip_code}
+              placeholder='e.g., zip_code'
               onChange={this.handleChange('zip_code')}
             />
           </FormGroup>
 					<FormGroup controlId='job_types'>
-						<ControlLabel>Job Types (select all that apply)</ControlLabel>
+						<ControlLabel>Job Types</ControlLabel>
 	          <VirtualizedSelect
-              arrowRenderer={arrowRenderer}
-              autofocus
-              searchable={false}
-              simpleValue
-              labelKey='label'
-              valueKey='value'
-              ref="job_search"
-              multi={true}
-              options={job_types}
-              onChange={(data) => this._selectJobType(data)}
-              value={this.state.jobValue}
-            />
+	                  arrowRenderer={arrowRenderer}
+	                  autofocus
+	                  searchable={false}
+	                  simpleValue
+	                  labelKey='label'
+	                  valueKey='value'
+	                  ref="job_search"
+	                  multi={true}
+	                  options={job_types}
+	                  onChange={(data) => this._selectJobType(data)}
+	                  value={this.state.jobValue}
+	                  placeholder="Job Types"
+	                />
 					</FormGroup>
 					<FormGroup controlId='compensation'>
 						<ControlLabel>Compensation Type</ControlLabel>
@@ -291,33 +260,24 @@ class PostJobForm extends Component {
 					</FormGroup>
 					<FormGroup controlId='travel_requirements'>
 						<ControlLabel>Travel Requirements</ControlLabel>
-						<FormControl componentClass='select' ref='travel_requirements'>
-							<option value='None'>None</option>
-							<option value='Occasional'>Occasional</option>
-							<option value='25%'>25%</option>
-							<option value='50%'>50%</option>
-							<option value='75%'>75%</option>
-							<option value='100%'>100%</option>
-						</FormControl>
+						<select ref='travel_requirements' placeholder='Travel Requirements'>
+							<option>None</option>
+							<option>Occasional</option>
+							<option>25%</option>
+							<option>50%</option>
+							<option>75%</option>
+							<option>100%</option>
+						</select>
 					</FormGroup>
-					<input type='checkbox' checked={this.state.checked}/>
-          <Button className='primary' type='submit'>Post Job</Button>
+					<FormGroup controlId='remote'>
+						<ControlLabel>Tellecomute:</ControlLabel>
+						<input ref='remote' type='checkbox' onClick={this.toggleRemote.bind(this)}/>
+					</FormGroup>
+          <Button className='primary' type='submit'>Update Job</Button>
         </form>
-        <CreditCard ref='card' />
-      </Row>
+      </div>
     )
   }
 }
 
-const mapStateToProps = state => ({
-  user: state.users.currentUser,
-  skills: state.skills.all
-})
-const mapDispatchToProps = dispatch => ({
-  createJobPost: post => dispatch(creatingNewJob(post)),
-  getSkills: post => dispatch(gettingAllSkills())
-})
-
-const PostNewJobContainer = connect(mapStateToProps, mapDispatchToProps)(PostJobForm)
-
-export default PostNewJobContainer
+export default JobUpdateDisplay
