@@ -1,8 +1,5 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
 import { FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap'
-import { updatingJob } from 'APP/src/reducers/actions/skills'
-import CreditCard from './CreditCard';
 import VirtualizedSelect from 'react-virtualized-select'
 import 'react-select/dist/react-select.css'
 import 'react-virtualized/styles.css'

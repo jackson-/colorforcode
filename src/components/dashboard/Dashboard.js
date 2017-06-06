@@ -1,7 +1,6 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import EmployerDashboard from './EmployerDashboard'
 import { connect } from 'react-redux'
-import { whoami } from '../../reducers/actions/users'
 
 class Dashboard extends Component {
 

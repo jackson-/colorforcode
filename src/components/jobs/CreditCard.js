@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Payment from 'payment';
-import { Col, FormGroup, FormControl, ControlLabel, Button } from 'react-bootstrap';
+import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 import { getStripeToken } from './getStripeToken';
 import Card from './Card'
 import CardLogos from './CardLogos'
