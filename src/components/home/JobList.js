@@ -1,30 +1,36 @@
-import React, { Component } from 'react'
+import React from 'react'
 import './Home.css'
-import { Link } from 'react-router-dom'
+import { Row, Col } from 'react-bootstrap'
+import { LinkContainer } from 'react-router-bootstrap'
+import './JobCard.css'
 
-
-class JobList extends Component {
-
-  render(){
-    let jobs = [];
-    if(this.props.jobs){
-      this.props.jobs.forEach((job)=>{
-        let url = "/job/"+job.id
-        jobs.push(
-          <li key={job.id}>
-          <Link to={url}>{job.title}</Link>
-          </li>
-        )
-      })
-    }
-    return(
-      <div className='JobBoard-cards'>
-        <ul>
-          {jobs}
-        </ul>
-      </div>
-    )
-  }
-}
+const JobList = props => (
+  <div className='JobList'>
+    {props.jobs && props.jobs.map((job, i) => {
+      return (
+        <LinkContainer className='JobCard' key={i} to={`/jobs/${job.id}`}>
+         <Row>
+           <Col xs={12} sm={6} md={6} lg={6}>
+             <h2>{job.title}</h2>
+             <p>{job.skills.map(skill => skill.title).join(', ')}</p>
+           </Col>
+           <Col xs={12} sm={6} md={6} lg={6}>
+             <h2>
+               {job.compensation_type === 'Hourly'
+                  ? `${job.pay_rate}/hr`
+                  : job.pay_rate
+               }
+             </h2>
+             <p>{`${job.city}, ${job.state}`}</p>
+             {job.employment_types && job.employment_types.map((type, i) => (
+               <span key={i} className='JobCard-type'>{type}</span>
+             ))}
+           </Col>
+         </Row>
+       </LinkContainer>
+      )
+    })}
+  </div>
+)
 
 export default JobList

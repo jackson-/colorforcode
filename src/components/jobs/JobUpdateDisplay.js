@@ -27,22 +27,22 @@ class JobUpdateDisplay extends Component {
   constructor(props) {
     super(props)
     this.state = {
-        title: this.props.job.title || '',
-        description: this.props.job.description || '',
-        application_email: this.props.job.application_email || '',
-        cc_email:this.props.job.cc_email || '',
-        application_url:this.props.job.application_url || '',
-        city:this.props.job.city || '',
-        zip_code:this.props.job.zip_code || '',
-        selectValue:this.props.job.selectValue || '',
-        jobValue:this.props.job.jobValue || '',
-        number: this.props.job.number || null,
-        exp_month: this.props.job.exp_month || null,
-        exp_year: this.props.job.exp_year || null,
-  			remote:this.props.job.remote || false,
-        cvc: this.props.job.cvc || null,
-        token: this.props.job.token || null,
-        app_method:this.props.job.app_method || 'email'
+      title: this.props.job.title || '',
+      description: this.props.job.description || '',
+      application_email: this.props.job.application_email || '',
+      cc_email:this.props.job.cc_email || '',
+      application_url:this.props.job.application_url || '',
+      city:this.props.job.city || '',
+      zip_code:this.props.job.zip_code || '',
+      selectValue:this.props.job.selectValue || '',
+      jobValue:this.props.job.jobValue || '',
+      number: this.props.job.number || null,
+      exp_month: this.props.job.exp_month || null,
+      exp_year: this.props.job.exp_year || null,
+			remote:this.props.job.remote || false,
+      cvc: this.props.job.cvc || null,
+      token: this.props.job.token || null,
+      app_method:this.props.job.app_method || 'email'
     }
   }
 
