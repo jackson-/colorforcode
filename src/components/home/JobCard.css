@@ -10,6 +10,12 @@
   border-bottom: 2px solid #12CD6A;
 }
 
+.JobCard-title,
+.JobCard-skills {
+  margin-left: 10%;
+  text-align: left;
+}
+
 .JobCard-type {
   background: #12CD6A;
   border-radius: 25px;
@@ -17,4 +23,18 @@
   font-size: 11px;
   padding: 10px;
   margin: 5px;
+}
+
+.JobCard-location {
+  font-size: 12px;
+  margin-top: 20px;
+}
+
+@media only screen
+and (max-width: 500px) {
+  .JobCard-title,
+  .JobCard-skills {
+    margin-left: 0;
+    text-align: center;
+  }
 }

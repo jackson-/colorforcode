@@ -114,22 +114,24 @@ class JobBoard extends Component {
 
     return (
       <Row className='JobBoard'>
-  			<VirtualizedSelect
-    			className='JobBoard-search'
-    			arrowRenderer={arrowRenderer}
-    			clearable={true}
-    			searchable={true}
-    			simpleValue
-    			labelKey='label'
-    			valueKey='value'
-    			ref="job_search"
-    			multi={true}
-    			options={skills}
-    			onInputChange={(data) => this._handleChange(data)}
-    			onChange={(selectValue) => this._selectSkill( selectValue )}
-    			value={this.state.selectValue}
-    			placeholder="Filter Jobs..."
-  			/>
+        <div className='JobBoard-filter-container'>
+          <VirtualizedSelect
+      			className='JobBoard-filter'
+      			arrowRenderer={arrowRenderer}
+      			clearable={true}
+      			searchable={true}
+      			simpleValue
+      			labelKey='label'
+      			valueKey='value'
+      			ref="job_search"
+      			multi={true}
+      			options={skills}
+      			onInputChange={(data) => this._handleChange(data)}
+      			onChange={(selectValue) => this._selectSkill( selectValue )}
+      			value={this.state.selectValue}
+      			placeholder="Filter Jobs..."
+    			/>
+        </div>
   			{
           this.props.loading
             ? <p>Loading....</p>
@@ -151,6 +153,4 @@ const mapDispatchToProps = dispatch => ({
   getSkills: post => dispatch(gettingAllSkills())
 })
 
-const JobBoardContainer = connect(mapStateToProps, mapDispatchToProps)(JobBoard)
-
-export default JobBoardContainer
+export default connect(mapStateToProps, mapDispatchToProps)(JobBoard)
