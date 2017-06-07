@@ -8,7 +8,8 @@ class JobList extends Component {
   render(){
     let jobs = [];
     if(this.props.jobs){
-      this.props.jobs.forEach((job)=>{
+      this.props.jobs.forEach((data)=>{
+        const job = data._source
         let url = "/job/"+job.id
         jobs.push(
           <li key={job.id}>

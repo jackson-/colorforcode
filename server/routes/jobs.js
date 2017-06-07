@@ -8,12 +8,32 @@ var stripe = require("stripe")(
 // );
 const db = require('APP/db')
 const {Job, Employer, Skill} = db
+const elasticsearch = require('elasticsearch');
+const esClient = new elasticsearch.Client({
+  host: '127.0.0.1:9200',
+  log: 'error'
+});
 
 module.exports = require('express').Router()
   .get('/', (req, res, next) => {
-    Job.findAll({ include: [Employer, Skill] })
-    .then(jobs => res.json(jobs))
-    .catch(next)
+    let body = {
+      from: 0,
+      query: {
+        match_all: {}
+      }
+    };
+    esClient.search({index: 'data', body: body})
+    .then(results => {
+      console.log(`found ${results.hits.total} items in ${results.took}ms`);
+      console.log(`returned article titles:`);
+      results.hits.hits.forEach(
+        (hit, index) => console.log(
+          `\t${body.from + ++index} - ${hit._source.title}`
+        )
+      )
+      return res.status(200).json(results.hits.hits)
+    })
+    .catch(console.error);
   })
   .post('/', (req, res, next) => {
     const skills = req.body.skills
