@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Row, FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap'
+import { Row, Col, FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap'
 import { login } from 'APP/src/reducers/actions/users'
 import './Form.css'
 
@@ -40,28 +40,30 @@ class LoginForm extends Component {
   render() {
     return (
       <Row className='LoginForm'>
-        <h1 className='LoginForm-header'>Log In</h1>
-        <form className='LoginForm-body' onSubmit={this.handleSubmit}>
-          <FormGroup controlId='email'>
-            <ControlLabel>Email</ControlLabel>
-            <FormControl
-              type='email'
-              value={this.state.email}
-              onChange={this.handleChange('email')}
-            />
-          </FormGroup>
-          <FormGroup controlId='password'>
-            <ControlLabel>Password</ControlLabel>
-            <FormControl
-              type='password'
-              value={this.state.password}
-              onChange={this.handleChange('password')}
-            />
-          </FormGroup>
-          <Button disabled={this.isInvalid()} className='primary' type='submit'>
-            Log In
-          </Button>
-        </form>
+        <Col xs={12} sm={6} md={6} lg={6}>
+          <h1 className='LoginForm-header'>Log In</h1>
+          <form className='LoginForm-body' onSubmit={this.handleSubmit}>
+            <FormGroup controlId='email'>
+              <ControlLabel>Email</ControlLabel>
+              <FormControl
+                type='email'
+                value={this.state.email}
+                onChange={this.handleChange('email')}
+              />
+            </FormGroup>
+            <FormGroup controlId='password'>
+              <ControlLabel>Password</ControlLabel>
+              <FormControl
+                type='password'
+                value={this.state.password}
+                onChange={this.handleChange('password')}
+              />
+            </FormGroup>
+            <Button disabled={this.isInvalid()} className='primary' type='submit'>
+              Log In
+            </Button>
+          </form>
+        </Col>
       </Row>
     )
   }

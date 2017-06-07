@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Row, FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap'
+import { Row, Col, FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap'
 import { creatingNewJob } from 'APP/src/reducers/actions/jobs'
 import { gettingAllSkills } from 'APP/src/reducers/actions/skills'
-import CreditCard from './CreditCard';
+import CreditCardFormControls from './CreditCard';
 import VirtualizedSelect from 'react-virtualized-select'
 import 'react-select/dist/react-select.css'
 import 'react-virtualized/styles.css'
@@ -63,7 +63,7 @@ class PostJobForm extends Component {
 
 	toggleRemote(){
 		const remote = !this.state.remote
-		this.setState({state:remote})
+		this.setState({state: remote})
 	}
 
   switchAppMethod(method){
@@ -77,25 +77,25 @@ class PostJobForm extends Component {
 
   clearForm = () => {
     this.setState({
-        title: '',
-        description: '',
-        application_email: '',
-        cc_email: '',
-        application_url:'',
-        city:'',
-        state: '',
-        zip_code:'',
-        selectValue:[],
-        jobValue:[],
-        pay_rate: '',
-        compensation_type: 'Salary',
-        travel_requirements: 'None',
-        number: null,
-        exp_month: null,
-        exp_year: null,
-        cvc: null,
-        token: null,
-        app_method:'email'
+      title: '',
+      description: '',
+      application_email: '',
+      cc_email: '',
+      application_url:'',
+      city:'',
+      state: '',
+      zip_code:'',
+      selectValue:[],
+      jobValue:[],
+      pay_rate: '',
+      compensation_type: 'Salary',
+      travel_requirements: 'None',
+      number: null,
+      exp_month: null,
+      exp_year: null,
+      cvc: null,
+      token: null,
+      app_method:'email'
     })
   }
 
@@ -176,134 +176,133 @@ class PostJobForm extends Component {
 
     return (
       <Row className='PostJobForm'>
-        <h1 className='PostJobForm-header'>Post a new job</h1>
-        <form className='PostJobForm-body' onSubmit={this.handleSubmit}>
-          <FormGroup controlId='title'>
-            <ControlLabel>Job Title</ControlLabel>
-            <FormControl
-              type='text'
-              value={this.state.title}
-              onChange={this.handleChange('title')}
-            />
-          </FormGroup>
-          <ControlLabel>
-            Required Skills (type below and hit 'Enter' to select and 'Backspace to deselect')
-          </ControlLabel>
-          <VirtualizedSelect
-            arrowRenderer={arrowRenderer}
-            autofocus
-            clearable={true}
-            searchable={true}
-            simpleValue
-            labelKey='label'
-            valueKey='value'
-            ref="job_search"
-            multi={true}
-            options={skills}
-            onChange={(data) => this._selectSkill(data)}
-            value={this.state.selectValue}
-          />
-          <FormGroup controlId='description'>
-            <ControlLabel>Job Description and Requirements</ControlLabel>
-            <FormControl
-              type='text'
-              componentClass='textarea'
-              value={this.state.description}
-              onChange={this.handleChange('description')}
-            />
-          </FormGroup>
-          <FormGroup controlId='application_email'>
-            <ControlLabel>Application Email</ControlLabel>
-            <FormControl
-              type='email'
-              value={this.state.application_email}
-              onChange={this.handleChange('application_email')}
-            />
-          </FormGroup>
-          <FormGroup controlId='cc_email'>
-            <ControlLabel>CC Email</ControlLabel>
-            <FormControl
-              type='email'
-              value={this.state.cc_email}
-              onChange={this.handleChange('cc_email')}
-            />
-          </FormGroup>
-          <FormGroup controlId='application_url'>
-            <ControlLabel>Application URL</ControlLabel>
-            <FormControl
-              type='url'
-              value={this.state.application_url}
-              onChange={this.handleChange('application_url')}
-            />
-          </FormGroup>
-          <FormGroup controlId='city'>
-            <ControlLabel>Job City</ControlLabel>
-            <FormControl
-              type='city'
-              value={this.state.city}
-              onChange={this.handleChange('city')}
-            />
-          </FormGroup>
-					<FormGroup controlId='state'>
-						<ControlLabel>State</ControlLabel>
-						<FormControl componentClass="select">
-							{state_options}
-						</FormControl>
-					</FormGroup>
-          <FormGroup controlId='zip_code'>
-            <ControlLabel>Zip Code</ControlLabel>
-            <FormControl
-              type='phone'
-              value={this.state.zip_code}
-              onChange={this.handleChange('zip_code')}
-            />
-          </FormGroup>
-					<FormGroup controlId='job_types'>
-						<ControlLabel>Job Types (select all that apply)</ControlLabel>
-	          <VirtualizedSelect
+        <Col xs={12} sm={6} md={6} lg={6}>
+          <h1 className='PostJobForm-header'>Post a new job</h1>
+          <form className='PostJobForm-body' onSubmit={this.handleSubmit}>
+            <FormGroup controlId='title'>
+              <ControlLabel>Job Title</ControlLabel>
+              <FormControl
+                type='text'
+                value={this.state.title}
+                onChange={this.handleChange('title')}
+              />
+            </FormGroup>
+            <ControlLabel>
+              Required Skills (type below and hit 'Enter' to select and 'Backspace to deselect')
+            </ControlLabel>
+            <VirtualizedSelect
               arrowRenderer={arrowRenderer}
-              autofocus
-              searchable={false}
+              clearable={true}
+              searchable={true}
               simpleValue
               labelKey='label'
               valueKey='value'
               ref="job_search"
               multi={true}
-              options={job_types}
-              onChange={(data) => this._selectJobType(data)}
-              value={this.state.jobValue}
+              options={skills}
+              onChange={(data) => this._selectSkill(data)}
+              value={this.state.selectValue}
             />
-					</FormGroup>
-					<FormGroup controlId='compensation'>
-						<ControlLabel>Compensation Type</ControlLabel>
-						<FormControl componentClass='select' ref='compensation'>
-							<option value='Salary'>Salary</option>
-							<option value='Hourly'>Hourly</option>
-						</FormControl>
-					</FormGroup>
-					<FormGroup controlId='pay_rate'>
-						<ControlLabel>Pay Rate</ControlLabel>
-						<FormControl
-              type='phone'
-              value={this.state.pay_rate}
-              onChange={this.handleChange('pay_rate')}
-            />
-					</FormGroup>
-					<FormGroup controlId='travel_requirements'>
-						<ControlLabel>Travel Requirements</ControlLabel>
-						<FormControl componentClass='select' ref='travel_requirements'>
-							<option value='None'>None</option>
-							<option value='Occasional'>Occasional</option>
-							<option value='25%'>25%</option>
-							<option value='50%'>50%</option>
-							<option value='75%'>75%</option>
-							<option value='100%'>100%</option>
-						</FormControl>
-					</FormGroup>
-					<input type='checkbox' checked={this.state.checked}/>
-          <Button className='primary' type='submit'>Post Job</Button>
-        </form>
-        <CreditCard ref='card' />
+            <FormGroup controlId='description'>
+              <ControlLabel>Job Description and Requirements</ControlLabel>
+              <FormControl
+                type='text'
+                componentClass='textarea'
+                value={this.state.description}
+                onChange={this.handleChange('description')}
+              />
+            </FormGroup>
+            <FormGroup controlId='application_email'>
+              <ControlLabel>Application Email</ControlLabel>
+              <FormControl
+                type='email'
+                value={this.state.application_email}
+                onChange={this.handleChange('application_email')}
+              />
+            </FormGroup>
+            <FormGroup controlId='cc_email'>
+              <ControlLabel>CC Email</ControlLabel>
+              <FormControl
+                type='email'
+                value={this.state.cc_email}
+                onChange={this.handleChange('cc_email')}
+              />
+            </FormGroup>
+            <FormGroup controlId='application_url'>
+              <ControlLabel>Application URL</ControlLabel>
+              <FormControl
+                type='url'
+                value={this.state.application_url}
+                onChange={this.handleChange('application_url')}
+              />
+            </FormGroup>
+            <FormGroup controlId='city'>
+              <ControlLabel>Job City</ControlLabel>
+              <FormControl
+                type='city'
+                value={this.state.city}
+                onChange={this.handleChange('city')}
+              />
+            </FormGroup>
+  					<FormGroup controlId='state'>
+  						<ControlLabel>State</ControlLabel>
+  						<FormControl componentClass="select">
+  							{state_options}
+  						</FormControl>
+  					</FormGroup>
+            <FormGroup controlId='zip_code'>
+              <ControlLabel>Zip Code</ControlLabel>
+              <FormControl
+                type='phone'
+                value={this.state.zip_code}
+                onChange={this.handleChange('zip_code')}
+              />
+            </FormGroup>
+  					<FormGroup controlId='job_types'>
+  						<ControlLabel>Job Types (select all that apply)</ControlLabel>
+  	          <VirtualizedSelect
+                arrowRenderer={arrowRenderer}
+                searchable={false}
+                simpleValue
+                labelKey='label'
+                valueKey='value'
+                ref="job_search"
+                multi={true}
+                options={job_types}
+                onChange={(data) => this._selectJobType(data)}
+                value={this.state.jobValue}
+              />
+  					</FormGroup>
+  					<FormGroup controlId='compensation'>
+  						<ControlLabel>Compensation Type</ControlLabel>
+  						<FormControl componentClass='select' ref='compensation'>
+  							<option value='Salary'>Salary</option>
+  							<option value='Hourly'>Hourly</option>
+  						</FormControl>
+  					</FormGroup>
+  					<FormGroup controlId='pay_rate'>
+  						<ControlLabel>Pay Rate</ControlLabel>
+  						<FormControl
+                type='phone'
+                value={this.state.pay_rate}
+                onChange={this.handleChange('pay_rate')}
+              />
+  					</FormGroup>
+  					<FormGroup controlId='travel_requirements'>
+  						<ControlLabel>Travel Requirements</ControlLabel>
+  						<FormControl componentClass='select' ref='travel_requirements'>
+  							<option value='None'>None</option>
+  							<option value='Occasional'>Occasional</option>
+  							<option value='25%'>25%</option>
+  							<option value='50%'>50%</option>
+  							<option value='75%'>75%</option>
+  							<option value='100%'>100%</option>
+  						</FormControl>
+  					</FormGroup>
+            <CreditCardFormControls ref='card' />
+            <Button className='primary' type='submit'>Post Job</Button>
+          </form>
+        </Col>
       </Row>
     )
   }

@@ -6,6 +6,7 @@
 
 .navbar {
   background: #FFFFFF;
+  margin: 0;
 }
 
 .nav a {
@@ -84,20 +85,27 @@ and (min-width: 768px) {
   }
 }
 
-.button-oval {
+.btn-oval {
   margin: 8px 0;
   padding: 12px 30px;
   font-size: 13px !important;
+  font-family: Open Sans Bold;
   border: solid 2px #12CD6A;
   border-radius: 25px;
 }
 
-.button-oval:hover,
-.button-oval:focus,
-.button-oval:active:focus,
-.button-oval.active,
-.button-oval.active:hover,
-.button-oval.active:focus {
+.btn-oval__black {
+  background: #000000;
+  border-color: #000000;
+  color: #FFFFFF;
+}
+
+.btn-oval:hover,
+.btn-oval:focus,
+.btn-oval:active:focus,
+.btn-oval.active,
+.btn-oval.active:hover,
+.btn-oval.active:focus {
   background: #12CD6A;
   border: solid 2px #12CD6A;
   color: #FFFFFF;

@@ -1,50 +1,38 @@
-import React, {Component} from 'react'
-import JobInfoDisplay from './JobInfoDisplay';
-import JobUpdateDisplay from './JobUpdateDisplay';
+import React, { Component } from 'react'
+import JobInfoDisplay from './JobInfoDisplay'
+import JobUpdateDisplay from './JobUpdateDisplay'
 import { gettingJobById } from 'APP/src/reducers/actions/jobs'
 import { connect } from 'react-redux'
 
 class JobDetailPage extends Component {
-  componentDidMount(){
-    this.props.getJob(this.props.match.params.id);
+  componentDidMount() {
+    const {id} = this.props.match.params
+    this.props.getJob(id)
   }
 
-  render(){
-    const user = this.props.user
-    return(
+  render() {
+    const {user, job, skills} = this.props
+    return (
       <div className='JobDetailPage'>
-        {!this.props.loading && this.props.job && this.props.skills &&
-          <div>
-            {user && user.is_employer &&
-              <JobUpdateDisplay user={user} skills={this.props.skills} job={this.props.job}/>
-            }
-            {user && !user.is_employer &&
-              <JobInfoDisplay user={user} skills={this.props.skills} job={this.props.job} />
-            }
-            {user === "" &&
-              <JobInfoDisplay user={null} skills={this.props.skills} job={this.props.job} />
-            }
-          </div>
+        {(user && user.is_employer) && job
+          && <JobUpdateDisplay user={user} skills={skills} job={job} />
         }
-        {this.props.loading &&
-          <div>
-            Loading...
-          </div>
+        {((user && !user.is_employer) || !user) && job
+          && <JobInfoDisplay skills={skills} job={job} />
         }
       </div>
-  )}
+    )
+  }
 }
 
 const mapStateToProps = state => ({
   user: state.users.currentUser,
   skills: state.skills.all,
-  job: state.jobs.currentJob,
-  loading: state.loading,
+  job: state.jobs.currentJob
 })
+
 const mapDispatchToProps = dispatch => ({
-  getJob: job_id => dispatch(gettingJobById(job_id)),
+  getJob: job_id => dispatch(gettingJobById(job_id))
 })
 
-const JobDetailPageContainer = connect(mapStateToProps, mapDispatchToProps)(JobDetailPage)
-
-export default JobDetailPageContainer
+export default connect(mapStateToProps, mapDispatchToProps)(JobDetailPage)
