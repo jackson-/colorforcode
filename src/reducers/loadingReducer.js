@@ -2,9 +2,10 @@
 // and loading animations
 
 import { REQUEST_ALL_JOBS, REQUEST_JOB, CREATE_JOB,
-         UPDATE_JOB, DELETE_JOB, RECEIVE_ALL_JOBS, RECEIVE_JOB,
+         UPDATE_JOB, DELETE_JOB, RECEIVE_ALL_JOBS,
          RECEIVE_ALL_USERS, AUTHENTICATED,
-         CREATE_USER, UPDATE_USER, DELETE_USER, REQUEST_ALL_USERS, RECEIVE_ALL_SKILLS } from './constants'
+         CREATE_USER, UPDATE_USER, DELETE_USER, REQUEST_ALL_USERS,
+         RECEIVE_ALL_SKILLS } from './constants'
 
 const loadingReducer = (state = false, action) => {
   switch (action.type) {

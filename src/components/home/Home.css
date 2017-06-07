@@ -22,6 +22,7 @@
   background: url("../../img/hero.jpg") no-repeat;
   background-size: cover;
   background-position: top;
+  background-attachment: fixed;
 }
 
 .parallax-content {
@@ -42,13 +43,23 @@
 
 .JobBoard {
   min-height: 100vh;
-  background: #EEEEEE;
   z-index: 2;
-  padding: 15px;
+  padding: 0 0 35px 0;
 }
 
-.JobBoard-search {
-  margin: 25px auto;
+.JobBoard-filter-container {
+  height: 100px;
+  background: #12CD6A;
+  padding: 32px 10px;
+  box-shadow: 0 -17px 15px -17px #099b4e inset;
+}
+
+.Select {
+  margin: 0;
+}
+
+.JobBoard-filter {
+  margin: 0 auto;
 }
 
 @media only screen

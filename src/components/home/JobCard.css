@@ -1,0 +1,66 @@
+@import url(../../fonts.css);
+
+.JobCard {
+  border-bottom: 2px solid #E4E4E4;
+  transition: border-bottom .3s ease-in;
+  padding: 40px 0;
+  width: 90vw;
+  margin: auto;
+}
+
+.JobCard:hover {
+  border-bottom: 2px solid #12CD6A;
+}
+
+.JobCard-title,
+.JobCard-payrate {
+  font-size: 17px;
+  font-family: Open Sans Bold;
+  margin-top: 10px;
+}
+
+.JobCard-title,
+.JobCard-skills {
+  margin-left: 10%;
+  text-align: left;
+}
+
+.JobCard-skills {
+  color: #909090;
+  font-size: 13px;
+}
+
+.JobCard-payrate {
+  margin-top: 35px;
+  text-align: right;
+}
+
+.JobCard-location {
+  font-size: 12px;
+  margin-top: 0px;
+  font-family: Helvetica Neue;
+}
+
+.JobCard-type {
+  background: #12CD6A;
+  border-radius: 25px;
+  color: #FFFFFF;
+  font-size: 11px;
+  font-family: Open Sans Bold;
+  padding: 5px 10px;
+  margin: 0 5px;
+}
+
+@media only screen
+and (max-width: 767px) {
+  .JobCard-title,
+  .JobCard-skills,
+  .JobCard-payrate {
+    margin: 5px;
+    text-align: center;
+  }
+
+  .JobCard {
+    padding: 20px 0;
+  }
+}
