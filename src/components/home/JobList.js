@@ -6,7 +6,8 @@ import './JobCard.css'
 
 const JobList = props => (
   <div className='JobList'>
-    {props.jobs && props.jobs.map((job, i) => {
+    {props.jobs && props.jobs.map((data, i) => {
+      const job = data._source
       return (
         <LinkContainer className='JobCard' key={i} to={`/jobs/${job.id}`}>
          <Row>
@@ -31,8 +32,6 @@ const JobList = props => (
                  ))}
                </Col>
              </Row>
-
-
            </Col>
          </Row>
        </LinkContainer>
