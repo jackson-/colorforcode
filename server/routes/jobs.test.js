@@ -22,28 +22,29 @@
      })
    })
 
-   describe("POST", () => {
-     it("returns the new job eager loaded with employer and skills", () =>
-       request(app)
-         .post("/api/jobs")
-         .send({
-           job: {
-             title: "JS Dev",
-             description: "Build me a million dollar app.",
-             remote: false,
-             employment_types: ["Full Time"],
-             pay_rate: "N/A",
-             compensation: "80-100K",
-             travel_requirements: "N/A",
-             employer_id: 1,
-           },
-           skills: [1]
-          })
-         .expect(201)
-         .then(res => {
-           expect(res.body.skills.length).to.equal(1)
-           expect(res.body.employer.name).to.equal("Etsy")
-         })
+  describe("POST", () => {
+    it("returns the new job eager loaded with employer and skills", () =>
+      request(app)
+      .post("/api/jobs")
+      .send({
+       job: {
+         title: "JS Dev",
+         description: "Build me a million dollar app.",
+         remote: false,
+         employment_types: ["Full Time"],
+         pay_rate: "N/A",
+         compensation: "80-100K",
+         travel_requirements: "N/A",
+         employer_id: 1,
+       },
+       skills: [1]
+      })
+      .expect(201)
+      .then(res => {
+       expect(res.body.skills.length).to.equal(1)
+       expect(res.body.employer.name).to.equal("Etsy")
+      })
     )
   })
+
 })

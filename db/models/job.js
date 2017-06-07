@@ -11,42 +11,19 @@ module.exports = db => db.define('job', {
     type: Sequelize.TEXT,
     allowNull: false
   },
-  application_email: {
-    type: Sequelize.STRING,
-  },
-  cc_email: {
-    type: Sequelize.STRING,
-  },
-  application_url: {
-    type: Sequelize.STRING,
-  },
-  city: {
-    type: Sequelize.STRING,
-  },
-  state: {
-    type: Sequelize.STRING,
-  },
-  country: {
-    type: Sequelize.STRING,
-  },
-  zip_code: {
-    type: Sequelize.STRING,
-  },
-  employment_types: {
-    type: Sequelize.ARRAY(Sequelize.STRING)
-  },
-  pay_rate: {
-    type: Sequelize.STRING
-  },
-  compensation_type: {
-    type: Sequelize.STRING
-  },
-  travel_requirements: {
-    type: Sequelize.STRING
-  },
-  remote: {
-    type: Sequelize.BOOLEAN
-  }
+  application_email: Sequelize.STRING,
+  cc_email: Sequelize.STRING,
+  application_url: Sequelize.STRING,
+  city: Sequelize.STRING,
+  state: Sequelize.STRING,
+  country: Sequelize.STRING,
+  zip_code: Sequelize.STRING,
+  employment_types: Sequelize.ARRAY(Sequelize.STRING),
+  pay_rate: Sequelize.STRING,
+  compensation_type: Sequelize.STRING,
+  travel_requirements: Sequelize.STRING,
+  remote: Sequelize.BOOLEAN,
+  application_email: Sequelize.STRING
 })
 
 // Belongs to Many associations create a join table.

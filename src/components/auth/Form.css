@@ -1,7 +1,7 @@
 @import url(../../fonts.css);
 
 .RegisterForm, .LoginForm {
-  padding: 70px 10%;
+  padding: 70px 0 25px 0;
   background: #12CD6A;
   min-height: 100vh;
   color: #FFFFFF;
@@ -16,7 +16,7 @@
 }
 
 .PostJobForm {
-  padding: 70px 10%;
+  padding: 70px 0 25px 0;
   min-height: 100vh;
 }
 
@@ -75,8 +75,28 @@
 }
 
 @media only screen
-and (max-width: 768px) {
+and (max-width: 767px) {
   .form-group textarea {
     width: 80vw;
+  }
+}
+
+@media only screen
+and (max-width: 767px) {
+  .LoginForm-header,
+  .RegisterForm-header,
+  .PostJobForm-header {
+    text-align: center
+  }
+
+  .LoginForm-body .form-control,
+  .RegisterForm-body .form-control,
+  .PostJobForm-body .form-control,
+  .CreditCardForm-body .form-control {
+    min-width: 100%;
+  }
+
+  .btn {
+    width: 100%;
   }
 }

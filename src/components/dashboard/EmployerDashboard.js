@@ -4,7 +4,6 @@ import { Button } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { gettingUserJobs } from '../../reducers/actions/jobs'
-import { whoami } from '../../reducers/actions/users'
 
 class EmployerDashboard extends Component {
 

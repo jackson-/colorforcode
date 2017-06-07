@@ -36,7 +36,7 @@ module.exports = require('express').Router()
     .catch(console.error);
   })
   .post('/', (req, res, next) => {
-    const skills = req.body.skills
+    const {skills} = req.body
     // const  token = req.body.token
     // stripe.charges.create({
     //   amount: 2,
