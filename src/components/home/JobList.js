@@ -17,7 +17,7 @@ const JobList = props => (
            <Col xs={12} sm={6} md={6} lg={6}>
              <Row>
                <Col xs={12} sm={6} md={6} lg={6}>
-                 <h2>
+                 <h2 className='JobCard-payrate'>
                    {job.compensation_type === 'Hourly'
                       ? `${job.pay_rate}/hr`
                       : job.pay_rate
