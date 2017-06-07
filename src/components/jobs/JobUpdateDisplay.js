@@ -30,16 +30,16 @@ class JobUpdateDisplay extends Component {
       title: this.props.job.title || '',
       description: this.props.job.description || '',
       application_email: this.props.job.application_email || '',
-      cc_email:this.props.job.cc_email || '',
-      application_url:this.props.job.application_url || '',
-      city:this.props.job.city || '',
-      zip_code:this.props.job.zip_code || '',
-      selectValue:this.props.job.selectValue || '',
-      jobValue:this.props.job.jobValue || '',
+      cc_email: this.props.job.cc_email || '',
+      application_url: this.props.job.application_url || '',
+      city: this.props.job.city || '',
+      zip_code: this.props.job.zip_code || '',
+      selectValue: this.props.job.selectValue || '',
+      jobValue: this.props.job.jobValue || '',
       number: this.props.job.number || null,
       exp_month: this.props.job.exp_month || null,
       exp_year: this.props.job.exp_year || null,
-			remote:this.props.job.remote || false,
+			remote: this.props.job.remote || false,
       cvc: this.props.job.cvc || null,
       token: this.props.job.token || null,
       app_method:this.props.job.app_method || 'email'
@@ -127,6 +127,7 @@ class JobUpdateDisplay extends Component {
 	}
 
   render() {
+    const {job} = this.props
 		let state_options = []
     let skills = []
     this.props.skills.forEach((s) => {
@@ -136,6 +137,7 @@ class JobUpdateDisplay extends Component {
       state_options.push(<option key={s}>{s}</option>)
     })
     return (
+      job &&
       <div>
         <h1 className='PostJobForm-header'>Post a new job</h1>
         <form className='PostJobForm-body' onSubmit={this.handleSubmit}>
@@ -226,19 +228,19 @@ class JobUpdateDisplay extends Component {
 					<FormGroup controlId='job_types'>
 						<ControlLabel>Job Types</ControlLabel>
 	          <VirtualizedSelect
-	                  arrowRenderer={arrowRenderer}
-	                  autofocus
-	                  searchable={false}
-	                  simpleValue
-	                  labelKey='label'
-	                  valueKey='value'
-	                  ref="job_search"
-	                  multi={true}
-	                  options={job_types}
-	                  onChange={(data) => this._selectJobType(data)}
-	                  value={this.state.jobValue}
-	                  placeholder="Job Types"
-	                />
+              arrowRenderer={arrowRenderer}
+              autofocus
+              searchable={false}
+              simpleValue
+              labelKey='label'
+              valueKey='value'
+              ref="job_search"
+              multi={true}
+              options={job_types}
+              onChange={(data) => this._selectJobType(data)}
+              value={this.state.jobValue}
+              placeholder="Job Types"
+            />
 					</FormGroup>
 					<FormGroup controlId='compensation'>
 						<ControlLabel>Compensation Type</ControlLabel>

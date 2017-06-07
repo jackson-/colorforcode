@@ -30,8 +30,7 @@ class JobInfoDisplay extends Component {
 
     return (
       <Row className='JobInfo'>
-        {
-          job &&
+        {job &&
           <Col xs={12} sm={12} md={12} lg={12}>
             <Row className='JobInfo-header'>
               <Col className='header-left' xs={12} sm={6} md={6} lg={6}>
@@ -75,6 +74,7 @@ class JobInfoDisplay extends Component {
 }
 
 const mapStateToProps = state => ({
+  user: state.user,
   history: state.router.history
 })
 

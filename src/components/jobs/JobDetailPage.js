@@ -14,9 +14,11 @@ class JobDetailPage extends Component {
     const {user, job, skills} = this.props
     return (
       <div className='JobDetailPage'>
-        {user && user.is_employer
-            ? <JobUpdateDisplay user={user} skills={skills} job={job} />
-            : <JobInfoDisplay user={user} skills={skills} job={job} />
+        {(user && user.is_employer) && job
+          && <JobUpdateDisplay user={user} skills={skills} job={job} />
+        }
+        {((user && !user.is_employer) || !user) && job
+          && <JobInfoDisplay skills={skills} job={job} />
         }
       </div>
     )
