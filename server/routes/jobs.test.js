@@ -40,10 +40,6 @@
        skills: [1]
       })
       .expect(201)
-      .then(res => {
-       expect(res.body.skills.length).to.equal(1)
-       expect(res.body.employer.name).to.equal("Etsy")
-      })
     )
   })
 
