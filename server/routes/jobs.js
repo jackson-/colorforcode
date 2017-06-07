@@ -6,6 +6,7 @@ var stripe = require("stripe")(
 // var stripe = require("stripe")(
 //   "sk_test_BQokikJOvBiI2HlWgH4olfQ2"
 // );
+const axios = require('axios')
 const db = require('APP/db')
 const {Job, Employer, Skill} = db
 const elasticsearch = require('elasticsearch');
@@ -16,23 +17,9 @@ const esClient = new elasticsearch.Client({
 
 module.exports = require('express').Router()
   .get('/', (req, res, next) => {
-    let body = {
-      from: 0,
-      query: {
-        match_all: {}
-      }
-    };
+    let body = {from: 0,query: {match_all: {}}};
     esClient.search({index: 'data', body: body})
-    .then(results => {
-      console.log(`found ${results.hits.total} items in ${results.took}ms`);
-      console.log(`returned article titles:`);
-      results.hits.hits.forEach(
-        (hit, index) => console.log(
-          `\t${body.from + ++index} - ${hit._source.title}`
-        )
-      )
-      return res.status(200).json(results.hits.hits)
-    })
+    .then(results => {return res.status(200).json(results.hits.hits)})
     .catch(console.error);
   })
   .post('/', (req, res, next) => {
@@ -54,7 +41,13 @@ module.exports = require('express').Router()
       },
       include: [Skill, Employer]
     }))
-    .then(job => res.status(201).json(job))
+    .then(job => {
+      return axios.post('http://localhost:9200/data/job', job.get())
+    })
+    .then(() => {
+      console.log("WE HERE YA")
+      return res.sendStatus(201)
+    })
     .catch(next)
   })
   .put('/:id', (req, res, next) => {
@@ -76,7 +69,6 @@ module.exports = require('express').Router()
       .catch(next))
   .post('/:id/apply', (req, res, next) => {
     const user_id = req.body.user_id
-
     Job.findById(req.params.id)
     .then(foundJob => foundJob.addApplicant(user_id))
     .then(application => res.sendStatus(201))
