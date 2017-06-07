@@ -61,7 +61,7 @@ const NavBar = props => (
       </Nav>
       <Nav pullRight>
         <LinkContainer to='/post-new-job'>
-          <NavItem><span className='button-oval'>Post a job</span></NavItem>
+          <NavItem><span className='btn-oval'>Post a job</span></NavItem>
         </LinkContainer>
       </Nav>
     </Navbar.Collapse>

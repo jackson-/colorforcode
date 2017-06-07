@@ -93,10 +93,10 @@ and (max-width: 767px) {
   .RegisterForm-body .form-control,
   .PostJobForm-body .form-control,
   .CreditCardForm-body .form-control {
-    min-width: 90vw;
+    min-width: 100%;
   }
 
   .btn {
-    width: 90vw;
+    width: 100%;
   }
 }

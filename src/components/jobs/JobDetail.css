@@ -1,7 +1,7 @@
 @import url(../../fonts.css);
 
 .JobInfo {
-  padding: 70px 0 35px 0;
+  padding: 60px 0 35px 0;
 }
 
 .JobInfo-header {
@@ -30,7 +30,7 @@
 }
 
 .JobInfo-location {
-  font-size: 12px;
+  font-size: .75em;
 }
 
 .header-right {
@@ -50,6 +50,10 @@
 .JobInfo-date {
   margin-top: 15px;
   font-size: .75em;
+}
+
+.JobInfo-summary {
+  padding: 25px;
 }
 
 @media only screen
