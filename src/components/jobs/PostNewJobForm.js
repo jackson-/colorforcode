@@ -19,7 +19,8 @@ const states = [
 	'AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','HI','ID','IL','IN','IA','KS',
 	'KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY',
 	'NC','ND','MP','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA',
-	"WV",'WI','WY']
+	"WV",'WI','WY'
+]
 
 const job_types = [
   {label:"Full Time", value:"Full Time"},
@@ -85,7 +86,7 @@ class PostJobForm extends Component {
       city:'',
       state: '',
       zip_code:'',
-      selectValue:[],
+      selectValue: [],
       jobValue:[],
       pay_rate: '',
       compensation_type: 'Salary',
@@ -102,15 +103,18 @@ class PostJobForm extends Component {
   handleSubmit = event => {
     event.preventDefault()
     const { title, description, application_url,
+            city, state, zip_code, selectValue, jobValue,
+            pay_rate, compensation_type, travel_requirements,
+            number, exp_month, exp_year, cvc, app_method,
+            application_email, cc_email, remote } = this.state
+
+    const job = {
+      title, description, application_url,
       city, state, zip_code, selectValue, jobValue,
       pay_rate, compensation_type, travel_requirements,
       number, exp_month, exp_year, cvc, app_method,
-      application_email, cc_email, remote } = this.state
-
-    const job = { title, description, application_url,
-      city, state, zip_code, selectValue, jobValue,
-      pay_rate, compensation_type, travel_requirements,
-      number, exp_month, exp_year, cvc, app_method, application_email, cc_email, remote }
+      application_email, cc_email, remote
+    }
 
     job.employer_id = this.props.user.employer.id
 		job.employment_types = []
@@ -119,7 +123,7 @@ class PostJobForm extends Component {
 		})
 
 		const skills = []
-		this.state.selectValue.forEach((skill)=>{
+		this.state.selectValue.forEach((skill) => {
 			skills.push(skill.value)
 		})
 
@@ -131,35 +135,33 @@ class PostJobForm extends Component {
   _selectSkill(data){
 		let skill_ids = data.split(',');
     let new_skills = []
-		if(skill_ids[0] !== ""){
+		if (skill_ids[0] !== "") {
       skill_ids.forEach((sk_id) => {
 				this.props.skills.forEach((s) => {
           if(s.id === parseInt(sk_id, 10)){
-            new_skills.push({label:s.title, value:s.id})
+            new_skills.push({label: s.title, value: s.id})
           }
         })
 			});
-		} else {
-			new_skills = [];
 		}
-		let new_state = Object.assign({}, this.state,
-			 {selectValue:new_skills, selected_skills:skill_ids})
-		this.setState(new_state);
+    this.setState({
+      selectValue: [...new_skills],
+      selected_skills: skill_ids
+    })
 	}
 
   _selectJobType(data){
 		let type_ids = data.split(',');
     let new_types = []
-    if(type_ids[0] !== ""){
+    if (type_ids[0] !== "") {
       type_ids.forEach((t) => {
-        new_types.push({label:t, value:t})
+        new_types.push({label: t, value: t})
       })
-    }else {
-      new_types = []
     }
-		let new_state = Object.assign({}, this.state,
-			 {jobValue:new_types, selected_skills:type_ids})
-		this.setState(new_state);
+    this.setState({
+      jobValue: [...new_types],
+      selected_jobtypes: type_ids
+    })
 	}
 
   render() {
@@ -246,7 +248,7 @@ class PostJobForm extends Component {
             </FormGroup>
   					<FormGroup controlId='state'>
   						<ControlLabel>State</ControlLabel>
-  						<FormControl componentClass="select">
+  						<FormControl componentClass="select" ref='state'>
   							{state_options}
   						</FormControl>
   					</FormGroup>
