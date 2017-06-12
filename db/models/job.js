@@ -22,7 +22,6 @@ module.exports = db => db.define('job', {
   pay_rate: Sequelize.STRING,
   compensation_type: Sequelize.STRING,
   travel_requirements: Sequelize.STRING,
-  remote: Sequelize.BOOLEAN,
   application_email: Sequelize.STRING
 })
 

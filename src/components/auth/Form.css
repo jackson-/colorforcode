@@ -15,12 +15,14 @@
   margin: 16px 0;
 }
 
-.PostJobForm {
+.PostJobForm,
+.UpdateJobForm {
   padding: 70px 0 25px 0;
   min-height: 100vh;
 }
 
-.PostJobForm-header {
+.PostJobForm-header,
+.UpdateJobForm-header {
   font-family: Lato Bold;
   text-transform: uppercase;
   margin: 16px 0;
@@ -85,14 +87,16 @@ and (max-width: 767px) {
 and (max-width: 767px) {
   .LoginForm-header,
   .RegisterForm-header,
-  .PostJobForm-header {
+  .PostJobForm-header,
+  .UpdateJobForm-header {
     text-align: center
   }
 
   .LoginForm-body .form-control,
   .RegisterForm-body .form-control,
   .PostJobForm-body .form-control,
-  .CreditCardForm-body .form-control {
+  .CreditCardForm-body .form-control,
+  .UpdateJobForm-body .form-control {
     min-width: 100%;
   }
 

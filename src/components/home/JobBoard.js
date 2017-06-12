@@ -80,7 +80,8 @@ class JobBoard extends Component {
     let new_skills = []
 		var viz = [];
 		if(skill_ids[0] !== ""){
-			viz = this.props.jobs.filter((job) => {
+			viz = this.props.jobs.filter((jobData) => {
+        const job = {...jobData._source}
 				return skill_ids.every((skill) => {
 					return this._checkForSkill(job, skill);
 				});

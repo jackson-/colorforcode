@@ -112,6 +112,7 @@ passport.use('local-signin', new LocalStrategy({
     debug('will authenticate user(email: "%s")', email)
     User.findOne({
       where: {email},
+      include: [Employer],
       attributes: {include: ['password_digest']}
     }).then(user => {
         if (!user) {
