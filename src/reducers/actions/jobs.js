@@ -1,8 +1,8 @@
 import axios from 'axios'
 import { RECEIVE_ALL_JOBS, RECEIVE_JOB,
-         RECEIVE_USER_JOBS, APPLIED_TO_JOB } from '../constants'
+         RECEIVE_USER_JOBS, APPLIED_TO_JOB, RECEIVE_APPLIED_JOBS } from '../constants'
 import { createNewJob, requestAllJobs,
-         requestJob, requestUserJobs, applyToJob } from './loading'
+         requestJob, requestUserJobs, requestAppliedJobs, applyToJob } from './loading'
 import { gettingAllSkills } from './skills'
 
 /* --------- PURE ACTION CREATORS ---------*/
@@ -19,6 +19,11 @@ export const receiveUserJobs = jobs => ({
   jobs,
   loading: false,
   type: RECEIVE_USER_JOBS
+})
+export const receiveAppliedJobs = jobs => ({
+  jobs,
+  loading: false,
+  type: RECEIVE_APPLIED_JOBS
 })
 export const appliedToJob = () => ({
   loading: false,
@@ -48,6 +53,15 @@ export const applyingToJob = (user_id, job_id, history) => dispatch => {
 export const gettingUserJobs = (employer) => dispatch => {
   dispatch(requestUserJobs())
   axios.get(`/api/jobs/employer/${employer.id}`)
+  .then(res => res.data)
+  .then(jobs => dispatch(receiveUserJobs(jobs)))
+  .catch(err => console.error(`Mang, I couldn't find the jobs! ${err.stack}`))
+}
+
+export const gettingUserApps = (user) => dispatch => {
+  console.log("IN REDUCER")
+  dispatch(requestAppliedJobs())
+  axios.get(`/api/jobs/apps/${user.id}`)
   .then(res => res.data)
   .then(jobs => dispatch(receiveUserJobs(jobs)))
   .catch(err => console.error(`Mang, I couldn't find the jobs! ${err.stack}`))
