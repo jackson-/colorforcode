@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {bindAll} from 'lodash';
 import $ from 'jquery';
+import axios from 'axios'
 
 class ImageUploader extends Component {
 
@@ -17,28 +18,36 @@ class ImageUploader extends Component {
   handleSubmit(e) {
     e.preventDefault();
     const _this = this;
-
-    this.setState({
-      processing: true
-    });
-
-    const promise = $.ajax({
-      url: '/api/v1/image',
-      type: "POST",
-      data: {
-        data_uri: this.state.data_uri,
-        filename: this.state.filename,
-        filetype: this.state.filetype
-      },
-      dataType: 'json'
-    });
-
-    promise.done(function(data){
-      _this.setState({
-        processing: false,
-        uploaded_uri: data.uri
+    // const data = _this.state.data
+    _this.setState({
+        processing: true,
       });
-    });
+   const options = {
+      headers: {
+        'Content-Type': this.state.file.type
+      }
+    };
+    axios.get(`http://localhost:1337/api/users/sign-s3?file-name=${this.state.filename}&file-type=${this.state.filetype}`)
+    .then((res) => {
+      axios.put(res.data.signedRequest, this.state.file, options).then((response) => {
+        _this.setState({
+          processing: false,
+          uploaded_uri:this.state.data_uri
+        });
+      })
+    })
+    // const promise = $.ajax({
+    //   url: '/api/v1/image',
+    //   type: "POST",
+    //   data: {
+    //     data_uri: this.state.data_uri,
+    //     filename: this.state.filename,
+    //     filetype: this.state.filetype
+    //   },
+    //   dataType: 'json'
+  // });
+
+
   }
 
   handleFile(e) {
@@ -47,6 +56,7 @@ class ImageUploader extends Component {
 
     reader.onload = (upload) => {
       this.setState({
+        file:file,
         data_uri: upload.target.result,
         filename: file.name,
         filetype: file.type
