@@ -4,7 +4,7 @@ const debug = require('debug')(`${app.name}:auth`)
 const passport = require('passport')
 const bCrypt = require('bcrypt')
 const bc = require('bcryptjs')
-const {User, OAuth, Employer} = require('APP/db')
+const {User, OAuth, Employer, Job} = require('APP/db')
 const auth = require('express').Router()
 const LocalStrategy = require('passport-local').Strategy;
 
@@ -58,7 +58,10 @@ passport.deserializeUser(
   (id, done) => {
     debug('will deserialize user.id=%d', id)
     User.findById(id, {
-      include: [Employer]
+      include: [
+        {model: Employer},
+        {model: Job, as: 'applications', through: {attributes: []}}
+      ],
     })
       .then(user => {
         if (!user) debug('deserialize retrieved null user for id=%d', id)
@@ -112,7 +115,10 @@ passport.use('local-signin', new LocalStrategy({
     debug('will authenticate user(email: "%s")', email)
     User.findOne({
       where: {email},
-      include: [Employer],
+      include: [
+        {model: Employer},
+        {model: Job, as: 'applications', through: {attributes: []}}
+      ],
       attributes: {include: ['password_digest']}
     }).then(user => {
         if (!user) {

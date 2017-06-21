@@ -21,11 +21,11 @@ class JobSeekerDashboard extends Component {
 
   render(){
     let apps = [];
-    this.props.apps && this.props.apps.forEach((app)=>{
+    this.props.user && this.props.user.applications.forEach((app)=>{
       let url = "/job/"+app.id
       apps.push(
         <li key={app.id}>
-          <Link to={url}>{app.job.title}</Link>
+          <Link to={url}>{app.title}</Link>
         </li>
       )
     })

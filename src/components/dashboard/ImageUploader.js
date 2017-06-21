@@ -27,8 +27,9 @@ class ImageUploader extends Component {
         'Content-Type': this.state.file.type
       }
     };
-    axios.get(`http://localhost:1337/api/users/sign-s3?file-name=${this.state.filename}&file-type=${this.state.filetype}`)
+    axios.get(`http://localhost:1337/api/users/sign-s3?&file-name=${this.state.filename}&file-type=${this.state.filetype}`)
     .then((res) => {
+      debugger;
       axios.put(res.data.signedRequest, this.state.file, options).then((response) => {
         _this.setState({
           processing: false,
