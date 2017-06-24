@@ -20,6 +20,8 @@ export const REQUEST_ALL_USERS = 'REQUEST_ALL_USERS'
 export const CREATE_USER = 'CREATE_USER'
 export const UPDATE_USER = 'UPDATE_USER'
 export const DELETE_USER = 'DELETE_USER'
+export const BEGIN_UPLOADING = 'BEGIN_UPLOADING'
+export const DONE_UPLOADING = 'DONE_UPLOADING'
 
 /* ----------- USERS ------------ */
 export const AUTHENTICATED = 'AUTHENTICATED'

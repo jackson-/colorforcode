@@ -4,20 +4,12 @@ import { Button } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import ImageUploader from './ImageUploader'
-import { gettingUserApps } from '../../reducers/actions/jobs'
+import ResumeUploader from './ResumeUploader'
+import { updatingUser } from '../../reducers/actions/users'
+import { uploadingAvatar } from '../../reducers/actions/users'
+import { uploadingResume } from '../../reducers/actions/users'
 
 class JobSeekerDashboard extends Component {
-
-  componentWillReceiveProps(){
-    if(this.props.user && !this.props.jobs){
-      console.log("PROPS", this.props)
-      // this.props.getApps(this.props.user)
-    }
-  }
-
-  _savePic(input){
-    debugger;
-  }
 
   render(){
     let apps = [];
@@ -35,7 +27,12 @@ class JobSeekerDashboard extends Component {
           <h2>{`Welcome, ${this.props.user.first_name} ${this.props.user.last_name}`}</h2>
         }
         <div id='activity'>
-          <ImageUploader />
+          <ImageUploader uploadAvatar={this.props.uploadAvatar}  user={this.props.user}/>
+
+          <ResumeUploader uploadResume={this.props.uploadResume}  user={this.props.user}/>
+          <div id="resume-photo">
+          <iframe src={this.props.user.resume_url}></iframe>
+          </div>
           <h3>Applied Jobs</h3>
           <ul>
             {apps}
@@ -49,11 +46,12 @@ class JobSeekerDashboard extends Component {
 
 const mapStateToProps = state => ({
   user: state.users.currentUser,
-  apps: state.jobs.user_jobs
 })
 
 const mapDispatchToProps = dispatch => ({
-  getApps: (user) => dispatch(gettingUserApps(user)),
+  updateUser: (user) => dispatch(updatingUser(user)),
+  uploadAvatar: (user, file) => dispatch(uploadingAvatar(user, file)),
+  uploadResume: (user, file) => dispatch(uploadingResume(user, file)),
 })
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(JobSeekerDashboard))

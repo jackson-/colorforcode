@@ -19,7 +19,7 @@ class ImageUploader extends Component {
     e.preventDefault();
     const _this = this;
 
-    this.props.uploadAvatar(this.props.user, this.state.file)
+    this.props.uploadResume(this.props.user, this.state.file)
     _this.setState({
         uploaded_uri:this.state.data_uri
       });
@@ -64,7 +64,7 @@ class ImageUploader extends Component {
     return (
       <div className='row'>
         <div className='col-sm-12'>
-          <label>Upload a profile photo</label>
+          <label>Upload your resume</label>
           <form onSubmit={this.handleSubmit} encType="multipart/form-data">
             <input type="file" onChange={this.handleFile} />
             <input disabled={this.state.processing} className='btn btn-primary' type="submit" value="Upload" />
