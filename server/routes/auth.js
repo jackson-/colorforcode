@@ -60,7 +60,7 @@ passport.deserializeUser(
     User.findById(id, {
       include: [
         {model: Employer},
-        {model: Job, as: 'applications', through: {attributes: []}}
+        {model: Job, as: 'applications', through: "JobApplication"}
       ],
     })
       .then(user => {
