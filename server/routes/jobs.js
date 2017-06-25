@@ -7,7 +7,7 @@ var stripe = require("stripe")(
 //   "sk_test_BQokikJOvBiI2HlWgH4olfQ2"
 // );
 const db = require('APP/db')
-const {Job, Employer, Skill} = db
+const {Job, Employer, Skill, User} = db
 const elasticsearch = require('elasticsearch')
 const esClient = new elasticsearch.Client({
   host: '127.0.0.1:9200',
@@ -115,7 +115,18 @@ module.exports = require('express').Router()
       .then(application => res.sendStatus(201))
       .catch(next)
     })
-
+  .get('/apps/:id',
+    (req, res, next) =>
+      User.findOne({
+        where: {
+          id: req.params.id
+        },
+        include: [{ association: 'Job' }]
+      })
+      .then(jobs => {
+        console.log("JOBS", jobs)
+        return res.json(jobs)})
+      .catch(next))
   .get('/employer/:id',
     (req, res, next) => {
       Job.findAll({

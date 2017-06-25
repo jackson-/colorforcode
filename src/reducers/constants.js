@@ -2,9 +2,11 @@
 export const RECEIVE_ALL_JOBS = 'RECEIVE_ALL_JOBS'
 export const RECEIVE_JOB = 'RECEIVE_JOB'
 export const RECEIVE_USER_JOBS = 'RECEIVE_USER_JOBS'
+export const RECEIVE_APPLIED_JOBS = 'RECEIVE_APPLIED_JOBS'
 
 /* ----------- LOADING ------------ */
 export const REQUEST_ALL_JOBS = 'REQUEST_ALL_JOBS'
+export const REQUEST_APPLIED_JOBS = 'REQUEST_APPLIED_JOBS'
 export const APPLY_TO_JOB = 'APPLY_TO_JOB'
 export const APPLIED_TO_JOB = 'APPLIED_TO_JOB'
 export const REQUEST_USER_JOBS = 'REQUEST_USER_JOBS'
@@ -18,6 +20,8 @@ export const REQUEST_ALL_USERS = 'REQUEST_ALL_USERS'
 export const CREATE_USER = 'CREATE_USER'
 export const UPDATE_USER = 'UPDATE_USER'
 export const DELETE_USER = 'DELETE_USER'
+export const BEGIN_UPLOADING = 'BEGIN_UPLOADING'
+export const DONE_UPLOADING = 'DONE_UPLOADING'
 
 /* ----------- USERS ------------ */
 export const AUTHENTICATED = 'AUTHENTICATED'

@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import EmployerDashboard from './EmployerDashboard'
+import JobSeekerDashboard from './JobSeekerDashboard'
 import { connect } from 'react-redux'
 
 class Dashboard extends Component {
@@ -12,6 +13,9 @@ class Dashboard extends Component {
           <div>
             {user && user.is_employer &&
               <EmployerDashboard user={user} />
+            }
+            {user && !user.is_employer &&
+              <JobSeekerDashboard user={user} />
             }
           </div>
         }
