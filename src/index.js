@@ -5,12 +5,14 @@ import { Provider } from 'react-redux'
 
 import Container from './components/app/App'
 import Home from './components/home/Home'
+import ProjectsPage from './components/projects/ProjectsPage'
 import About from './components/about/About'
 import RegisterForm from './components/auth/RegisterForm'
 import LoginForm from './components/auth/LoginForm'
 import PostNewJobForm from './components/jobs/PostNewJobForm'
 import JobDetailPage from './components/jobs/JobDetailPage'
 import Dashboard from './components/dashboard/Dashboard'
+import ProjectCreate from './components/projects/CreateProjectForm'
 // import EmployerLoginForm from './components/auth/EmployerLoginForm'
 // import EmployerRegisterForm from './components/auth/EmployerRegisterForm'
 import store from './store'
@@ -38,6 +40,8 @@ const App = () => (
           <Route exact path='/post-new-job' component={PostNewJobForm} />
           <Route exact path='/jobs/:id' component={JobDetailPage} />
           <Route exact path='/dashboard' component={Dashboard} />
+          <Route exact path='/projects' component={ProjectsPage} />
+          <Route exact path='/projects/create' component={ProjectCreate} />
         </Switch>
       </Container>
     </Router>

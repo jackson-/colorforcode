@@ -22,8 +22,9 @@ module.exports = require('express').Router()
       query,
       from: 0
     }
-    esClient.search({body, index: 'data'})
-    .then(results => res.status(200).json(results.hits.hits))
+    esClient.search({body, index: 'data', type:'job'})
+    .then(results => {
+      return res.status(200).json(results.hits.hits)})
     .catch(next)
   })
 

@@ -4,7 +4,7 @@ const debug = require('debug')(`${app.name}:auth`)
 const passport = require('passport')
 const bCrypt = require('bcrypt')
 const bc = require('bcryptjs')
-const {User, OAuth, Employer, Job} = require('APP/db')
+const {User, OAuth, Employer, Job, Project, Skill} = require('APP/db')
 const auth = require('express').Router()
 const LocalStrategy = require('passport-local').Strategy;
 
@@ -60,6 +60,7 @@ passport.deserializeUser(
     User.findById(id, {
       include: [
         {model: Employer},
+        {model: Project, include: [Skill]},
         {model: Job, as: 'applications', through: "JobApplication"}
       ],
     })

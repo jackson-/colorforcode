@@ -2,7 +2,8 @@ import { CREATE_JOB, UPDATE_JOB, DELETE_JOB, REQUEST_JOB,
          REQUEST_ALL_JOBS, CREATE_USER, UPDATE_USER,
          DELETE_USER, REQUEST_ALL_USERS, REQUEST_ALL_SKILLS,
           REQUEST_USER_JOBS, REQUEST_APPLIED_JOBS, APPLY_TO_JOB,
-          APPLIED_TO_JOB, BEGIN_UPLOADING, DONE_UPLOADING  } from '../constants'
+          APPLIED_TO_JOB, BEGIN_UPLOADING, DONE_UPLOADING,
+          CREATE_PROJECT} from '../constants'
 
 /* --------- PURE ACTION CREATORS ---------*/
 
@@ -87,12 +88,7 @@ export const requestAllSkills = () => ({
   loading: true
 })
 
-// export const authenticateUser = () => ({
-//   type: AUTHENTICATE_USER,
-//   loading: true
-// })
-//
-// export const doneLoading = () => ({
-//   type: DONE_LOADING,
-//   loading: false
-// })
+export const createNewProject = () => ({
+  type: CREATE_PROJECT,
+  loading: true
+})
