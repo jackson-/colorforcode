@@ -10,11 +10,9 @@ const initialState = {
 const jobsReducer = (state=initialState, action) => {
   switch (action.type) {
     case RECEIVE_JOB: return {
-      // all: [...state.all],
       currentJob: action.job
     }
     case RECEIVE_ALL_JOBS: return {
-      // currentJob: {...state.currentJob} || null,
       all: action.jobs
     }
     case RECEIVE_USER_JOBS: return {

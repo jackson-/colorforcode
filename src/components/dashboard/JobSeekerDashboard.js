@@ -9,6 +9,9 @@ import { updatingUser } from '../../reducers/actions/users'
 import { uploadingAvatar } from '../../reducers/actions/users'
 import { uploadingResume } from '../../reducers/actions/users'
 
+import { LinkContainer } from 'react-router-bootstrap'
+import { NavItem } from 'react-bootstrap'
+
 class JobSeekerDashboard extends Component {
 
   render(){
@@ -27,6 +30,7 @@ class JobSeekerDashboard extends Component {
           <h2>{`Welcome, ${this.props.user.first_name} ${this.props.user.last_name}`}</h2>
         }
         <div id='activity'>
+          <Link to='/projects'>My Projects</Link>
           <ImageUploader uploadAvatar={this.props.uploadAvatar}  user={this.props.user}/>
 
           <ResumeUploader uploadResume={this.props.uploadResume}  user={this.props.user}/>
