@@ -2,7 +2,7 @@
 
 var stripe = require("stripe")(
   "API_SECRET"
-);
+)
 // var stripe = require("stripe")(
 //   "sk_test_BQokikJOvBiI2HlWgH4olfQ2"
 // );
@@ -17,14 +17,37 @@ const esClient = new elasticsearch.Client({
 module.exports = require('express').Router()
 
   .get('/', (req, res, next) => {
-    const query = req.query ? req.query : {match_all: {}}
     let body = {
-      query,
+      query: {match_all: {}},
       from: 0
     }
-    esClient.search({body, index: 'data', type:'job'})
+    esClient.search({body, index: 'data', type: 'job'})
     .then(results => {
-      return res.status(200).json(results.hits.hits)})
+      return res.status(200).json(results.hits.hits)
+    })
+    .catch(next)
+  })
+
+  // search bar
+  .post('/search', (req, res, next) => {
+    const query = req.body.query
+      ? {multi_match: {query: req.body.query, fields: ['_all']}}
+      : {match_all: {}}
+
+    esClient.search({
+      index: 'data',
+      type: 'job',
+      body: {query}
+    })
+    .then(results => res.status(200).json(results.hits.hits))
+    .catch(next)
+  })
+
+  // advanced search
+  .post('/search/advanced', (req, res, next) => {
+    const {body} = req
+    esClient.search({body, index: 'data'})
+    .then(advancedResults => res.status(200).json(advancedResults))
     .catch(next)
   })
 

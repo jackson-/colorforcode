@@ -1,11 +1,11 @@
 import { CREATE_JOB, UPDATE_JOB, DELETE_JOB, REQUEST_JOB,
          REQUEST_ALL_JOBS, CREATE_USER, UPDATE_USER,
          DELETE_USER, REQUEST_ALL_USERS, REQUEST_ALL_SKILLS,
-          REQUEST_USER_JOBS, REQUEST_APPLIED_JOBS, APPLY_TO_JOB,
-          APPLIED_TO_JOB, BEGIN_UPLOADING, DONE_UPLOADING,
-          CREATE_PROJECT} from '../constants'
+         REQUEST_USER_JOBS, REQUEST_APPLIED_JOBS, APPLY_TO_JOB,
+         APPLIED_TO_JOB, BEGIN_UPLOADING, DONE_UPLOADING,
+         CREATE_PROJECT, REQUEST_FILTERED_JOBS } from '../constants'
 
-/* --------- PURE ACTION CREATORS ---------*/
+/* --------- PURE ACTION CREATORS --------- */
 
 export const beginUploading = () => ({
   type: BEGIN_UPLOADING,
@@ -39,6 +39,11 @@ export const requestJob = () => ({
 
 export const requestAllJobs = () => ({
   type: REQUEST_ALL_JOBS,
+  loading: true
+})
+
+export const requestFilteredJobs = () => ({
+  type: REQUEST_FILTERED_JOBS,
   loading: true
 })
 
@@ -76,7 +81,6 @@ export const deleteUser = () => ({
   type: DELETE_USER,
   loading: true
 })
-
 
 export const requestAllUsers = () => ({
   type: REQUEST_ALL_USERS,

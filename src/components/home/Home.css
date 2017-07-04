@@ -9,10 +9,6 @@
   z-index: -4;
 }
 
-.job_searchbar {
-  margin-bottom:20%
-}
-
 .Home-hero {
   padding: 0;
   width: 100%;
@@ -47,19 +43,39 @@
   padding: 0 0 35px 0;
 }
 
-.JobBoard-filter-container {
-  height: 100px;
+.search-header {
+  padding: 0 12px 0 12px;
+}
+
+.search-chip-container {
+  padding: 15px 10px;
+}
+
+.search-chip {
+  background: #FFFFFF;
+  border-radius: 3px;
+  border: 2px solid #12CD6A;
+  color: #12CD6A;
+  font-size: 14px;
+  font-family: Open Sans Bold;
+  padding: 5px 10px;
+  margin: 0 5px;
+  display: inline-block;
+  width: auto !important;
+}
+
+.search-chip:hover,
+.search-chip:focus,
+.search-chip:active:focus,
+.search-chip.active,
+.search-chip.active:hover,
+.search-chip.active:focus {
   background: #12CD6A;
-  padding: 32px 10px;
-  box-shadow: 0 -17px 15px -17px #099b4e inset;
-}
-
-.Select {
-  margin: 0;
-}
-
-.JobBoard-filter {
-  margin: 0 auto;
+  border: solid 2px #12CD6A;
+  color: #FFFFFF;
+  box-shadow: none;
+  transition: all 0.1s ease-in-out;
+  transition-duration: 0.2s;
 }
 
 @media only screen

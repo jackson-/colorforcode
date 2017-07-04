@@ -1,19 +1,19 @@
 import axios from 'axios'
-import { RECEIVE_ALL_JOBS, RECEIVE_JOB,
-         RECEIVE_USER_JOBS, APPLIED_TO_JOB, RECEIVE_APPLIED_JOBS } from '../constants'
-import { createNewJob, requestAllJobs,
-         requestJob, requestUserJobs, requestAppliedJobs, applyToJob } from './loading'
+import { RECEIVE_JOBS, RECEIVE_JOB, RECEIVE_APPLIED_JOBS,
+         RECEIVE_USER_JOBS, APPLIED_TO_JOB } from '../constants'
+import { createNewJob, requestAllJobs, requestFilteredJobs,
+         requestJob, requestUserJobs, applyToJob, requestAppliedJobs } from './loading'
 import { gettingAllSkills } from './skills'
 
-/* --------- PURE ACTION CREATORS ---------*/
+/* --------- PURE ACTION CREATORS --------- */
 export const receiveJob = job => ({
   job,
   type: RECEIVE_JOB
 })
-export const receiveAllJobs = jobs => ({
+export const receiveJobs = jobs => ({
   jobs,
   loading: false,
-  type: RECEIVE_ALL_JOBS
+  type: RECEIVE_JOBS
 })
 export const receiveUserJobs = jobs => ({
   jobs,
@@ -30,14 +30,22 @@ export const appliedToJob = () => ({
   type: APPLIED_TO_JOB
 })
 
-/* --------- ASYNC ACTION CREATORS (THUNKS) ---------*/
+/* --------- ASYNC ACTION CREATORS (THUNKS) --------- */
 
 export const gettingAllJobs = () => dispatch => {
   dispatch(requestAllJobs())
   axios.get('/api/jobs')
   .then(res => res.data)
-  .then(jobs => dispatch(receiveAllJobs(jobs)))
+  .then(jobs => dispatch(receiveJobs(jobs)))
   .catch(err => console.error(`Mang, I couldn't find the jobs! ${err.stack}`))
+}
+
+export const filteringJobs = query => dispatch => {
+  dispatch(requestFilteredJobs())
+  axios.post('/api/jobs/search', {query})
+  .then(res => res.data)
+  .then(jobs => dispatch(receiveJobs(jobs)))
+  .catch(err => console.error(`Mang, I couldn't filter the jobs! ${err.stack}`))
 }
 
 export const applyingToJob = (user_id, job_id, history) => dispatch => {
@@ -59,7 +67,6 @@ export const gettingUserJobs = (employer) => dispatch => {
 }
 
 export const gettingUserApps = (user) => dispatch => {
-  console.log("IN REDUCER")
   dispatch(requestAppliedJobs())
   axios.get(`/api/jobs/apps/${user.id}`)
   .then(res => res.data)

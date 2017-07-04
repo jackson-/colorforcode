@@ -48,11 +48,7 @@ Table Of Index
 @import url(assets/webcss/custom_fonts.css);
 
 body {
-<<<<<<< HEAD
   background: #f9f9f9;
-=======
-    background: #f9f9f9;
->>>>>>> 7d413562ae4e4f79f7044e621d1ca25296d07464
 	font-family: OpenSansSemibold;
 	font-size:21px;
 }
@@ -193,10 +189,6 @@ input[type="submit"],
 /*////////////////////////*/
 .navbar-fixed-top {
 	padding: 29px 0;
-<<<<<<< HEAD
-=======
-
->>>>>>> 7d413562ae4e4f79f7044e621d1ca25296d07464
 }
 
 .fixed-header .navbar-fixed-top {
