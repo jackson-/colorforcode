@@ -1,7 +1,10 @@
 import axios from 'axios'
-import { RECEIVE_ALL_JOBS, RECEIVE_JOB, RECEIVE_USER_JOBS, APPLIED_TO_JOB } from '../constants'
-import { createNewJob, requestAllJobs, requestJob, requestUserJobs, applyToJob } from './loading'
+import { RECEIVE_ALL_JOBS, RECEIVE_JOB,
+         RECEIVE_USER_JOBS, APPLIED_TO_JOB, RECEIVE_APPLIED_JOBS } from '../constants'
+import { createNewJob, requestAllJobs,
+         requestJob, requestUserJobs, requestAppliedJobs, applyToJob } from './loading'
 import { gettingAllSkills } from './skills'
+
 /* --------- PURE ACTION CREATORS ---------*/
 export const receiveJob = job => ({
   job,
@@ -17,11 +20,15 @@ export const receiveUserJobs = jobs => ({
   loading: false,
   type: RECEIVE_USER_JOBS
 })
+export const receiveAppliedJobs = jobs => ({
+  jobs,
+  loading: false,
+  type: RECEIVE_APPLIED_JOBS
+})
 export const appliedToJob = () => ({
   loading: false,
   type: APPLIED_TO_JOB
 })
-
 
 /* --------- ASYNC ACTION CREATORS (THUNKS) ---------*/
 
@@ -35,7 +42,7 @@ export const gettingAllJobs = () => dispatch => {
 
 export const applyingToJob = (user_id, job_id, history) => dispatch => {
   dispatch(applyToJob())
-  axios.post('/api/jobs/apply', {user_id, job_id})
+  axios.post(`/api/jobs/${job_id}/apply`, {user_id, job_id})
   .then(() => {
     dispatch(appliedToJob())
     history.push('/')
@@ -46,6 +53,15 @@ export const applyingToJob = (user_id, job_id, history) => dispatch => {
 export const gettingUserJobs = (employer) => dispatch => {
   dispatch(requestUserJobs())
   axios.get(`/api/jobs/employer/${employer.id}`)
+  .then(res => res.data)
+  .then(jobs => dispatch(receiveUserJobs(jobs)))
+  .catch(err => console.error(`Mang, I couldn't find the jobs! ${err.stack}`))
+}
+
+export const gettingUserApps = (user) => dispatch => {
+  console.log("IN REDUCER")
+  dispatch(requestAppliedJobs())
+  axios.get(`/api/jobs/apps/${user.id}`)
   .then(res => res.data)
   .then(jobs => dispatch(receiveUserJobs(jobs)))
   .catch(err => console.error(`Mang, I couldn't find the jobs! ${err.stack}`))
@@ -72,4 +88,20 @@ export const creatingNewJob = jobPost => dispatch => {
   .then(jobs => dispatch(gettingAllJobs()))
   // otherwise we catch the error...
   .catch(err => console.error(`Sorry, cuz. We couldn't create that job post...${err.stack}`))
+}
+
+export const updatingJob = (postData, history) => dispatch => {
+  axios.put(`/api/jobs/${postData.job.id}`, postData)
+  .then(() => {
+    history.push('/dashboard')
+  })
+  .catch(err => console.error(`Sorry, cuz. Couldn't update that job post...${err.stack}`))
+}
+
+export const deletingJob = (id, history) => dispatch => {
+  axios.delete(`/api/jobs/${id}`)
+  .then(() => {
+    history.push('/dashboard')
+  })
+  .catch(err => console.error(`Sorry, cuz. Couldn't delete that job post...${err.stack}`))
 }

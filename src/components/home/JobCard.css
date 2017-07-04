@@ -49,6 +49,7 @@
   font-family: Open Sans Bold;
   padding: 5px 10px;
   margin: 0 5px;
+  display: inline-block;
 }
 
 @media only screen

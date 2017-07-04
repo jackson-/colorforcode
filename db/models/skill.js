@@ -39,7 +39,7 @@ module.exports.associations = (Skill, {User, Job}) => {
   Skill.belongsToMany(Job, {
     through: 'JobSkill'
   })
-  
+
   Skill.belongsToMany(User, {
     through: 'UserSkill'
   })

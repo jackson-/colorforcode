@@ -42,8 +42,7 @@
     Job.findAll({ include: [Employer, Skill] })
       .then(jobs => {
         console.log(`${jobs.length} items parsed from data file`);
-        bulkIndex('data', 'job', jobs);
-        return null
+        bulkIndex('data', 'job', jobs)
       })
       .catch((error) => {
         console.log("ERROR: ", error)

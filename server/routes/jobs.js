@@ -7,34 +7,27 @@ var stripe = require("stripe")(
 //   "sk_test_BQokikJOvBiI2HlWgH4olfQ2"
 // );
 const db = require('APP/db')
-const {Job, Employer, Skill} = db
-const elasticsearch = require('elasticsearch');
+const {Job, Employer, Skill, User} = db
+const elasticsearch = require('elasticsearch')
 const esClient = new elasticsearch.Client({
   host: '127.0.0.1:9200',
   log: 'error'
-});
+})
 
 module.exports = require('express').Router()
+
   .get('/', (req, res, next) => {
+    const query = req.query ? req.query : {match_all: {}}
     let body = {
-      from: 0,
-      query: {
-        match_all: {}
-      }
-    };
-    esClient.search({index: 'data', body: body})
+      query,
+      from: 0
+    }
+    esClient.search({body, index: 'data', type:'job'})
     .then(results => {
-      console.log(`found ${results.hits.total} items in ${results.took}ms`);
-      console.log(`returned article titles:`);
-      results.hits.hits.forEach(
-        (hit, index) => console.log(
-          `\t${body.from + ++index} - ${hit._source.title}`
-        )
-      )
-      return res.status(200).json(results.hits.hits)
-    })
-    .catch(console.error);
+      return res.status(200).json(results.hits.hits)})
+    .catch(next)
   })
+
   .post('/', (req, res, next) => {
     const {skills} = req.body
     // const  token = req.body.token
@@ -44,7 +37,7 @@ module.exports = require('express').Router()
     //   source: token, // obtained with Stripe.js
     //   description: "Charge for job stuff"
     // }, function(err, charge) {
-    //   console.log("ERR", err, "CAHRGE", charge)
+    //   console.log("ERR", err, "CHARGE", charge)
     // });
     Job.create(req.body.job)
     .then(createdJob => createdJob.addSkills(skills))
@@ -54,16 +47,16 @@ module.exports = require('express').Router()
       },
       include: [Skill, Employer]
     }))
-    .then(job => res.status(201).json(job))
+    .then(job => esClient.create({
+      index: 'data',
+      type: 'job',
+      id: `${job.id}`,
+      body: job.get()
+    }))
+    .then(() => res.sendStatus(201))
     .catch(next)
   })
-  .put('/:id', (req, res, next) => {
-    const job = req.body.job
-    Job.findById(req.params.id)
-    .then(foundJob => foundJob.update(req.body, {include: [Skill]}))
-    .then(updatedJob => res.json(updatedJob))
-    .catch(next)
-  })
+
   .get('/:id',
     (req, res, next) =>
       Job.findOne({
@@ -74,14 +67,67 @@ module.exports = require('express').Router()
       })
       .then(job => res.json(job))
       .catch(next))
-  .post('/:id/apply', (req, res, next) => {
-    const user_id = req.body.user_id
 
-    Job.findById(req.params.id)
-    .then(foundJob => foundJob.addApplicant(user_id))
-    .then(application => res.sendStatus(201))
-    .catch(next)
-  })
+  .put('/:id',
+    (req, res, next) => {
+      const {job, skills} = req.body
+      Job.findById(req.params.id)
+      .then(foundJob => foundJob.update(job))
+      .then(updatedJob => updatedJob.addSkills(skills))
+      .then(() => Job.findOne({
+        where: {
+          id: req.params.id
+        },
+        include: [Skill, Employer]
+      }))
+      .then(editedJob => esClient.update({
+        index: 'data',
+        type: 'job',
+        id: req.params.id,
+        body: {
+          doc: editedJob.get()
+        }
+      }))
+      .then(() => res.sendStatus(200))
+      .catch(next)
+    })
+
+  .delete('/:id',
+    (req, res, next) => {
+      Job.destroy({
+        where: {
+          id: req.params.id
+        }
+      })
+      .then(deletedJob => esClient.delete({
+        index: 'data',
+        type: 'job',
+        id: req.params.id
+      }))
+      .then(() => res.sendStatus(204))
+      .catch(next)
+    })
+
+  .post('/:id/apply',
+    (req, res, next) => {
+      const user_id = req.body.user_id
+      Job.findById(req.params.id)
+      .then(foundJob => foundJob.addApplicant(user_id))
+      .then(application => res.sendStatus(201))
+      .catch(next)
+    })
+  .get('/apps/:id',
+    (req, res, next) =>
+      User.findOne({
+        where: {
+          id: req.params.id
+        },
+        include: [{ association: 'Job' }]
+      })
+      .then(jobs => {
+        console.log("JOBS", jobs)
+        return res.json(jobs)})
+      .catch(next))
   .get('/employer/:id',
     (req, res, next) => {
       Job.findAll({

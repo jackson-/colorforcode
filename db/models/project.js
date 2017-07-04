@@ -2,7 +2,7 @@
 const Sequelize = require('sequelize')
 const db = require('..')
 
-module.exports = db => db.define('job', {
+module.exports = db => db.define('project', {
   title: {
     type: Sequelize.STRING,
     allowNull: false
@@ -11,18 +11,7 @@ module.exports = db => db.define('job', {
     type: Sequelize.TEXT,
     allowNull: false
   },
-  application_email: Sequelize.STRING,
-  cc_email: Sequelize.STRING,
-  application_url: Sequelize.STRING,
-  city: Sequelize.STRING,
-  state: Sequelize.STRING,
-  country: Sequelize.STRING,
-  zip_code: Sequelize.STRING,
-  employment_types: Sequelize.ARRAY(Sequelize.STRING),
-  pay_rate: Sequelize.STRING,
-  compensation_type: Sequelize.STRING,
-  travel_requirements: Sequelize.STRING,
-  application_email: Sequelize.STRING
+  external_link: Sequelize.TEXT,
 })
 
 // Belongs to Many associations create a join table.
@@ -45,13 +34,11 @@ module.exports = db => db.define('job', {
          })
 */
 
-module.exports.associations = (Job, {User, Employer, Skill}) => {
-  Job.belongsToMany(User, {
-    as: 'applicant',
-    through: 'JobApplication'
+module.exports.associations = (Project, {User, Skill}) => {
+  Project.belongsToMany(User, {
+    through:"UserProject"
   })
-  Job.belongsToMany(Skill, {
-    through: 'JobSkill'
+  Project.belongsToMany(Skill, {
+    through: 'ProjectSkill'
   })
-  Job.belongsTo(Employer)
 }

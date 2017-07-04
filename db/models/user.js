@@ -12,6 +12,7 @@ module.exports = db => db.define('user', {
   zip_code: STRING,
   location: STRING,
   image_url: STRING,
+  resume_url: STRING,
   email: {
       type: STRING,
       validate: {
@@ -69,16 +70,19 @@ module.exports = db => db.define('user', {
          })
 */
 
-module.exports.associations = (User, {OAuth, Job, Skill, Employer}) => {
+module.exports.associations = (User, {OAuth, Job, Skill, Employer, Project}) => {
   User.belongsTo(Employer)
   User.hasOne(OAuth)
   User.belongsToMany(Skill, {
     through: 'UserSkill'
   })
   User.belongsToMany(Job, {
-    as: 'Applications',
+    as: 'applications',
     through: 'JobApplication',
     foreignKey: 'applicant_id'
+  })
+  User.belongsToMany(Project, {
+    through:"UserProject"
   })
 }
 
