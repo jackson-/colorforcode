@@ -1,5 +1,5 @@
 /* ----------- JOBS ------------ */
-export const RECEIVE_ALL_JOBS = 'RECEIVE_ALL_JOBS'
+export const RECEIVE_JOBS = 'RECEIVE_JOBS'
 export const RECEIVE_JOB = 'RECEIVE_JOB'
 export const RECEIVE_USER_JOBS = 'RECEIVE_USER_JOBS'
 export const RECEIVE_APPLIED_JOBS = 'RECEIVE_APPLIED_JOBS'
@@ -7,6 +7,7 @@ export const RECEIVE_APPLIED_JOBS = 'RECEIVE_APPLIED_JOBS'
 /* ----------- LOADING ------------ */
 export const REQUEST_ALL_JOBS = 'REQUEST_ALL_JOBS'
 export const REQUEST_APPLIED_JOBS = 'REQUEST_APPLIED_JOBS'
+export const REQUEST_FILTERED_JOBS = 'REQUEST_FILTERED_JOBS'
 export const APPLY_TO_JOB = 'APPLY_TO_JOB'
 export const APPLIED_TO_JOB = 'APPLIED_TO_JOB'
 export const REQUEST_USER_JOBS = 'REQUEST_USER_JOBS'
