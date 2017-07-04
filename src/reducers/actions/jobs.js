@@ -2,7 +2,7 @@ import axios from 'axios'
 import { RECEIVE_JOBS, RECEIVE_JOB, RECEIVE_APPLIED_JOBS,
          RECEIVE_USER_JOBS, APPLIED_TO_JOB } from '../constants'
 import { createNewJob, requestAllJobs, requestFilteredJobs,
-         requestJob, requestUserJobs, applyToJob } from './loading'
+         requestJob, requestUserJobs, applyToJob, requestAppliedJobs } from './loading'
 import { gettingAllSkills } from './skills'
 
 /* --------- PURE ACTION CREATORS --------- */
@@ -42,10 +42,10 @@ export const gettingAllJobs = () => dispatch => {
 
 export const filteringJobs = query => dispatch => {
   dispatch(requestFilteredJobs())
-  axios.post('/api/jobs/search', query)
+  axios.post('/api/jobs/search', {query})
   .then(res => res.data)
   .then(jobs => dispatch(receiveJobs(jobs)))
-  .then(err => console.error(`Mang, I couldn't filter the jobs! ${err.stack}`))
+  .catch(err => console.error(`Mang, I couldn't filter the jobs! ${err.stack}`))
 }
 
 export const applyingToJob = (user_id, job_id, history) => dispatch => {
@@ -67,7 +67,6 @@ export const gettingUserJobs = (employer) => dispatch => {
 }
 
 export const gettingUserApps = (user) => dispatch => {
-  console.log("IN REDUCER")
   dispatch(requestAppliedJobs())
   axios.get(`/api/jobs/apps/${user.id}`)
   .then(res => res.data)

@@ -29,22 +29,22 @@ module.exports = require('express').Router()
   })
 
   // search bar
-  .get('/search', (req, res, next) => {
-    const {query} = req.body
+  .post('/search', (req, res, next) => {
+    const query = req.body.query
+      ? {multi_match: {query: req.body.query, fields: ['_all']}}
+      : {match_all: {}}
+
     esClient.search({
       index: 'data',
       type: 'job',
-      multi_match: {
-        query,
-        fields: ['*']
-      }
+      body: {query}
     })
     .then(results => res.status(200).json(results.hits.hits))
     .catch(next)
   })
 
   // advanced search
-  .get('/search/advanced', (req, res, next) => {
+  .post('/search/advanced', (req, res, next) => {
     const {body} = req
     esClient.search({body, index: 'data'})
     .then(advancedResults => res.status(200).json(advancedResults))

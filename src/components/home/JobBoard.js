@@ -1,128 +1,80 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Row } from 'react-bootstrap'
-import { gettingAllJobs } from 'APP/src/reducers/actions/jobs'
+import { Row, Button, FormGroup, FormControl, ControlLabel } from 'react-bootstrap'
+import { gettingAllJobs, filteringJobs } from 'APP/src/reducers/actions/jobs'
 import { gettingAllSkills } from 'APP/src/reducers/actions/skills'
 import JobList from './JobList.js'
 import './Home.css'
-import VirtualizedSelect from 'react-virtualized-select'
-import 'react-select/dist/react-select.css'
-import 'react-virtualized/styles.css'
-import 'react-virtualized-select/styles.css'
-
-function arrowRenderer () {
-	return (
-		<span></span>
-	);
-}
 
 class JobBoard extends Component {
 
   constructor(props){
     super(props)
     this.state = {
-      selectValue: [],
-      selected_skills: [],
-      visible_jobs: [],
+      query: '',
+      filtered: false
     }
   }
 
-  componentDidMount(){
-    this.props.getJobs();
-    this.props.getSkills();
+  componentDidMount() {
+    this.props.getJobs()
   }
 
-  _handleChange(input){
-		let viz = [];
-		let skill_ids = this.state.selected_skills;
-
-		if (input === "" || input === null) {
-
-			if (skill_ids.length > 0) {
-				viz = this.state.visible_jobs.filter((job) => {
-					return skill_ids.every((skill) => {
-						return job.skills.indexOf(skill) >= 0;
-					});
-				})
-			} else {
-				viz = this.props.jobs
-			}
-			let new_state = Object.assign({}, this.state, {visible_jobs:viz, selectValue:input})
-			this.setState(new_state);
-		} else {
-			if (skill_ids.length > 0) {
-				viz = this.state.visible_jobs.filter((job) => {
-					return skill_ids.every((skill) => {
-						return job.skills.indexOf(skill) >= 0;
-					});
-				})
-			}
-
-			for(let i=0; i < viz.length; i++){
-				if (viz[i]['title'].toLowerCase().includes(input)) {
-					viz.push({title: viz[i]['title'], id: viz[i]['id']})
-				}
-			}
-
-			let new_state = Object.assign({}, this.state, {visible_jobs:viz, selectValue:input})
-			this.setState(new_state);
-		}
-	}
-
-  _checkForSkill(job, skill){
-    return job.skills.some((s) => {
-      return s.id === parseInt(skill, 10)
-    })
+  handleChange = event => {
+    this.setState({query: event.target.value})
   }
 
-  _selectSkill(data){
-		let skill_ids = data.split(',');
-    let new_skills = []
-		var viz = [];
-		if(skill_ids[0] !== ""){
-			viz = this.props.jobs.filter((jobData) => {
-        const job = {...jobData._source}
-				return skill_ids.every((skill) => {
-					return this._checkForSkill(job, skill);
-				});
-			});
-      skill_ids.forEach((sk_id) => {
-				this.props.skills.forEach((s) => {
-          if(s.id === parseInt(sk_id, 10)){
-            new_skills.push({label:s.title, value:s.id})
-          }
-        })
-			});
-		} else {
-			viz = this.props.jobs;
-		}
-		let new_state = Object.assign({}, this.state,
-			 {selectValue:new_skills, selected_skills:skill_ids, visible_jobs:viz})
-		this.setState(new_state);
-	}
-
-  render(){
-    let visible_jobs = []
-    if(this.state.selectValue.length === 0 && this.state.selected_skills.length === 0){
-      visible_jobs = this.props.jobs
+  clearFilter = (filter) => {
+    if (filter) {
+      // clear the search bar, show all job listings, and hide search header
+      this.setState({
+        query: '',
+        filtered: false
+      })
+      this.filterJobs()
     } else {
-      visible_jobs = this.state.visible_jobs
+      // just clear the search bar, nbd
+      this.setState({query: ''})
     }
-    let skills = []
-    this.props.skills.forEach((skill) => {
-			skills.push({label:skill.title, value:skill.id})
-		})
+  }
 
+  filterJobs = event => {
+    // this is an event handler but we also use this in clearFilter,
+    // in which case there's no event object to preventDefault of
+    if (event) event.preventDefault()
+
+    const {query} = this.state
+    this.props.filterJobs(query)
+    // ^ when query === '', all job listings are shown,
+    if (query) this.setState({filtered: true})
+    // we only show the search results header if this.state.filtered === true
+    this.clearFilter()
+  }
+
+  render() {
+    let jobs = this.props.jobs || []
     return (
       <Row className='JobBoard'>
-        <div className='JobBoard-filter-container'>
-          
-        </div>
-  			{
+        <form className='JobBoard-filter-container' onSubmit={this.filterJobs}>
+          <FormGroup controlId='query'>
+            <ControlLabel srOnly>Filter job listings</ControlLabel>
+            <FormControl
+              onChange={this.handleChange}
+              className='JobBoard-filter'
+              value={this.state.query}
+            />
+          </FormGroup>
+          <Button type='submit'>Filter Jobs</Button>
+        </form>
+        {
           this.props.loading
-            ? <p>Loading....</p>
-            : <JobList jobs={visible_jobs} />
-  			}
+            ? <p>Loading...</p>
+            : <JobList
+                filtered={this.state.filtered}
+                jobs={jobs}
+                clear={this.clearFilter}
+              />
+        }
       </Row>
     )
   }
@@ -131,12 +83,13 @@ class JobBoard extends Component {
 const mapStateToProps = state => ({
   jobs: state.jobs.all,
   skills: state.skills.all,
-	loading: state.loading
+  loading: state.loading
 })
 
 const mapDispatchToProps = dispatch => ({
   getJobs: post => dispatch(gettingAllJobs()),
-  getSkills: post => dispatch(gettingAllSkills())
+  getSkills: post => dispatch(gettingAllSkills()),
+  filterJobs: query => dispatch(filteringJobs(query))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(JobBoard)
