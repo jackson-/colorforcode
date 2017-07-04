@@ -1,27 +1,48 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Row, Button, FormGroup, FormControl, ControlLabel } from 'react-bootstrap'
+import { Row } from 'react-bootstrap'
 import { gettingAllJobs, filteringJobs } from 'APP/src/reducers/actions/jobs'
 import { gettingAllSkills } from 'APP/src/reducers/actions/skills'
+import SearchBar from '../utilities/SearchBar'
 import JobList from './JobList.js'
 import './Home.css'
 
 class JobBoard extends Component {
 
-  constructor(props){
+  constructor (props) {
     super(props)
     this.state = {
       query: '',
+      terms: [],
       filtered: false
     }
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.props.getJobs()
   }
 
   handleChange = event => {
-    this.setState({query: event.target.value})
+    const {value} = event.target
+    const searchTermArray = value.split(' ')
+    this.setState({
+      query: value,
+      terms: searchTermArray
+    })
+  }
+
+  clearChip = event => {
+    event.preventDefault()
+    const chipToClear = event.target.value
+    let terms = this.state.terms.filter(term => {
+      return term !== chipToClear && term !== ''
+    })
+    const query = terms.join(' ')
+    this.setState(
+      {terms, query, filtered: query.length > 0},
+      this.filterJobs
+      // ^second param of setState (optional) is callback to execute after setting state
+    )
   }
 
   clearFilter = (filter) => {
@@ -45,34 +66,35 @@ class JobBoard extends Component {
 
     const {query} = this.state
     this.props.filterJobs(query)
-    // ^ when query === '', all job listings are shown,
+    // ^ when query === '', all job listings are shown
     if (query) this.setState({filtered: true})
     // we only show the search results header if this.state.filtered === true
     this.clearFilter()
   }
 
-  render() {
+  render () {
     let jobs = this.props.jobs || []
     return (
       <Row className='JobBoard'>
-        <form className='JobBoard-filter-container' onSubmit={this.filterJobs}>
-          <FormGroup controlId='query'>
-            <ControlLabel srOnly>Filter job listings</ControlLabel>
-            <FormControl
-              onChange={this.handleChange}
-              className='JobBoard-filter'
-              value={this.state.query}
-            />
-          </FormGroup>
-          <Button type='submit'>Filter Jobs</Button>
-        </form>
+        <SearchBar
+          type='job'
+          inline
+          query={this.state.query}
+          handleSubmit={this.filterJobs}
+          handleChange={this.handleChange}
+          labelText='Filter job listings by keyword'
+          submitButtonText='Search jobs'
+        />
         {
           this.props.loading
-            ? <p>Loading...</p>
+            ? <p>Loading Job Listings...</p>
             : <JobList
                 filtered={this.state.filtered}
                 jobs={jobs}
-                clear={this.clearFilter}
+                query={this.state.query}
+                clearFilter={this.clearFilter}
+                clearChip={this.clearChip}
+                terms={this.state.terms}
               />
         }
       </Row>

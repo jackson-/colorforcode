@@ -1,0 +1,45 @@
+/* ----- SearchBar ----- */
+
+.filter-container {
+  height: auto;
+  background: #12CD6A;
+  padding: 32px 10px;
+  box-shadow: 0 -17px 15px -17px #099B4E inset;
+}
+
+.filter-label {
+  color: #FFFFFF;
+  font-size: 2rem !important;
+  margin-bottom: 15px;
+}
+
+.filter {
+  margin: 0 auto;
+  width: 100% !important;
+}
+
+.filter-button {
+  height: 42px;
+}
+
+@media only screen and (min-width: 768px) {
+  .filter-label {
+    margin-right: 15px;
+  }
+
+  .filter {
+    width: auto !important;
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+  }
+
+  .filter-button {
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+    border-width: 0 0 0 1px;
+  }
+
+  .filter-container {
+    height: 108px;
+  }
+}

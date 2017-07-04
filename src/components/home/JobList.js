@@ -1,17 +1,29 @@
 import React from 'react'
 import './Home.css'
-import { Row, Col, Button } from 'react-bootstrap'
+import { Row, Col, Button, Glyphicon } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
+import './Home.css'
 import './JobCard.css'
 
 const JobList = props => (
   <div className='JobList'>
     {props.filtered &&
-      <div>
-        <h2>Search Results</h2>
-        <Button bsStyle='warning' onClick={(event, filter) => props.clear(filter)}>
-          Reset search results
-        </Button>
+      <div className='search-header'>
+        <Row>
+          <h2>Search Results</h2>
+          <Col className='search-chip-container' xs={12} sm={12} md={12} lg={12}>
+            {props.terms && props.terms.map((term, i) => (
+                <Button key={i} className='search-chip' value={term} onClick={props.clearChip}>
+                  <Glyphicon glyph="remove-sign" /> {term}
+                </Button>
+            ))}
+          </Col>
+          <Col xs={12} sm={12} md={12} lg={12}>
+            <Button bsStyle='warning' onClick={(event, filter) => props.clearFilter(filter)}>
+              Reset search results
+            </Button>
+          </Col>
+        </Row>
       </div>
     }
     {props.jobs && props.jobs.map((data, i) => {
