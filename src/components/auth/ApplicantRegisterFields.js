@@ -50,6 +50,14 @@ const ApplicantRegisterFields = props => (
         onChange={props.handleChange('last_name')}
       />
     </FormGroup>
+    <FormGroup controlId='story'>
+      <ControlLabel>Personal Story</ControlLabel>
+      <FormControl
+        required
+        value={props.state.story}
+        onChange={props.handleChange('story')}
+      />
+    </FormGroup>
     {/* with zip_code we auto find user's city, state and country */}
     <FormGroup controlId='zip_code'>
       <ControlLabel>Zip Code</ControlLabel>

@@ -20,6 +20,7 @@ module.exports = db => db.define('user', {
           notEmpty:true
       }
   },
+  story: TEXT,
   work_auth: STRING,
   employment_type: ARRAY(STRING),
   personal_site: STRING,

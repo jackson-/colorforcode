@@ -17,6 +17,7 @@ class RegisterForm extends Component {
       passwordConfirm: '',
       company_name: '',
       company_role: '',
+      story:'',
       first_name: '',
       last_name: '',
       zip_code: '',
