@@ -11,6 +11,8 @@ module.exports = db => db.define('project', {
     type: Sequelize.TEXT,
     allowNull: false
   },
+  learning_point: Sequelize.TEXT,
+  pain_point: Sequelize.TEXT,
   external_link: Sequelize.TEXT,
 })
 
