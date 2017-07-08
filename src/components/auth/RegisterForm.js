@@ -37,7 +37,8 @@ class RegisterForm extends Component {
     .then(res => res.data)
     .then(json => {
       const location = json.results[0].formatted_address
-      this.setState({location, zip_code})
+      const coords = `${json.results[0].geometry.location.lat},${json.results[0].geometry.location.lng}`
+      this.setState({coords, zip_code, location})
     })
     .catch(err => console.error(err.stack))
   }

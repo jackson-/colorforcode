@@ -11,14 +11,15 @@ module.exports = db => db.define('user', {
   is_employer: BOOLEAN,
   zip_code: STRING,
   location: STRING,
+  coords: STRING,
   image_url: STRING,
   resume_url: STRING,
   email: {
-      type: STRING,
-      validate: {
-          isEmail: true,
-          notEmpty:true
-      }
+    type: STRING,
+    validate: {
+      isEmail: true,
+      notEmpty:true
+    }
   },
   work_auth: STRING,
   employment_type: ARRAY(STRING),
@@ -27,8 +28,8 @@ module.exports = db => db.define('user', {
   linkedin: STRING,
   twitter: STRING,
   status: {
-      type: ENUM('active', 'inactive'),
-      defaultValue: 'active'
+    type: ENUM('active', 'inactive'),
+    defaultValue: 'active'
   },
   // We support oauth, so users may or may not have passwords.
   password_digest: STRING, // This column stores the hashed password in the DB, via the beforeCreate/beforeUpdate hooks

@@ -5,10 +5,10 @@ import { FormGroup, FormControl, ControlLabel,
 import './SearchAdvanced.css'
 
 const SearchAdvanced = props => (
-  <form className='SearchAdvanced'>
+  <form className='SearchAdvanced' onSubmit={(event, advanced) => props.filterJobs(advanced)}>
     <h3 className='SearchAdvanced__header'>Advanced Search</h3>
     {props.filtered &&
-      <Row className='SearchAdvanced__reset-container'>
+      <Row className='SearchAdvanced__button-container'>
         <Col className='SearchAdvanced__chip-container' xs={12} sm={12} md={12} lg={12}>
           {props.terms && props.terms.map((term, i) => (
             <Button key={i} className='search-chip' value={term} onClick={props.clearChip}>
@@ -17,7 +17,7 @@ const SearchAdvanced = props => (
           ))}
         </Col>
         <Button
-          className='SearchAdvanced__reset-button'
+          className='SearchAdvanced__button'
           onClick={(event, filter) => props.clearFilter(filter)}
         >
           Clear Filter
@@ -49,16 +49,22 @@ const SearchAdvanced = props => (
       controlId='SearchAdvanced__sort-by'
       name='SearchAdvanced__sort-by'
       onChange={props.handleChange('sortBy')}
-      inline
     >
       <ControlLabel>SORT BY</ControlLabel>
-      <Radio className='SearchAdvanced__radio' name='radioGroup' value='Date (most recent)'>
+      <Radio className='SearchAdvanced__radio' name='radioGroup' value='updated_at'>
         Date (most recent)
       </Radio>
-      <Radio className='SearchAdvanced__radio' name='radioGroup' value='Distance'>
+      <Radio className='SearchAdvanced__radio' name='radioGroup' value='distance'>
         Distance
       </Radio>
     </FormGroup>
+    <Row className='SearchAdvanced__button-container'>
+      <Col className='SearchAdvanced__chip-container' xs={12} sm={12} md={12} lg={12}>
+        <Button className='SearchAdvanced__button' type='submit'>
+          Refine Results
+        </Button>
+      </Col>
+    </Row>
   </form>
 )
 

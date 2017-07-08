@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Row, Col } from 'react-bootstrap'
-import { gettingAllJobs, filteringJobs } from 'APP/src/reducers/actions/jobs'
+import { gettingAllJobs, filteringJobs, advancedFilteringJobs } from 'APP/src/reducers/actions/jobs'
 import { gettingAllSkills } from 'APP/src/reducers/actions/skills'
 import SearchBar from '../utilities/SearchBar'
 import SearchAdvanced from '../utilities/SearchAdvanced'
@@ -62,30 +62,84 @@ class JobBoard extends Component {
   clearFilter = filter => {
     if (filter) {
       // if this method is invoked with a filter param,
-      // we clear the search bar, show all job listings, and hide search-header
-      // e.g., see JobList.js line 22 (the Reset Search Results button onClick)
+      // we reset all search interface elements by:
+      // clearing the search bar, showing all job listings, and hiding search-header
+      // see SearchAdvanced.js line 21 (the Clear Filter button onClick)
       this.setState({
         query: '',
         filtered: false
       })
-      this.filterJobs()
+      this.filterJobs()()
     } else {
       // just clear the search bar, nbd
       this.setState({query: ''})
     }
   }
 
-  filterJobs = event => {
+  filterJobs = advanced => event => {
     // this is an event handler but we also use this in clearFilter & clearChip,
     // in which case there's no event object to call preventDefault on
     if (event) event.preventDefault()
-
-    const {query} = this.state
-    this.props.filterJobs(query)
-    // ^ when query === '', all job listings are shown
-    if (query) this.setState({filtered: true, terms: [...this.state.pendingTerms]})
-    // we only show the search results header if this.state.filtered === true
-    this.clearFilter()
+    if (advanced) {
+      const {query, distance, employment_types, sortBy} = this.state
+      let coords = ''
+      if (this.props.user && this.props.user.coords) {
+        coords = this.props.user.coords.split(',')
+      } else {
+        if ('geolocation' in navigator) {
+          const {getCurrentPosition} = navigator.geolocation
+          const positionId = Promise.resolve(getCurrentPosition((position) => {
+            const {latitude, longitude} = position.coords
+            coords = [latitude, longitude]
+          }))
+          .then(success => navigator.geolocation.clearWatch(positionId))
+          .catch(error => console.error(
+            'Could not locate user for advanced search max distance.',
+            error.stack)
+          )
+        }
+      }
+      const must = employment_types.map(type => ({match: {employment_types: type}}))
+      const body = {
+        query: {
+          bool: {
+            must,
+            filter: [
+              {multi_match: {query, fields: ['_all']}},
+              {geo_distance: {coords, distance: `${distance}mi`}}
+            ]
+          },
+        },
+        sort: [
+          {updated_at: {order: 'desc'}},
+          {_score: {order: 'desc'}}
+        ]
+      }
+      if (sortBy === 'distance') {
+        body.query.function_score = {
+          functions: [
+            {
+              gauss: {
+                coords: {
+                  origin: {lat: coords[0], lon: coords[1]},
+                  offset: `${distance}mi`,
+                  scale: '5mi'
+                }
+              }
+            }
+          ]
+        }
+      }
+      this.props.filterJobsAdvanced(body)
+    } else {
+      // no advanced search needed, do a basic query
+      const {query} = this.state
+      this.props.filterJobs(query)
+      // ^ when query === '', all job listings are shown
+      if (query) this.setState({filtered: true, terms: [...this.state.pendingTerms]})
+      // we only show the search results header if this.state.filtered === true
+      this.clearFilter()
+    }
   }
 
   render () {
@@ -96,7 +150,7 @@ class JobBoard extends Component {
           type='job'
           inline
           query={this.state.query}
-          handleSubmit={this.filterJobs}
+          handleSubmit={this.filterJobs()}
           handleChange={this.handleChange('query')}
           labelText='Filter job listings by keyword'
           submitButtonText='Search jobs'
@@ -124,6 +178,7 @@ class JobBoard extends Component {
 }
 
 const mapStateToProps = state => ({
+  user: state.users.currentUser,
   jobs: state.jobs.all,
   skills: state.skills.all,
   loading: state.loading
@@ -132,7 +187,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   getJobs: post => dispatch(gettingAllJobs()),
   getSkills: post => dispatch(gettingAllSkills()),
-  filterJobs: query => dispatch(filteringJobs(query))
+  filterJobs: query => dispatch(filteringJobs(query)),
+  advancedFilterJobs: body => dispatch(advancedFilteringJobs(body))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(JobBoard)
