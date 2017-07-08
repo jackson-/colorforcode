@@ -61,7 +61,8 @@ class PostJobForm extends Component {
   handleChange = type => event => {
     const { value } = event.target
     if (type === 'zip_code' && value.toString().length === 5) {
-      this.handleLocation(value)
+      /* first we finish updating the state of the input, then we use the zip to find the rest of the location data by passing the callback to setState (an optional 2nd param) */
+      this.setState({[type]: value}, this.handleLocation(value))
     } else if (type === 'employment_type') {
       this.state.employment_type.has(value)
         ? this.state.employment_type.delete(value)
@@ -213,6 +214,7 @@ class PostJobForm extends Component {
               <Checkbox value='Contract'>Contract</Checkbox>
               <Checkbox value='Contract to Hire'>Contract to Hire</Checkbox>
               <Checkbox value='Internship'>Internship</Checkbox>
+              <Checkbox value='Remote'>Remote</Checkbox>
             </FormGroup>
   					<FormGroup controlId='compensation'>
   						<ControlLabel>Compensation Type</ControlLabel>

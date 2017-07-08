@@ -27,7 +27,7 @@ const SearchAdvanced = props => (
     <FormGroup
       controlId='SearchAdvanced__job-types'
       name='search-advanced__job-types'
-      onChange={props.toggleJobTypes}
+      onChange={props.toggleCheckbox}
     >
       <ControlLabel>EMPLOYMENT TYPES</ControlLabel>
       <Checkbox value='Full-time'>Full-time</Checkbox>
@@ -35,17 +35,16 @@ const SearchAdvanced = props => (
       <Checkbox value='Contract'>Contract</Checkbox>
       <Checkbox value='Contract to Hire'>Contract to Hire</Checkbox>
       <Checkbox value='Internship'>Internship</Checkbox>
+      <Checkbox value='Remote'>Remote</Checkbox>
     </FormGroup>
-
     <FormGroup
       controlId='SearchAdvanced-distance'
       className='SearchAdvanced__distance'
       onChange={props.handleChange('distance')}
     >
       <ControlLabel>MAX DISTANCE (miles)</ControlLabel>
-      <FormControl onChange={props.handleChange} />
+      <FormControl type='tel' onChange={props.handleChange} />
     </FormGroup>
-
     <FormGroup
       controlId='SearchAdvanced__sort-by'
       name='SearchAdvanced__sort-by'
@@ -64,7 +63,7 @@ const SearchAdvanced = props => (
 )
 
 SearchAdvanced.propTypes = {
-  toggleJobTypes: PropTypes.func.isRequired,
+  toggleCheckbox: PropTypes.func.isRequired,
   handleChange: PropTypes.func.isRequired,
   clearFilter: PropTypes.func.isRequired,
   clearChip: PropTypes.func.isRequired,

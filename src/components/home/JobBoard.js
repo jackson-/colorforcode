@@ -104,7 +104,7 @@ class JobBoard extends Component {
         <Col className='SearchAdvanced__container' xs={12} sm={3} md={3} lg={3}>
           <SearchAdvanced
             handleChange={this.handleChange}
-            toggleJobTypes={this.toggleJobTypes}
+            toggleCheckbox={this.toggleJobTypes}
             clearFilter={this.clearFilter}
             clearChip={this.clearChip}
             filtered={this.state.filtered}
