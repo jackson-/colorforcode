@@ -30,7 +30,7 @@ class PostJobForm extends Component {
       coords: '',
       zip_code: '',
       selectValue: [],
-      employment_type: new Set([]),
+      employment_types: new Set([]),
       pay_rate: '',
       compensation_type: 'Salary',
       travel_requirements: 'None',
@@ -51,7 +51,9 @@ class PostJobForm extends Component {
     axios.get(`http://maps.googleapis.com/maps/api/geocode/json?address=${zip_code}`)
     .then(res => res.data)
     .then(json => {
-      const location = json.results[0].formatted_address
+      const city = json.results[0].address_components[1].long_name
+      const state = json.results[0].address_components[2].short_name
+      const location = `${city}, ${state}`
       const coords = `${json.results[0].geometry.location.lat},${json.results[0].geometry.location.lng}`
       this.setState({coords, zip_code, location})
     })
@@ -64,12 +66,12 @@ class PostJobForm extends Component {
       /* first we finish updating the state of the input, then we use the zip to find the rest of the location data by passing the callback to setState (an optional 2nd param) */
       this.setState({[type]: value}, this.handleLocation(value))
     } else if (type === 'employment_type') {
-      this.state.employment_type.has(value)
-        ? this.state.employment_type.delete(value)
-        : this.state.employment_type.add(value)
-      const employment_type = new Set([...this.state.employment_type])
+      this.state.employment_types.has(value)
+        ? this.state.employment_types.delete(value)
+        : this.state.employment_types.add(value)
+      const employment_types = new Set([...this.state.employment_types])
       /* ^Using a Set instead of an array because we need the data values to be unique */
-      this.setState({employment_type})
+      this.setState({employment_types})
     } else {
       this.setState({[type]: value})
     }
@@ -86,7 +88,7 @@ class PostJobForm extends Component {
       coords: '',
       zip_code: '',
       selectValue: [],
-      employment_type: new Set([]),
+      employment_types: new Set([]),
       pay_rate: '',
       compensation_type: 'Salary',
       travel_requirements: 'None',
@@ -104,7 +106,7 @@ class PostJobForm extends Component {
     const job = {...this.state}
     job.employer_id = this.props.user.employer.id
 		job.employment_types = [...this.state.employment_types]
-    const skills = job.selectValue.map(skill => skills.push(skill.value))
+    const skills = job.selectValue.map(skill => skill.value)
     delete job.selectValue
 		// const token = this.refs.card.state.token
     this.clearForm()
@@ -131,7 +133,6 @@ class PostJobForm extends Component {
 
   render() {
     let skills = this.props.skills.map(s => ({label: s.title, value: s.id}))
-    console.log(this.state)
     return (
       <Row className='PostJobForm'>
         <Col xs={12} sm={6} md={6} lg={6}>

@@ -148,7 +148,6 @@ module.exports = require('express').Router()
         include: [{ association: 'Job' }]
       })
       .then(jobs => {
-        console.log("JOBS", jobs)
         return res.json(jobs)})
       .catch(next))
   .get('/employer/:id',

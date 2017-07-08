@@ -27,7 +27,7 @@ const JobList = props => (
                  </h2>
                </Col>
                <Col xs={12} sm={6} md={6} lg={6}>
-                 <p className='JobCard-location'>{`${job.city}, ${job.state}`}</p>
+                 <p className='JobCard-location'>{job.location}</p>
                  {job.employment_types && job.employment_types.map((type, i) => (
                    <span key={i} className='JobCard-type'>{type}</span>
                  ))}

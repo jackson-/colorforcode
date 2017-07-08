@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { Row, Col, FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap'
+import { Row, Col, FormGroup, ControlLabel, FormControl, Button, Checkbox } from 'react-bootstrap'
+import axios from 'axios'
 import VirtualizedSelect from 'react-virtualized-select'
 import 'react-select/dist/react-select.css'
 import 'react-virtualized/styles.css'
@@ -11,20 +12,6 @@ function arrowRenderer () {
 		<span></span>
 	);
 }
-const states = [
-	'AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','HI','ID','IL','IN','IA','KS',
-	'KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY',
-	'NC','ND','MP','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA',
-	"WV",'WI','WY']
-
-const job_types = [
-  {label: "Full Time", value: "Full Time"},
-  {label: "Part Time", value: "Part Time"},
-  {label: "Contract", value: "Contract"},
-  {label: "Contract to Hire", value: "Contract to Hire"},
-  {label: "Internship", value: "Internship"},
-  {label: "Remote", value: "Remote"}
-]
 
 class JobUpdateDisplay extends Component {
   constructor(props) {
@@ -35,21 +22,20 @@ class JobUpdateDisplay extends Component {
       application_email: this.props.job.application_email || '',
       cc_email: this.props.job.cc_email || '',
       application_url: this.props.job.application_url || '',
-      city: this.props.job.city || '',
+      coords: this.props.job.coords || '',
+      location: this.props.job.location || '',
       zip_code: this.props.job.zip_code || '',
       state: this.props.job.state || '',
       country: 'US',
-      selectValue: '',
-      jobValue: this.props.job.employment_types || '',
-      number: this.props.job.number || null,
-      exp_month: this.props.job.exp_month || null,
-      exp_year: this.props.job.exp_year || null,
-      pay_rate: this.props.job.pay_rate || '',
-      cvc: this.props.job.cvc || null,
-      token: this.props.job.token || null,
-      app_method:this.props.job.app_method || 'email'
+      selectValue: this.formatInitialSkills() || '',
+      employment_types: new Set([...this.props.job.employment_types]) || new Set([])
     }
   }
+
+  formatInitialSkills = () => this.props.job.skills.map(skill => ({
+    label: skill.title,
+    value: skill.id
+  }))
 
   _selectSkill = data => {
     let skill_ids = data.split(',');
@@ -70,87 +56,79 @@ class JobUpdateDisplay extends Component {
     })
   }
 
-  _selectJobType = data => {
-    let type_ids = data.split(',');
-    let new_types = []
-    if (type_ids[0] !== "") {
-      type_ids.forEach((t) => {
-        new_types.push({label:t, value:t})
-      })
-    }
-    this.setState({
-      jobValue: [...new_types],
-      selected_jobtypes: type_ids
-    })
-  }
-
   handleDelete = event => {
     event.preventDefault()
-    console.log(this.props)
     this.props.deleteJob(this.props.job.id, this.props.history)
+  }
+
+  handleLocation(zip_code) {
+    axios.get(`http://maps.googleapis.com/maps/api/geocode/json?address=${zip_code}`)
+    .then(res => res.data)
+    .then(json => {
+      const address = json.results[0].address_components
+      const city = address[1].long_name
+      const state = address.length === 4 ? address[2].short_name : address[3].short_name
+      const location = `${city}, ${state}`
+      const coords = `${json.results[0].geometry.location.lat},${json.results[0].geometry.location.lng}`
+      this.setState({coords, zip_code, location})
+    })
+    .catch(err => console.error(err.stack))
   }
 
   handleChange = type => event => {
     const { value } = event.target
-    this.setState({[type]: value})
+    if (type === 'zip_code' && value.toString().length === 5) {
+      /* first we finish updating the state of the input, then we use the zip to find the rest of the location data by passing the callback to setState (an optional 2nd param) */
+      this.setState({[type]: value}, this.handleLocation(value))
+    } else if (type === 'employment_type') {
+      this.state.employment_types.has(value)
+        ? this.state.employment_types.delete(value)
+        : this.state.employment_types.add(value)
+      const employment_types = new Set([...this.state.employment_types])
+      /* ^Using a Set instead of an array because we need the data values to be unique */
+      this.setState({employment_types})
+    } else {
+      this.setState({[type]: value})
+    }
+  }
+
+  clearForm = () => {
+    this.setState({
+      title: this.props.job.title || '',
+      description: this.props.job.description || '',
+      application_email: this.props.job.application_email || '',
+      cc_email: this.props.job.cc_email || '',
+      application_url: this.props.job.application_url || '',
+      coords: this.props.job.coords || '',
+      location: this.props.job.location || '',
+      zip_code: this.props.job.zip_code || '',
+      state: this.props.job.state || '',
+      country: 'US',
+      selectValue: this.formatInitialSkills() || '',
+      employment_types: new Set([...this.props.job.employment_types]) || new Set([])
+    })
   }
 
   handleSubmit = event => {
     event.preventDefault()
-    const { title, description, application_url, country,
-            city, zip_code, state, selectValue, jobValue,
-            pay_rate, travel_requirements, compensation_type,
-            app_method, application_email, cc_email, remote } = this.state
-
-    const job = {
-      title, description, application_url, country,
-      city, zip_code, state, selectValue, jobValue,
-      pay_rate, travel_requirements, compensation_type,
-      application_email, cc_email, remote, app_method
-    }
-
-    job.application_emails = [application_email, cc_email]
+    const job = {...this.state}
     job.id = this.props.job.id
+    job.employer_id = this.props.user.employer.id
+		job.employment_types = [...this.state.employment_types]
+    const skills = job.selectValue.map(skill => skill.value)
+    delete job.selectValue
+		// const token = this.refs.card.state.token
+    this.clearForm()
+    this.props.updateJob({job, skills}, this.props.history)
+  }
 
-    if (this.state.jobValue[0].label) {
-      job.employment_types = []
-  		this.state.jobValue.forEach((jt)=>{
-  			job.employment_types.push(jt.label)
-  		})
-    } else {
-      job.employment_types = this.state.jobValue
-    }
-
-    let skills = []
-		if (!this.state.selectValue) {
-      skills = this.props.job.skills.map(skill => skill.id)
-    } else {
-      this.state.selectValue.forEach(skill => {
-  			skills.push(skill.value)
-  		})
-    }
-    console.log(this.props)
-    this.props.updateJob({skills, job}, this.props.history)
+  isChecked = type => {
+    return this.state.employment_types.has(type)
   }
 
   render() {
     const {job} = this.props
-		let state_options = []
-    let skills = []
-    let initialSkills = []
-    this.props.skills.forEach((s) => {
-      skills.push({label: s.title, value: s.id})
-    })
-
-    if (job) {
-      job.skills.forEach(skill => {
-        initialSkills.push({label: skill.title, value: skill.id})
-      })
-    }
-
-		states.forEach((state, idx) => {
-      state_options.push(<option value={state} key={idx}>{state}</option>)
-    })
+    let skills = this.props.skills.map(s => ({label: s.title, value: s.id})) || []
 
     return (
       job &&
@@ -163,27 +141,25 @@ class JobUpdateDisplay extends Component {
               <FormControl
                 type='text'
                 value={this.state.title}
-                placeholder='e.g., Senior DevOps Engineer'
                 onChange={this.handleChange('title')}
               />
             </FormGroup>
-            <FormGroup controlId='job_types'>
-  						<ControlLabel>Skills</ControlLabel>
-              <VirtualizedSelect
-                arrowRenderer={arrowRenderer}
-                clearable={false}
-                searchable={false}
-                simpleValue
-                labelKey='label'
-                valueKey='value'
-                ref="job_search"
-                multi={true}
-                options={skills}
-                onChange={this._selectSkill}
-                value={this.state.selectValue || initialSkills}
-                placeholder="Skills"
-              />
-            </FormGroup>
+            <ControlLabel>
+              Required Skills (type below and hit 'Enter' to select and 'Backspace to deselect')
+            </ControlLabel>
+            <VirtualizedSelect
+              arrowRenderer={arrowRenderer}
+              clearable={true}
+              searchable={true}
+              simpleValue
+              labelKey='label'
+              valueKey='value'
+              ref="job_search"
+              multi={true}
+              options={skills}
+              onChange={(data) => this._selectSkill(data)}
+              value={this.state.selectValue || this.formatInitialSkills()}
+            />
             <FormGroup controlId='description'>
               <ControlLabel>Job Description and Requirements</ControlLabel>
               <FormControl
@@ -198,7 +174,6 @@ class JobUpdateDisplay extends Component {
               <FormControl
                 type='email'
                 value={this.state.application_email}
-                placeholder='e.g., hiring@aircash.io'
                 onChange={this.handleChange('application_email')}
               />
             </FormGroup>
@@ -207,7 +182,6 @@ class JobUpdateDisplay extends Component {
               <FormControl
                 type='email'
                 value={this.state.cc_email}
-                placeholder='e.g., hiring@aircash.io'
                 onChange={this.handleChange('cc_email')}
               />
             </FormGroup>
@@ -216,89 +190,69 @@ class JobUpdateDisplay extends Component {
               <FormControl
                 type='url'
                 value={this.state.application_url}
-                placeholder='e.g., hiring@aircash.io'
                 onChange={this.handleChange('application_url')}
               />
             </FormGroup>
-            <FormGroup controlId='city'>
-              <ControlLabel>Job City</ControlLabel>
-              <FormControl
-                type='city'
-                value={this.state.city}
-                placeholder='e.g., NY'
-                onChange={this.handleChange('city')}
-              />
-            </FormGroup>
-  					<FormGroup controlId='state'>
-  						<ControlLabel>State</ControlLabel>
-  						<FormControl
-                defaultValue={job.state}
-                componentClass='select'
-                onChange={this.handleChange('state')}
-              >
-  							{state_options}
-  						</FormControl>
-  					</FormGroup>
+            {/* with zip_code we auto find user's city, state, country and coords */}
             <FormGroup controlId='zip_code'>
               <ControlLabel>Zip Code</ControlLabel>
               <FormControl
-                type='zip_code'
+                required
+                type='tel'
                 value={this.state.zip_code}
-                placeholder='e.g., zip_code'
                 onChange={this.handleChange('zip_code')}
               />
             </FormGroup>
-  					<FormGroup controlId='job_types'>
-  						<ControlLabel>Job Types</ControlLabel>
-  	          <VirtualizedSelect
-                arrowRenderer={arrowRenderer}
-                clearable={false}
-                searchable={false}
-                simpleValue
-                labelKey='label'
-                valueKey='value'
-                ref="job_search"
-                multi={true}
-                options={job_types}
-                onChange={this._selectJobType}
-                value={this.state.jobValue}
-                placeholder="Job Types"
-              />
-  					</FormGroup>
-  					<FormGroup controlId='compensation'>
-  						<ControlLabel>Compensation Type</ControlLabel>
-  						<FormControl
-                defaultValue={job.compensation_type}
-                componentClass='select'
-                onChange={this.handleChange('compensation_type')}
-              >
-  							<option value='Salary'>Salary</option>
-  							<option value='Hourly'>Hourly</option>
-  						</FormControl>
-  					</FormGroup>
-  					<FormGroup controlId='pay_rate'>
-  						<ControlLabel>Pay Rate</ControlLabel>
-  						<FormControl
+            <FormGroup
+              controlId='employment_type'
+              name='employment_type'
+              onChange={this.handleChange('employment_type')}>
+              <ControlLabel>Employment Type(s)</ControlLabel>
+              <Checkbox value='Full-time' defaultChecked={this.isChecked('Full-time')}>
+                Full-time
+              </Checkbox>
+              <Checkbox value='Part-time' defaultChecked={this.isChecked('Part-time')}>
+                Part-time
+              </Checkbox>
+              <Checkbox value='Contract' defaultChecked={this.isChecked('Contract')}>
+                Contract
+              </Checkbox>
+              <Checkbox value='Contract to Hire' defaultChecked={this.isChecked('Contract to Hire')}>
+                Contract to Hire
+              </Checkbox>
+              <Checkbox value='Internship' defaultChecked={this.isChecked('Internship')}>
+                Internship
+              </Checkbox>
+              <Checkbox value='Remote' defaultChecked={this.isChecked('Remote')}>
+                Remote
+              </Checkbox>
+            </FormGroup>
+            <FormGroup controlId='compensation'>
+              <ControlLabel>Compensation Type</ControlLabel>
+              <FormControl componentClass='select' ref='compensation'>
+                <option value='Salary'>Salary</option>
+                <option value='Hourly'>Hourly</option>
+              </FormControl>
+            </FormGroup>
+            <FormGroup controlId='pay_rate'>
+              <ControlLabel>Pay Rate</ControlLabel>
+              <FormControl
                 type='phone'
                 value={this.state.pay_rate}
                 onChange={this.handleChange('pay_rate')}
               />
-  					</FormGroup>
-  					<FormGroup controlId='travel_requirements'>
-  						<ControlLabel>Travel Requirements</ControlLabel>
-  						<FormControl
-                defaultValue={job.travel_requirements}
-                componentClass='select'
-                onChange={this.handleChange('travel_requirements')}
-              >
-  							<option value='None'>None</option>
-  							<option value='Occasional'>Occasional</option>
-  							<option value='25%'>25%</option>
-  							<option value='50%'>50%</option>
-  							<option value='75%'>75%</option>
-  							<option value='100%'>100%</option>
-  						</FormControl>
-  					</FormGroup>
+            </FormGroup>
+            <FormGroup controlId='travel_requirements'>
+              <ControlLabel>Travel Requirements</ControlLabel>
+              <FormControl componentClass='select' ref='travel_requirements'>
+                <option value='None'>None</option>
+                <option value='Occasional'>Occasional</option>
+                <option value='25%'>25%</option>
+                <option value='50%'>50%</option>
+                <option value='75%'>75%</option>
+                <option value='100%'>100%</option>
+              </FormControl>
+            </FormGroup>
             <Button type='submit'>Update Job</Button>
           </form>
           <Button bsStyle='danger' type='submit' onClick={this.handleDelete}>
