@@ -5,7 +5,7 @@ import { FormGroup, FormControl, ControlLabel,
 import './SearchAdvanced.css'
 
 const SearchAdvanced = props => (
-  <form className='SearchAdvanced' onSubmit={(event, advanced) => props.filterJobs(advanced)}>
+  <form className='SearchAdvanced' onSubmit={props.filterJobs('advanced')}>
     <h3 className='SearchAdvanced__header'>Advanced Search</h3>
     {props.filtered &&
       <Row className='SearchAdvanced__button-container'>
@@ -17,7 +17,7 @@ const SearchAdvanced = props => (
           ))}
         </Col>
         <Button
-          className='SearchAdvanced__button'
+          className='SearchAdvanced__button--warning'
           onClick={(event, filter) => props.clearFilter(filter)}
         >
           Clear Filter
@@ -43,7 +43,7 @@ const SearchAdvanced = props => (
       onChange={props.handleChange('distance')}
     >
       <ControlLabel>MAX DISTANCE (miles)</ControlLabel>
-      <FormControl type='tel' onChange={props.handleChange} />
+      <FormControl type='tel' />
     </FormGroup>
     <FormGroup
       controlId='SearchAdvanced__sort-by'

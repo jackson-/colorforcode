@@ -50,7 +50,7 @@ export const filteringJobs = query => dispatch => {
 
 export const advancedFilteringJobs = body => dispatch => {
   dispatch(requestFilteredJobs())
-  axios.post('/api/jobs/search/advanced', {body})
+  axios.post('/api/jobs/search/advanced', body)
   .then(res => res.data)
   .then(jobs => dispatch(receiveJobs(jobs)))
   .catch(err => console.error(`Mang, I couldn't advanced filter the jobs! ${err.stack}`))

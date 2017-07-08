@@ -18,7 +18,7 @@ class JobBoard extends Component {
       terms: [],
       distance: '',
       sortBy: '',
-      jobTypes: new Set([]),
+      employment_types: new Set([]),
       filtered: false
     }
   }
@@ -37,12 +37,12 @@ class JobBoard extends Component {
 
   toggleJobTypes = event => {
     const {value} = event.target
-    this.state.jobTypes.has(value)
-      ? this.state.jobTypes.delete(value)
-      : this.state.jobTypes.add(value)
-    const jobTypes = new Set([...this.state.jobTypes])
+    this.state.employment_types.has(value)
+      ? this.state.employment_types.delete(value)
+      : this.state.employment_types.add(value)
+    const employment_types = new Set([...this.state.employment_types])
     /* ^Using a Set instead of an array because we want the data values to be unique */
-    this.setState({jobTypes})
+    this.setState({employment_types})
   }
 
   clearChip = event => {
@@ -79,44 +79,51 @@ class JobBoard extends Component {
   filterJobs = advanced => event => {
     // this is an event handler but we also use this in clearFilter & clearChip,
     // in which case there's no event object to call preventDefault on
-    if (event) event.preventDefault()
+    if (event) {
+      event.preventDefault()
+    }
     if (advanced) {
       const {query, distance, employment_types, sortBy} = this.state
+      console.log(employment_types)
       let coords = ''
       if (this.props.user && this.props.user.coords) {
         coords = this.props.user.coords.split(',')
       } else {
-        if ('geolocation' in navigator) {
-          const {getCurrentPosition} = navigator.geolocation
-          const positionId = Promise.resolve(getCurrentPosition((position) => {
-            const {latitude, longitude} = position.coords
-            coords = [latitude, longitude]
-          }))
-          .then(success => navigator.geolocation.clearWatch(positionId))
-          .catch(error => console.error(
-            'Could not locate user for advanced search max distance.',
-            error.stack)
+        if (navigator.geolocation) {
+          const positionId = navigator.geolocation.watchPosition(
+            position => {
+              const {latitude, longitude} = position.coords
+              coords = [latitude, longitude]
+              navigator.geolocation.clearWatch(positionId)
+            },
+            error => console.error(
+              'Could not locate user for advanced search max distance.',
+              error.stack
+            )
           )
         }
       }
-      const must = employment_types.map(type => ({match: {employment_types: type}}))
+      let must = Array.from(employment_types)
+      must.map(type => ({match: {employment_types: type}}))
       const body = {
-        query: {
-          bool: {
-            must,
-            filter: [
-              {multi_match: {query, fields: ['_all']}},
-              {geo_distance: {coords, distance: `${distance}mi`}}
-            ]
+        body: {
+          query: {
+            bool: {
+              must,
+              filter: [
+                {multi_match: {query, fields: ['_all']}},
+                {geo_distance: {coords, distance: `${distance}mi`}}
+              ]
+            }
           },
-        },
-        sort: [
-          {updated_at: {order: 'desc'}},
-          {_score: {order: 'desc'}}
-        ]
+          sort: [
+            {updated_at: {order: 'desc'}},
+            {_score: {order: 'desc'}}
+          ]
+        }
       }
       if (sortBy === 'distance') {
-        body.query.function_score = {
+        body.query['function_score'] = {
           functions: [
             {
               gauss: {
@@ -130,7 +137,7 @@ class JobBoard extends Component {
           ]
         }
       }
-      this.props.filterJobsAdvanced(body)
+      this.props.advancedFilterJobs(body)
     } else {
       // no advanced search needed, do a basic query
       const {query} = this.state
@@ -157,6 +164,7 @@ class JobBoard extends Component {
         />
         <Col className='SearchAdvanced__container' xs={12} sm={3} md={3} lg={3}>
           <SearchAdvanced
+            filterJobs={this.filterJobs}
             handleChange={this.handleChange}
             toggleCheckbox={this.toggleJobTypes}
             clearFilter={this.clearFilter}

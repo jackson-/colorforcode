@@ -1,5 +1,5 @@
 import React from 'react'
-import { Row, Col, Button, Glyphicon } from 'react-bootstrap'
+import { Row, Col } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
 import './Home.css'
 import './JobCard.css'

@@ -40,8 +40,17 @@
 .search-chip:focus,
 .search-chip:active:focus,
 .search-chip.active,
-.search-chip.active:hover,
+.search-chip.active:hover,F0AD4E
 .search-chip.active:focus,
+.SearchAdvanced__button--warning:hover {
+  background: #F0AD4E;
+  border: solid 2px #F0AD4E;
+  color: #FFFFFF;
+  box-shadow: none;
+  transition: all 0.1s ease-in-out;
+  transition-duration: 0.2s;
+}
+
 .SearchAdvanced__button:hover {
   background: #12CD6A;
   border: solid 2px #12CD6A;
@@ -51,7 +60,8 @@
   transition-duration: 0.2s;
 }
 
-.SearchAdvanced__button {
+.SearchAdvanced__button,
+.SearchAdvanced__button--warning {
   border: 2px solid #FFFFFF;
   width: 100%;
   margin-bottom: 5px;
