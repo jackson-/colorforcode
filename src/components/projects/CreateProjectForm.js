@@ -22,6 +22,8 @@ class CreateProjectForm extends Component {
       title: '',
       description: '',
       external_link: '',
+			learning_point:'',
+			pain_point:'',
       selectValue:[],
       selected_skills:[],
     }
@@ -58,32 +60,20 @@ class CreateProjectForm extends Component {
     this.setState({
       title: '',
       description: '',
-      application_email: '',
-      cc_email: '',
-      application_url:'',
-      city:'',
-      state: '',
-      zip_code:'',
-      selectValue: [],
-      jobValue:[],
-      pay_rate: '',
-      compensation_type: 'Salary',
-      travel_requirements: 'None',
-      number: null,
-      exp_month: null,
-      exp_year: null,
-      cvc: null,
-      token: null,
-      app_method:'email'
+      external_link: '',
+			learning_point:'',
+			pain_point:'',
+      selectValue:[],
+      selected_skills:[],
     })
   }
 
   handleSubmit = event => {
     event.preventDefault()
-    const { title, description, external_link } = this.state
+    const { title, description, external_link, learning_point, pain_point } = this.state
 
     const project = {
-      title, description, external_link
+      title, description, external_link, learning_point, pain_point
     }
 
     project.user = this.props.user
@@ -133,6 +123,14 @@ class CreateProjectForm extends Component {
               onChange={(data) => this._selectSkill(data)}
               value={this.state.selectValue}
             />
+						<FormGroup controlId='external_link'>
+							<ControlLabel>External Link</ControlLabel>
+							<FormControl
+							type='url'
+							value={this.state.external_link}
+							onChange={this.handleChange('external_link')}
+							/>
+							</FormGroup>
             <FormGroup controlId='description'>
               <ControlLabel>Project Description</ControlLabel>
               <FormControl
@@ -142,12 +140,22 @@ class CreateProjectForm extends Component {
                 onChange={this.handleChange('description')}
               />
             </FormGroup>
-            <FormGroup controlId='external_link'>
-              <ControlLabel>External Link</ControlLabel>
+						<FormGroup controlId='learning_point'>
+              <ControlLabel>Learning Point</ControlLabel>
               <FormControl
-                type='url'
-                value={this.state.external_link}
-                onChange={this.handleChange('external_link')}
+                type='text'
+                componentClass='textarea'
+                value={this.state.learning_point}
+                onChange={this.handleChange('learning_point')}
+              />
+            </FormGroup>
+						<FormGroup controlId='pain_point'>
+              <ControlLabel>Pain Point</ControlLabel>
+              <FormControl
+                type='text'
+                componentClass='textarea'
+                value={this.state.pain_point}
+                onChange={this.handleChange('pain_point')}
               />
             </FormGroup>
             <Button className='primary' type='submit'>Save</Button>

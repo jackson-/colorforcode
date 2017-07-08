@@ -1,9 +1,6 @@
-'use strict'
-
 // bcrypt docs: https://www.npmjs.com/package/bcrypt
 const bcrypt = require('bcryptjs')
-const {STRING, TEXT, JSON, VIRTUAL, BOOLEAN,
-       INTEGER, ENUM, DATE, ARRAY} = require('sequelize')
+const {STRING, TEXT, VIRTUAL, BOOLEAN, ENUM, ARRAY} = require('sequelize')
 
 module.exports = db => db.define('user', {
   first_name: STRING,
@@ -18,9 +15,10 @@ module.exports = db => db.define('user', {
     type: STRING,
     validate: {
       isEmail: true,
-      notEmpty:true
+      notEmpty: true
     }
   },
+  story: TEXT,
   work_auth: STRING,
   employment_type: ARRAY(STRING),
   personal_site: STRING,
@@ -83,7 +81,7 @@ module.exports.associations = (User, {OAuth, Job, Skill, Employer, Project}) => 
     foreignKey: 'applicant_id'
   })
   User.belongsToMany(Project, {
-    through:"UserProject"
+    through: 'UserProject'
   })
 }
 
