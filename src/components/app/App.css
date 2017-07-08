@@ -1,8 +1,12 @@
 @import url(../../fonts.css);
 
+/* ------ Misc (App-wide) ------ */
+
 .active, a:hover, a:focus {
   color: #12CD6A;
 }
+
+/* ------ Navbar ------ */
 
 .navbar {
   background: #FFFFFF;
@@ -14,6 +18,10 @@
   font-family: Open Sans Bold;
   font-size: 15px;
   text-transform: uppercase;
+}
+
+.navbar-right {
+  margin-right: 0;
 }
 
 .navbar-default .navbar-nav>li>a {
@@ -64,9 +72,9 @@
 .navbar-fixed-top .navbar-collapse {
   text-align: center;
   font-size: larger;
-  height: 100vh;
   max-height: none;
   width: inherit;
+  height: 100vh;
 }
 
 .dropdown-menu {

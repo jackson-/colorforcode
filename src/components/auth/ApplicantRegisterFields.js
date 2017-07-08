@@ -50,7 +50,7 @@ const ApplicantRegisterFields = props => (
         onChange={props.handleChange('last_name')}
       />
     </FormGroup>
-    {/* with zip_code we auto find user's city, state and country */}
+    {/* with zip_code we auto find user's city, state, country and coords */}
     <FormGroup controlId='zip_code'>
       <ControlLabel>Zip Code</ControlLabel>
       <FormControl

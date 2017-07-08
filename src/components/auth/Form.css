@@ -69,6 +69,11 @@
   padding: 0;
 }
 
+.radio, .checkbox {
+  margin-top: 0;
+}
+
+.radio input[type=radio],
 .checkbox input[type=checkbox] {
   width: 20px !important;
   min-width: 0;
