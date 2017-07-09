@@ -32,6 +32,7 @@ class EmployerDashboard extends Component {
         <Link to={`/jobs/${job.id}`}>{job.title}</Link>
       </li>
     ))
+
     return(
       <div className='Home'>
       {this.props.user &&
