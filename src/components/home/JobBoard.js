@@ -67,6 +67,11 @@ class JobBoard extends Component {
       // see SearchAdvanced.js line 21 (the Clear Filter button onClick)
       this.setState({
         query: '',
+        pendingTerms: [],
+        terms: [],
+        distance: '',
+        sortBy: '',
+        employment_types: new Set([]),
         filtered: false
       })
       this.filterJobs()()
@@ -76,77 +81,80 @@ class JobBoard extends Component {
     }
   }
 
+  advancedFilterJobs = event => {
+    event.preventDefault()
+    const {terms, distance, employment_types, sortBy} = this.state
+    let coords = ''
+    if (this.props.user && this.props.user.coords) {
+      coords = this.props.user.coords
+    } else {
+      if (navigator.geolocation) {
+        const positionId = navigator.geolocation.watchPosition(
+          position => {
+            const {latitude, longitude} = position.coords
+            coords = [latitude, longitude]
+            navigator.geolocation.clearWatch(positionId)
+          },
+          error => console.error(
+            'Could not locate user for advanced search max distance.',
+            error.stack
+          )
+        )
+      }
+    }
+
+    let must = {};
+    [...employment_types].forEach(type => {
+      must.match = {employment_types: type}
+    })
+    let should = terms.map(term => ({term: {_all: term}}))
+    const body = {
+      query: {
+        bool: {
+          must,
+          should
+        }
+      },
+      sort: [{_score: {order: 'desc'}}]
+    }
+    // if (must.length) body.query.bool.must = {...body.query.bool, must}
+    // if (should.length) body.query.bool = {...body.query.bool, should}
+    if (distance) {
+      body.query.bool.filter = [
+        {
+          geo_distance: {
+            coords,
+            distance: `${distance}mi`
+          }
+        }
+      ]
+    }
+    if (sortBy === 'date') body.sort.push({updated_at: {order: 'desc'}})
+    if (sortBy === 'distance') {
+      body.sort.push({
+        _geo_distance: {
+          coords,
+          order: 'desc',
+          unit: 'mi',
+          distance_type: 'arc'
+        }
+      })
+    }
+    this.setState({filtered: true})
+    console.log('BODY', body)
+    this.props.advancedFilterJobs(body)
+  }
+
   filterJobs = advanced => event => {
     // this is an event handler but we also use this in clearFilter & clearChip,
     // in which case there's no event object to call preventDefault on
-    if (event) {
-      event.preventDefault()
-    }
-    if (advanced) {
-      const {query, distance, employment_types, sortBy} = this.state
-      console.log(employment_types)
-      let coords = ''
-      if (this.props.user && this.props.user.coords) {
-        coords = this.props.user.coords.split(',')
-      } else {
-        if (navigator.geolocation) {
-          const positionId = navigator.geolocation.watchPosition(
-            position => {
-              const {latitude, longitude} = position.coords
-              coords = [latitude, longitude]
-              navigator.geolocation.clearWatch(positionId)
-            },
-            error => console.error(
-              'Could not locate user for advanced search max distance.',
-              error.stack
-            )
-          )
-        }
-      }
-      let must = Array.from(employment_types)
-      must.map(type => ({match: {employment_types: type}}))
-      const body = {
-        body: {
-          query: {
-            bool: {
-              must,
-              filter: [
-                {multi_match: {query, fields: ['_all']}},
-                {geo_distance: {coords, distance: `${distance}mi`}}
-              ]
-            }
-          },
-          sort: [
-            {updated_at: {order: 'desc'}},
-            {_score: {order: 'desc'}}
-          ]
-        }
-      }
-      if (sortBy === 'distance') {
-        body.query['function_score'] = {
-          functions: [
-            {
-              gauss: {
-                coords: {
-                  origin: {lat: coords[0], lon: coords[1]},
-                  offset: `${distance}mi`,
-                  scale: '5mi'
-                }
-              }
-            }
-          ]
-        }
-      }
-      this.props.advancedFilterJobs(body)
-    } else {
-      // no advanced search needed, do a basic query
-      const {query} = this.state
-      this.props.filterJobs(query)
-      // ^ when query === '', all job listings are shown
-      if (query) this.setState({filtered: true, terms: [...this.state.pendingTerms]})
-      // we only show the search results header if this.state.filtered === true
-      this.clearFilter()
-    }
+    if (event) event.preventDefault()
+    const {query} = this.state
+    this.props.filterJobs(query)
+    // ^ when query === '', all job listings are shown
+    if (query) this.setState({filtered: true, terms: [...this.state.pendingTerms]})
+    // we only show the search results header if this.state.filtered === true
+    this.clearFilter()
   }
 
   render () {
@@ -165,7 +173,7 @@ class JobBoard extends Component {
         <div className='container__flex'>
           <Col className='SearchAdvanced__container' xs={12} sm={3} md={3} lg={3}>
             <SearchAdvanced
-              filterJobs={this.filterJobs}
+              filterJobs={this.advancedFilterJobs}
               handleChange={this.handleChange}
               toggleCheckbox={this.toggleJobTypes}
               clearFilter={this.clearFilter}

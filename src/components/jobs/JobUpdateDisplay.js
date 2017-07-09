@@ -70,7 +70,7 @@ class JobUpdateDisplay extends Component {
     .then(json => {
       const address = json.results[0].address_components
       const city = address[1].long_name
-      const state = address.length === 4 ? address[2].short_name : address[3].short_name
+      const state = address.filter(a => a.types.includes('administrative_area_level_1'))[0].short_name
       const location = `${city}, ${state}`
       const coords = `${json.results[0].geometry.location.lat},${json.results[0].geometry.location.lng}`
       this.setState({coords, zip_code, location})

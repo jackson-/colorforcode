@@ -5,7 +5,7 @@ import { FormGroup, FormControl, ControlLabel,
 import './SearchAdvanced.css'
 
 const SearchAdvanced = props => (
-  <form className='SearchAdvanced' onSubmit={props.filterJobs('advanced')}>
+  <form className='SearchAdvanced' onSubmit={props.filterJobs}>
     <h3 className='SearchAdvanced__header'>Advanced Search</h3>
     {props.filtered &&
       <Row className='SearchAdvanced__button-container'>
