@@ -26,6 +26,9 @@ class JobUpdateDisplay extends Component {
       location: this.props.job.location || '',
       zip_code: this.props.job.zip_code || '',
       state: this.props.job.state || '',
+      pay_rate: this.props.job.pay_rate || '',
+      compensation_type: this.props.job.compensation_type || '',
+      travel_requirements: this.props.job.travel_requirements,
       country: 'US',
       selectValue: this.formatInitialSkills() || '',
       employment_types: new Set([...this.props.job.employment_types]) || new Set([])
@@ -107,7 +110,8 @@ class JobUpdateDisplay extends Component {
       compensation_type: this.props.job.compensation_type || '',
       pay_rate: this.props.job.pay_rate || '',
       selectValue: this.formatInitialSkills() || '',
-      employment_types: new Set([...this.props.job.employment_types]) || new Set([])
+      employment_types: new Set([...this.props.job.employment_types]) || new Set([]),
+      travel_requirements: this.props.job.travel_requirements
     })
   }
 
@@ -231,7 +235,10 @@ class JobUpdateDisplay extends Component {
             </FormGroup>
             <FormGroup controlId='compensation'>
               <ControlLabel>Compensation Type</ControlLabel>
-              <FormControl componentClass='select' ref='compensation' defaultValue={this.state.compensation_type}>
+              <FormControl
+                componentClass='select'
+                defaultValue={this.state.compensation_type} onChange={this.handleChange('compensation_type')}
+              >
                 <option value='Salary'>Salary</option>
                 <option value='Hourly'>Hourly</option>
               </FormControl>
@@ -246,7 +253,10 @@ class JobUpdateDisplay extends Component {
             </FormGroup>
             <FormGroup controlId='travel_requirements'>
               <ControlLabel>Travel Requirements</ControlLabel>
-              <FormControl componentClass='select' ref='travel_requirements'>
+              <FormControl
+                componentClass='select'
+                defaultValue={this.state.travel_requirements} onChange={this.handleChange('travel_requirements')}
+              >
                 <option value='None'>None</option>
                 <option value='Occasional'>Occasional</option>
                 <option value='25%'>25%</option>
