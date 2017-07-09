@@ -5,7 +5,8 @@
   const elasticsearch = require('elasticsearch');
   const esClient = new elasticsearch.Client({
     host: '127.0.0.1:9200',
-    log: 'error'
+    log: 'error',
+    apiVersion: '5.4'
   });
 
   const bulkIndex = function bulkIndex(index, type, data) {
@@ -16,12 +17,12 @@
         index: {
           _index: index,
           _type: type,
-          _id: item.id,
+          _id: item.id
         }
-      });
+      })
 
       bulkBody.push(item);
-    });
+    })
 
     esClient.bulk({body: bulkBody})
     .then(response => {
@@ -30,11 +31,11 @@
         if (item.index && item.index.error) {
           console.log(++errorCount, item.index.error);
         }
-      });
+      })
       console.log(`Successfully indexed ${data.length - errorCount} out of ${data.length} items`);
     })
     .catch(console.err);
-  };
+  }
 
   // only for testing purposes
   // all calls should be initiated through the module
@@ -56,9 +57,20 @@
         console.log("ERROR: ", error)
       })
 
-  };
+  esClient.indices.delete({index: 'data'})
 
-  test();
+  esClient.indices.create({
+    index: 'data',
+    body: {
+      mappings: {
+        job: {
+          properties: {
+            coords: {type: 'geo_point'}
+          }
+        }
+      }
+    }
+  }, test)
 
   module.exports = {
     bulkIndex

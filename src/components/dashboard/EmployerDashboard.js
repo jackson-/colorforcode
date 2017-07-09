@@ -27,15 +27,12 @@ class EmployerDashboard extends Component {
       rejected:3014,
       hired:18
     }
-    let my_jobs = [];
-    this.props.jobs && this.props.jobs.forEach((job)=>{
-      let url = "/job/"+job.id
-      my_jobs.push(
-        <li key={job.id}>
-          <Link to={url}>{job.title}</Link>
-        </li>
-      )
-    })
+    let my_jobs = this.props.jobs && this.props.jobs.map(job => (
+      <li key={job.id}>
+        <Link to={`/jobs/${job.id}`}>{job.title}</Link>
+      </li>
+    ))
+
     return(
       <div className='Home'>
       {this.props.user &&

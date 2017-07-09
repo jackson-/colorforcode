@@ -1,6 +1,5 @@
 
 const Sequelize = require('sequelize')
-const db = require('..')
 
 module.exports = db => db.define('job', {
   title: {
@@ -14,15 +13,13 @@ module.exports = db => db.define('job', {
   application_email: Sequelize.STRING,
   cc_email: Sequelize.STRING,
   application_url: Sequelize.STRING,
-  city: Sequelize.STRING,
-  state: Sequelize.STRING,
-  country: Sequelize.STRING,
+  coords: Sequelize.STRING,
+  location: Sequelize.STRING,
   zip_code: Sequelize.STRING,
   employment_types: Sequelize.ARRAY(Sequelize.STRING),
   pay_rate: Sequelize.STRING,
   compensation_type: Sequelize.STRING,
-  travel_requirements: Sequelize.STRING,
-  application_email: Sequelize.STRING
+  travel_requirements: Sequelize.STRING
 })
 
 // Belongs to Many associations create a join table.

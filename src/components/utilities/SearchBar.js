@@ -3,7 +3,7 @@ import { Form, FormGroup, FormControl, ControlLabel, Button } from 'react-bootst
 import PropTypes from 'prop-types'
 import './SearchBar.css'
 
-// see JobBoard component for example use of this component
+// see JobBoard container for example use of this component
 
 const SearchBar = props => (
   <Form inline={props.inline} className='filter-container' onSubmit={props.handleSubmit}>

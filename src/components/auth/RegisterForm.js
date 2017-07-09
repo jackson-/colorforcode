@@ -38,7 +38,8 @@ class RegisterForm extends Component {
     .then(res => res.data)
     .then(json => {
       const location = json.results[0].formatted_address
-      this.setState({location, zip_code})
+      const coords = `${json.results[0].geometry.location.lat},${json.results[0].geometry.location.lng}`
+      this.setState({coords, zip_code, location})
     })
     .catch(err => console.error(err.stack))
   }
@@ -46,7 +47,8 @@ class RegisterForm extends Component {
   handleChange = type => event => {
     const {value} = event.target
     if (type === 'zip_code' && value.toString().length === 5) {
-      this.handleLocation(value)
+      /* first we finish updating the state of the input, then we use the zip to find the rest of the location data by passing the callback to setState (an optional 2nd param) */
+      this.setState({[type]: value}, this.handleLocation(value))
     } else if (type === 'employment_type') {
       this.state.employment_type.has(value)
         ? this.state.employment_type.delete(value)

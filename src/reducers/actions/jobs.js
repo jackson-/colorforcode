@@ -48,6 +48,60 @@ export const filteringJobs = query => dispatch => {
   .catch(err => console.error(`Mang, I couldn't filter the jobs! ${err.stack}`))
 }
 
+export const advancedFilteringJobs = body => dispatch => {
+  axios.post('/api/jobs/search/advanced', body)
+  .then(res => res.data)
+  .then(jobs => dispatch(receiveJobs(jobs)))
+  .catch(err => console.error(`Mang, I couldn't advanced filter the jobs! ${err.stack}`))
+}
+
+export const grabbingCoords = () => {
+  return new Promise((resolve, reject) => {
+    let coords = ''
+    if (navigator.geolocation) {
+      console.log('grabbing user coords')
+      const positionId = navigator.geolocation.watchPosition(
+        position => {
+          const {latitude, longitude} = position.coords
+          coords = `${latitude}, ${longitude}`
+          navigator.geolocation.clearWatch(positionId)
+          resolve(coords)
+        },
+        error => {
+          console.error(
+            'Could not locate user for advanced search max distance.',
+            error.stack
+          )
+          reject(error)
+        }
+      )
+    }
+  })
+}
+
+export const buildBodyThenSearch = (user, bodyBuilderFunc, needCoords) => {
+  return async (dispatch) => {
+    dispatch(requestFilteredJobs())
+    let body = {}
+    let coords = ''
+    if (needCoords) {
+      if (user && user.coords) {
+        console.log('have user coords')
+        coords = user.coords
+      } else {
+        try {
+          coords = await grabbingCoords()
+        } catch (err) {
+          console.error(err.stack)
+        }
+      }
+    }
+    body = bodyBuilderFunc(coords)
+    console.log('COORDS', coords, 'BODY', body)
+    dispatch(advancedFilteringJobs(body))
+  }
+}
+
 export const applyingToJob = (user_id, job_id, history) => dispatch => {
   dispatch(applyToJob())
   axios.post(`/api/jobs/${job_id}/apply`, {user_id, job_id})

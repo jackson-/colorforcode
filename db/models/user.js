@@ -1,9 +1,6 @@
-'use strict'
-
 // bcrypt docs: https://www.npmjs.com/package/bcrypt
 const bcrypt = require('bcryptjs')
-const {STRING, TEXT, JSON, VIRTUAL, BOOLEAN,
-       INTEGER, ENUM, DATE, ARRAY} = require('sequelize')
+const {STRING, TEXT, VIRTUAL, BOOLEAN, ENUM, ARRAY} = require('sequelize')
 
 module.exports = db => db.define('user', {
   first_name: STRING,
@@ -11,14 +8,15 @@ module.exports = db => db.define('user', {
   is_employer: BOOLEAN,
   zip_code: STRING,
   location: STRING,
+  coords: STRING,
   image_url: STRING,
   resume_url: STRING,
   email: {
-      type: STRING,
-      validate: {
-          isEmail: true,
-          notEmpty:true
-      }
+    type: STRING,
+    validate: {
+      isEmail: true,
+      notEmpty: true
+    }
   },
   story: TEXT,
   work_auth: STRING,
@@ -28,8 +26,8 @@ module.exports = db => db.define('user', {
   linkedin: STRING,
   twitter: STRING,
   status: {
-      type: ENUM('active', 'inactive'),
-      defaultValue: 'active'
+    type: ENUM('active', 'inactive'),
+    defaultValue: 'active'
   },
   // We support oauth, so users may or may not have passwords.
   password_digest: STRING, // This column stores the hashed password in the DB, via the beforeCreate/beforeUpdate hooks
@@ -83,7 +81,7 @@ module.exports.associations = (User, {OAuth, Job, Skill, Employer, Project}) => 
     foreignKey: 'applicant_id'
   })
   User.belongsToMany(Project, {
-    through:"UserProject"
+    through: 'UserProject'
   })
 }
 

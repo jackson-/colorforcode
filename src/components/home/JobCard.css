@@ -4,12 +4,13 @@
   border-bottom: 2px solid #E4E4E4;
   transition: border-bottom .3s ease-in;
   padding: 40px 0;
-  width: 90vw;
+  width: 100%;
   margin: auto;
 }
 
 .JobCard:hover {
   border-bottom: 2px solid #12CD6A;
+  cursor: pointer;
 }
 
 .JobCard-title,
