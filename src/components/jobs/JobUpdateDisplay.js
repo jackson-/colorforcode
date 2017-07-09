@@ -104,6 +104,8 @@ class JobUpdateDisplay extends Component {
       zip_code: this.props.job.zip_code || '',
       state: this.props.job.state || '',
       country: 'US',
+      compensation_type: this.props.job.compensation_type || '',
+      pay_rate: this.props.job.pay_rate || '',
       selectValue: this.formatInitialSkills() || '',
       employment_types: new Set([...this.props.job.employment_types]) || new Set([])
     })
@@ -229,7 +231,7 @@ class JobUpdateDisplay extends Component {
             </FormGroup>
             <FormGroup controlId='compensation'>
               <ControlLabel>Compensation Type</ControlLabel>
-              <FormControl componentClass='select' ref='compensation'>
+              <FormControl componentClass='select' ref='compensation' defaultValue={this.state.compensation_type}>
                 <option value='Salary'>Salary</option>
                 <option value='Hourly'>Hourly</option>
               </FormControl>
@@ -237,7 +239,7 @@ class JobUpdateDisplay extends Component {
             <FormGroup controlId='pay_rate'>
               <ControlLabel>Pay Rate</ControlLabel>
               <FormControl
-                type='phone'
+                type='tel'
                 value={this.state.pay_rate}
                 onChange={this.handleChange('pay_rate')}
               />

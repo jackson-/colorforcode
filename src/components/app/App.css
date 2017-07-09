@@ -6,6 +6,17 @@
   color: #12CD6A;
 }
 
+.container__flex {
+  display: flex;
+  flex-direction: column;
+}
+
+@media only screen and (min-width: 500px) {
+  .container__flex {
+    flex-direction: row;
+  }
+}
+
 /* ------ Navbar ------ */
 
 .navbar {

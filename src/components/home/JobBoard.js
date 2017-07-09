@@ -162,24 +162,27 @@ class JobBoard extends Component {
           labelText='Filter job listings by keyword'
           submitButtonText='Search jobs'
         />
-        <Col className='SearchAdvanced__container' xs={12} sm={3} md={3} lg={3}>
-          <SearchAdvanced
-            filterJobs={this.filterJobs}
-            handleChange={this.handleChange}
-            toggleCheckbox={this.toggleJobTypes}
-            clearFilter={this.clearFilter}
-            clearChip={this.clearChip}
-            filtered={this.state.filtered}
-            query={this.state.query}
-            terms={this.state.terms}
-          />
-        </Col>
-        <Col xs={12} sm={9} md={9} lg={9}>
-          {this.props.loading
-            ? <p>Loading Job Listings...</p>
-            : <JobList filtered={this.state.filtered} jobs={jobs} />
-          }
-        </Col>
+        <div className='container__flex'>
+          <Col className='SearchAdvanced__container' xs={12} sm={3} md={3} lg={3}>
+            <SearchAdvanced
+              filterJobs={this.filterJobs}
+              handleChange={this.handleChange}
+              toggleCheckbox={this.toggleJobTypes}
+              clearFilter={this.clearFilter}
+              clearChip={this.clearChip}
+              filtered={this.state.filtered}
+              query={this.state.query}
+              terms={this.state.terms}
+            />
+          </Col>
+          <Col xs={12} sm={9} md={9} lg={9}>
+            {this.props.loading
+              ? <p>Loading Job Listings...</p>
+              : <JobList filtered={this.state.filtered} jobs={jobs} />
+            }
+          </Col>
+        </div>
+
       </Row>
     )
   }
