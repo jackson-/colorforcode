@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Row, Col } from 'react-bootstrap'
-import { gettingAllJobs, filteringJobs, advancedFilteringJobs } from 'APP/src/reducers/actions/jobs'
+import { gettingAllJobs, filteringJobs, buildBodyThenSearch } from 'APP/src/reducers/actions/jobs'
 import { gettingAllSkills } from 'APP/src/reducers/actions/skills'
 import SearchBar from '../utilities/SearchBar'
 import SearchAdvanced from '../utilities/SearchAdvanced'
@@ -74,35 +74,15 @@ class JobBoard extends Component {
         employment_types: new Set([]),
         filtered: false
       })
-      this.filterJobs()()
+      this.filterJobs()
     } else {
       // just clear the search bar, nbd
       this.setState({query: ''})
     }
   }
 
-  advancedFilterJobs = event => {
-    event.preventDefault()
+  buildBody = coords => {
     const {terms, distance, employment_types, sortBy} = this.state
-    let coords = ''
-    if (this.props.user && this.props.user.coords) {
-      coords = this.props.user.coords
-    } else {
-      if (navigator.geolocation) {
-        const positionId = navigator.geolocation.watchPosition(
-          position => {
-            const {latitude, longitude} = position.coords
-            coords = [latitude, longitude]
-            navigator.geolocation.clearWatch(positionId)
-          },
-          error => console.error(
-            'Could not locate user for advanced search max distance.',
-            error.stack
-          )
-        )
-      }
-    }
-
     let must = {};
     [...employment_types].forEach(type => {
       must.match = {employment_types: type}
@@ -112,40 +92,49 @@ class JobBoard extends Component {
       query: {
         bool: {
           must,
-          should
+          should,
+          filter: [
+
+          ]
         }
       },
       sort: [{_score: {order: 'desc'}}]
     }
-    // if (must.length) body.query.bool.must = {...body.query.bool, must}
-    // if (should.length) body.query.bool = {...body.query.bool, should}
     if (distance) {
-      body.query.bool.filter = [
-        {
-          geo_distance: {
-            coords,
-            distance: `${distance}mi`
-          }
+      body.query.bool.filter.push({
+        geo_distance: {
+          coords,
+          distance: `${distance}mi`
         }
-      ]
+      })
     }
     if (sortBy === 'date') body.sort.push({updated_at: {order: 'desc'}})
     if (sortBy === 'distance') {
       body.sort.push({
         _geo_distance: {
           coords,
-          order: 'desc',
+          order: 'asc',
           unit: 'mi',
           distance_type: 'arc'
         }
       })
     }
-    this.setState({filtered: true})
-    console.log('BODY', body)
-    this.props.advancedFilterJobs(body)
+    return body
   }
 
-  filterJobs = advanced => event => {
+  advancedFilterJobs = event => {
+    event.preventDefault()
+    this.setState(
+      {filtered: true},
+      () => this.props.advancedFilterJobs(
+        this.props.user,
+        this.buildBody,
+        (this.state.distance || this.state.sortBy === 'distance')
+      )
+    )
+  }
+
+  filterJobs = event => {
     // this is an event handler but we also use this in clearFilter & clearChip,
     // in which case there's no event object to call preventDefault on
     if (event) event.preventDefault()
@@ -159,13 +148,14 @@ class JobBoard extends Component {
 
   render () {
     let jobs = this.props.jobs || []
+    console.log(this.state)
     return (
       <Row className='JobBoard'>
         <SearchBar
           type='job'
           inline
           query={this.state.query}
-          handleSubmit={this.filterJobs()}
+          handleSubmit={this.filterJobs}
           handleChange={this.handleChange('query')}
           labelText='Filter job listings by keyword'
           submitButtonText='Search jobs'
@@ -181,6 +171,7 @@ class JobBoard extends Component {
               filtered={this.state.filtered}
               query={this.state.query}
               terms={this.state.terms}
+              state={this.state}
             />
           </Col>
           <Col xs={12} sm={9} md={9} lg={9}>
@@ -207,7 +198,9 @@ const mapDispatchToProps = dispatch => ({
   getJobs: post => dispatch(gettingAllJobs()),
   getSkills: post => dispatch(gettingAllSkills()),
   filterJobs: query => dispatch(filteringJobs(query)),
-  advancedFilterJobs: body => dispatch(advancedFilteringJobs(body))
+  advancedFilterJobs: (user, bodyBuilder, needCoords) => {
+    dispatch(buildBodyThenSearch(user, bodyBuilder, needCoords))
+  }
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(JobBoard)

@@ -30,12 +30,42 @@ const SearchAdvanced = props => (
       onChange={props.toggleCheckbox}
     >
       <ControlLabel>EMPLOYMENT TYPES</ControlLabel>
-      <Checkbox value='Full-time'>Full-time</Checkbox>
-      <Checkbox value='Part-time'>Part-time</Checkbox>
-      <Checkbox value='Contract'>Contract</Checkbox>
-      <Checkbox value='Contract to Hire'>Contract to Hire</Checkbox>
-      <Checkbox value='Internship'>Internship</Checkbox>
-      <Checkbox value='Remote'>Remote</Checkbox>
+      <Checkbox
+        value='Full-time'
+        checked={props.state && props.state.employment_types.has('Full-time')}
+      >
+        Full-time
+      </Checkbox>
+      <Checkbox
+        value='Part-time'
+        checked={props.state && props.state.employment_types.has('Part-time')}
+      >
+        Part-time
+      </Checkbox>
+      <Checkbox
+        value='Contract'
+        checked={props.state && props.state.employment_types.has('Contract')}
+      >
+        Contract
+      </Checkbox>
+      <Checkbox
+        value='Contract to Hire'
+        checked={props.state && props.state.employment_types.has('Contract to Hire')}
+      >
+        Contract to Hire
+      </Checkbox>
+      <Checkbox
+        value='Internship'
+        checked={props.state && props.state.employment_types.has('Internship')}
+      >
+        Internship
+      </Checkbox>
+      <Checkbox
+        value='Remote'
+        checked={props.state && props.state.employment_types.has('Remote')}
+      >
+        Remote
+      </Checkbox>
     </FormGroup>
     <FormGroup
       controlId='SearchAdvanced-distance'
@@ -43,7 +73,7 @@ const SearchAdvanced = props => (
       onChange={props.handleChange('distance')}
     >
       <ControlLabel>MAX DISTANCE (miles)</ControlLabel>
-      <FormControl type='tel' />
+      <FormControl type='tel' value={props.state.distance} />
     </FormGroup>
     <FormGroup
       controlId='SearchAdvanced__sort-by'
@@ -51,10 +81,20 @@ const SearchAdvanced = props => (
       onChange={props.handleChange('sortBy')}
     >
       <ControlLabel>SORT BY</ControlLabel>
-      <Radio className='SearchAdvanced__radio' name='radioGroup' value='updated_at'>
+      <Radio
+        className='SearchAdvanced__radio'
+        name='radioGroup'
+        value='date'
+        checked={props.state && props.state.sortBy === 'date'}
+      >
         Date (most recent)
       </Radio>
-      <Radio className='SearchAdvanced__radio' name='radioGroup' value='distance'>
+      <Radio
+        className='SearchAdvanced__radio'
+        name='radioGroup'
+        value='distance'
+        checked={props.state.sortBy && props.state.sortBy === 'distance'}
+      >
         Distance
       </Radio>
     </FormGroup>
