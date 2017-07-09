@@ -4,35 +4,26 @@ import JobSeekerDashboard from './JobSeekerDashboard'
 import { connect } from 'react-redux'
 
 class Dashboard extends Component {
-
-  render(){
+  render() {
     const user = this.props.user
-    return(
+    return (
       <div className='JobDetailPage'>
         {!this.props.loading && this.props.user &&
           <div>
-            {user && user.is_employer &&
-              <EmployerDashboard user={user} />
-            }
-            {user && !user.is_employer &&
-              <JobSeekerDashboard user={user} />
-            }
+            {user && user.is_employer && <EmployerDashboard user={user} />}
+            {user && !user.is_employer && <JobSeekerDashboard user={user} />}
           </div>
         }
-        {this.props.loading &&
-          <div>
-            Loading...
-          </div>
-        }
+        {this.props.loading && <div>Loading...</div>}
       </div>
-  )}
+    )
+  }
 }
 
 const mapStateToProps = state => ({
   user: state.users.currentUser,
-  loading: state.loading,
+  loading: state.loading
 })
 
-const JobDetailPageContainer = connect(mapStateToProps, null)(Dashboard)
-
+const JobDetailPageContainer = connect(mapStateToProps)(Dashboard)
 export default JobDetailPageContainer
