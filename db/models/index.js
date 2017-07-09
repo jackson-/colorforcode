@@ -17,6 +17,7 @@ const metaModels = {
   Employer: require('./employer'),
   Job: require('./job'),
   Skill: require('./skill'),
+  JobSkill: require('./jobskill'),
   Project: require('./project'),
 }
 

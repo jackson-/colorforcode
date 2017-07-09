@@ -1,5 +1,7 @@
 'use strict'
 
+var _ = require("underscore")
+
 var stripe = require("stripe")(
   "API_SECRET"
 );
@@ -17,36 +19,31 @@ const esClient = new elasticsearch.Client({
 module.exports = require('express').Router()
 
   .get('/', (req, res, next) => {
-    const query = req.query ? req.query : {match_all: {}}
+    let query = req.query ? req.query : {match_all: {}}
     let body = {
       query,
       from: 0
     }
     esClient.search({body, index: 'data', type:'project'})
-    .then(results => res.status(200).json(results.hits.hits))
+    .then(results => {
+      return res.status(200).json(results.hits.hits)
+    })
+
     .catch(next)
   })
 
   .post('/', (req, res, next) => {
     const {skills} = req.body
     const {user} = req.body.project
-    // const  token = req.body.token
-    // stripe.charges.create({
-    //   amount: 2,
-    //   currency: "usd",
-    //   source: token, // obtained with Stripe.js
-    //   description: "Charge for project stuff"
-    // }, function(err, charge) {
-    //   console.log("ERR", err, "CHARGE", charge)
-    // });
+    req.body.project.user_id = user.id
     Project.create(req.body.project)
     .then(createdProject => {
       return Promise.all([
-        createdProject.addUser(user.id),
+        // createdProject.addUser(user.id),
         createdProject.addSkills(skills)
       ])
     })
-    .spread((user, projectskill) => Project.findOne({
+    .spread((projectskill) => Project.findOne({
       where: {
         id: projectskill[0][0].get().project_id
       },
@@ -59,6 +56,37 @@ module.exports = require('express').Router()
       body: project.get()
     }))
     .then(() => res.sendStatus(201))
+    .catch(next)
+  })
+
+  // search bar
+  .post('/search', (req, res, next) => {
+    const query = req.body.query
+      ? {multi_match: {query: req.body.query, fields: ['description', 'skill.title']}}
+      : {match_all: {}}
+
+    esClient.search({
+      index: 'data',
+      type: 'project',
+      body: {query}
+    })
+    .then(results => {
+      var grouped = _.groupBy(results.hits.hits, (p) => {
+        return p._source.user_id
+      })
+      return res.status(200).json(grouped)})
+    .catch(next)
+  })
+
+  // advanced search
+  .post('/search/advanced', (req, res, next) => {
+    const {body} = req
+    esClient.search({body, index: 'data', type: 'project'})
+    .then(advancedResults => {
+      var grouped = _.groupBy(advancedResults, (p) => {
+        return p._source.user_id
+      })
+      return res.status(200).json(grouped)})
     .catch(next)
   })
 

@@ -1,7 +1,7 @@
 'use strict'
 
 const db = require('APP/db')
-const {User, Employer, Skill, Job, Project} = db
+const {User, Employer, Skill, Job, Project, ProjectSkill, JobSkill} = db
 const Promise = require('bluebird')
 const {mapValues} = require('lodash')
 
@@ -13,9 +13,29 @@ function seedEverything() {
   }
   seeded.jobs = jobs(seeded)
   // seeded.projects = projects(seeded)
-  // seeded.relationships = relationships(seeded)
+  seeded.relationships = relationships(seeded)
   return Promise.props(seeded)
 }
+
+const relationships = seed(JobSkill,
+  ({users, employers, skills, jobs}) => ({
+      1: {
+        job_id: jobs.full_stack.id,
+        skill_id:skills.react.id,
+      },
+      2: {
+        job_id: jobs.full_stack.id,
+        skill_id:skills.nginx.id,
+      },
+      3: {
+        job_id: jobs.dev_ops.id,
+        skill_id:skills.mongo.id,
+      },
+      4: {
+        job_id: jobs.dev_ops.id,
+        skill_id:skills.node.id,
+      },
+}))
 
 // const projects = seed(Project,
 //   ({users}) => ({
@@ -137,17 +157,17 @@ function getMethods(obj)
     return res;
 }
 
-function seedAssociations(){
-  return Job.findAll()
-}
+// function seedAssociations(){
+//   return Job.findAll()
+// }
 
 if (module === require.main) {
   console.log('seeding')
   db.didSync
     .then(() => db.sync({force: true}))
     .then(seedEverything)
-    .then(seedAssociations)
-    .then(jobs => jobs.forEach(job => job.addSkills([1,2,3]).then(() => {console.log("GOT EM")}) ) )
+    // .then(seedAssociations)
+    // .then(jobs => jobs.forEach(job => job.addSkills([1,2,3]).then(() => {console.log("GOT EM")}) ) )
 
     .finally(() => process.exit(0))
 }
