@@ -46,8 +46,8 @@ module.exports = require('express').Router()
   // advanced search
   .post('/search/advanced', (req, res, next) => {
     const {body} = req
-    esClient.search({body, index: 'data'})
-    .then(advancedResults => res.status(200).json(advancedResults))
+    esClient.search({body, index: 'data', type: 'job'})
+    .then(advancedResults => res.status(200).json(advancedResults.hits.hits))
     .catch(next)
   })
 
@@ -148,7 +148,6 @@ module.exports = require('express').Router()
         include: [{ association: 'Job' }]
       })
       .then(jobs => {
-        console.log("JOBS", jobs)
         return res.json(jobs)})
       .catch(next))
   .get('/employer/:id',

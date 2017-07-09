@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Row, Col, FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap'
+import { Row, Col, FormGroup, ControlLabel, FormControl, Button, Checkbox } from 'react-bootstrap'
+import axios from 'axios'
 import { creatingNewJob } from 'APP/src/reducers/actions/jobs'
 import { gettingAllSkills } from 'APP/src/reducers/actions/skills'
-import CreditCardFormControls from './CreditCard';
+import CreditCardFormControls from './CreditCard'
 import VirtualizedSelect from 'react-virtualized-select'
 import 'react-select/dist/react-select.css'
 import 'react-virtualized/styles.css'
@@ -15,21 +16,6 @@ function arrowRenderer () {
 		<span></span>
 	);
 }
-const states = [
-	'AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','HI','ID','IL','IN','IA','KS',
-	'KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY',
-	'NC','ND','MP','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA',
-	"WV",'WI','WY'
-]
-
-const job_types = [
-  {label:"Full Time", value:"Full Time"},
-  {label:"Part Time", value:"Part Time"},
-  {label:"Contract", value:"Contract"},
-  {label:"Contract to Hire", value:"Contract to Hire"},
-  {label:"Internship", value:"Internship"},
-  {label:"Remote", value:"Remote"}
-]
 
 class PostJobForm extends Component {
   constructor(props) {
@@ -39,12 +25,12 @@ class PostJobForm extends Component {
       description: '',
       application_email: '',
       cc_email: '',
-      application_url:'',
-      city:'',
-      state: '',
-      zip_code:'',
-      selectValue:[],
-      jobValue:[],
+      application_url: '',
+      location: '',
+      coords: '',
+      zip_code: '',
+      selectValue: [],
+      employment_types: new Set([]),
       pay_rate: '',
       compensation_type: 'Salary',
       travel_requirements: 'None',
@@ -53,8 +39,7 @@ class PostJobForm extends Component {
       exp_year: null,
       cvc: null,
       token: null,
-      app_method:'email',
-			remote:false,
+      app_method: 'email'
     }
   }
 
@@ -62,18 +47,34 @@ class PostJobForm extends Component {
     this.props.getSkills()
   }
 
-	toggleRemote(){
-		const remote = !this.state.remote
-		this.setState({state: remote})
-	}
-
-  switchAppMethod(method){
-    this.setState({app_method:method})
+  handleLocation(zip_code) {
+    axios.get(`http://maps.googleapis.com/maps/api/geocode/json?address=${zip_code}`)
+    .then(res => res.data)
+    .then(json => {
+      const city = json.results[0].address_components[1].long_name
+      const state = json.results[0].address_components[2].short_name
+      const location = `${city}, ${state}`
+      const coords = `${json.results[0].geometry.location.lat},${json.results[0].geometry.location.lng}`
+      this.setState({coords, zip_code, location})
+    })
+    .catch(err => console.error(err.stack))
   }
 
   handleChange = type => event => {
     const { value } = event.target
-    this.setState({[type]: value})
+    if (type === 'zip_code' && value.toString().length === 5) {
+      /* first we finish updating the state of the input, then we use the zip to find the rest of the location data by passing the callback to setState (an optional 2nd param) */
+      this.setState({[type]: value}, this.handleLocation(value))
+    } else if (type === 'employment_type') {
+      this.state.employment_types.has(value)
+        ? this.state.employment_types.delete(value)
+        : this.state.employment_types.add(value)
+      const employment_types = new Set([...this.state.employment_types])
+      /* ^Using a Set instead of an array because we need the data values to be unique */
+      this.setState({employment_types})
+    } else {
+      this.setState({[type]: value})
+    }
   }
 
   clearForm = () => {
@@ -82,12 +83,12 @@ class PostJobForm extends Component {
       description: '',
       application_email: '',
       cc_email: '',
-      application_url:'',
-      city:'',
-      state: '',
-      zip_code:'',
+      application_url: '',
+      location: '',
+      coords: '',
+      zip_code: '',
       selectValue: [],
-      jobValue:[],
+      employment_types: new Set([]),
       pay_rate: '',
       compensation_type: 'Salary',
       travel_requirements: 'None',
@@ -96,37 +97,17 @@ class PostJobForm extends Component {
       exp_year: null,
       cvc: null,
       token: null,
-      app_method:'email'
+      app_method: 'email'
     })
   }
 
   handleSubmit = event => {
     event.preventDefault()
-    const { title, description, application_url,
-            city, state, zip_code, selectValue, jobValue,
-            pay_rate, compensation_type, travel_requirements,
-            number, exp_month, exp_year, cvc, app_method,
-            application_email, cc_email, remote } = this.state
-
-    const job = {
-      title, description, application_url,
-      city, state, zip_code, selectValue, jobValue,
-      pay_rate, compensation_type, travel_requirements,
-      number, exp_month, exp_year, cvc, app_method,
-      application_email, cc_email, remote
-    }
-
+    const job = {...this.state}
     job.employer_id = this.props.user.employer.id
-		job.employment_types = []
-		this.state.jobValue.forEach((jt)=>{
-			job.employment_types.push(jt.label)
-		})
-
-		const skills = []
-		this.state.selectValue.forEach((skill) => {
-			skills.push(skill.value)
-		})
-
+		job.employment_types = [...this.state.employment_types]
+    const skills = job.selectValue.map(skill => skill.value)
+    delete job.selectValue
 		// const token = this.refs.card.state.token
     this.clearForm()
     this.props.createJobPost({job, skills})
@@ -150,32 +131,8 @@ class PostJobForm extends Component {
     })
 	}
 
-  _selectJobType(data){
-		let type_ids = data.split(',');
-    let new_types = []
-    if (type_ids[0] !== "") {
-      type_ids.forEach((t) => {
-        new_types.push({label: t, value: t})
-      })
-    }
-    this.setState({
-      jobValue: [...new_types],
-      selected_jobtypes: type_ids
-    })
-	}
-
   render() {
-		let state_options = []
-    let skills = []
-
-    this.props.skills.forEach(s => {
-      skills.push({label:s.title, value:s.id})
-    })
-
-		states.forEach((s, idx) => {
-      state_options.push(<option key={idx} value={s}>{s}</option>)
-    })
-
+    let skills = this.props.skills.map(s => ({label: s.title, value: s.id}))
     return (
       <Row className='PostJobForm'>
         <Col xs={12} sm={6} md={6} lg={6}>
@@ -238,43 +195,28 @@ class PostJobForm extends Component {
                 onChange={this.handleChange('application_url')}
               />
             </FormGroup>
-            <FormGroup controlId='city'>
-              <ControlLabel>Job City</ControlLabel>
-              <FormControl
-                type='city'
-                value={this.state.city}
-                onChange={this.handleChange('city')}
-              />
-            </FormGroup>
-  					<FormGroup controlId='state'>
-  						<ControlLabel>State</ControlLabel>
-  						<FormControl componentClass="select" ref='state'>
-  							{state_options}
-  						</FormControl>
-  					</FormGroup>
+            {/* with zip_code we auto find user's city, state, country and coords */}
             <FormGroup controlId='zip_code'>
               <ControlLabel>Zip Code</ControlLabel>
               <FormControl
-                type='phone'
+                required
+                type='tel'
                 value={this.state.zip_code}
                 onChange={this.handleChange('zip_code')}
               />
             </FormGroup>
-  					<FormGroup controlId='job_types'>
-  						<ControlLabel>Job Types (select all that apply)</ControlLabel>
-  	          <VirtualizedSelect
-                arrowRenderer={arrowRenderer}
-                searchable={false}
-                simpleValue
-                labelKey='label'
-                valueKey='value'
-                ref="job_search"
-                multi={true}
-                options={job_types}
-                onChange={(data) => this._selectJobType(data)}
-                value={this.state.jobValue}
-              />
-  					</FormGroup>
+            <FormGroup
+              controlId='employment_type'
+              name='employment_type'
+              onChange={this.handleChange('employment_type')}>
+              <ControlLabel>Employment Type(s)</ControlLabel>
+              <Checkbox value='Full-time'>Full-time</Checkbox>
+              <Checkbox value='Part-time'>Part-time</Checkbox>
+              <Checkbox value='Contract'>Contract</Checkbox>
+              <Checkbox value='Contract to Hire'>Contract to Hire</Checkbox>
+              <Checkbox value='Internship'>Internship</Checkbox>
+              <Checkbox value='Remote'>Remote</Checkbox>
+            </FormGroup>
   					<FormGroup controlId='compensation'>
   						<ControlLabel>Compensation Type</ControlLabel>
   						<FormControl componentClass='select' ref='compensation'>
