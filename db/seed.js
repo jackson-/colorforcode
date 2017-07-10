@@ -12,13 +12,14 @@ function seedEverything() {
     skills: skills(),
   }
   seeded.jobs = jobs(seeded)
-  // seeded.projects = projects(seeded)
-  seeded.relationships = relationships(seeded)
+  seeded.projects = projects(seeded)
+  seeded.job_skills = job_skills(seeded)
+  seeded.project_skills = project_skills(seeded)
   return Promise.props(seeded)
 }
 
-const relationships = seed(JobSkill,
-  ({users, employers, skills, jobs}) => ({
+const job_skills = seed(JobSkill,
+  ({skills, jobs}) => ({
       1: {
         job_id: jobs.full_stack.id,
         skill_id:skills.react.id,
@@ -37,34 +38,89 @@ const relationships = seed(JobSkill,
       },
 }))
 
-// const projects = seed(Project,
-//   ({users}) => ({
-//
-//   })
-// )
+const project_skills = seed(ProjectSkill,
+  ({skills, projects}) => ({
+    1: {
+      job_id: projects.d1.id,
+      skill_id:skills.react.id,
+    },
+    2: {
+      job_id: projects.d1.id,
+      skill_id:skills.nginx.id,
+    },
+    3: {
+      job_id: projects.c1.id,
+      skill_id:skills.mongo.id,
+    },
+    4: {
+      job_id: projects.c2.id,
+      skill_id:skills.node.id,
+    },
+}))
+
+const projects = seed(Project,
+  ({users}) => ({
+    d1: {
+      user_id: users.devin.id,
+      title:"Devin's Project 1",
+      description:"This is a description",
+      learning_point:"I learned so much yo",
+      pain_point:"This really pissed me off",
+      external_link:"http://www.google.com",
+    },
+    d2: {
+      user_id: users.devin.id,
+      title:"Devin's Project 2",
+      description:"This is a description",
+      learning_point:"I learned so much yo",
+      pain_point:"This really pissed me off",
+      external_link:"http://www.google.com",
+    },
+    c1: {
+      user_id: users.chloe.id,
+      title:"Chloe's Project 1",
+      description:"This is a description",
+      learning_point:"I learned so much yo",
+      pain_point:"This really pissed me off",
+      external_link:"http://www.google.com",
+    },
+    c2: {
+      user_id: users.chloe.id,
+      title:"Chloe's Project 2",
+      description:"This is a description",
+      learning_point:"I learned so much yo",
+      pain_point:"This really pissed me off",
+      external_link:"http://www.google.com",
+    },
+  })
+)
 
 const users = seed(User,
   ({users, employers, skills}) => ({
       devin: {
         email: 'devin@123.com',
-        name:'Devin Jackson',
+        first_name:'Devin',
+        last_name:'Jackson',
         password: '123',
         is_employer:false
       },
       chloe: {
-        name: 'Chloe Rice',
+        first_name: 'Chloe',
+        last_name:'Rice',
         email: 'chloe@123.com',
         password: '123',
         is_employer:false
       },
       hb1: {
-        name: 'Devin Blackson',
+        first_name:'Devin',
+        last_name:'Blackson',
         email: 'devin@hireblack.io',
         password: '123',
         is_employer:true,
       },
       hb2: {
-        name: 'Chloe Ice',
+        first_name: 'Chloe',
+        last_name:'Ice',
         email: 'chloe@hireblack.io',
         password: '123',
         is_employer:true,

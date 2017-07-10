@@ -57,6 +57,8 @@
         console.log("ERROR: ", error)
       })
 
+  }
+
   esClient.indices.delete({index: 'data'})
 
   esClient.indices.create({
