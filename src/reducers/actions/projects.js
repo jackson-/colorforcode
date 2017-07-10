@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { RECEIVE_ALL_PROJECTS, RECEIVE_PROJECT, RECEIVE_USER_PROJECTS } from '../constants'
 import { createNewProject, requestAllProjects, requestUserProjects,
-         requestProject} from './loading'
+         requestFilteredProjects, requestProject} from './loading'
 import { gettingAllSkills } from './skills'
 
 /* --------- PURE ACTION CREATORS ---------*/
@@ -40,6 +40,14 @@ export const gettingUserProjects = (user) => dispatch => {
   .catch(err => console.error(`Mang, I couldn't find the projects! ${err.stack}`))
 }
 
+export const filteringProjects = query => dispatch => {
+  dispatch(requestFilteredProjects())
+  axios.post('/api/projects/search', {query})
+  .then(res => res.data)
+  .then(projects => dispatch(receiveAllProjects(projects)))
+  .catch(err => console.error(`Mang, I couldn't filter the  projects! ${err.stack}`))
+}
+
 
 export const gettingProjectById = project_id => dispatch => {
   dispatch(requestProject())
@@ -59,7 +67,7 @@ export const creatingNewProject = projectPost => dispatch => {
   axios.post('/api/projects', projectPost)
   .then(res => res.data)
   // if the project is successfully created, we receive the update to date projects list
-  .then(projects => dispatch(gettingAllProjects()))
+  .then(projects => console.log("YES WE DONE"))
   // otherwise we catch the error...
   .catch(err => console.error(`Sorry, cuz. We couldn't create that project post...${err.stack}`))
 }

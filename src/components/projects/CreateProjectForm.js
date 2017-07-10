@@ -86,6 +86,7 @@ class CreateProjectForm extends Component {
 		// const token = this.refs.card.state.token
     this.clearForm()
     this.props.createProject({project, skills})
+		this.props.history.push('/')
   }
 
   render() {

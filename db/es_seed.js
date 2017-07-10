@@ -1,7 +1,7 @@
 (function () {
   'use strict';
   const db = require('APP/db')
-  const {Job, Employer, Skill} = db
+  const {Job, Employer, Skill, User, Project} = db
   const elasticsearch = require('elasticsearch');
   const esClient = new elasticsearch.Client({
     host: '127.0.0.1:9200',
@@ -41,13 +41,22 @@
   // all calls should be initiated through the module
   const test = function test() {
     Job.findAll({ include: [Employer, Skill] })
-    .then(jobs => {
-      console.log(`${jobs.length} items parsed from data file`);
-      bulkIndex('data', 'job', jobs)
-    })
-    .catch((error) => {
-      console.log("ERROR: ", error)
-    })
+      .then(jobs => {
+        console.log(`${jobs.length} jobs parsed from database`);
+        bulkIndex('data', 'job', jobs)
+      })
+      .catch((error) => {
+        console.log("ERROR: ", error)
+      })
+    User.findAll({ where:{is_employer:false}, include: [{model:Project, include:[{model:Skill}]}] })
+      .then(users => {
+        console.log(`${users.length} users parsed from database`);
+        bulkIndex('data', 'user', users)
+      })
+      .catch((error) => {
+        console.log("ERROR: ", error)
+      })
+
   }
 
   esClient.indices.delete({index: 'data'})

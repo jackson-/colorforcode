@@ -12,6 +12,7 @@ import LoginForm from './components/auth/LoginForm'
 import PostNewJobForm from './components/jobs/PostNewJobForm'
 import JobDetailPage from './components/jobs/JobDetailPage'
 import Dashboard from './components/dashboard/Dashboard'
+import CandidateSearchPage from './components/search/CandidateSearchPage'
 import ProjectCreate from './components/projects/CreateProjectForm'
 // import EmployerLoginForm from './components/auth/EmployerLoginForm'
 // import EmployerRegisterForm from './components/auth/EmployerRegisterForm'
@@ -40,6 +41,7 @@ const App = () => (
           <Route exact path='/post-new-job' component={PostNewJobForm} />
           <Route exact path='/jobs/:id' component={JobDetailPage} />
           <Route exact path='/dashboard' component={Dashboard} />
+          <Route exact path='/search/candidates' component={CandidateSearchPage} />
           <Route exact path='/projects' component={ProjectsPage} />
           <Route exact path='/projects/create' component={ProjectCreate} />
         </Switch>

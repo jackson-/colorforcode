@@ -1,7 +1,7 @@
 'use strict'
 
 const db = require('APP/db')
-const {User, Employer, Skill, Job} = db
+const {User, Employer, Skill, Job, Project, ProjectSkill, JobSkill} = db
 const Promise = require('bluebird')
 const {mapValues} = require('lodash')
 
@@ -12,32 +12,115 @@ function seedEverything() {
     skills: skills(),
   }
   seeded.jobs = jobs(seeded)
-  // seeded.relationships = relationships(seeded)
-
+  seeded.projects = projects(seeded)
+  seeded.job_skills = job_skills(seeded)
+  seeded.project_skills = project_skills(seeded)
   return Promise.props(seeded)
 }
 
+const job_skills = seed(JobSkill,
+  ({skills, jobs}) => ({
+      1: {
+        job_id: jobs.full_stack.id,
+        skill_id:skills.react.id,
+      },
+      2: {
+        job_id: jobs.full_stack.id,
+        skill_id:skills.nginx.id,
+      },
+      3: {
+        job_id: jobs.dev_ops.id,
+        skill_id:skills.mongo.id,
+      },
+      4: {
+        job_id: jobs.dev_ops.id,
+        skill_id:skills.node.id,
+      },
+}))
+
+const project_skills = seed(ProjectSkill,
+  ({skills, projects}) => ({
+    1: {
+      job_id: projects.d1.id,
+      skill_id:skills.react.id,
+    },
+    2: {
+      job_id: projects.d1.id,
+      skill_id:skills.nginx.id,
+    },
+    3: {
+      job_id: projects.c1.id,
+      skill_id:skills.mongo.id,
+    },
+    4: {
+      job_id: projects.c2.id,
+      skill_id:skills.node.id,
+    },
+}))
+
+const projects = seed(Project,
+  ({users}) => ({
+    d1: {
+      user_id: users.devin.id,
+      title:"Devin's Project 1",
+      description:"This is a description",
+      learning_point:"I learned so much yo",
+      pain_point:"This really pissed me off",
+      external_link:"http://www.google.com",
+    },
+    d2: {
+      user_id: users.devin.id,
+      title:"Devin's Project 2",
+      description:"This is a description",
+      learning_point:"I learned so much yo",
+      pain_point:"This really pissed me off",
+      external_link:"http://www.google.com",
+    },
+    c1: {
+      user_id: users.chloe.id,
+      title:"Chloe's Project 1",
+      description:"This is a description",
+      learning_point:"I learned so much yo",
+      pain_point:"This really pissed me off",
+      external_link:"http://www.google.com",
+    },
+    c2: {
+      user_id: users.chloe.id,
+      title:"Chloe's Project 2",
+      description:"This is a description",
+      learning_point:"I learned so much yo",
+      pain_point:"This really pissed me off",
+      external_link:"http://www.google.com",
+    },
+  })
+)
 
 const users = seed(User,
   ({users, employers, skills}) => ({
       devin: {
         email: 'devin@123.com',
-        name:'Devin Jackson',
+        first_name:'Devin',
+        last_name:'Jackson',
         password: '123',
+        is_employer:false
       },
       chloe: {
-        name: 'Chloe Rice',
+        first_name: 'Chloe',
+        last_name:'Rice',
         email: 'chloe@123.com',
-        password: '123'
+        password: '123',
+        is_employer:false
       },
       hb1: {
-        name: 'Devin Blackson',
+        first_name:'Devin',
+        last_name:'Blackson',
         email: 'devin@hireblack.io',
         password: '123',
         is_employer:true,
       },
       hb2: {
-        name: 'Chloe Ice',
+        first_name: 'Chloe',
+        last_name:'Ice',
         email: 'chloe@hireblack.io',
         password: '123',
         is_employer:true,
@@ -119,33 +202,29 @@ const jobs = seed(Job,
 }
 )
 
-const relationships = seed(Job,
-  // We're specifying a function here, rather than just a rows object.
-  // Using a function lets us receive the previously-seeded rows (the seed
-  // function does this wiring for us).
-  //
-  // This lets us reference previously-created rows in order to create the join
-  // rows. We can reference them by the names we used above (which is why we used
-  // Objects above, rather than just arrays).
-  ({jobs}) => {
-    const job1 = jobs.full_stack
-    const job2 = jobs.dev_ops
-    const skills = {
-      1: [1, 2, 3],
-      2: [4, 5, 6]
+function getMethods(obj)
+{
+    var res = [];
+    for(var m in obj) {
+        if(typeof obj[m] == "function") {
+            res.push(m)
+        }
     }
+    return res;
+}
 
-    const jobArray = [job1, job2]
-    return Promise.props(jobArray, (job) => job.addSkills(skills[`${job.get().id}`]))
-    .then(success => console.log(success))
-  }
-)
+// function seedAssociations(){
+//   return Job.findAll()
+// }
 
 if (module === require.main) {
   console.log('seeding')
   db.didSync
     .then(() => db.sync({force: true}))
     .then(seedEverything)
+    // .then(seedAssociations)
+    // .then(jobs => jobs.forEach(job => job.addSkills([1,2,3]).then(() => {console.log("GOT EM")}) ) )
+
     .finally(() => process.exit(0))
 }
 
@@ -184,7 +263,7 @@ function seed(Model, rows) {
     }
     return Promise.resolve(rows)
       .then(rows => {
-        console.log("ROWS", rows)
+        console.log("TYPE",typeof rows)
         return Promise.props(
         Object.keys(rows)
           .map(key => {
