@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Row } from 'react-bootstrap'
-import { gettingAllProjects, filteringProjects } from 'APP/src/reducers/actions/jobs'
+import { gettingAllUsers, filteringProjects } from 'APP/src/reducers/actions/users'
 import { gettingAllSkills } from 'APP/src/reducers/actions/skills'
 import SearchBar from '../utilities/SearchBar'
 import CandidateList from './CandidateList.js'
 // import './Home.css'
 
-class JobBoard extends Component {
+class CandidateSearch extends Component {
 
   constructor (props) {
     super(props)
@@ -19,7 +19,7 @@ class JobBoard extends Component {
   }
 
   componentDidMount () {
-    this.props.getProjects()
+    this.props.getUsers()
   }
 
   handleChange = event => {
@@ -73,7 +73,7 @@ class JobBoard extends Component {
   }
 
   render () {
-    let jobs = this.props.jobs || []
+    let users = this.props.users || []
     return (
       <Row className='JobBoard'>
         <SearchBar
@@ -83,14 +83,14 @@ class JobBoard extends Component {
           handleSubmit={this.filterJobs}
           handleChange={this.handleChange}
           labelText='Filter project listings by keyword'
-          submitButtonText='Search projects and candidates'
+          submitButtonText='Search users by skills'
         />
         {
           this.props.loading
-            ? <p>Loading Job Listings...</p>
+            ? <p>Loading Candidates...</p>
             : <CandidateList
                 filtered={this.state.filtered}
-                jobs={jobs}
+                users={users}
                 query={this.state.query}
                 clearFilter={this.clearFilter}
                 clearChip={this.clearChip}
@@ -103,15 +103,15 @@ class JobBoard extends Component {
 }
 
 const mapStateToProps = state => ({
-  projects: state.projects.all,
+  users: state.users.all,
   skills: state.skills.all,
   loading: state.loading
 })
 
 const mapDispatchToProps = dispatch => ({
-  getJobs: post => dispatch(gettingAllProjects()),
+  getUsers: post => dispatch(gettingAllUsers()),
   getSkills: post => dispatch(gettingAllSkills()),
   filterProjects: query => dispatch(filteringProjects(query))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(JobBoard)
+export default connect(mapStateToProps, mapDispatchToProps)(CandidateSearch)
