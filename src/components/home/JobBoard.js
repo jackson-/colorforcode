@@ -136,11 +136,7 @@ class JobBoard extends Component {
       : this.state.coords
     this.setState(
       {filtered: true},
-      () => this.props.advancedFilterJobs(
-        this.props.user,
-        this.buildBody,
-        coords
-      )
+      () => this.props.advancedFilterJobs(this.buildBody, coords)
     )
   }
 
@@ -208,8 +204,8 @@ const mapDispatchToProps = dispatch => ({
   getJobs: post => dispatch(gettingAllJobs()),
   getSkills: post => dispatch(gettingAllSkills()),
   filterJobs: query => dispatch(filteringJobs(query)),
-  advancedFilterJobs: (user, bodyBuilder, coords) => {
-    dispatch(buildBodyThenSearch(user, bodyBuilder, coords))
+  advancedFilterJobs: (bodyBuilder, coords) => {
+    dispatch(buildBodyThenSearch(bodyBuilder, coords))
   }
 })
 
