@@ -80,7 +80,7 @@ export const grabbingCoords = () => {
   })
 }
 
-export const buildBodyThenSearch = (user, bodyBuilderFunc, coords) => {
+export const buildBodyThenSearch = (bodyBuilderFunc, coords) => {
   return dispatch => {
     dispatch(requestFilteredJobs())
     const body = bodyBuilderFunc(coords)
