@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Row, Col } from 'react-bootstrap'
-import { gettingAllJobs, filteringJobs, buildBodyThenSearch } from 'APP/src/reducers/actions/jobs'
+import { gettingAllJobs, filteringJobs, grabbingCoords, buildBodyThenSearch } from 'APP/src/reducers/actions/jobs'
 import { gettingAllSkills } from 'APP/src/reducers/actions/skills'
 import SearchBar from '../utilities/SearchBar'
 import SearchAdvanced from '../utilities/SearchAdvanced'
@@ -19,8 +19,15 @@ class JobBoard extends Component {
       distance: '',
       sortBy: '',
       employment_types: new Set([]),
-      filtered: false
+      filtered: false,
+      coords: ''
     }
+  }
+
+  componentWillMount () {
+    grabbingCoords()
+    .then(coords => this.setState({coords}))
+    .catch(err => console.error(err))
   }
 
   componentDidMount () {
@@ -124,12 +131,15 @@ class JobBoard extends Component {
 
   advancedFilterJobs = event => {
     event.preventDefault()
+    const coords = this.props.user.coords
+      ? this.props.user.coords
+      : this.state.coords
     this.setState(
       {filtered: true},
       () => this.props.advancedFilterJobs(
         this.props.user,
         this.buildBody,
-        (this.state.distance || this.state.sortBy === 'distance')
+        coords
       )
     )
   }
@@ -198,8 +208,8 @@ const mapDispatchToProps = dispatch => ({
   getJobs: post => dispatch(gettingAllJobs()),
   getSkills: post => dispatch(gettingAllSkills()),
   filterJobs: query => dispatch(filteringJobs(query)),
-  advancedFilterJobs: (user, bodyBuilder, needCoords) => {
-    dispatch(buildBodyThenSearch(user, bodyBuilder, needCoords))
+  advancedFilterJobs: (user, bodyBuilder, coords) => {
+    dispatch(buildBodyThenSearch(user, bodyBuilder, coords))
   }
 })
 

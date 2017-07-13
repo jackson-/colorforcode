@@ -56,10 +56,11 @@ export const advancedFilteringJobs = body => dispatch => {
 }
 
 export const grabbingCoords = () => {
+  // returning a Promise so it's thenable (*then* we'll call setState once resolved)
   return new Promise((resolve, reject) => {
     let coords = ''
     if (navigator.geolocation) {
-      console.log('grabbing user coords')
+      console.log('GRABBING COORDS')
       const positionId = navigator.geolocation.watchPosition(
         position => {
           const {latitude, longitude} = position.coords
@@ -69,7 +70,7 @@ export const grabbingCoords = () => {
         },
         error => {
           console.error(
-            'Could not locate user for advanced search max distance.',
+            'Could not locate user for advanced search distance filters.',
             error.stack
           )
           reject(error)
@@ -79,25 +80,10 @@ export const grabbingCoords = () => {
   })
 }
 
-export const buildBodyThenSearch = (user, bodyBuilderFunc, needCoords) => {
-  return async (dispatch) => {
+export const buildBodyThenSearch = (user, bodyBuilderFunc, coords) => {
+  return dispatch => {
     dispatch(requestFilteredJobs())
-    let body = {}
-    let coords = ''
-    if (needCoords) {
-      if (user && user.coords) {
-        console.log('have user coords')
-        coords = user.coords
-      } else {
-        try {
-          coords = await grabbingCoords()
-        } catch (err) {
-          console.error(err.stack)
-        }
-      }
-    }
-    body = bodyBuilderFunc(coords)
-    console.log('COORDS', coords, 'BODY', body)
+    const body = bodyBuilderFunc(coords)
     dispatch(advancedFilteringJobs(body))
   }
 }
