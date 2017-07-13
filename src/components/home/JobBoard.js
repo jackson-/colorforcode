@@ -25,9 +25,11 @@ class JobBoard extends Component {
   }
 
   componentWillMount () {
-    grabbingCoords()
-    .then(coords => this.setState({coords}))
-    .catch(err => console.error(err))
+    if (!this.props.user || !this.props.user.coords) {
+      grabbingCoords()
+      .then(coords => this.setState({coords}))
+      .catch(err => console.error(err))
+    }
   }
 
   componentDidMount () {
