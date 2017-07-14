@@ -139,137 +139,143 @@ class JobUpdateDisplay extends Component {
     return (
       job &&
       <Row className='UpdateJobForm'>
-        <Col xs={12} sm={6} md={6} lg={6}>
+        <Col xs={12} sm={12} md={12} lg={12}>
           <h1 className='UpdateJobForm-header'>Edit Job</h1>
-          <form className='UpdateJobForm-body' onSubmit={this.handleSubmit}>
-            <FormGroup controlId='title'>
-              <ControlLabel>Job Title</ControlLabel>
-              <FormControl
-                type='text'
-                value={this.state.title}
-                onChange={this.handleChange('title')}
-              />
-            </FormGroup>
-            <ControlLabel>
-              Required Skills (type below and hit 'Enter' to select and 'Backspace to deselect')
-            </ControlLabel>
-            <VirtualizedSelect
-              arrowRenderer={arrowRenderer}
-              clearable={true}
-              searchable={true}
-              simpleValue
-              labelKey='label'
-              valueKey='value'
-              ref="job_search"
-              multi={true}
-              options={skills}
-              onChange={(data) => this._selectSkill(data)}
-              value={this.state.selectValue || this.formatInitialSkills()}
-            />
-            <FormGroup controlId='description'>
-              <ControlLabel>Job Description and Requirements</ControlLabel>
-              <FormControl
-                type='text'
-                componentClass='textarea'
-                value={this.state.description}
-                onChange={this.handleChange('description')}
-              />
-            </FormGroup>
-            <FormGroup controlId='application_email'>
-              <ControlLabel>Application Email</ControlLabel>
-              <FormControl
-                type='email'
-                value={this.state.application_email}
-                onChange={this.handleChange('application_email')}
-              />
-            </FormGroup>
-            <FormGroup controlId='cc_email'>
-              <ControlLabel>CC Email</ControlLabel>
-              <FormControl
-                type='email'
-                value={this.state.cc_email}
-                onChange={this.handleChange('cc_email')}
-              />
-            </FormGroup>
-            <FormGroup controlId='application_url'>
-              <ControlLabel>Application URL</ControlLabel>
-              <FormControl
-                type='url'
-                value={this.state.application_url}
-                onChange={this.handleChange('application_url')}
-              />
-            </FormGroup>
-            {/* with zip_code we auto find user's city, state, country and coords */}
-            <FormGroup controlId='zip_code'>
-              <ControlLabel>Zip Code</ControlLabel>
-              <FormControl
-                required
-                type='tel'
-                value={this.state.zip_code}
-                onChange={this.handleChange('zip_code')}
-              />
-            </FormGroup>
-            <FormGroup
-              controlId='employment_type'
-              name='employment_type'
-              onChange={this.handleChange('employment_type')}>
-              <ControlLabel>Employment Type(s)</ControlLabel>
-              <Checkbox value='Full-time' defaultChecked={this.isChecked('Full-time')}>
-                Full-time
-              </Checkbox>
-              <Checkbox value='Part-time' defaultChecked={this.isChecked('Part-time')}>
-                Part-time
-              </Checkbox>
-              <Checkbox value='Contract' defaultChecked={this.isChecked('Contract')}>
-                Contract
-              </Checkbox>
-              <Checkbox value='Contract to Hire' defaultChecked={this.isChecked('Contract to Hire')}>
-                Contract to Hire
-              </Checkbox>
-              <Checkbox value='Internship' defaultChecked={this.isChecked('Internship')}>
-                Internship
-              </Checkbox>
-              <Checkbox value='Remote' defaultChecked={this.isChecked('Remote')}>
-                Remote
-              </Checkbox>
-            </FormGroup>
-            <FormGroup controlId='compensation'>
-              <ControlLabel>Compensation Type</ControlLabel>
-              <FormControl
-                componentClass='select'
-                defaultValue={this.state.compensation_type} onChange={this.handleChange('compensation_type')}
-              >
-                <option value='Salary'>Salary</option>
-                <option value='Hourly'>Hourly</option>
-              </FormControl>
-            </FormGroup>
-            <FormGroup controlId='pay_rate'>
-              <ControlLabel>Pay Rate</ControlLabel>
-              <FormControl
-                type='tel'
-                value={this.state.pay_rate}
-                onChange={this.handleChange('pay_rate')}
-              />
-            </FormGroup>
-            <FormGroup controlId='travel_requirements'>
-              <ControlLabel>Travel Requirements</ControlLabel>
-              <FormControl
-                componentClass='select'
-                defaultValue={this.state.travel_requirements} onChange={this.handleChange('travel_requirements')}
-              >
-                <option value='None'>None</option>
-                <option value='Occasional'>Occasional</option>
-                <option value='25%'>25%</option>
-                <option value='50%'>50%</option>
-                <option value='75%'>75%</option>
-                <option value='100%'>100%</option>
-              </FormControl>
-            </FormGroup>
-            <Button type='submit'>Update Job</Button>
-          </form>
-          <Button bsStyle='danger' type='submit' onClick={this.handleDelete}>
-            Delete Job
-          </Button>
+          <Row>
+            <form className='UpdateJobForm-body' onSubmit={this.handleSubmit}>
+              <Col xs={12} sm={6} md={6} lg={6}>
+                <FormGroup controlId='title'>
+                  <ControlLabel>JOB TITLE</ControlLabel>
+                  <FormControl
+                    type='text'
+                    value={this.state.title}
+                    onChange={this.handleChange('title')}
+                  />
+                </FormGroup>
+                <ControlLabel>
+                  REQUIRED SKILLS (type below and hit 'Enter' to select and 'Backspace to deselect')
+                </ControlLabel>
+                <VirtualizedSelect
+                  arrowRenderer={arrowRenderer}
+                  clearable={true}
+                  searchable={true}
+                  simpleValue
+                  labelKey='label'
+                  valueKey='value'
+                  ref="job_search"
+                  multi={true}
+                  options={skills}
+                  onChange={(data) => this._selectSkill(data)}
+                  value={this.state.selectValue || this.formatInitialSkills()}
+                />
+                <FormGroup controlId='description'>
+                  <ControlLabel>JOB DESCRIPTION</ControlLabel>
+                  <FormControl
+                    type='text'
+                    componentClass='textarea'
+                    value={this.state.description}
+                    onChange={this.handleChange('description')}
+                  />
+                </FormGroup>
+                <FormGroup controlId='application_email'>
+                  <ControlLabel>APPLICATION EMAIL</ControlLabel>
+                  <FormControl
+                    type='email'
+                    value={this.state.application_email}
+                    onChange={this.handleChange('application_email')}
+                  />
+                </FormGroup>
+                <FormGroup controlId='cc_email'>
+                  <ControlLabel>CC EMAIL</ControlLabel>
+                  <FormControl
+                    type='email'
+                    value={this.state.cc_email}
+                    onChange={this.handleChange('cc_email')}
+                  />
+                </FormGroup>
+                <FormGroup controlId='application_url'>
+                  <ControlLabel>APPLICATION URL</ControlLabel>
+                  <FormControl
+                    type='url'
+                    value={this.state.application_url}
+                    onChange={this.handleChange('application_url')}
+                  />
+                </FormGroup>
+              </Col>
+              <Col xs={12} sm={6} md={4} mdOffset={2} lg={4} lgOffset={2}>
+                {/* with zip_code we auto find user's city, state, country and coords */}
+                <FormGroup controlId='zip_code'>
+                  <ControlLabel>ZIP CODE</ControlLabel>
+                  <FormControl
+                    required
+                    type='tel'
+                    value={this.state.zip_code}
+                    onChange={this.handleChange('zip_code')}
+                  />
+                </FormGroup>
+                <FormGroup
+                  controlId='employment_type'
+                  name='employment_type'
+                  onChange={this.handleChange('employment_type')}>
+                  <ControlLabel>EMPLOYMENT TYPE(S)</ControlLabel>
+                  <Checkbox value='Full-time' defaultChecked={this.isChecked('Full-time')}>
+                    Full-time
+                  </Checkbox>
+                  <Checkbox value='Part-time' defaultChecked={this.isChecked('Part-time')}>
+                    Part-time
+                  </Checkbox>
+                  <Checkbox value='Contract' defaultChecked={this.isChecked('Contract')}>
+                    Contract
+                  </Checkbox>
+                  <Checkbox value='Contract to Hire' defaultChecked={this.isChecked('Contract to Hire')}>
+                    Contract to Hire
+                  </Checkbox>
+                  <Checkbox value='Internship' defaultChecked={this.isChecked('Internship')}>
+                    Internship
+                  </Checkbox>
+                  <Checkbox value='Remote' defaultChecked={this.isChecked('Remote')}>
+                    Remote
+                  </Checkbox>
+                </FormGroup>
+                <FormGroup controlId='compensation'>
+                  <ControlLabel>COMPENSATION TYPE</ControlLabel>
+                  <FormControl
+                    componentClass='select'
+                    defaultValue={this.state.compensation_type} onChange={this.handleChange('compensation_type')}
+                  >
+                    <option value='Salary'>Salary</option>
+                    <option value='Hourly'>Hourly</option>
+                  </FormControl>
+                </FormGroup>
+                <FormGroup controlId='pay_rate'>
+                  <ControlLabel>PAY RATE</ControlLabel>
+                  <FormControl
+                    type='tel'
+                    value={this.state.pay_rate}
+                    onChange={this.handleChange('pay_rate')}
+                  />
+                </FormGroup>
+                <FormGroup controlId='travel_requirements'>
+                  <ControlLabel>TRAVEL REQUIREMENTS</ControlLabel>
+                  <FormControl
+                    componentClass='select'
+                    defaultValue={this.state.travel_requirements} onChange={this.handleChange('travel_requirements')}
+                  >
+                    <option value='None'>None</option>
+                    <option value='Occasional'>Occasional</option>
+                    <option value='25%'>25%</option>
+                    <option value='50%'>50%</option>
+                    <option value='75%'>75%</option>
+                    <option value='100%'>100%</option>
+                  </FormControl>
+                </FormGroup>
+                <Button className='btn-oval' type='submit'>Update Job</Button>
+                <Button className='btn-oval btn-oval__black btn-oval__danger' bsStyle='danger' onClick={this.handleDelete}>
+                  Delete Job
+                </Button>
+              </Col>
+            </form>
+          </Row>
         </Col>
       </Row>
     )

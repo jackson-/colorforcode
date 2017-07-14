@@ -1,10 +1,17 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Row, Col, Button } from 'react-bootstrap'
+import { Row, Col, Button, FormControl, ControlLabel } from 'react-bootstrap'
 import { applyingToJob } from 'APP/src/reducers/actions/jobs'
 import './JobDetail.css'
 
 class JobInfoDisplay extends Component {
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      email: ''
+    }
+  }
 
   applyToJob = () => {
     this.props.sendApplication(
@@ -14,60 +21,95 @@ class JobInfoDisplay extends Component {
     )
   }
 
+  handleChange = event => {
+    this.setState({email: event.target.value})
+  }
+
   render() {
     const {job} = this.props
-    let skill_list, employer, datePosted
+    let skills, employer, datePosted
 
     if (job) {
       employer = job.employer
       datePosted = new Date(job.created_at).toDateString()
       if (job.skills) {
-        skill_list = job.skills.map((skill, i) => {
-          return <li key={i}>{skill.title}</li>
+        skills = job.skills.map((skill, i) => {
+          return skill.title
         })
       }
     }
 
     return (
       <Row className='JobInfo'>
-        {job &&
-          <Col xs={12} sm={12} md={12} lg={12}>
-            <Row className='JobInfo-header'>
-              <Col className='header-left' xs={12} sm={6} md={6} lg={6}>
-                <h1 className='JobInfo-title'>{job.title}</h1>
-                <h5 className='JobInfo-employer'>{employer.name}</h5>
-                <p className='JobInfo-location'>{`${job.city}, ${job.state}`}</p>
+        <Col xs={12} sm={12} md={12} lg={12}>
+          <Row className='JobInfo--header'>
+            <Col className='header-left' xs={12} sm={6} md={6} lg={6}>
+              <h1 className='JobInfo--header-title'>{job.title}</h1>
+              <h5 className='JobInfo--header-employer'>{employer.name}</h5>
+              <p className='JobInfo--header-location'>{`${job.location}`}</p>
+            </Col>
+            <Col className='header-right' xs={12} sm={6} md={3} mdOffset={3} lg={3} lgOffset={3}>
+              <h5 className='JobInfo--header-payrate'>
+                {job.compensation_type === 'Hourly'
+                   ? `Pay: ${job.pay_rate}/hr`
+                   : `Pay: ${job.pay_rate}/yr`
+                }
+              </h5>
+              {job.employment_types && job.employment_types.map((type, i) => (
+                <span key={i} className='JobInfo--header-type'>{type}</span>
+              ))}
+              <p className='JobInfo--header-date'>{`Posted on ${datePosted}`}</p>
+            </Col>
+          </Row>
+        </Col>
+        <Col xs={12} sm={12} md={12} lg={12}>
+          <Row>
+            <div className='container__flex--sidebar'>
+              <Col className='JobInfo--summary' xs={12} sm={7} md={8} lg={8}>
+                <Row className='JobInfo--summary-section'>
+                  <h2>Description</h2>
+                  <p>{job.description}</p>
+                </Row>
+                <Row className='JobInfo--summary-section'>
+                  <h2>Key Skills</h2>
+                  <Col className='skill-chip-container' xs={12} sm={12} md={12} lg={12}>
+                    {skills && skills.map((skill, i) => (
+                      <span key={i} className='skill-chip'>{skill}</span>
+                    ))}
+                  </Col>
+                </Row>
+                <Row className='JobInfo--summary-section'>
+                  <h2>Travel Required</h2>
+                  <p>{job.travel_requirements}</p>
+                </Row>
               </Col>
-              <Col className='header-right' xs={12} sm={6} md={3} mdOffset={3} lg={3} lgOffset={3}>
-                <h5 className='JobInfo-payrate'>
-                  {job.compensation_type === 'Hourly'
-                     ? `Pay: ${job.pay_rate}/hr`
-                     : `Pay: ${job.pay_rate}/yr`
-                  }
-                </h5>
-                {job.employment_types && job.employment_types.map((type, i) => (
-                  <span key={i} className='JobInfo-type'>{type}</span>
-                ))}
-                <p className='JobInfo-date'>{`Posted on ${datePosted}`}</p>
-              </Col>
-            </Row>
-            <Row className='JobInfo-summary'>
-              <Col xs={12} sm={8} md={8} lg={8}>
-                <p>{`Description:  ${job.description}`}</p>
-                <p>Key Skills</p>
-                {skill_list && <ul>{skill_list.map(skill => skill)}</ul>}
-              </Col>
-              <Col xs={12} sm={4} md={4} lg={4}>
+              <Col className='JobInfo--sidebar' xs={12} sm={5} md={4} lg={4}>
                 <Button className='btn-oval' onClick={this.applyToJob}>
                   APPLY FOR JOB
                 </Button>
                 <Button className='btn-oval btn-oval__black'>
                   SAVE JOB
                 </Button>
+                <div className='JobInfo--subscribe-container'>
+                  <h4>
+                    Get alerted about similar jobs!
+                  </h4>
+                  <form>
+                    <ControlLabel srOnly>Email</ControlLabel>
+                    <FormControl
+                      type='email'
+                      placeholder='EMAIL'
+                      onChange={this.handleChange}
+                    />
+                    <Button type='submit' className='JobInfo--subscribe-button'>
+                      SUBSCRIBE
+                    </Button>
+                  </form>
+                </div>
               </Col>
-            </Row>
-          </Col>
-        }
+            </div>
+          </Row>
+        </Col>
       </Row>
     )
   }
