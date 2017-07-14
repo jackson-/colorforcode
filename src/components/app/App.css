@@ -111,6 +111,7 @@ and (min-width: 768px) {
   font-family: Open Sans Bold;
   border: solid 2px #12CD6A;
   border-radius: 25px;
+  width: 100%;
 }
 
 .btn-oval__black {
@@ -131,4 +132,12 @@ and (min-width: 768px) {
   box-shadow: none;
   transition: all 0.1s ease-in-out;
   transition-duration: 0.2s;
+}
+
+.btn-oval__danger:hover,
+.btn-oval__danger:focus,
+.btn-oval__danger:active:focus {
+  background: #C33A3C;
+  border-color: #C33A3C;
+  color: #FFFFFF;
 }

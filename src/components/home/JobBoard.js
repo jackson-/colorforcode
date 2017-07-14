@@ -119,14 +119,14 @@ class JobBoard extends Component {
     }
     if (sortBy === 'date') body.sort.push({updated_at: {order: 'desc'}})
     if (sortBy === 'distance') {
-      body.sort.push({
+      body.sort = [{
         _geo_distance: {
           coords,
           order: 'asc',
           unit: 'mi',
           distance_type: 'arc'
         }
-      })
+      }]
     }
     return body
   }

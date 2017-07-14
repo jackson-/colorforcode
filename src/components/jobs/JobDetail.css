@@ -1,43 +1,48 @@
 @import url(../../fonts.css);
 
-.JobInfo {
-  padding: 60px 0 35px 0;
+.container__flex--sidebar {
+  display: flex;
+  flex-direction: column;
 }
 
-.JobInfo-header {
+.JobInfo {
+  padding: 60px 0 0 0;
+}
+
+.JobInfo--header {
   background: #12CD6A;
   height: auto;
-  padding: 25px;
+  padding: 20px;
   color: #FFFFFF;
   font-family: Open Sans Regular;
   box-shadow: 0 -17px 15px -17px #099b4e inset;
 }
 
 .header-left {
-  text-align: left;
+  text-align: center;
 }
 
-.JobInfo-title {
-  margin: 0;
-  font-size: 2em;
+.JobInfo--header-title {
+  font-size: 1.5em;
+  text-align: center;
 }
 
-.JobInfo-employer,
-.JobInfo-payrate {
+.JobInfo--header-employer,
+.JobInfo--header-payrate {
   font-size: 17px;
   font-family: Open Sans Bold;
   margin-top: 10px;
 }
 
-.JobInfo-location {
+.JobInfo--header-location {
   font-size: .75em;
 }
 
 .header-right {
-  text-align: right;
+  text-align: center;
 }
 
-.JobInfo-type {
+.JobInfo--header-type {
   font-size: 11px;
   font-family: Open Sans Bold;
   color: #12CD6A;
@@ -47,30 +52,104 @@
   margin: 0 0 0 10px;
 }
 
-.JobInfo-date {
-  margin-top: 15px;
+.JobInfo--header-date {
+  margin-top: 10px;
   font-size: .75em;
 }
 
-.JobInfo-summary {
-  padding: 25px;
+.JobInfo--summary {
+  min-width: 350px;
+}
+
+.JobInfo--summary-section {
+  padding: 10px 15px;
+  height: auto;
+}
+
+.JobInfo--summary-section p {
+  font-family: Open Sans Regular;
+}
+
+.skill-chip-container {
+  padding: 0;
+}
+
+.skill-chip {
+  background: #FFFFFF;
+  border-radius: 3px;
+  border: 2px solid #12CD6A;
+  color: #12CD6A;
+  font-size: 14px;
+  font-family: Open Sans Bold;
+  padding: 5px 10px;
+  margin: 10px 5px 0 0;
+  display: inline-block;
+  width: auto !important;
+}
+
+.JobInfo--sidebar {
+  text-align: left;
+  padding: 15px;
+  align-items: stretch;
+  min-width: 250px;
+  flex: 1;
+}
+
+.JobInfo--subscribe-container {
+  text-align: center;
+  background: #E4E4E4;
+  border-radius: 10px;
+  padding: 15px 10px;
+  margin: 25px 0;
+}
+
+.JobInfo--subscribe-button {
+  width: 100%;
+  margin: 15px 0;
+  border: 0;
+}
+
+.JobInfo--subscribe-button:hover {
+  background: #12CD6A;
+  color: #FFFFFF;
+  box-shadow: none;
+  transition: all 0.1s ease-in-out;
+  transition-duration: 0.2s;
+}
+
+@media only screen and (min-width: 620px) {
+  .container__flex--sidebar {
+    flex-direction: row;
+  }
 }
 
 @media only screen
-and (max-width: 767px) {
-  .JobInfo-header {
-    padding: 20px;
+and (min-width: 768px) {
+  .JobInfo--header {
+    padding: 25px;
   }
-  .JobInfo-title {
-    font-size: 1.5em;
-    text-align: center;
+  .JobInfo--header-title {
+    margin: 0;
+    font-size: 2em;
+    text-align: left;
   }
-  .JobInfo-date {
-    margin-top: 10px;
+  .JobInfo--header-date {
+    margin-top: 15px;
   }
 
-  .header-left,
+  .header-left {
+    text-align: left;
+  }
+
   .header-right {
-    text-align: center;
+    text-align: right;
+  }
+
+  .JobInfo--summary {
+    padding: 0 0 0 40px;
+  }
+
+  .JobInfo--sidebar {
+    padding: 30px 40px 30px 0;
   }
 }
