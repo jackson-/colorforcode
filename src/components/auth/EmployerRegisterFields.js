@@ -82,6 +82,16 @@ const EmployerRegisterFields = props => (
         onChange={props.handleChange('company_site')}
       />
     </FormGroup>
+    {/* with zip_code we auto find user's city, state and country */}
+    <FormGroup controlId='zip_code'>
+      <ControlLabel>Zip Code</ControlLabel>
+      <FormControl
+        required
+        type='tel'
+        value={props.state.zip_code}
+        onChange={props.handleChange('zip_code')}
+      />
+    </FormGroup>
   </div>
 )
 
