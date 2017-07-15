@@ -9,12 +9,10 @@ import ProjectsPage from './components/projects/ProjectsPage'
 import About from './components/about/About'
 import RegisterForm from './components/auth/RegisterForm'
 import LoginForm from './components/auth/LoginForm'
-import PostNewJobForm from './components/jobs/PostNewJobForm'
 import JobDetailPage from './components/jobs/JobDetailPage'
 import Dashboard from './components/dashboard/EmployerDashboard'
 import SearchTalent from './components/search/CandidateSearchPage'
 import ProjectCreate from './components/projects/CreateProjectForm'
-import NestedRoutingExample from './components/Example'
 import store from './store'
 import './index.css'
 
@@ -35,7 +33,6 @@ const App = () => (
           <Route path='/jobs/:id' component={JobDetailPage} />
           <Route path='/projects' component={ProjectsPage} />
           <Route path='/projects/create' component={ProjectCreate} />
-          <Route path='/example' component={NestedRoutingExample} />
         </Switch>
       </Container>
     </Router>
