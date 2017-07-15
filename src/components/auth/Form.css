@@ -17,7 +17,7 @@
 
 .PostJobForm,
 .UpdateJobForm {
-  padding: 70px 25px 25px 25px;
+  padding: 10px 25px 25px 25px;
   min-height: 100vh;
 }
 
@@ -137,7 +137,7 @@ and (max-width: 767px) {
 
   .PostJobForm,
   .UpdateJobForm {
-    padding: 70px 10px 25px 10px;
+    padding: 10px 10px 25px 10px;
   }
 
   .LoginForm-header,

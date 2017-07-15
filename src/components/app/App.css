@@ -17,6 +17,10 @@
   }
 }
 
+.glyphicon {
+  padding-right: 5px;
+}
+
 /* ------ Navbar ------ */
 
 .navbar {

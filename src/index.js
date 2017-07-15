@@ -11,39 +11,31 @@ import RegisterForm from './components/auth/RegisterForm'
 import LoginForm from './components/auth/LoginForm'
 import PostNewJobForm from './components/jobs/PostNewJobForm'
 import JobDetailPage from './components/jobs/JobDetailPage'
-import Dashboard from './components/dashboard/Dashboard'
-import CandidateSearchPage from './components/search/CandidateSearchPage'
+import Dashboard from './components/dashboard/EmployerDashboard'
+import SearchTalent from './components/search/CandidateSearchPage'
 import ProjectCreate from './components/projects/CreateProjectForm'
-// import EmployerLoginForm from './components/auth/EmployerLoginForm'
-// import EmployerRegisterForm from './components/auth/EmployerRegisterForm'
+import NestedRoutingExample from './components/Example'
 import store from './store'
 import './index.css'
-
-// const authTransition = function() {
-//   let user = null
-//   try {
-//     user = sessionStorage.getItem('user')
-//   } catch(exception){
-//     console.error("ESXC", exception.stack)
-//   }
-//   return user
-// }
 
 const App = () => (
   <Provider store={store}>
     <Router>
       <Container>
         <Switch>
-          <Route exact strict path='/' component={Home} />
-          <Route exact path='/about' component={About} />
-          <Route exact path='/register' component={RegisterForm} />
-          <Route exact path='/login' component={LoginForm} />
-          <Route exact path='/post-new-job' component={PostNewJobForm} />
-          <Route exact path='/jobs/:id' component={JobDetailPage} />
-          <Route exact path='/dashboard' component={Dashboard} />
-          <Route exact path='/search/candidates' component={CandidateSearchPage} />
-          <Route exact path='/projects' component={ProjectsPage} />
-          <Route exact path='/projects/create' component={ProjectCreate} />
+          <Route exact path='/' component={Home} />
+          <Route path='/about' component={About} />
+          <Route path='/register' component={RegisterForm} />
+          <Route path='/login' component={LoginForm} />
+          <Route path='/dashboard' component={Dashboard} />
+          <Route path='/dashboard/post-new-job' component={Dashboard} />
+          <Route path='/dashboard/manage-jobs' render={() => <h1>Manage Jobs</h1>} />
+          <Route path='/dashboard/search-talent' component={SearchTalent} />
+          <Route path='/dashboard/edit-profile' render={() => <h1>Edit Profile</h1>} />
+          <Route path='/jobs/:id' component={JobDetailPage} />
+          <Route path='/projects' component={ProjectsPage} />
+          <Route path='/projects/create' component={ProjectCreate} />
+          <Route path='/example' component={NestedRoutingExample} />
         </Switch>
       </Container>
     </Router>

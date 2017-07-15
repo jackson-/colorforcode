@@ -39,18 +39,18 @@ const NavBar = props => (
             ? <LinkContainer to='#' eventKey={3} className='dropdown-hover'>
                 <NavDropdown title='Account' id='account-dropdown'>
                   <Col xsHidden sm={12} md={12} lg={12}>
-                    <LinkContainer to='/dashboard' eventKey={3.1}>
+                    <LinkContainer to='/dashboard/manage-jobs' eventKey={3.1}>
                       <MenuItem>Dashboard</MenuItem>
                     </LinkContainer>
                   </Col>
                   <Col xs={12} smHidden mdHidden lgHidden>
-                    <LinkContainer to='/dashboard' eventKey={3.2}>
+                    <LinkContainer to='/dashboard/manage-jobs' eventKey={3.2}>
                       <NavDropdown title='Dashboard' id='dashboard-dropdown-menu'>
                         <MenuItem divider />
                         <LinkContainer to='/dashboard/post-a-job' eventKey={3.3}>
                           <MenuItem>Post a Job</MenuItem>
                          </LinkContainer>
-                        <LinkContainer to='/dashboad/manage-jobs' eventKey={3.4}>
+                        <LinkContainer to='/dashboard/manage-jobs' eventKey={3.4}>
                           <MenuItem>Manage Jobs</MenuItem>
                         </LinkContainer>
                         <LinkContainer to='/dashboard/search-talent' eventKey={3.5}>
