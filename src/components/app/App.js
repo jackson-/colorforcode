@@ -17,7 +17,10 @@ class App extends Component {
   render () {
     return (
       <div>
-        <Navbar user={this.props.user} logoutUser={this.props.logoutUser} />
+        <Navbar
+          user={this.props.user}
+          logoutUser={this.props.logoutUser}
+        />
         <Grid fluid className='App'>
           { this.props.children && React.cloneElement(this.props.children, this.props) }
         </Grid>
@@ -32,7 +35,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   logoutUser: (history) => () => dispatch(logout(history)),
-  passRouterState: (routerState) => dispatch(receiveRouterState(routerState))
+  passRouterState: (routerState) => dispatch(receiveRouterState(routerState)),
+  sidebar: (num) => num > 0
 })
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App))

@@ -2,8 +2,8 @@
 
 /* ------ Misc (App-wide) ------ */
 
-.active, a:hover, a:focus {
-  color: #12CD6A;
+.nav .open>a, .nav .open>a:focus, .nav .open>a:hover {
+  background: none;
 }
 
 .container__flex {
@@ -40,6 +40,7 @@
   margin-top: 6px;
 }
 
+.active, a:hover, a:focus,
 .navbar-default .navbar-nav>.active>a,
 .navbar-default .navbar-nav>.active>a:hover,
 .navbar-default .navbar-nav>.active>a:focus,

@@ -7,7 +7,7 @@ class Dashboard extends Component {
   render() {
     const user = this.props.user
     return (
-      <div className='JobDetailPage'>
+      <div>
         {!this.props.loading && this.props.user &&
           <div>
             {user && user.is_employer && <EmployerDashboard user={user} />}

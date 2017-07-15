@@ -1,0 +1,30 @@
+.Dashboard {
+  padding: 60px 0 0;
+}
+
+.Dashboard__sidebar {
+  text-align: left;
+  background: #404648;
+  padding: 10px 0;
+  align-items: stretch;
+  color: #E4E4E4;
+  flex: 1;
+  width: 100%;
+}
+
+.Dashboard__content {
+  min-height: calc(100vh - 60px);
+  background: #E4E4E4;
+}
+
+.Dashboard__nav-item a {
+  padding: 10px 0 10px 25% !important;
+  text-align: left;
+  color: #E4E4E4;
+}
+
+.Dashboard__nav-item a:hover,
+.Dashboard__nav-item a:active,
+.Dashboard__nav-item a:focus {
+  background: #53585A !important;
+}

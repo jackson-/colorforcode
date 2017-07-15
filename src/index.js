@@ -34,7 +34,7 @@ const App = () => (
     <Router>
       <Container>
         <Switch>
-          <Route exact strict path='/' component={Home}/>
+          <Route exact strict path='/' component={Home} />
           <Route exact path='/about' component={About} />
           <Route exact path='/register' component={RegisterForm} />
           <Route exact path='/login' component={LoginForm} />

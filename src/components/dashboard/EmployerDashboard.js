@@ -1,79 +1,70 @@
-import React, {Component} from 'react'
-import { NavLink,Link } from 'react-router-dom'
-import { Button } from 'react-bootstrap'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import { withRouter, Switch, Route } from 'react-router-dom'
+import { LinkContainer } from 'react-router-bootstrap'
+import { Nav, NavItem, Row, Col, Glyphicon } from 'react-bootstrap'
 import { connect } from 'react-redux'
-import { withRouter } from 'react-router-dom'
 import { gettingUserJobs } from '../../reducers/actions/jobs'
+import PostAJob from '../jobs/PostNewJobForm'
+import SearchTalent from '../search/CandidateSearchPage'
+import './Dashboard.css'
+import Sidebar from '../utilities/Sidebar'
+import '../utilities/Sidebar.css'
 
 class EmployerDashboard extends Component {
 
-  componentWillReceiveProps(){
-    if(this.props.user && !this.props.jobs){
-      this.props.getJobs(this.props.user.employer)
+  constructor (props) {
+    super(props)
+    this.state = {
+      post: false,
+      manage: true,
+      search: false,
+      profile: false
     }
   }
 
-  render(){
-    let activity = []
-    const open = 6
-    const paused = 1
-    const closed = 96
-    const candidates = {
-      new:1154,
-      reviewed:816,
-      phone_screened:35,
-      interviewed:24,
-      offer_made:5,
-      rejected:3014,
-      hired:18
+  componentWillReceiveProps () {
+    if (this.props.user && !this.props.jobs) {
+      this.props.getJobs(this.props.user.employer.id)
     }
-    let my_jobs = this.props.jobs && this.props.jobs.map(job => (
-      <li key={job.id}>
-        <Link to={`/jobs/${job.id}`}>{job.title}</Link>
-      </li>
-    ))
+  }
 
-    return(
-      <div className='Home'>
-      {this.props.user &&
-        <h2>{`Welcome, ${this.props.user.first_name} ${this.props.user.last_name}`}</h2>
-      }
-      <NavLink to='/post-new-job'><Button>Post a new job</Button></NavLink>
-      <div id='activity'>
-      <h3>My Jobs</h3>
-        <ul>
-          {my_jobs}
-        </ul>
-      </div>
-      <div id='activity'>
-      <h3>Activity</h3>
-      <ul>
-      {activity}
-      </ul>
-      </div>
-      <div id='sidebar'>
-        <div id='jobs-sidebar'>
-          <h3>Job Stats</h3>
-          <ul>
-            <li>Open {open}</li>
-            <li>Paused {paused}</li>
-            <li>Closed {closed}</li>
-          </ul>
+  render () {
+    const firstName = this.props.user.first_name || ''
+    return (
+      <Row className='Dashboard'>
+        <div className='container__flex'>
+          <Col xsHidden sm={3} md={3} lg={3} className='Dashboard__sidebar'>
+            <Sidebar
+              headerText={`Welcome, ${firstName}`}
+              content={
+                <Nav className='Sidebar__button-container' stacked>
+                  <LinkContainer to='/dashboard/post-a-job' className='Dashboard__nav-item'>
+                    <NavItem><Glyphicon glyph='plus-sign' />   Post a Job</NavItem>
+                  </LinkContainer>
+                  <LinkContainer to='/dashboard/manage-jobs' className='Dashboard__nav-item'>
+                    <NavItem><Glyphicon glyph='list-alt' />   Manage Jobs</NavItem>
+                  </LinkContainer>
+                  <LinkContainer to='/dashboard/search-talent' className='Dashboard__nav-item'>
+                    <NavItem><Glyphicon glyph='search' />   Search Talent</NavItem>
+                  </LinkContainer>
+                  <LinkContainer to='/dashboard/edit-profile' className='Dashboard__nav-item'>
+                    <NavItem><Glyphicon glyph='user' />   Edit Profile</NavItem>
+                  </LinkContainer>
+                </Nav>
+              }
+            />
+          </Col>
+          <Col xs={12} sm={9} md={9} lg={9} className='Dashboard__content'>
+            <Switch>
+              <Route exact path='/dashboard/post-a-job' component={PostAJob} />
+              <Route exact path='/dashboard/manage-jobs' render={() => <h1>Manage Jobs</h1>} />
+              <Route exact path='/dashboard/search-talent' component={SearchTalent} />
+              <Route exact path='/dashboard/edit-profile' render={() => <h1>Edit Profile</h1>} />
+            </Switch>
+          </Col>
         </div>
-        <div id='candidates-sidebar'>
-          <h3>Candidates</h3>
-          <ul>
-            <li>New {candidates.new}</li>
-            <li>Reviewed {candidates.reviewed}</li>
-            <li>Phone Screened {candidates.phone_screened}</li>
-            <li>Interviewed {candidates.interviewed}</li>
-            <li>Offer made {candidates.offer_made}</li>
-            <li>Rejected {candidates.rejected}</li>
-            <li>Hired {candidates.hired}</li>
-          </ul>
-        </div>
-      </div>
-      </div>
+      </Row>
     )
   }
 }
@@ -84,7 +75,13 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  getJobs: (employer) => dispatch(gettingUserJobs(employer)),
+  getJobs: (employerId) => dispatch(gettingUserJobs(employerId))
 })
+
+EmployerDashboard.propTypes = {
+  user: PropTypes.object.isRequired,
+  jobs: PropTypes.array,
+  getJobs: PropTypes.func.isRequired
+}
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(EmployerDashboard))
