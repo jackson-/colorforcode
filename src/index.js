@@ -21,7 +21,7 @@ const App = () => (
     <Router>
       <Container>
         <Switch>
-          <Route exact path='/' component={Home} />
+          <Route exact strict path='/' component={Home} />
           <Route path='/about' component={About} />
           <Route path='/register' component={RegisterForm} />
           <Route path='/login' component={LoginForm} />
@@ -30,7 +30,7 @@ const App = () => (
           <Route path='/dashboard/manage-jobs' render={() => <h1>Manage Jobs</h1>} />
           <Route path='/dashboard/search-talent' component={SearchTalent} />
           <Route path='/dashboard/edit-profile' render={() => <h1>Edit Profile</h1>} />
-          <Route path='/jobs/:id' component={JobDetailPage} />
+          <Route exact path='/jobs/:id' component={JobDetailPage} />
           <Route path='/projects' component={ProjectsPage} />
           <Route path='/projects/create' component={ProjectCreate} />
         </Switch>

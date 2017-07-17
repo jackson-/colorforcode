@@ -12,21 +12,27 @@ class JobDetailPage extends Component {
 
   render() {
     const {user, job, skills} = this.props
+    let jobComponent = ''
+    if (job) {
+      if (user && user.is_employer && (user.employer.id === job.employer.id)) {
+        jobComponent = (
+          <JobUpdateDisplay
+            user={user}
+            skills={skills}
+            job={job}
+            updateJob={this.props.updateJob}
+            deleteJob={this.props.deleteJob}
+            history={this.props.history}
+          />
+        )
+      } else {
+        jobComponent = <JobInfoDisplay skills={skills} job={job} />
+      }
+    }
+
     return (
       <div className='JobDetailPage'>
-        {(user && user.is_employer && job) && job && job.employer.id == user.employer.id
-          && <JobUpdateDisplay
-              user={user}
-              skills={skills}
-              job={job}
-              updateJob={this.props.updateJob}
-              deleteJob={this.props.deleteJob}
-              history={this.props.history}
-             />
-        }
-        {((user && !user.is_employer) || (job && !(job.employer.id == user.employer.id)) || !user) && job
-          && <JobInfoDisplay skills={skills} job={job} />
-        }
+        {jobComponent}
       </div>
     )
   }
@@ -41,7 +47,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   getJob: job_id => dispatch(gettingJobById(job_id)),
-  updateJob:  (job, history) => dispatch(updatingJob(job, history)),
+  updateJob: (job, history) => dispatch(updatingJob(job, history)),
   deleteJob: (id, history) => dispatch(deletingJob(id, history))
 })
 
