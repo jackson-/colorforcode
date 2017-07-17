@@ -2,7 +2,6 @@ import React from 'react'
 import { LinkContainer } from 'react-router-bootstrap'
 import { Navbar, NavbarBrand, Nav, Col,
          NavItem, NavDropdown, MenuItem } from 'react-bootstrap'
-import { connect } from 'react-redux'
 import './App.css'
 import navLogo from '../../img/hireblack-logo-no-border.svg'
 
@@ -63,7 +62,7 @@ const NavBar = props => (
                       </NavDropdown>
                     </LinkContainer>
                   </Col>
-                  <LinkContainer to='#' eventKey={3.7} onClick={props.logoutUser(props.history)}>
+                  <LinkContainer to='#' eventKey={3.7} onClick={props.logOut}>
                     <MenuItem >Logout</MenuItem>
                   </LinkContainer>
                 </NavDropdown>
@@ -90,6 +89,4 @@ const NavBar = props => (
   </Navbar>
 )
 
-const mapStateToProps = state => ({ history: state.history })
-
-export default connect(mapStateToProps)(NavBar)
+export default NavBar

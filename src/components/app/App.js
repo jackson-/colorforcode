@@ -2,10 +2,10 @@ import React, { Component } from 'react'
 import { Grid } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
-import { logout } from '../../reducers/actions/users'
 import { receiveRouterState } from '../../reducers/actions/router'
 import Navbar from './Navbar'
 import './App.css'
+import { logout } from '../../reducers/actions/users'
 
 class App extends Component {
 
@@ -19,7 +19,7 @@ class App extends Component {
       <div>
         <Navbar
           user={this.props.user}
-          logoutUser={this.props.logoutUser}
+          logOut={this.props.logOut(this.props.history)}
         />
         <Grid fluid className='App'>
           { this.props.children && React.cloneElement(this.props.children, this.props) }
@@ -34,9 +34,11 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  logoutUser: (history) => () => dispatch(logout(history)),
-  passRouterState: (routerState) => dispatch(receiveRouterState(routerState)),
-  sidebar: (num) => num > 0
+  logOut: history => event => {
+    event.preventDefault()
+    dispatch(logout(history))
+  },
+  passRouterState: (routerState) => dispatch(receiveRouterState(routerState))
 })
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App))
