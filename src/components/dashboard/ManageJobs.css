@@ -19,7 +19,9 @@ thead {
 }
 
 tbody > tr:hover {
-  background: #FFFFFF
+  background: #FFFFFF;
+  transition: all 0.1s ease-in;
+  transition-duration: 0.1s;
 }
 
 @media only screen and (min-width: 768px) {
