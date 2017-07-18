@@ -117,6 +117,7 @@ const users = seed(User,
         email: 'devin@hireblack.io',
         password: '123',
         is_employer:true,
+        employer_id: 3
       },
       hb2: {
         first_name: 'Chloe',
@@ -124,7 +125,7 @@ const users = seed(User,
         email: 'chloe@hireblack.io',
         password: '123',
         is_employer:true,
-
+        employer_id: 3
       },
 }))
 
@@ -179,7 +180,7 @@ const jobs = seed(Job,
       compensation_type:'Hourly',
       pay_rate:'$80',
       travel_requirements:'None',
-      remote:false,
+      status: 'open'
     },
     'dev_ops': {
       employer_id: employers.hireblack.id,
@@ -192,12 +193,12 @@ const jobs = seed(Job,
       state:null,
       country: null,
       zip_code:null,
-      remote:true,
       employment_types:['Full-time', 'Remote'],
       compensation_type:'Hourly',
       pay_rate:'$100',
-      travel_requirements:'None'
-    },
+      travel_requirements:'None',
+      status: 'open'
+    }
   })
 }
 )

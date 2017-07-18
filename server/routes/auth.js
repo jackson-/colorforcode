@@ -59,22 +59,31 @@ passport.deserializeUser(
     User.findById(id, {
       include: [
         {model: Employer, include: [
-          {model: Job, as: 'listings', include: [
-            {model: Skill, through: {attributes: []}},
-            {model: User, as: 'applicants', through: 'JobApplication'}
-          ]}
+          {
+            model: Job,
+            as: 'listings',
+            include: [
+              {model: Skill, through: {attributes: []}},
+              {model: User, as: 'applicants', through: 'JobApplication'}
+            ]
+          }
         ]},
         {model: Project, include: [Skill]},
         {model: Job, as: 'applications', through: 'JobApplication'}
+      ],
+      order: [
+        [Employer, {model: Job, as: 'listings'}, 'status', 'DESC'],
+        [Employer, {model: Job, as: 'listings'}, 'updated_at', 'DESC']
       ]
-    }).then(user => {
+    })
+    .then(user => {
       if (!user) debug('deserialize retrieved null user for id=%d', id)
       else debug('deserialize did ok user.id=%d', id)
-      done(null, user)
+      return done(null, user)
     })
     .catch(err => {
       debug('deserialize did fail err=%s', err)
-      done(err)
+      return done(err)
     })
   }
 )
@@ -128,8 +137,10 @@ passport.use('local-signin',
         ]},
         {model: Project, include: [Skill]},
         {model: Job, as: 'applications', through: 'JobApplication'}
-      ]
-    }).then(user => {
+      ],
+      attributes: {include: ['password_digest']}
+    })
+    .then(user => {
       if (!user) {
         debug('authenticate user(email: "%s") did fail: no such user', email)
         return done(null, false, { message: 'Login incorrect' })

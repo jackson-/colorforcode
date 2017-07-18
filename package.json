@@ -85,7 +85,7 @@
     "redux-devtools-extension": "^2.13.0",
     "redux-logger": "^3.0.1",
     "redux-thunk": "^2.1.0",
-    "sequelize": "^3.30.4",
+    "sequelize": "^3.24.6",
     "stripe": "^4.19.0",
     "underscore": "^1.8.3"
   },

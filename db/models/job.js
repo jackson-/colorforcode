@@ -10,6 +10,7 @@ module.exports = db => db.define('job', {
     type: Sequelize.TEXT,
     allowNull: false
   },
+  status: Sequelize.STRING,
   application_email: Sequelize.STRING,
   cc_email: Sequelize.STRING,
   application_url: Sequelize.STRING,

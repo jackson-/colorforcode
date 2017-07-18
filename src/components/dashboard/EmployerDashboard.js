@@ -10,6 +10,7 @@ import SearchTalent from '../search/CandidateSearchPage'
 import './Dashboard.css'
 import Sidebar from '../utilities/Sidebar'
 import '../utilities/Sidebar.css'
+import ManageJobs from './ManageJobs'
 
 class EmployerDashboard extends Component {
 
@@ -24,7 +25,9 @@ class EmployerDashboard extends Component {
   }
 
   render () {
-    const firstName = this.props.user ? this.props.user.first_name : ''
+    const {user} = this.props
+    const firstName = user ? user.first_name : ''
+    const jobs = user && [...user.employer.listings]
     return (
       <Router>
         <Row className='Dashboard'>
@@ -53,7 +56,7 @@ class EmployerDashboard extends Component {
             <Col xs={12} sm={9} md={9} lg={9} className='Dashboard__content'>
               <Switch>
                 <Route path='/dashboard/post-new-job' component={PostAJob} />
-                <Route path='/dashboard/manage-jobs' render={() => <h1>Manage Jobs</h1>} />
+                {jobs && <Route path='/dashboard/manage-jobs' component={ManageJobs} />}
                 <Route path='/dashboard/search-talent' component={SearchTalent} />
                 <Route path='/dashboard/edit-profile' render={() => <h1>Edit Profile</h1>} />
               </Switch>

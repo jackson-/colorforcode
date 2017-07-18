@@ -36,14 +36,14 @@ module.exports = db => db.define('user', {
   indexes: [{fields: ['email'], unique: true}],
   hooks: {
     beforeCreate: setEmailAndPassword,
-    beforeUpdate: setEmailAndPassword,
+    beforeUpdate: setEmailAndPassword
   },
   defaultScope: {
     attributes: {exclude: ['password_digest']}
   },
   instanceMethods: {
     // This method is a Promisified bcrypt.compare
-    authenticate(plaintext) {
+    authenticate (plaintext) {
       return bcrypt.compare(plaintext, this.password_digest)
     }
   }
@@ -85,7 +85,7 @@ module.exports.associations = (User, {OAuth, Job, Skill, Employer, Project}) => 
   })
 }
 
-function setEmailAndPassword(user) {
+function setEmailAndPassword (user) {
   user.email = user.email && user.email.toLowerCase()
   if (!user.password) return Promise.resolve(user)
 
