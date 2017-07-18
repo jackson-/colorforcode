@@ -13,6 +13,7 @@ import JobDetailPage from './components/jobs/JobDetailPage'
 import Dashboard from './components/dashboard/EmployerDashboard'
 import SearchTalent from './components/search/CandidateSearchPage'
 import ProjectCreate from './components/projects/CreateProjectForm'
+import ManageJobs from '././components/dashboard/ManageJobs'
 import store from './store'
 import './index.css'
 
@@ -27,9 +28,9 @@ const App = () => (
           <Route path='/login' component={LoginForm} />
           <Route path='/dashboard' component={Dashboard} />
           <Route path='/dashboard/post-new-job' component={Dashboard} />
-          <Route path='/dashboard/manage-jobs' render={() => <h1>Manage Jobs</h1>} />
-          <Route path='/dashboard/search-talent' component={SearchTalent} />
-          <Route path='/dashboard/edit-profile' render={() => <h1>Edit Profile</h1>} />
+          <Route path='/dashboard/manage-jobs' component={Dashboard} />
+          <Route path='/dashboard/search-talent' component={Dashboard} />
+          <Route path='/dashboard/edit-profile' render={Dashboard} />
           <Route path='/jobs/:id' component={JobDetailPage} />
           <Route path='/projects' component={ProjectsPage} />
           <Route path='/projects/create' component={ProjectCreate} />

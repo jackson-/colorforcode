@@ -32,20 +32,21 @@ class ManageJobs extends Component {
     return (
       <Row className='ManageJobs'>
         <h1>MANAGE JOBS</h1>
-        <Table responsive hover bordered>
+        <Table responsive>
           <thead>
             <tr>
               <td>JOB TITLE</td>
+              <td>ACTIONS</td>
               <td>STATUS</td>
-              <td>DATE POSTED/UPDATED</td>
-              <td>TOTAL APPLICANTS</td>
+              <td>LAST UPDATED</td>
+              <td>APPLICANTS</td>
             </tr>
           </thead>
           <tbody>
             {jobs.map((job, i) => (
               <tr key={i}>
+                <td>{job.title}</td>
                 <td>
-                  {job.title}
                   {
                     job.status === 'open'
                     ? (

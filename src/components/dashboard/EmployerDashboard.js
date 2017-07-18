@@ -38,7 +38,7 @@ class EmployerDashboard extends Component {
                 content={
                   <Nav className='Sidebar__button-container' stacked>
                     <LinkContainer to='/dashboard/post-new-job' className='Dashboard__nav-item'>
-                      <NavItem><Glyphicon glyph='plus-sign' /> Post a Job</NavItem>
+                      <NavItem><Glyphicon glyph='plus-sign' /> Post New Job</NavItem>
                     </LinkContainer>
                     <LinkContainer to='/dashboard/manage-jobs' className='Dashboard__nav-item'>
                       <NavItem><Glyphicon glyph='list-alt' /> Manage Jobs</NavItem>
@@ -55,10 +55,10 @@ class EmployerDashboard extends Component {
             </Col>
             <Col xs={12} sm={9} md={9} lg={9} className='Dashboard__content'>
               <Switch>
-                <Route path='/dashboard/post-new-job' component={PostAJob} />
-                {jobs && <Route path='/dashboard/manage-jobs' component={ManageJobs} />}
-                <Route path='/dashboard/search-talent' component={SearchTalent} />
-                <Route path='/dashboard/edit-profile' render={() => <h1>Edit Profile</h1>} />
+                <Route exact path='/dashboard/post-new-job' render={() => <PostAJob />} />
+                {jobs && <Route exact path='/dashboard/manage-jobs' render={() => <ManageJobs />} />}
+                <Route exact path='/dashboard/search-talent' render={() => <SearchTalent />} />
+                <Route exact path='/dashboard/edit-profile' render={() => <h1>Edit Profile</h1>} />
               </Switch>
             </Col>
           </div>

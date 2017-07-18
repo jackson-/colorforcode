@@ -46,7 +46,7 @@ const NavBar = props => (
                     <LinkContainer to='/dashboard/manage-jobs' eventKey={3.2}>
                       <NavDropdown title='Dashboard' id='dashboard-dropdown-menu'>
                         <MenuItem divider />
-                        <LinkContainer to='/dashboard/post-a-job' eventKey={3.3}>
+                        <LinkContainer to='/dashboard/post-new-job' eventKey={3.3}>
                           <MenuItem>Post a Job</MenuItem>
                          </LinkContainer>
                         <LinkContainer to='/dashboard/manage-jobs' eventKey={3.4}>
