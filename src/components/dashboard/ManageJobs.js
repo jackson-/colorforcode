@@ -50,13 +50,21 @@ class ManageJobs extends Component {
                   {
                     job.status === 'open'
                     ? (
-                      <Button onClick={this.handleClose(job.id)} bsSize='xsmall'>
+                      <Button
+                        onClick={this.handleClose(job.id)}
+                        bsSize='xsmall'
+                        bsStyle='danger'
+                      >
                         <Glyphicon glyph='trash' /> close
                       </Button>
                     )
 
                     : (
-                      <Button onClick={this.handleDuplicate(job)} bsSize='xsmall'>
+                      <Button
+                        onClick={this.handleDuplicate(job)}
+                        bsSize='xsmall'
+                        bsStyle='primary'
+                      >
                         <Glyphicon glyph='retweet' /> duplicate
                       </Button>
                     )

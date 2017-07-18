@@ -149,11 +149,29 @@ and (min-width: 768px) {
 
 .btn-xs {
   width: auto !important;
-  border: solid 2px #FFFFFF;
+  background: none;
 }
 
-.btn-xs:hover {
-  background: #12CD6A;
+.btn-xs.btn-danger {
+  background: #53585A !important;
+  border: solid 2px #53585A ;
+}
+
+.btn-xs.btn-danger:hover {
+  background: #C33A3C !important;
+  border-color: #C33A3C;
+  color: #FFFFFF;
+  transition: all 0.1s ease-in;
+  transition-duration: 0.1s;
+}
+
+.btn-xs.btn-primary {
+  background: #53585A !important;
+  border: solid 2px #53585A ;
+}
+
+.btn-xs.btn-primary:hover {
+  background: #12CD6A !important;
   border: solid 2px #12CD6A;
   color: #FFFFFF;
   transition: all 0.1s ease-in;
