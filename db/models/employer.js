@@ -29,6 +29,6 @@ module.exports = db => db.define('employer', {
 */
 
 module.exports.associations = (Employer, {Job, User}) => {
-  Employer.hasMany(Job, {as: 'Listings'})
-  Employer.hasMany(User, {as: 'Recruiters'})
+  Employer.hasMany(Job, {as: 'listings'})
+  Employer.hasMany(User, {as: 'recruiters'})
 }

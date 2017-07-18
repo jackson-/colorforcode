@@ -20,7 +20,7 @@ const NavBar = props => (
     <Navbar.Header>
       <NavbarBrand>
         <LinkContainer to='/'>
-          <img src={navLogo} alt='HireBlack logo' height='40px' width='40px'/>
+          <img src={navLogo} alt='HireBlack logo' height='40px' width='40px' />
         </LinkContainer>
       </NavbarBrand>
       <Navbar.Toggle />

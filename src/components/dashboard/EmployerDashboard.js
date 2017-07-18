@@ -23,12 +23,6 @@ class EmployerDashboard extends Component {
     }
   }
 
-  componentWillReceiveProps () {
-    if (this.props.user && !this.props.jobs) {
-      this.props.getJobs(this.props.user.employer.id)
-    }
-  }
-
   render () {
     const firstName = this.props.user ? this.props.user.first_name : ''
     return (

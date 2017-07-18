@@ -50,6 +50,7 @@
     "axios": "^0.15.2",
     "bcrypt": "^1.0.2",
     "bcryptjs": "^2.4.0",
+    "bluebird": "^3.5.0",
     "body-parser": "^1.15.2",
     "chai": "^3.5.0",
     "chai-enzyme": "^0.5.2",
@@ -84,7 +85,7 @@
     "redux-devtools-extension": "^2.13.0",
     "redux-logger": "^3.0.1",
     "redux-thunk": "^2.1.0",
-    "sequelize": "^3.24.6",
+    "sequelize": "^3.30.4",
     "stripe": "^4.19.0",
     "underscore": "^1.8.3"
   },

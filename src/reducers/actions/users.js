@@ -41,8 +41,6 @@ export const whoami = (history) => dispatch => {
       typeof user !== 'string'
         ? history.push('/dashboard/manage-jobs')
         : history.push('/login')
-    } else {
-      console.log('no history, can\'t redirect...')
     }
   })
   .catch(err => {

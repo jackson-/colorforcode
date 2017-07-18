@@ -3,10 +3,9 @@ const {env} = app
 const debug = require('debug')(`${app.name}:auth`)
 const passport = require('passport')
 const bCrypt = require('bcrypt')
-const bc = require('bcryptjs')
-const {User, OAuth, Employer, Job, Project, Skill} = require('APP/db')
+const {User, Employer, Job, Project, Skill} = require('APP/db')
 const auth = require('express').Router()
-const LocalStrategy = require('passport-local').Strategy;
+const LocalStrategy = require('passport-local').Strategy
 
 /*************************
  * Auth strategies
@@ -59,87 +58,93 @@ passport.deserializeUser(
     debug('will deserialize user.id=%d', id)
     User.findById(id, {
       include: [
-        {model: Employer},
+        {model: Employer, include: [
+          {model: Job, as: 'listings', include: [
+            {model: Skill, through: {attributes: []}},
+            {model: User, as: 'applicants', through: 'JobApplication'}
+          ]}
+        ]},
         {model: Project, include: [Skill]},
-        {model: Job, as: 'applications', through: "JobApplication"},
-      ],
+        {model: Job, as: 'applications', through: 'JobApplication'}
+      ]
+    }).then(user => {
+      if (!user) debug('deserialize retrieved null user for id=%d', id)
+      else debug('deserialize did ok user.id=%d', id)
+      done(null, user)
     })
-      .then(user => {
-        if (!user) debug('deserialize retrieved null user for id=%d', id)
-        else debug('deserialize did ok user.id=%d', id)
-        done(null, user)
-      })
-      .catch(err => {
-        debug('deserialize did fail err=%s', err)
-        done(err)
-      })
+    .catch(err => {
+      debug('deserialize did fail err=%s', err)
+      done(err)
+    })
   }
 )
 
 // require.('passport-local').Strategy => a function we can use as a constructor, that takes in a callback
-passport.use('local-signup', new LocalStrategy({
-    usernameField:'email',
-    passwordField:'password',
-    passReqToCallback:true
+passport.use('local-signup',
+  new LocalStrategy({
+    usernameField: 'email',
+    passwordField: 'password',
+    passReqToCallback: true
   },
   (req, email, password, done) => {
-    const generateHash = (password) => {return bCrypt.hashSync(password, bCrypt.genSaltSync(8), null)};
+    const generateHash = (password) => bCrypt.hashSync(password, bCrypt.genSaltSync(8), null)
     User.findOne({
-          where: {
-              email: email
-          }
-      }).then(function(user) {
-          if (user){return done(null, false, {
-            message: 'That email is already taken'})}
-          else{
-            var userPassword = generateHash(password);
-            var data = {
-                    email: email,
-                    password: userPassword,
-                    firstname: req.body.firstname,
-                    lastname: req.body.lastname
-                };
-            User.create(data).then(function(newUser, created) {
-                if (!newUser) {return done(null, false);}
-                if (newUser) {return done(null, newUser);}
-            });
-          }
-      });
-    }
-));
+      where: {email}
+    }).then(function (user) {
+      if (user) {
+        return done(null, false, {message: 'That email is already taken'})
+      } else {
+        var userPassword = generateHash(password)
+        var data = {
+          email: email,
+          password: userPassword,
+          firstname: req.body.firstname,
+          lastname: req.body.lastname
+        }
+        User.create(data).then(function (newUser, created) {
+          if (!newUser) { return done(null, false) }
+          if (newUser) { return done(null, newUser) }
+        })
+      }
+    })
+  }
+))
 
-passport.use('local-signin', new LocalStrategy({
-    usernameField:'email',
-    passwordField:'password',
+passport.use('local-signin',
+  new LocalStrategy({
+    usernameField: 'email',
+    passwordField: 'password'
   },
   (email, password, done) => {
     debug('will authenticate user(email: "%s")', email)
     User.findOne({
       where: {email},
       include: [
-        {model: Employer},
-        {model: Job, as: 'applications', through: {attributes: []}}
-      ],
-      attributes: {include: ['password_digest']}
+        {model: Employer, include: [
+          {model: Job, as: 'listings', include: [
+            {model: Skill, through: {attributes: []}},
+            {model: User, as: 'applicants', through: 'JobApplication'}
+          ]}
+        ]},
+        {model: Project, include: [Skill]},
+        {model: Job, as: 'applications', through: 'JobApplication'}
+      ]
     }).then(user => {
-        if (!user) {
-          debug('authenticate user(email: "%s") did fail: no such user', email)
+      if (!user) {
+        debug('authenticate user(email: "%s") did fail: no such user', email)
+        return done(null, false, { message: 'Login incorrect' })
+      }
+      user.authenticate(password)
+      .then(ok => {
+        if (!ok) {
+          debug('authenticate user(email: "%s") did fail: bad password')
           return done(null, false, { message: 'Login incorrect' })
         }
-        bc.compare('123', user.password_digest).then((ok) => {
-          console.log("OK", ok)
-        })
-        user.authenticate(password)
-          .then(ok => {
-            if (!ok) {
-              debug('authenticate user(email: "%s") did fail: bad password')
-              return done(null, false, { message: 'Login incorrect' })
-            }
-            debug('authenticate user(email: "%s") did ok: user.id=%d', email, user.id)
-            done(null, user)
-          })
+        debug('authenticate user(email: "%s") did ok: user.id=%d', email, user.id)
+        done(null, user)
       })
-      .catch(done)
+    })
+    .catch(done)
   }
 ))
 
@@ -147,8 +152,8 @@ auth.get('/whoami', (req, res) => res.send(req.user))
 
 // POST requests for local login:
 auth.post('/login/local', passport.authenticate('local-signin', {
-  successRedirect:'/'
-}));
+  successRedirect: '/'
+}))
 
 // GET requests for OAuth login:
 // Register this route as a callback URL with OAuth provider
@@ -157,7 +162,7 @@ auth.get('/login/:strategy', (req, res, next) =>
     scope: 'email', // You may want to ask for additional OAuth scopes. These are
                     // provider specific, and let you access additional data (like
                     // their friends or email), or perform actions on their behalf.
-    successRedirect: '/',
+    successRedirect: '/'
     // Specify other config here
   })(req, res, next)
 )
