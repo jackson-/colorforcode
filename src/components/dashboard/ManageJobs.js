@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Table, Row, Button, Glyphicon } from 'react-bootstrap'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { deletingJob, creatingNewJob } from '../../reducers/actions/jobs'
 import './ManageJobs.css'
@@ -30,7 +31,7 @@ class ManageJobs extends Component {
     const {jobs} = this.props
     return (
       <Row className='ManageJobs'>
-        <h1>Manage Jobs</h1>
+        <h1>MANAGE JOBS</h1>
         <Table responsive hover bordered>
           <thead>
             <tr>
@@ -81,5 +82,12 @@ const mapDispatchToProps = dispatch => ({
   closeJob: (id, history) => dispatch(deletingJob(id, history)),
   duplicateJob: (job, history) => dispatch(creatingNewJob(job, history))
 })
+
+ManageJobs.propTypes = {
+  closeJob: PropTypes.func.isRequired,
+  duplicateJob: PropTypes.func.isRequired,
+  jobs: PropTypes.array.isRequired,
+  history: PropTypes.object.isRequired
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(ManageJobs)

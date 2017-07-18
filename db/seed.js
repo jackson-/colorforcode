@@ -1,138 +1,126 @@
-'use strict'
-
 const db = require('APP/db')
 const {User, Employer, Skill, Job, Project, ProjectSkill, JobSkill} = db
 const Promise = require('bluebird')
 const {mapValues} = require('lodash')
 
-function seedEverything() {
-  const seeded = {
-    users: users(),
-    employers: employers(),
-    skills: skills(),
-  }
-  seeded.jobs = jobs(seeded)
-  seeded.projects = projects(seeded)
-  seeded.job_skills = job_skills(seeded)
-  seeded.project_skills = project_skills(seeded)
-  return Promise.props(seeded)
-}
-
 const job_skills = seed(JobSkill,
   ({skills, jobs}) => ({
-      1: {
-        job_id: jobs.full_stack.id,
-        skill_id:skills.react.id,
-      },
-      2: {
-        job_id: jobs.full_stack.id,
-        skill_id:skills.nginx.id,
-      },
-      3: {
-        job_id: jobs.dev_ops.id,
-        skill_id:skills.mongo.id,
-      },
-      4: {
-        job_id: jobs.dev_ops.id,
-        skill_id:skills.node.id,
-      },
-}))
+    1: {
+      job_id: jobs.full_stack.id,
+      skill_id: skills.react.id
+    },
+    2: {
+      job_id: jobs.full_stack.id,
+      skill_id: skills.nginx.id
+    },
+    3: {
+      job_id: jobs.dev_ops.id,
+      skill_id: skills.mongo.id
+    },
+    4: {
+      job_id: jobs.dev_ops.id,
+      skill_id: skills.node.id
+    }
+  })
+)
 
 const project_skills = seed(ProjectSkill,
   ({skills, projects}) => ({
     1: {
       job_id: projects.d1.id,
-      skill_id:skills.react.id,
+      skill_id: skills.react.id
     },
     2: {
       job_id: projects.d1.id,
-      skill_id:skills.nginx.id,
+      skill_id: skills.nginx.id
     },
     3: {
       job_id: projects.c1.id,
-      skill_id:skills.mongo.id,
+      skill_id: skills.mongo.id
     },
     4: {
       job_id: projects.c2.id,
-      skill_id:skills.node.id,
-    },
-}))
+      skill_id: skills.node.id
+    }
+  })
+)
 
 const projects = seed(Project,
   ({users}) => ({
     d1: {
       user_id: users.devin.id,
-      title:"Devin's Project 1",
-      description:"This is a description",
-      learning_point:"I learned so much yo",
-      pain_point:"This really pissed me off",
-      external_link:"http://www.google.com",
+      title: 'Devin\'s Project 1',
+      description: 'This is a description',
+      learning_point: 'I learned so much yo',
+      pain_point: 'This really pissed me off',
+      external_link: 'http://www.google.com'
     },
     d2: {
       user_id: users.devin.id,
-      title:"Devin's Project 2",
-      description:"This is a description",
-      learning_point:"I learned so much yo",
-      pain_point:"This really pissed me off",
-      external_link:"http://www.google.com",
+      title: 'Devin\'s Project 2',
+      description: 'This is a description',
+      learning_point: 'I learned so much yo',
+      pain_point: 'This really pissed me off',
+      external_link: 'http://www.google.com'
     },
     c1: {
       user_id: users.chloe.id,
-      title:"Chloe's Project 1",
-      description:"This is a description",
-      learning_point:"I learned so much yo",
-      pain_point:"This really pissed me off",
-      external_link:"http://www.google.com",
+      title: 'Chloe\'s Project 1',
+      description: 'This is a description',
+      learning_point: 'I learned so much yo',
+      pain_point: 'This really pissed me off',
+      external_link: 'http://www.google.com'
     },
     c2: {
       user_id: users.chloe.id,
-      title:"Chloe's Project 2",
-      description:"This is a description",
-      learning_point:"I learned so much yo",
-      pain_point:"This really pissed me off",
-      external_link:"http://www.google.com",
-    },
+      title: 'Chloe\'s Project 2',
+      description: 'This is a description',
+      learning_point: 'I learned so much yo',
+      pain_point: 'This really pissed me off',
+      external_link: 'http://www.google.com'
+    }
   })
 )
 
 const users = seed(User,
   ({users, employers, skills}) => ({
-      devin: {
-        email: 'devin@123.com',
-        first_name:'Devin',
-        last_name:'Jackson',
-        password: '123',
-        is_employer:false
-      },
-      chloe: {
-        first_name: 'Chloe',
-        last_name:'Rice',
-        email: 'chloe@123.com',
-        password: '123',
-        is_employer:false
-      },
-      hb1: {
-        first_name:'Devin',
-        last_name:'Blackson',
-        email: 'devin@hireblack.io',
-        password: '123',
-        is_employer:true,
-        employer_id: 3
-      },
-      hb2: {
-        first_name: 'Chloe',
-        last_name:'Ice',
-        email: 'chloe@hireblack.io',
-        password: '123',
-        is_employer:true,
-        employer_id: 3
-      },
-}))
+    devin: {
+      email: 'devin@123.com',
+      first_name: 'Devin',
+      last_name: 'Jackson',
+      password: '123',
+      is_employer: false
+    },
+    chloe: {
+      first_name: 'Chloe',
+      last_name: 'Rice',
+      email: 'chloe@123.com',
+      password: '123',
+      is_employer: false
+    },
+    hb1: {
+      first_name: 'Devin',
+      last_name: 'Blackson',
+      email: 'devin@hireblack.io',
+      password: '123',
+      is_employer: true,
+      employer_id: 3
+    },
+    hb2: {
+      first_name: 'Chloe',
+      last_name: 'Ice',
+      email: 'chloe@hireblack.io',
+      password: '123',
+      is_employer: true,
+      employer_id: 3
+    }
+  })
+)
 
 const employers = seed(Employer, {
   airbnb: {
     name: 'AirBnB',
-    company_site: 'http://www.airbnb.com',
+    company_site: 'http://www.airbnb.com'
   },
   google: {
     name: 'Google',
@@ -141,16 +129,16 @@ const employers = seed(Employer, {
   hireblack: {
     name: 'HireBlack',
     company_site: 'http://www.hireblack.io'
-  },
+  }
 })
 
 const skills = seed(Skill, {
-  react: {title: 'react', template:true},
-  mongo: {title: 'mongo', template:true},
-  node: {title: 'node', template:true},
-  nginx: {title: 'nginx', template:true},
-  gunicorn: {title: 'gunicorn', template:true},
-  aws: {title: 'aws', template:true},
+  react: {title: 'react', template: true},
+  mongo: {title: 'mongo', template: true},
+  node: {title: 'node', template: true},
+  nginx: {title: 'nginx', template: true},
+  gunicorn: {title: 'gunicorn', template: true},
+  aws: {title: 'aws', template: true}
 })
 
 const jobs = seed(Job,
@@ -163,60 +151,73 @@ const jobs = seed(Job,
   // Objects above, rather than just arrays).
   ({users, employers, skills}) => {
     return ({
-    // The easiest way to seed associations seems to be to just create rows
-    // in the join table.
-    'full_stack': {
-      employer_id: employers.hireblack.id,
-      title:'Full Stack Dev',
-      description:'This is a job for a full stack dev',
-      application_url:null,
-      application_email:'emp1@123.com',
-      cc_email: 'emp2@123.com',
-      city:'Brooklyn',
-      state:'NY',
-      country:'US',
-      zip_code:'11207',
-      employment_types:['Full-time', 'Part-time'],
-      compensation_type:'Hourly',
-      pay_rate:'$80',
-      travel_requirements:'None',
-      status: 'open'
-    },
-    'dev_ops': {
-      employer_id: employers.hireblack.id,
-      title:'DevOps',
-      description:'This is a job for a devops dude',
-      application_url:null,
-      application_email:'emp1@123.com',
-      cc_email: 'emp2@123.com',
-      city:null,
-      state:null,
-      country: null,
-      zip_code:null,
-      employment_types:['Full-time', 'Remote'],
-      compensation_type:'Hourly',
-      pay_rate:'$100',
-      travel_requirements:'None',
-      status: 'open'
-    }
-  })
-}
+      // The easiest way to seed associations seems to be to just create rows
+      // in the join table.
+      'full_stack': {
+        employer_id: employers.hireblack.id,
+        title: 'Full Stack Dev',
+        description: 'This is a job for a full stack dev',
+        application_url: null,
+        application_email: 'emp1@123.com',
+        cc_email: 'emp2@123.com',
+        city: 'Brooklyn',
+        state: 'NY',
+        country: 'US',
+        zip_code: '11207',
+        employment_types: ['Full-time', 'Part-time'],
+        compensation_type: 'Hourly',
+        pay_rate: '$80',
+        travel_requirements: 'None',
+        status: 'open',
+        coords: '40.6655101,-73.8918897',
+        location: 'Brooklyn, New York'
+      },
+      'dev_ops': {
+        employer_id: employers.hireblack.id,
+        title: 'DevOps',
+        description: 'This is a job for a devops dude',
+        application_url: null,
+        application_email: 'emp1@123.com',
+        cc_email: 'emp2@123.com',
+        city: null,
+        state: null,
+        country: null,
+        zip_code: 11207,
+        employment_types: ['Full-time', 'Remote'],
+        compensation_type: 'Hourly',
+        pay_rate: '$100',
+        travel_requirements: 'None',
+        status: 'open',
+        coords: '40.6655101,-73.8918897',
+        location: 'Brooklyn, New York'
+      }
+    })
+  }
 )
 
-function getMethods(obj)
-{
-    var res = [];
-    for(var m in obj) {
-        if(typeof obj[m] == "function") {
-            res.push(m)
-        }
+function getMethods (obj) {
+  var res = []
+  for (var m in obj) {
+    if (typeof obj[m] === 'function') {
+      res.push(m)
     }
-    return res;
+  }
+  return res
 }
 
-// function seedAssociations(){
-//   return Job.findAll()
-// }
+
+function seedEverything () {
+  const seeded = {
+    users: users(),
+    employers: employers(),
+    skills: skills()
+  }
+  seeded.jobs = jobs(seeded)
+  seeded.projects = projects(seeded)
+  seeded.job_skills = job_skills(seeded)
+  seeded.project_skills = project_skills(seeded)
+  return Promise.props(seeded)
+}
 
 if (module === require.main) {
   console.log('seeding')
@@ -224,20 +225,20 @@ if (module === require.main) {
     .then(() => db.sync({force: true}))
     .then(seedEverything)
     // .then(seedAssociations)
-    // .then(jobs => jobs.forEach(job => job.addSkills([1,2,3]).then(() => {console.log("GOT EM")}) ) )
+    // .then(jobs => jobs.forEach(job => job.addSkills([1,2,3]).then(() => {console.log('GOT EM')}) ) )
 
     .finally(() => process.exit(0))
 }
 
 class BadRow extends Error {
-  constructor(key, row, error) {
+  constructor (key, row, error) {
     super(error)
     this.cause = error
     this.row = row
     this.key = key
   }
 
-  toString() {
+  toString () {
     return `[${this.key}] ${this.cause} while creating ${JSON.stringify(this.row, 0, 2)}`
   }
 }
@@ -252,8 +253,8 @@ class BadRow extends Error {
 //
 // The function form can be used to initialize rows that reference
 // other models.
-function seed(Model, rows) {
-  return (others={}) => {
+function seed (Model, rows) {
+  return (others = {}) => {
     if (typeof rows === 'function') {
       rows = Promise.props(
         mapValues(others,
@@ -264,7 +265,7 @@ function seed(Model, rows) {
     }
     return Promise.resolve(rows)
       .then(rows => {
-        console.log("TYPE",typeof rows)
+        console.log('TYPE', typeof rows)
         return Promise.props(
         Object.keys(rows)
           .map(key => {

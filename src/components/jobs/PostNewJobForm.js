@@ -6,19 +6,18 @@ import { creatingNewJob } from 'APP/src/reducers/actions/jobs'
 import { gettingAllSkills } from 'APP/src/reducers/actions/skills'
 import CreditCardFormControls from './CreditCard'
 import VirtualizedSelect from 'react-virtualized-select'
+import PropTypes from 'prop-types'
 import 'react-select/dist/react-select.css'
 import 'react-virtualized/styles.css'
 import 'react-virtualized-select/styles.css'
 import '../auth/Form.css'
 
 function arrowRenderer () {
-	return (
-		<span></span>
-	);
+  return <span />
 }
 
 class PostJobForm extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       title: '',
@@ -39,15 +38,16 @@ class PostJobForm extends Component {
       exp_year: null,
       cvc: null,
       token: null,
+      status: 'open',
       app_method: 'email'
     }
   }
 
-  componentDidMount(){
+  componentDidMount () {
     this.props.getSkills()
   }
 
-  handleLocation(zip_code) {
+  handleLocation = zip_code => {
     axios.get(`http://maps.googleapis.com/maps/api/geocode/json?address=${zip_code}`)
     .then(res => res.data)
     .then(json => {
@@ -97,6 +97,7 @@ class PostJobForm extends Component {
       exp_year: null,
       cvc: null,
       token: null,
+      status: 'open',
       app_method: 'email'
     })
   }
@@ -105,33 +106,33 @@ class PostJobForm extends Component {
     event.preventDefault()
     const job = {...this.state}
     job.employer_id = this.props.user.employer.id
-		job.employment_types = [...this.state.employment_types]
+    job.employment_types = [...this.state.employment_types]
     const skills = job.selectValue.map(skill => skill.value)
     delete job.selectValue
-		// const token = this.refs.card.state.token
+    // const token = this.refs.card.state.token
     this.clearForm()
     this.props.createJobPost({job, skills})
   }
 
   _selectSkill(data){
-		let skill_ids = data.split(',');
+    let skill_ids = data.split(',')
     let new_skills = []
-		if (skill_ids[0] !== "") {
+    if (skill_ids[0] !== '') {
       skill_ids.forEach((sk_id) => {
-				this.props.skills.forEach((s) => {
-          if(s.id === parseInt(sk_id, 10)){
+        this.props.skills.forEach((s) => {
+          if (s.id === parseInt(sk_id, 10)) {
             new_skills.push({label: s.title, value: s.id})
           }
         })
-			});
-		}
+      })
+    }
     this.setState({
       selectValue: [...new_skills],
       selected_skills: skill_ids
     })
-	}
+  }
 
-  render() {
+  render () {
     let skills = this.props.skills.map(s => ({label: s.title, value: s.id}))
     return (
       <Row className='PostJobForm'>
@@ -151,13 +152,13 @@ class PostJobForm extends Component {
             </ControlLabel>
             <VirtualizedSelect
               arrowRenderer={arrowRenderer}
-              clearable={true}
-              searchable={true}
+              clearable
+              searchable
               simpleValue
               labelKey='label'
               valueKey='value'
-              ref="job_search"
-              multi={true}
+              ref='job_search'
+              multi
               options={skills}
               onChange={(data) => this._selectSkill(data)}
               value={this.state.selectValue}
@@ -217,32 +218,32 @@ class PostJobForm extends Component {
               <Checkbox value='Internship'>Internship</Checkbox>
               <Checkbox value='Remote'>Remote</Checkbox>
             </FormGroup>
-  					<FormGroup controlId='compensation'>
-  						<ControlLabel>Compensation Type</ControlLabel>
-  						<FormControl componentClass='select' ref='compensation'>
-  							<option value='Salary'>Salary</option>
-  							<option value='Hourly'>Hourly</option>
-  						</FormControl>
-  					</FormGroup>
-  					<FormGroup controlId='pay_rate'>
-  						<ControlLabel>Pay Rate</ControlLabel>
-  						<FormControl
+            <FormGroup controlId='compensation'>
+              <ControlLabel>Compensation Type</ControlLabel>
+              <FormControl componentClass='select' ref='compensation'>
+                <option value='Salary'>Salary</option>
+                <option value='Hourly'>Hourly</option>
+              </FormControl>
+            </FormGroup>
+            <FormGroup controlId='pay_rate'>
+              <ControlLabel>Pay Rate</ControlLabel>
+              <FormControl
                 type='phone'
                 value={this.state.pay_rate}
                 onChange={this.handleChange('pay_rate')}
               />
-  					</FormGroup>
-  					<FormGroup controlId='travel_requirements'>
-  						<ControlLabel>Travel Requirements</ControlLabel>
-  						<FormControl componentClass='select' ref='travel_requirements'>
-  							<option value='None'>None</option>
-  							<option value='Occasional'>Occasional</option>
-  							<option value='25%'>25%</option>
-  							<option value='50%'>50%</option>
-  							<option value='75%'>75%</option>
-  							<option value='100%'>100%</option>
-  						</FormControl>
-  					</FormGroup>
+            </FormGroup>
+            <FormGroup controlId='travel_requirements'>
+              <ControlLabel>Travel Requirements</ControlLabel>
+              <FormControl componentClass='select' ref='travel_requirements'>
+                <option value='None'>None</option>
+                <option value='Occasional'>Occasional</option>
+                <option value='25%'>25%</option>
+                <option value='50%'>50%</option>
+                <option value='75%'>75%</option>
+                <option value='100%'>100%</option>
+              </FormControl>
+            </FormGroup>
             <CreditCardFormControls ref='card' />
             <Button className='primary' type='submit'>Post Job</Button>
           </form>
@@ -261,6 +262,11 @@ const mapDispatchToProps = dispatch => ({
   getSkills: post => dispatch(gettingAllSkills())
 })
 
-const PostNewJobContainer = connect(mapStateToProps, mapDispatchToProps)(PostJobForm)
+PostJobForm.propTypes = {
+  user: PropTypes.object.isRequired,
+  skills: PropTypes.array.isRequired,
+  getSkills: PropTypes.func.isRequired,
+  createJobPost: PropTypes.func.isRequired
+}
 
-export default PostNewJobContainer
+export default connect(mapStateToProps, mapDispatchToProps)(PostJobForm)

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Row, Col, FormGroup, ControlLabel, FormControl, Button, Checkbox } from 'react-bootstrap'
 import axios from 'axios'
+import PropTypes from 'prop-types'
 import VirtualizedSelect from 'react-virtualized-select'
 import 'react-select/dist/react-select.css'
 import 'react-virtualized/styles.css'
@@ -8,13 +9,11 @@ import 'react-virtualized-select/styles.css'
 import '../auth/Form.css'
 
 function arrowRenderer () {
-	return (
-		<span></span>
-	);
+  return <span />
 }
 
 class JobUpdateDisplay extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       title: this.props.job.title || '',
@@ -41,17 +40,17 @@ class JobUpdateDisplay extends Component {
   }))
 
   _selectSkill = data => {
-    let skill_ids = data.split(',');
+    let skill_ids = data.split(',')
     let new_skills = []
 
-    if (skill_ids[0] !== "") {
+    if (skill_ids[0] !== '') {
       skill_ids.forEach((sk_id) => {
         this.props.skills.forEach((s) => {
-          if(s.id === parseInt(sk_id, 10)){
-            new_skills.push({label:s.title, value:s.id})
+          if (s.id === parseInt(sk_id, 10)) {
+            new_skills.push({label: s.title, value: s.id})
           }
         })
-      });
+      })
     }
     this.setState({
       selectValue: [...new_skills],
@@ -64,7 +63,7 @@ class JobUpdateDisplay extends Component {
     this.props.deleteJob(this.props.job.id, this.props.history)
   }
 
-  handleLocation(zip_code) {
+  handleLocation = zip_code => {
     axios.get(`http://maps.googleapis.com/maps/api/geocode/json?address=${zip_code}`)
     .then(res => res.data)
     .then(json => {
@@ -120,10 +119,11 @@ class JobUpdateDisplay extends Component {
     const job = {...this.state}
     job.id = this.props.job.id
     job.employer_id = this.props.user.employer.id
-		job.employment_types = [...this.state.employment_types]
+    job.employment_types = [...this.state.employment_types]
+    job.status = 'open'
     const skills = job.selectValue.map(skill => skill.value)
     delete job.selectValue
-		// const token = this.refs.card.state.token
+    // const token = this.refs.card.state.token
     this.clearForm()
     this.props.updateJob({job, skills}, this.props.history)
   }
@@ -132,7 +132,7 @@ class JobUpdateDisplay extends Component {
     return this.state.employment_types.has(type)
   }
 
-  render() {
+  render () {
     const {job} = this.props
     let skills = this.props.skills.map(s => ({label: s.title, value: s.id})) || []
 
@@ -157,13 +157,13 @@ class JobUpdateDisplay extends Component {
                 </ControlLabel>
                 <VirtualizedSelect
                   arrowRenderer={arrowRenderer}
-                  clearable={true}
-                  searchable={true}
+                  clearable
+                  searchable
                   simpleValue
                   labelKey='label'
                   valueKey='value'
-                  ref="job_search"
-                  multi={true}
+                  ref='job_search'
+                  multi
                   options={skills}
                   onChange={(data) => this._selectSkill(data)}
                   value={this.state.selectValue || this.formatInitialSkills()}
@@ -280,6 +280,15 @@ class JobUpdateDisplay extends Component {
       </Row>
     )
   }
+}
+
+JobUpdateDisplay.propTypes = {
+  job: PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired,
+  skills: PropTypes.array.isRequired,
+  deleteJob: PropTypes.func.isRequired,
+  updateJob: PropTypes.func.isRequired
 }
 
 export default JobUpdateDisplay
