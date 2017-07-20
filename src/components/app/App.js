@@ -33,7 +33,7 @@ class App extends Component {
     if (event) event.preventDefault()
     this.setState({
       showDashMenu: true,
-      height: this.state.height === '250px' ? '0' : '250px',
+      height: this.state.height === '215px' ? '0' : '215px',
       padding: this.state.padding === '75px 0 10px 0' ? '0' : '75px 0 10px 0',
       opacity: this.state.opacity === 0 ? 1 : 0,
       marginBottom: this.state.marginBottom === '-60px' ? 0 : '-60px'
@@ -90,15 +90,6 @@ class App extends Component {
                 </NavItem>
               </LinkContainer>
               <LinkContainer
-                hidden={this.state.showDashMenu}
-                to='/dashboard/search-talent'
-                className='Dashboard__nav-item'
-              >
-                <NavItem style={{opacity: this.state.opacity}}>
-                  <Glyphicon glyph='search' /> Search Talent
-                </NavItem>
-              </LinkContainer>
-              <LinkContainer
                 to='/dashboard/edit-profile'
                 className='Dashboard__nav-item'
               >
@@ -115,7 +106,6 @@ class App extends Component {
             <Route exact path='/login' component={LoginForm} />
             <Route exact path='/dashboard/post-new-job' component={Dashboard} />
             <Route exact path='/dashboard/manage-jobs' component={Dashboard} />
-            <Route exact path='/dashboard/search-talent' component={Dashboard} />
             <Route exact path='/dashboard/edit-profile' component={Dashboard} />
             <Route exact path='/jobs/:id' component={JobDetailPage} />
             <Route exact path='/projects' component={ProjectsPage} />

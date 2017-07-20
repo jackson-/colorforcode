@@ -20,6 +20,8 @@ class ManageJobs extends Component {
   handleDuplicate = job => () => {
     job.skills = job.skills.map(skill => skill.id)
     delete job.id
+    delete job.created_at
+    delete job.updated_at
     job.status = 'open'
     this.props.duplicateJob({job, skills: job.skills}, this.props.history)
   }

@@ -63,7 +63,6 @@ class EmployerDashboard extends Component {
               <ScrollToTopOnMount />
               <Route exact path='/dashboard/post-new-job' component={PostAJob} />
               {jobs && <Route exact path='/dashboard/manage-jobs' component={ManageJobs} />}
-              <Route exact path='/dashboard/search-talent' component={SearchTalent} />
               <Route exact path='/dashboard/edit-profile' render={() => <h1>Edit Profile</h1>} />
             </Col>
           </div>
