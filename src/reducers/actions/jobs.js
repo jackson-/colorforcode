@@ -140,7 +140,7 @@ export const creatingNewJob = (jobPost, history) => dispatch => {
   })
   .then(success => {
     if (history) {
-      history.push(`/jobs/${id}`)
+      history.push(`/dashboard/jobs/${id}`)
     }
   })
   // otherwise we catch the error...

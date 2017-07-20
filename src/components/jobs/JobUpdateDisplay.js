@@ -9,7 +9,7 @@ import 'react-virtualized-select/styles.css'
 import '../auth/Form.css'
 
 function arrowRenderer () {
-  return <span />
+  return <span></span>
 }
 
 export default class JobUpdateDisplay extends Component {

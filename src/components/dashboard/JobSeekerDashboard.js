@@ -42,13 +42,13 @@ class JobSeekerDashboard extends Component {
 }
 
 const mapStateToProps = state => ({
-  user: state.users.currentUser,
+  user: state.users.currentUser
 })
 
 const mapDispatchToProps = dispatch => ({
   updateUser: (user) => dispatch(updatingUser(user)),
   uploadAvatar: (user, file) => dispatch(uploadingAvatar(user, file)),
-  uploadResume: (user, file) => dispatch(uploadingResume(user, file)),
+  uploadResume: (user, file) => dispatch(uploadingResume(user, file))
 })
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(JobSeekerDashboard))

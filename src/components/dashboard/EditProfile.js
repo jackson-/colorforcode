@@ -1,36 +1,34 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { Row, Col, FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap'
+import { Row, Col, Button } from 'react-bootstrap'
+import PropTypes from 'prop-types'
 import axios from 'axios'
-import { creatingNewUser } from 'APP/src/reducers/actions/users'
-import EmployerFields from './EmployerRegisterFields'
-import ApplicantFields from './ApplicantRegisterFields'
-import { withRouter, Redirect } from 'react-router-dom'
-import './Form.css'
+import EmployerFields from '../auth/EmployerRegisterFields'
+import ApplicantFields from '../auth/ApplicantRegisterFields'
+import '../auth/Form.css'
 import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
 
-class RegisterForm extends Component {
+export default class EditProfile extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      email: '',
-      password: '',
-      passwordConfirm: '',
-      company_name: '',
-      company_role: '',
-      story: '',
-      first_name: '',
-      last_name: '',
-      zip_code: '',
-      location: '',
-      image_url: '',
-      company_site: '',
-      personal_site: '',
-      github: '',
-      linkedin: '',
-      twitter: '',
-      work_auth: '',
-      employment_type: new Set([])
+      email: this.props.user.email || '',
+      password: this.props.user.password || '',
+      passwordConfirm: this.props.user.passwordConfirm || '',
+      company_name: this.props.user.is_employer ? this.props.user.employer.name : '',
+      company_role: this.props.user.is_employer ? this.props.user.company_role : '',
+      story: this.props.user.story || '',
+      first_name: this.props.user.first_name || '',
+      last_name: this.props.user.last_name || '',
+      zip_code: this.props.user.zip_code || '',
+      location: this.props.user.location || '',
+      image_url: this.props.user.image_url || '',
+      company_site: this.props.user.is_employer ? this.props.user.employer.company_site : '',
+      personal_site: this.props.user.personal_site || '',
+      github: this.props.user.github || '',
+      linkedin: this.props.user.linkedin || '',
+      twitter: this.props.user.twitter || '',
+      work_auth: this.props.user.work_auth || '',
+      employment_type: new Set([...this.props.user.employment_type]) || new Set([])
     }
   }
 
@@ -38,7 +36,10 @@ class RegisterForm extends Component {
     axios.get(`http://maps.googleapis.com/maps/api/geocode/json?address=${zip_code}`)
     .then(res => res.data)
     .then(json => {
-      const location = json.results[0].formatted_address
+      const address = json.results[0].address_components
+      const city = address[1].long_name
+      const state = address.filter(a => a.types.includes('administrative_area_level_1'))[0].short_name
+      const location = `${city}, ${state}`
       const coords = `${json.results[0].geometry.location.lat},${json.results[0].geometry.location.lng}`
       this.setState({coords, zip_code, location})
     })
@@ -66,25 +67,30 @@ class RegisterForm extends Component {
     }
   }
 
+  isChecked = type => {
+    return this.state.employment_type.has(type)
+  }
+
   clearForm = () => {
     this.setState({
-      email: '',
-      password: '',
-      passwordConfirm: '',
-      company_name: '',
-      company_role: '',
-      first_name: '',
-      last_name: '',
-      zip_code: '',
-      location: '',
-      image_url: '',
-      company_site: '',
-      personal_site: '',
-      github: '',
-      linkedin: '',
-      twitter: '',
-      work_auth: '',
-      employment_type: new Set([])
+      email: this.props.user.email || '',
+      password: this.props.user.password || '',
+      passwordConfirm: this.props.user.passwordConfirm || '',
+      company_name: this.props.user.is_employer ? this.props.user.employer.name : '',
+      company_role: this.props.user.is_employer ? this.props.user.company_role : '',
+      story: this.props.user.story || '',
+      first_name: this.props.user.first_name || '',
+      last_name: this.props.user.last_name || '',
+      zip_code: this.props.user.zip_code || '',
+      location: this.props.user.location || '',
+      image_url: this.props.user.image_url || '',
+      company_site: this.props.user.is_employer ? this.props.user.employer.company_site : '',
+      personal_site: this.props.user.personal_site || '',
+      github: this.props.user.github || '',
+      linkedin: this.props.user.linkedin || '',
+      twitter: this.props.user.twitter || '',
+      work_auth: this.props.user.work_auth || '',
+      employment_type: new Set([...this.props.user.employment_type]) || new Set([])
     })
   }
 
@@ -120,30 +126,25 @@ class RegisterForm extends Component {
       company_site,
       company_role,
       email,
-      password,
-      passwordConfirm,
       zip_code,
       location,
       work_auth
     } = this.state
 
     if (this.state.is_employer) {
-      return password === passwordConfirm &&
-        !(
+      !(
           first_name &&
           last_name &&
           company_name &&
           company_role &&
           company_site &&
-          password &&
+          zip_code &&
           email
         )
     } else {
-      return password === passwordConfirm &&
-        !(
+      !(
           first_name &&
           last_name &&
-          password &&
           email &&
           zip_code &&
           location &&
@@ -154,34 +155,23 @@ class RegisterForm extends Component {
 
   handleSubmit = event => {
     event.preventDefault()
-    const newUser = {...this.state}
+    const user = {...this.state}
+    user.id = this.props.user.id
     // turn the set into an array (postgres rejects sets)
-    newUser.employment_type = [...newUser.employment_type]
+    user.employment_type = [...user.employment_type]
     this.clearForm()
-    this.props.createUser(newUser)
+    this.props.updateUser(user)
   }
 
   render () {
-    if (this.props.user) {
-      return <Redirect to='/dashboard/manage-jobs' />
-    }
-
     return (
-      <Row className='RegisterForm'>
+      <Row className='EditProfile'>
         <ScrollToTopOnMount />
         <Col xs={12} sm={6} md={6} lg={6}>
-          <h1 className='RegisterForm-header'>Register</h1>
-          <form className='RegisterForm-body' onSubmit={this.handleSubmit}>
-            <FormGroup controlId='is_employer' onChange={this.toggleAccountType}>
-              <ControlLabel>What type of account would you like to create?</ControlLabel>
-              <FormControl componentClass="select">
-                <option>select an account type</option>
-                <option value='employer'>Employer</option>
-                <option value='applicant'>Applicant</option>
-              </FormControl>
-            </FormGroup>
+          <h1 className='EditProfile-header'>Edit Profile</h1>
+          <form className='EditProfile-body' onSubmit={this.handleSubmit}>
             {
-              this.state.showEmployer &&
+              this.props.user.is_employer &&
               <EmployerFields
                 state={this.state}
                 handleChange={this.handleChange}
@@ -189,14 +179,17 @@ class RegisterForm extends Component {
               />
             }
             {
-              this.state.showApplicant &&
+              !this.props.user.is_employer &&
               <ApplicantFields
                 state={this.state}
                 handleChange={this.handleChange}
                 validate={this.getValidationState}
+                isChecked={this.isChecked}
               />
             }
-            <Button disabled={this.isInvalid()} className='primary' type='submit'>Create Account</Button>
+            <Button disabled={this.isInvalid()} className='primary' type='submit'>
+              Update Profile
+            </Button>
           </form>
         </Col>
       </Row>
@@ -204,10 +197,7 @@ class RegisterForm extends Component {
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  createUser: (user) => dispatch(creatingNewUser(user))
-})
-
-const RegisterFormContainer = connect(null, mapDispatchToProps)(RegisterForm)
-
-export default withRouter(RegisterFormContainer)
+EditProfile.propTypes = {
+  user: PropTypes.object.isRequired,
+  updateUser: PropTypes.func.isRequired
+}

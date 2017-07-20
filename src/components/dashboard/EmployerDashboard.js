@@ -4,13 +4,14 @@ import { withRouter, BrowserRouter as Router, Redirect, Route } from 'react-rout
 import { LinkContainer } from 'react-router-bootstrap'
 import { Nav, NavItem, Row, Col, Glyphicon } from 'react-bootstrap'
 import { connect } from 'react-redux'
-import { gettingUserJobs } from '../../reducers/actions/jobs'
-import PostAJob from '../jobs/PostNewJobForm'
-import SearchTalent from '../search/CandidateSearchPage'
+import { gettingUserJobs, deletingJob, creatingNewJob } from '../../reducers/actions/jobs'
+import { updatingUser } from '../../reducers/actions/users'
 import './Dashboard.css'
 import Sidebar from '../utilities/Sidebar'
-import '../utilities/Sidebar.css'
+import PostAJob from '../jobs/PostNewJobForm'
 import ManageJobs from './ManageJobs'
+import EditProfile from './EditProfile'
+import JobDetailPage from '../jobs/JobDetailPage'
 import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
 
 class EmployerDashboard extends Component {
@@ -28,11 +29,9 @@ class EmployerDashboard extends Component {
   render () {
     const {user} = this.props
     const firstName = user ? user.first_name : ''
-    const jobs = user && [...user.employer.listings]
+    const jobs = user && user.is_employer && [...user.employer.listings]
 
-    if (!user) {
-      return <Redirect to='/login' from='/dashboard/manage-jobs' />
-    }
+    if (!this.props.user) return <Redirect to='/login' from='/dashboard/manage-jobs' />
 
     return (
       <Router>
@@ -49,9 +48,6 @@ class EmployerDashboard extends Component {
                     <LinkContainer to='/dashboard/manage-jobs' className='Dashboard__nav-item'>
                       <NavItem><Glyphicon glyph='list-alt' /> Manage Jobs</NavItem>
                     </LinkContainer>
-                    <LinkContainer to='/dashboard/search-talent' className='Dashboard__nav-item'>
-                      <NavItem><Glyphicon glyph='search' /> Search Talent</NavItem>
-                    </LinkContainer>
                     <LinkContainer to='/dashboard/edit-profile' className='Dashboard__nav-item'>
                       <NavItem><Glyphicon glyph='user' /> Edit Profile</NavItem>
                     </LinkContainer>
@@ -62,8 +58,22 @@ class EmployerDashboard extends Component {
             <Col xs={12} sm={9} md={9} lg={9} className='Dashboard__content'>
               <ScrollToTopOnMount />
               <Route exact path='/dashboard/post-new-job' component={PostAJob} />
-              {jobs && <Route exact path='/dashboard/manage-jobs' component={ManageJobs} />}
-              <Route exact path='/dashboard/edit-profile' render={() => <h1>Edit Profile</h1>} />
+              <Route exact path='/dashboard/manage-jobs' component={({history}) => (
+                <ManageJobs
+                  history={history}
+                  closeJob={this.props.closeJob}
+                  duplicateJob={this.props.duplicateJob}
+                  jobs={jobs}
+                />
+              )} />
+              <Route exact path='/dashboard/edit-profile' component={({history}) => (
+                <EditProfile
+                  user={user}
+                  updateUser={this.props.updateUser}
+                  history={history}
+                />
+              )} />
+              <Route exact path='/dashboard/jobs/:id' component={JobDetailPage} />
             </Col>
           </div>
         </Row>
@@ -73,18 +83,23 @@ class EmployerDashboard extends Component {
 }
 
 const mapStateToProps = state => ({
-  user: state.users.currentUser,
-  jobs: state.jobs.user_jobs
+  user: state.users.currentUser
 })
 
 const mapDispatchToProps = dispatch => ({
-  getJobs: (employerId) => dispatch(gettingUserJobs(employerId))
+  getJobs: (employerId) => dispatch(gettingUserJobs(employerId)),
+  closeJob: (id, history) => dispatch(deletingJob(id, history)),
+  duplicateJob: (job, history) => dispatch(creatingNewJob(job, history)),
+  updateUser: (user) => dispatch(updatingUser(user))
 })
 
 EmployerDashboard.propTypes = {
-  user: PropTypes.object.isRequired,
+  user: PropTypes.object,
   jobs: PropTypes.array,
-  getJobs: PropTypes.func.isRequired
+  getJobs: PropTypes.func.isRequired,
+  closeJob: PropTypes.func.isRequired,
+  duplicateJob: PropTypes.func.isRequired,
+  updateUser: PropTypes.func.isRequired
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(EmployerDashboard))

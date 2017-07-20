@@ -11,6 +11,7 @@ module.exports = db => db.define('user', {
   coords: STRING,
   image_url: STRING,
   resume_url: STRING,
+  company_role: STRING,
   email: {
     type: STRING,
     validate: {

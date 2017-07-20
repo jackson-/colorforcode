@@ -1,4 +1,5 @@
 import React from 'react'
+import { withRouter } from 'react-router-dom'
 import { LinkContainer } from 'react-router-bootstrap'
 import { Navbar, NavbarBrand, Nav, Glyphicon,
          Col, NavItem, NavDropdown, MenuItem } from 'react-bootstrap'
@@ -16,7 +17,7 @@ const onlyOneActiveMatch = (match, location) => {
 }
 
 const NavBar = props => (
-  <Navbar style={props.style} fixedTop collapseOnSelect>
+  <Navbar fixedTop collapseOnSelect>
     <Navbar.Header>
       <NavbarBrand>
         <LinkContainer to='/'>
@@ -48,7 +49,7 @@ const NavBar = props => (
                   <LinkContainer to='/dashboard/manage-jobs' eventKey={3.1}>
                     <MenuItem>Dashboard</MenuItem>
                   </LinkContainer>
-                  <LinkContainer to='#' eventKey={3.7} onClick={props.logOut}>
+                  <LinkContainer to='#' eventKey={3.1} onClick={props.logOut(props.history)}>
                     <MenuItem >Logout</MenuItem>
                   </LinkContainer>
                 </NavDropdown>
@@ -75,4 +76,4 @@ const NavBar = props => (
   </Navbar>
 )
 
-export default NavBar
+export default withRouter(NavBar)

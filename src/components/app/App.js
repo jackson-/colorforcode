@@ -47,7 +47,13 @@ class App extends Component {
     return location.includes('dashboard') === false
   }
 
+  logOut = history => event => {
+    event.preventDefault()
+    this.props.logOut(history)
+  }
+
   render () {
+    const {user} = this.props
     const dashMenuStyle = {
       padding: this.state.padding,
       height: this.state.height,
@@ -60,7 +66,7 @@ class App extends Component {
         <div>
           <MainNav
             user={this.props.user}
-            logOut={this.props.logOut()}
+            logOut={this.logOut}
             toggleDashMenu={this.toggleDashMenu}
             isNotDashRoute={this.isNotDashRoute()}
           />
@@ -101,15 +107,16 @@ class App extends Component {
           }
           <Grid fluid className='App'>
             <Route exact strict path='/' component={Home} />
-            <Route exact path='/about' component={About} />
-            <Route exact path='/register' component={RegisterForm} />
-            <Route exact path='/login' component={LoginForm} />
-            <Route exact path='/dashboard/post-new-job' component={Dashboard} />
-            <Route exact path='/dashboard/manage-jobs' component={Dashboard} />
-            <Route exact path='/dashboard/edit-profile' component={Dashboard} />
-            <Route exact path='/jobs/:id' component={JobDetailPage} />
-            <Route exact path='/projects' component={ProjectsPage} />
-            <Route exact path='/projects/create' component={ProjectCreate} />
+            <Route path='/about' component={About} />
+            <Route path='/register' component={RegisterForm} />
+            <Route path='/login' component={LoginForm} />
+            <Route path='/dashboard/post-new-job' component={Dashboard} />
+            <Route path='/dashboard/manage-jobs' component={Dashboard} />
+            <Route path='/dashboard/edit-profile' component={Dashboard} />
+            <Route path='/dashboard/jobs/:id' component={JobDetailPage} />
+            <Route path='/jobs/:id' component={JobDetailPage} />
+            <Route path='/projects' component={ProjectsPage} />
+            <Route path='/projects/create' component={ProjectCreate} />
           </Grid>
         </div>
       </Router>
@@ -128,10 +135,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  logOut: () => event => {
-    event.preventDefault()
-    dispatch(logout())
-  }
+  logOut: (history) => dispatch(logout(history))
 })
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App))

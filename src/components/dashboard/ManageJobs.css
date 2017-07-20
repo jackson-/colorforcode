@@ -2,6 +2,10 @@
   padding: 5px 10px;
 }
 
+.ManageJobs-header {
+  text-align: center;
+}
+
 table {
   background: #F5F5F5;
 }
@@ -27,6 +31,10 @@ tbody > tr:hover {
 @media only screen and (min-width: 768px) {
   .ManageJobs {
     padding: 5px 40px;
+  }
+
+  .ManageJobs-header {
+    text-align: left;
   }
 
   td:not(:first-child) {

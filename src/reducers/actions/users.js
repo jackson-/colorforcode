@@ -50,9 +50,13 @@ export const login = (email, password) => dispatch => {
   .catch(() => dispatch(whoami()))
 }
 
-export const logout = () => dispatch => {
+export const logout = (history) => dispatch => {
   axios.post('/api/auth/logout')
-  .then(() => dispatch(whoami()))
+  .then(() => {
+    dispatch(whoami())
+    console.log('HISTORY', history)
+    history.push('/login')
+  })
   .catch(() => dispatch(whoami()))
 }
 
@@ -78,15 +82,14 @@ export const creatingNewEmployer = employer => dispatch => {
   .catch(err => console.error(`Couldn't create employer ${employer.name}...${err.stack}`))
 }
 
-export const updateUser = (user) => dispatch => {
+export const updatingUser = (user) => dispatch => {
   // set loading state to true to trigger UI changes
-  // create the new user
+  // update the user
   axios.put(`/api/users/${user.id}`, {user})
   .then(res => res.data)
-  // if the user is successfully created, we receive the updated users list
-  .then(newUser => {
+  // if the user is successfully updated, we fetch the updated users list
+  .then(updatedUser => {
     dispatch(gettingAllUsers())
-    dispatch(login(newUser.email, newUser.password))
     dispatch(whoami())
   })
   // otherwise we catch the error...
@@ -102,7 +105,7 @@ export const uploadingAvatar = (user, file) => dispatch => {
   )
   .then(res => axios.put(res.data.signedRequest, file, options))
   .then(() => {
-    dispatch(updateUser(user))
+    dispatch(updatingUser(user))
   })
   .then(() => dispatch(doneUploading()))
   .catch(err => console.error(`Mang, I couldn't upload the avatar! ${err.stack}`))
@@ -117,7 +120,7 @@ export const uploadingResume = (user, file) => dispatch => {
   )
   .then(res => axios.put(res.data.signedRequest, file, options))
   .then(() => {
-    dispatch(updateUser(user))
+    dispatch(updatingUser(user))
   })
   .then(() => dispatch(doneUploading()))
   .catch(err => console.error(`Mang, I couldn't upload the resume! ${err.stack}`))

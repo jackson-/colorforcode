@@ -1,12 +1,10 @@
 import React, { Component } from 'react'
 import { Table, Row, Button, Glyphicon } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
-import { withRouter } from 'react-router-dom'
-import { connect } from 'react-redux'
-import { deletingJob, creatingNewJob } from '../../reducers/actions/jobs'
 import './ManageJobs.css'
 
-class ManageJobs extends Component {
+export default class ManageJobs extends Component {
 
   mostRecentDate = job => {
     const {created_at, updated_at} = job
@@ -17,7 +15,8 @@ class ManageJobs extends Component {
     }
   }
 
-  handleDuplicate = job => () => {
+  handleDuplicate = job => event => {
+    event.preventDefault()
     job.skills = job.skills.map(skill => skill.id)
     delete job.id
     delete job.created_at
@@ -34,7 +33,7 @@ class ManageJobs extends Component {
     const {jobs} = this.props
     return (
       <Row className='ManageJobs'>
-        <h1>MANAGE JOBS</h1>
+        <h1 className='ManageJobs-header'>MANAGE JOBS</h1>
         <Table responsive>
           <thead>
             <tr>
@@ -48,7 +47,13 @@ class ManageJobs extends Component {
           <tbody>
             {jobs.map((job, i) => (
               <tr key={i}>
-                <td>{job.title}</td>
+                <td>
+                  {
+                    job.status === 'closed'
+                      ? job.title
+                      : <Link to={`/dashboard/jobs/${job.id}`}>{job.title}</Link>
+                  }
+                </td>
                 <td>
                   {
                     job.status === 'open'
@@ -85,20 +90,9 @@ class ManageJobs extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  jobs: state.users.currentUser.employer.listings
-})
-
-const mapDispatchToProps = dispatch => ({
-  closeJob: (id, history) => dispatch(deletingJob(id, history)),
-  duplicateJob: (job, history) => dispatch(creatingNewJob(job, history))
-})
-
 ManageJobs.propTypes = {
   closeJob: PropTypes.func.isRequired,
   duplicateJob: PropTypes.func.isRequired,
   jobs: PropTypes.array.isRequired,
   history: PropTypes.object
 }
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ManageJobs))
