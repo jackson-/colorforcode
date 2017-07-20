@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Row } from 'react-bootstrap'
-import { gettingAllUsers, filteringProjects } from 'APP/src/reducers/actions/users'
+import { filteringProjects } from 'APP/src/reducers/actions/projects'
+import { gettingAllUsers } from 'APP/src/reducers/actions/users'
 import { gettingAllSkills } from 'APP/src/reducers/actions/skills'
 import SearchBar from '../utilities/SearchBar'
 import CandidateList from './CandidateList.js'
@@ -59,14 +60,14 @@ class CandidateSearch extends Component {
     }
   }
 
-  filterJobs = event => {
+  filterCandidates = event => {
     // this is an event handler but we also use this in clearFilter,
     // in which case there's no event object to preventDefault of
     if (event) event.preventDefault()
 
     const {query} = this.state
-    this.props.filterJobs(query)
-    // ^ when query === '', all job listings are shown
+    this.props.filterProjects(query)
+    // ^ when query === '', all candidates are shown
     if (query) this.setState({filtered: true})
     // we only show the search results header if this.state.filtered === true
     this.clearFilter()
@@ -74,16 +75,17 @@ class CandidateSearch extends Component {
 
   render () {
     let users = this.props.users || []
+    console.log('Candidate Search', this.props)
     return (
       <Row className='JobBoard'>
         <SearchBar
           type='project'
           inline
           query={this.state.query}
-          handleSubmit={this.filterJobs}
+          handleSubmit={this.filterCandidates}
           handleChange={this.handleChange}
-          labelText='Filter project listings by keyword'
-          submitButtonText='Search users by skills'
+          labelText='Filter job seekers by skill'
+          submitButtonText='Search'
         />
         {
           this.props.loading

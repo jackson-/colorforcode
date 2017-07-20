@@ -18,6 +18,7 @@ export const CREATE_JOB = 'CREATE_JOB'
 export const UPDATE_JOB = 'UPDATE_JOB'
 export const DELETE_JOB = 'DELETE_JOB'
 export const CREATE_PROJECT = 'CREATE_PROJECT'
+export const REQUEST_FILTERED_PROJECTS = 'REQUEST_FILTERED_PROJECTS'
 export const REQUEST_ALL_USERS = 'REQUEST_ALL_USERS'
 export const CREATE_USER = 'CREATE_USER'
 export const UPDATE_USER = 'UPDATE_USER'
@@ -25,9 +26,12 @@ export const DELETE_USER = 'DELETE_USER'
 export const BEGIN_UPLOADING = 'BEGIN_UPLOADING'
 export const DONE_UPLOADING = 'DONE_UPLOADING'
 
-/* ----------- USERS ------------ */
+/* ----------- USERS/PROJECTS ------------ */
 export const AUTHENTICATED = 'AUTHENTICATED'
 export const RECEIVE_ALL_USERS = 'RECEIVE_ALL_USERS'
+export const RECEIVE_ALL_PROJECTS = 'RECEIVE_ALL_PROJECTS'
+export const RECEIVE_PROJECTS = 'RECEIVE_PROJECTS'
+export const RECEIVE_USER_PROJECTS = 'RECEIVE_USER_PROJECTS'
 
 /* ------------ ROUTER STATE ------------ */
 export const RECEIVE_ROUTER_STATE = 'RECEIVE_ROUTER_STATE'

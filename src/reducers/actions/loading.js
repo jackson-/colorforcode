@@ -3,7 +3,7 @@ import { CREATE_JOB, UPDATE_JOB, DELETE_JOB, REQUEST_JOB,
          DELETE_USER, REQUEST_ALL_USERS, REQUEST_ALL_SKILLS,
          REQUEST_USER_JOBS, REQUEST_APPLIED_JOBS, APPLY_TO_JOB,
          APPLIED_TO_JOB, BEGIN_UPLOADING, DONE_UPLOADING,
-         CREATE_PROJECT, REQUEST_FILTERED_JOBS } from '../constants'
+         CREATE_PROJECT, REQUEST_FILTERED_JOBS, REQUEST_FILTERED_PROJECTS } from '../constants'
 
 /* --------- PURE ACTION CREATORS --------- */
 
@@ -94,5 +94,10 @@ export const requestAllSkills = () => ({
 
 export const createNewProject = () => ({
   type: CREATE_PROJECT,
+  loading: true
+})
+
+export const requestFilteredProjects = () => ({
+  type: REQUEST_FILTERED_PROJECTS,
   loading: true
 })

@@ -7,6 +7,7 @@ import EmployerFields from './EmployerRegisterFields'
 import ApplicantFields from './ApplicantRegisterFields'
 import { withRouter } from 'react-router-dom'
 import './Form.css'
+import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
 
 class RegisterForm extends Component {
   constructor(props) {
@@ -157,12 +158,13 @@ class RegisterForm extends Component {
     // turn the set into an array (postgres rejects sets)
     newUser.employment_type = [...newUser.employment_type]
     this.clearForm()
-    this.props.createUser(newUser, this.props.history)
+    this.props.createUser(newUser)
   }
 
   render() {
     return (
       <Row className='RegisterForm'>
+        <ScrollToTopOnMount />
         <Col xs={12} sm={6} md={6} lg={6}>
           <h1 className='RegisterForm-header'>Register</h1>
           <form className='RegisterForm-body' onSubmit={this.handleSubmit}>
@@ -199,7 +201,7 @@ class RegisterForm extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  createUser: (user, history) => dispatch(creatingNewUser(user, history))
+  createUser: (user) => dispatch(creatingNewUser(user))
 })
 
 const RegisterFormContainer = connect(null, mapDispatchToProps)(RegisterForm)

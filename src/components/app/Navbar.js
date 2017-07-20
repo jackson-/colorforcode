@@ -1,7 +1,7 @@
 import React from 'react'
 import { LinkContainer } from 'react-router-bootstrap'
-import { Navbar, NavbarBrand, Nav, Col,
-         NavItem, NavDropdown, MenuItem } from 'react-bootstrap'
+import { Navbar, NavbarBrand, Nav, Glyphicon,
+         Col, NavItem, NavDropdown, MenuItem } from 'react-bootstrap'
 import './App.css'
 import navLogo from '../../img/hireblack-logo-no-border.svg'
 
@@ -23,6 +23,14 @@ const NavBar = props => (
           <img src={navLogo} alt='HireBlack logo' height='40px' width='40px' />
         </LinkContainer>
       </NavbarBrand>
+        <Col
+          xsHidden={!props.user}
+          onClick={props.toggleDashMenu}
+          className='Dashboard-menuToggle'
+          xs={3} smHidden mdHidden lgHidden
+        >
+          <Glyphicon glyph='cog' />
+        </Col>
       <Navbar.Toggle />
     </Navbar.Header>
     <Navbar.Collapse>
@@ -37,31 +45,9 @@ const NavBar = props => (
           props.user
             ? <LinkContainer to='#' eventKey={3} className='dropdown-hover'>
                 <NavDropdown title='Account' id='account-dropdown'>
-                  <Col xsHidden sm={12} md={12} lg={12}>
-                    <LinkContainer to='/dashboard/manage-jobs' eventKey={3.1}>
-                      <MenuItem>Dashboard</MenuItem>
-                    </LinkContainer>
-                  </Col>
-                  <Col xs={12} smHidden mdHidden lgHidden>
-                    <LinkContainer to='/dashboard/manage-jobs' eventKey={3.2}>
-                      <NavDropdown title='Dashboard' id='dashboard-dropdown-menu'>
-                        <MenuItem divider />
-                        <LinkContainer to='/dashboard/post-new-job' eventKey={3.3}>
-                          <MenuItem>Post a Job</MenuItem>
-                         </LinkContainer>
-                        <LinkContainer to='/dashboard/manage-jobs' eventKey={3.4}>
-                          <MenuItem>Manage Jobs</MenuItem>
-                        </LinkContainer>
-                        <LinkContainer to='/dashboard/search-talent' eventKey={3.5}>
-                          <MenuItem>Search Talent</MenuItem>
-                        </LinkContainer>
-                        <LinkContainer to='/dashboard/edit-profile' eventKey={3.6}>
-                          <MenuItem>Edit Profile</MenuItem>
-                        </LinkContainer>
-                        <MenuItem divider />
-                      </NavDropdown>
-                    </LinkContainer>
-                  </Col>
+                  <LinkContainer to='/dashboard/manage-jobs' eventKey={3.1}>
+                    <MenuItem>Dashboard</MenuItem>
+                  </LinkContainer>
                   <LinkContainer to='#' eventKey={3.7} onClick={props.logOut}>
                     <MenuItem >Logout</MenuItem>
                   </LinkContainer>
@@ -81,7 +67,7 @@ const NavBar = props => (
         }
       </Nav>
       <Nav pullRight>
-        <LinkContainer to='/post-new-job'>
+        <LinkContainer to='/dashboard/post-new-job'>
           <NavItem><span className='btn-oval'>Post a job</span></NavItem>
         </LinkContainer>
       </Nav>

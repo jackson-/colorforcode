@@ -2,16 +2,15 @@
 (see JobBoard class in Home.css) */
 .Sidebar {
   width: 100%;
-  padding-left: 25%;
 }
 
 .Sidebar__header {
   text-align: center;
-  margin-left: -35%;
 }
 
 .Sidebar__button-container {
   padding: 10px 0;
-  margin-left: -40%;
   display: block;
+  min-width: 180px;
+  background: #404648;
 }

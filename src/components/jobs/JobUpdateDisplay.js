@@ -12,7 +12,7 @@ function arrowRenderer () {
   return <span />
 }
 
-class JobUpdateDisplay extends Component {
+export default class JobUpdateDisplay extends Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -285,10 +285,8 @@ class JobUpdateDisplay extends Component {
 JobUpdateDisplay.propTypes = {
   job: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired,
+  history: PropTypes.object,
   skills: PropTypes.array.isRequired,
   deleteJob: PropTypes.func.isRequired,
   updateJob: PropTypes.func.isRequired
 }
-
-export default JobUpdateDisplay

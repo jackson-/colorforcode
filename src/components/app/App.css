@@ -93,6 +93,24 @@
   height: 100vh;
 }
 
+.Dashboard-menuToggle span {
+  padding: 15px;
+  margin: 5px;
+}
+
+.Dashboard-menuToggle {
+  left: 185px;
+}
+
+.Dashboard-menu-collapse {
+  padding: 75px 0 10px 0;
+  margin-bottom: -60px;
+  display: block;
+  min-width: 180px;
+  background: #404648;
+  transition: all .65s ease-in-out;
+}
+
 .dropdown-menu {
   text-align: center;
   min-width: 0;

@@ -3,7 +3,8 @@ import { RECEIVE_ALL_USERS, AUTHENTICATED } from '../constants'
 import { createNewUser, requestAllUsers,
   beginUploading, doneUploading } from './loading'
 
-/* --------- PURE ACTION CREATORS ---------*/
+/* --------- PURE ACTION CREATORS --------- */
+
 export const receiveAllUsers = users => ({
   users,
   loading: false,
@@ -21,8 +22,7 @@ export const authenticated = user => ({
 //   type: RECEIVE_USER
 // })
 
-/* --------- ASYNC ACTION CREATORS (THUNKS) ---------*/
-
+/* --------- ASYNC ACTION CREATORS (THUNKS) --------- */
 
 export const gettingAllUsers = () => dispatch => {
   dispatch(requestAllUsers())
@@ -32,50 +32,45 @@ export const gettingAllUsers = () => dispatch => {
   .catch(err => console.error(`Mang, I couldn't find any users! ${err.stack}`))
 }
 
-export const whoami = (history) => dispatch => {
+export const whoami = () => dispatch => {
   axios.get('/api/auth/whoami')
   .then(response => {
     const user = response.data
     dispatch(authenticated(user))
-    if (history) {
-      typeof user !== 'string'
-        ? history.push('/dashboard/manage-jobs')
-        : history.push('/login')
-    }
   })
   .catch(err => {
+    console.error(err)
     dispatch(authenticated(null))
   })
 }
 
-export const login = (email, password, history) => dispatch => {
+export const login = (email, password) => dispatch => {
   axios.post('/api/auth/login/local', {email, password})
-  .then(() => dispatch(whoami(history)))
-  .catch(() => dispatch(whoami(history)))
+  .then(() => dispatch(whoami()))
+  .catch(() => dispatch(whoami()))
 }
 
-export const logout = (history) => dispatch => {
+export const logout = () => dispatch => {
   axios.post('/api/auth/logout')
-  .then(() => dispatch(whoami(history)))
-  .catch(() => dispatch(whoami(history)))
+  .then(() => dispatch(whoami()))
+  .catch(() => dispatch(whoami()))
 }
 
-export const creatingNewUser = (user, history) => dispatch => {
-  //set loading state to true to trigger UI changes
+export const creatingNewUser = (user) => dispatch => {
+  // set loading state to true to trigger UI changes
   dispatch(createNewUser())
   // create the new user
   axios.post('/api/users', user)
   .then(res => res.data)
-  // if the user is successfully created, we receive the updated to users list
+  // if the user is successfully created, we receive the updated users list
   .then(newUser => {
     dispatch(gettingAllUsers())
-    dispatch(login(newUser.email, newUser.password, history))
-    dispatch(whoami(history))
+    dispatch(login(newUser.email, newUser.password))
+    dispatch(whoami())
   })
   // otherwise we catch the error...
   .catch(err => console.error(`Sorry, cuz. We couldn't create that user...${err.stack}`))
 }
-
 
 export const creatingNewEmployer = employer => dispatch => {
   axios.post('/api/employers', employer)
@@ -84,14 +79,14 @@ export const creatingNewEmployer = employer => dispatch => {
 }
 
 export const updateUser = (user) => dispatch => {
-  //set loading state to true to trigger UI changes
+  // set loading state to true to trigger UI changes
   // create the new user
   axios.put(`/api/users/${user.id}`, {user})
   .then(res => res.data)
-  // if the user is successfully created, we receive the updated to users list
+  // if the user is successfully created, we receive the updated users list
   .then(newUser => {
     dispatch(gettingAllUsers())
-    dispatch(login(newUser.email, newUser.password, history))
+    dispatch(login(newUser.email, newUser.password))
     dispatch(whoami())
   })
   // otherwise we catch the error...
@@ -102,7 +97,9 @@ export const uploadingAvatar = (user, file) => dispatch => {
   dispatch(beginUploading())
   user.image_url = `https://s3.amazonaws.com/hireblack/avatars/${file.name}`
   const options = {headers: {'Content-Type':file.type}};
-  axios.get(`http://localhost:1337/api/users/avatars/sign-s3?&file-name=${file.name}&file-type=${file.type}`)
+  axios.get(
+    `http://localhost:1337/api/users/avatars/sign-s3?&file-name=${file.name}&file-type=${file.type}`
+  )
   .then(res => axios.put(res.data.signedRequest, file, options))
   .then(() => {
     dispatch(updateUser(user))
@@ -115,7 +112,9 @@ export const uploadingResume = (user, file) => dispatch => {
   dispatch(beginUploading())
   user.resume_url = `https://s3.amazonaws.com/hireblack/resumes/${file.name}`
   const options = {headers: {'Content-Type':file.type}};
-  axios.get(`http://localhost:1337/api/users/resumes/sign-s3?&file-name=${file.name}&file-type=${file.type}`)
+  axios.get(
+    `http://localhost:1337/api/users/resumes/sign-s3?&file-name=${file.name}&file-type=${file.type}`
+  )
   .then(res => axios.put(res.data.signedRequest, file, options))
   .then(() => {
     dispatch(updateUser(user))

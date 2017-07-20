@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
 import { Row, Col, Button, FormControl, ControlLabel } from 'react-bootstrap'
-import { applyingToJob } from 'APP/src/reducers/actions/jobs'
+
 import './JobDetail.css'
 
-class JobInfoDisplay extends Component {
+export default class JobInfoDisplay extends Component {
 
   constructor(props) {
     super(props)
@@ -13,19 +12,11 @@ class JobInfoDisplay extends Component {
     }
   }
 
-  applyToJob = () => {
-    this.props.sendApplication(
-      this.props.user.id,
-      this.props.job.id,
-      this.props.history
-    )
-  }
-
   handleChange = event => {
     this.setState({email: event.target.value})
   }
 
-  render() {
+  render () {
     const {job} = this.props
     let skills, employer, datePosted
 
@@ -33,9 +24,7 @@ class JobInfoDisplay extends Component {
       employer = job.employer
       datePosted = new Date(job.created_at).toDateString()
       if (job.skills) {
-        skills = job.skills.map((skill, i) => {
-          return skill.title
-        })
+        skills = job.skills.map((skill, i) => skill.title)
       }
     }
 
@@ -84,7 +73,7 @@ class JobInfoDisplay extends Component {
                 </Row>
               </Col>
               <Col className='JobInfo--sidebar' xs={12} sm={5} md={4} lg={4}>
-                <Button className='btn-oval' onClick={this.applyToJob}>
+                <Button className='btn-oval' onClick={this.props.applyToJob}>
                   APPLY FOR JOB
                 </Button>
                 <Button className='btn-oval btn-oval__black'>
@@ -114,14 +103,3 @@ class JobInfoDisplay extends Component {
     )
   }
 }
-
-const mapStateToProps = state => ({
-  user: state.users.currentUser,
-  history: state.router.history
-})
-
-const mapDispatchToProps = dispatch => ({
-  sendApplication: (user_id, job_id, history) => dispatch(applyingToJob(user_id, job_id, history))
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(JobInfoDisplay)

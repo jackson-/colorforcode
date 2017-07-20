@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { withRouter, BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import { withRouter, BrowserRouter as Router, Redirect, Route } from 'react-router-dom'
 import { LinkContainer } from 'react-router-bootstrap'
 import { Nav, NavItem, Row, Col, Glyphicon } from 'react-bootstrap'
 import { connect } from 'react-redux'
@@ -11,6 +11,7 @@ import './Dashboard.css'
 import Sidebar from '../utilities/Sidebar'
 import '../utilities/Sidebar.css'
 import ManageJobs from './ManageJobs'
+import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
 
 class EmployerDashboard extends Component {
 
@@ -28,6 +29,11 @@ class EmployerDashboard extends Component {
     const {user} = this.props
     const firstName = user ? user.first_name : ''
     const jobs = user && [...user.employer.listings]
+
+    if (!user) {
+      return <Redirect to='/login' from='/dashboard/manage-jobs' />
+    }
+
     return (
       <Router>
         <Row className='Dashboard'>
@@ -54,12 +60,11 @@ class EmployerDashboard extends Component {
               />
             </Col>
             <Col xs={12} sm={9} md={9} lg={9} className='Dashboard__content'>
-              <Switch>
-                <Route exact path='/dashboard/post-new-job' render={() => <PostAJob />} />
-                {jobs && <Route exact path='/dashboard/manage-jobs' render={() => <ManageJobs />} />}
-                <Route exact path='/dashboard/search-talent' render={() => <SearchTalent />} />
-                <Route exact path='/dashboard/edit-profile' render={() => <h1>Edit Profile</h1>} />
-              </Switch>
+              <ScrollToTopOnMount />
+              <Route exact path='/dashboard/post-new-job' component={PostAJob} />
+              {jobs && <Route exact path='/dashboard/manage-jobs' component={ManageJobs} />}
+              <Route exact path='/dashboard/search-talent' component={SearchTalent} />
+              <Route exact path='/dashboard/edit-profile' render={() => <h1>Edit Profile</h1>} />
             </Col>
           </div>
         </Row>

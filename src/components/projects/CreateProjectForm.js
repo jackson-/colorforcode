@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
 import { Row, Col, FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap'
 import { creatingNewProject } from 'APP/src/reducers/actions/projects'
 import { gettingAllSkills } from 'APP/src/reducers/actions/skills'
@@ -8,11 +9,12 @@ import 'react-select/dist/react-select.css'
 import 'react-virtualized/styles.css'
 import 'react-virtualized-select/styles.css'
 import '../auth/Form.css'
+import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
 
 function arrowRenderer () {
 	return (
 		<span></span>
-	);
+	)
 }
 
 class CreateProjectForm extends Component {
@@ -22,10 +24,10 @@ class CreateProjectForm extends Component {
       title: '',
       description: '',
       external_link: '',
-			learning_point:'',
-			pain_point:'',
-      selectValue:[],
-      selected_skills:[],
+			learning_point: '',
+			pain_point: '',
+      selectValue: [],
+      selected_skills: [],
     }
   }
 
@@ -97,6 +99,7 @@ class CreateProjectForm extends Component {
     })
     return (
       <Row className='PostJobForm'>
+        <ScrollToTopOnMount />
         <Col xs={12} sm={6} md={6} lg={6}>
           <h1 className='PostJobForm-header'>Create a new project</h1>
           <form className='PostJobForm-body' onSubmit={this.handleSubmit}>
@@ -178,4 +181,4 @@ const mapDispatchToProps = dispatch => ({
 
 const CreateProjectFormContainer = connect(mapStateToProps, mapDispatchToProps)(CreateProjectForm)
 
-export default CreateProjectFormContainer
+export default withRouter(CreateProjectFormContainer)

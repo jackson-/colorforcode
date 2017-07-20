@@ -4,7 +4,8 @@ import { createNewProject, requestAllProjects, requestUserProjects,
          requestFilteredProjects, requestProject} from './loading'
 import { gettingAllSkills } from './skills'
 
-/* --------- PURE ACTION CREATORS ---------*/
+/* --------- PURE ACTION CREATORS --------- */
+
 export const receiveProject = project => ({
   project,
   type: RECEIVE_PROJECT
@@ -21,7 +22,7 @@ export const receiveUserProjects = projects => ({
   type: RECEIVE_USER_PROJECTS
 })
 
-/* --------- ASYNC ACTION CREATORS (THUNKS) ---------*/
+/* --------- ASYNC ACTION CREATORS (THUNKS) --------- */
 
 export const gettingAllProjects = () => dispatch => {
   dispatch(requestAllProjects())

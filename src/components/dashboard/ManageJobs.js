@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Table, Row, Button, Glyphicon } from 'react-bootstrap'
 import PropTypes from 'prop-types'
+import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { deletingJob, creatingNewJob } from '../../reducers/actions/jobs'
 import './ManageJobs.css'
@@ -83,8 +84,7 @@ class ManageJobs extends Component {
 }
 
 const mapStateToProps = state => ({
-  jobs: state.users.currentUser.employer.listings,
-  history: state.router.history
+  jobs: state.users.currentUser.employer.listings
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -96,7 +96,7 @@ ManageJobs.propTypes = {
   closeJob: PropTypes.func.isRequired,
   duplicateJob: PropTypes.func.isRequired,
   jobs: PropTypes.array.isRequired,
-  history: PropTypes.object.isRequired
+  history: PropTypes.object
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ManageJobs)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ManageJobs))

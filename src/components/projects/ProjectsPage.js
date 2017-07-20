@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
 import { gettingUserProjects } from 'APP/src/reducers/actions/projects'
 import ProjectsList from './ProjectsList.js'
+import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
 
 class ProjectsPage extends Component {
 
@@ -92,6 +94,7 @@ class ProjectsPage extends Component {
     }
     return (
       <div className='JobBoard'>
+        <ScrollToTopOnMount />
 				<h1>Projects</h1>
   			{
           this.props.loading
@@ -114,4 +117,4 @@ const mapDispatchToProps = dispatch => ({
 	getProjects: user => dispatch(gettingUserProjects(user))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProjectsPage)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ProjectsPage))

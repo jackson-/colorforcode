@@ -15,5 +15,4 @@ const store = createStore(
 
 export default store
 
-const history = store.getState().router.history || null
-store.dispatch(whoami(history))
+store.dispatch(whoami())
