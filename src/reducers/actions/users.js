@@ -1,13 +1,19 @@
 import axios from 'axios'
-import { RECEIVE_ALL_USERS, AUTHENTICATED } from '../constants'
+import { RECEIVE_ALL_USERS, AUTHENTICATED, RECEIVE_USER } from '../constants'
 import { createNewUser, requestAllUsers,
-  beginUploading, doneUploading } from './loading'
+  beginUploading, doneUploading, requestUser } from './loading'
 
 /* --------- PURE ACTION CREATORS ---------*/
 export const receiveAllUsers = users => ({
   users,
   loading: false,
   type: RECEIVE_ALL_USERS
+})
+
+export const receiveUser = user => ({
+  selected:user,
+  loading: false,
+  type: RECEIVE_USER
 })
 
 export const authenticated = user => ({
@@ -30,6 +36,16 @@ export const gettingAllUsers = () => dispatch => {
   .then(res => res.data)
   .then(users => dispatch(receiveAllUsers(users)))
   .catch(err => console.error(`Mang, I couldn't find any users! ${err.stack}`))
+}
+
+export const gettingUserById = user_id => dispatch => {
+  dispatch(requestUser())
+  axios.get(`/api/users/${user_id}`)
+  .then(res => res.data)
+  .then(job => {
+    dispatch(receiveUser(job))
+  })
+  .catch(err => console.error(`Mang I couldn't find the user! ${err.stack}`))
 }
 
 export const whoami = (history) => dispatch => {

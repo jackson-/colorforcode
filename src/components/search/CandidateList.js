@@ -33,11 +33,10 @@ const CandidateList = props => {
         <LinkContainer className='JobCard' key={i} to={`/users/${user.id}`}>
           <Row>
             <Col xs={12} sm={6} md={6} lg={6}>
-             <h2 className='JobCard-title'>{user.email} {user.first_name} {user.last_name}</h2>
+             <h2 className='JobCard-title'>{user.email} | {user.first_name} {user.last_name} | Project Count: {user.projects.length}</h2>
              <p className='JobCard-skills'>{user.projects.map(p => p.title).join(', ')}</p>
            </Col>
-
-         </Row>
+          </Row>
         </LinkContainer>
       )
     })}
