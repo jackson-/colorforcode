@@ -1,18 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Row } from 'react-bootstrap'
 import { gettingUserProjects } from 'APP/src/reducers/actions/projects'
 import ProjectsList from './ProjectsList.js'
-import VirtualizedSelect from 'react-virtualized-select'
-import 'react-select/dist/react-select.css'
-import 'react-virtualized/styles.css'
-import 'react-virtualized-select/styles.css'
-
-function arrowRenderer () {
-	return (
-		<span></span>
-	);
-}
 
 class ProjectsPage extends Component {
 

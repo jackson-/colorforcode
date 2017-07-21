@@ -1,16 +1,9 @@
 import React, {Component} from 'react'
-import { NavLink,Link } from 'react-router-dom'
-import { Button } from 'react-bootstrap'
+import { Link, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { withRouter } from 'react-router-dom'
 import ImageUploader from './ImageUploader'
 import ResumeUploader from './ResumeUploader'
-import { updatingUser } from '../../reducers/actions/users'
-import { uploadingAvatar } from '../../reducers/actions/users'
-import { uploadingResume } from '../../reducers/actions/users'
-
-import { LinkContainer } from 'react-router-bootstrap'
-import { NavItem } from 'react-bootstrap'
+import { updatingUser, uploadingAvatar, uploadingResume } from '../../reducers/actions/users'
 
 class JobSeekerDashboard extends Component {
 

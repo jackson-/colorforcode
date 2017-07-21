@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Row, Col } from 'react-bootstrap'
-import { gettingAllJobs, filteringJobs, buildBodyThenSearch } from 'APP/src/reducers/actions/jobs'
+import { gettingAllJobs, filteringJobs, grabbingCoords, buildBodyThenSearch } from 'APP/src/reducers/actions/jobs'
 import { gettingAllSkills } from 'APP/src/reducers/actions/skills'
 import SearchBar from '../utilities/SearchBar'
 import SearchAdvanced from '../utilities/SearchAdvanced'
@@ -19,7 +19,16 @@ class JobBoard extends Component {
       distance: '',
       sortBy: '',
       employment_types: new Set([]),
-      filtered: false
+      filtered: false,
+      coords: ''
+    }
+  }
+
+  componentWillMount () {
+    if (!this.props.user || !this.props.user.coords) {
+      grabbingCoords()
+      .then(coords => this.setState({coords}))
+      .catch(err => console.error(err))
     }
   }
 
@@ -110,27 +119,26 @@ class JobBoard extends Component {
     }
     if (sortBy === 'date') body.sort.push({updated_at: {order: 'desc'}})
     if (sortBy === 'distance') {
-      body.sort.push({
+      body.sort = [{
         _geo_distance: {
           coords,
           order: 'asc',
           unit: 'mi',
           distance_type: 'arc'
         }
-      })
+      }]
     }
     return body
   }
 
   advancedFilterJobs = event => {
     event.preventDefault()
+    const coords = this.props.user.coords
+      ? this.props.user.coords
+      : this.state.coords
     this.setState(
       {filtered: true},
-      () => this.props.advancedFilterJobs(
-        this.props.user,
-        this.buildBody,
-        (this.state.distance || this.state.sortBy === 'distance')
-      )
+      () => this.props.advancedFilterJobs(this.buildBody, coords)
     )
   }
 
@@ -198,8 +206,8 @@ const mapDispatchToProps = dispatch => ({
   getJobs: post => dispatch(gettingAllJobs()),
   getSkills: post => dispatch(gettingAllSkills()),
   filterJobs: query => dispatch(filteringJobs(query)),
-  advancedFilterJobs: (user, bodyBuilder, needCoords) => {
-    dispatch(buildBodyThenSearch(user, bodyBuilder, needCoords))
+  advancedFilterJobs: (bodyBuilder, coords) => {
+    dispatch(buildBodyThenSearch(bodyBuilder, coords))
   }
 })
 

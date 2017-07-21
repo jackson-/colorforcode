@@ -61,7 +61,7 @@ passport.deserializeUser(
       include: [
         {model: Employer},
         {model: Project, include: [Skill]},
-        {model: Job, as: 'applications', through: "JobApplication"}
+        {model: Job, as: 'applications', through: "JobApplication"},
       ],
     })
       .then(user => {

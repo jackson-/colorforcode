@@ -14,7 +14,7 @@ class JobDetailPage extends Component {
     const {user, job, skills} = this.props
     return (
       <div className='JobDetailPage'>
-        {(user && user.is_employer) && job
+        {(user && user.is_employer && job) && job && job.employer.id == user.employer.id
           && <JobUpdateDisplay
               user={user}
               skills={skills}
@@ -24,7 +24,7 @@ class JobDetailPage extends Component {
               history={this.props.history}
              />
         }
-        {((user && !user.is_employer) || !user) && job
+        {((user && !user.is_employer) || (job && !(job.employer.id == user.employer.id)) || !user) && job
           && <JobInfoDisplay skills={skills} job={job} />
         }
       </div>

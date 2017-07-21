@@ -1,7 +1,5 @@
 import React, {Component} from 'react';
 import {bindAll} from 'lodash';
-import $ from 'jquery';
-import axios from 'axios'
 
 class ImageUploader extends Component {
 
@@ -51,7 +49,7 @@ class ImageUploader extends Component {
       uploaded = (
         <div>
           <h4>Image uploaded!</h4>
-          <img className='image-preview' src={this.state.uploaded_uri} />
+          <img className='image-preview' src={this.state.uploaded_uri} alt='resume preview' />
           <pre className='image-link-box'>{this.state.uploaded_uri}</pre>
         </div>
       );

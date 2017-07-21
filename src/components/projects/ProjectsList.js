@@ -1,7 +1,7 @@
 import React from 'react'
 import { Row, Col } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
-import { NavLink,Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 const ProjectList = props => (
   <div className='ProjectList'>
