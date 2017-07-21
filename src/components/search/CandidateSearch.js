@@ -82,6 +82,7 @@ class CandidateSearch extends Component {
     }
   }
 
+  filterUsers = events => {
     // this is an event handler but we also use this in clearFilter,
     // in which case there's no event object to preventDefault of
     if (event) event.preventDefault()

@@ -1,11 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { FormGroup, FormControl, ControlLabel,
-         Checkbox, Radio, Button, Glyphicon, Row, Col } from 'react-bootstrap'
+         Radio, Button, Glyphicon, Row, Col } from 'react-bootstrap'
 import './SearchAdvanced.css'
 
 const CandidateSearchAdvanced = props => (
-  <form className='SearchAdvanced' onSubmit={props.filterJobs}>
+  <form className='SearchAdvanced' onSubmit={props.filterUsers}>
     <h3 className='SearchAdvanced__header'>Advanced Search</h3>
     {props.filtered &&
       <Row className='SearchAdvanced__button-container'>
@@ -66,6 +66,8 @@ const CandidateSearchAdvanced = props => (
 )
 
 CandidateSearchAdvanced.propTypes = {
+  filterUsers: PropTypes.func.isRequired,
+  state: PropTypes.object.isRequired,
   handleChange: PropTypes.func.isRequired,
   clearFilter: PropTypes.func.isRequired,
   clearChip: PropTypes.func.isRequired,
