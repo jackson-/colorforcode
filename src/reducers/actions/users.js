@@ -17,12 +17,6 @@ export const receiveUser = user => ({
   type: RECEIVE_USER
 })
 
-export const receiveUsers = users => ({
-  users,
-  loading: false,
-  type: RECEIVE_USERS
-})
-
 export const authenticated = user => ({
   user,
   loading: false,
@@ -49,8 +43,8 @@ export const gettingUserById = user_id => dispatch => {
   dispatch(requestUser())
   axios.get(`/api/users/${user_id}`)
   .then(res => res.data)
-  .then(job => {
-    dispatch(receiveUser(job))
+  .then(user => {
+    dispatch(receiveUser(user))
   })
   .catch(err => console.error(`Mang I couldn't find the user! ${err.stack}`))
 }
@@ -58,10 +52,8 @@ export const gettingUserById = user_id => dispatch => {
 export const filteringUsers = query => dispatch => {
   dispatch(requestFilteredUsers())
   axios.post('/api/users/search', {query})
-  .then(res => {
-    console.log(res.data)
-    return res.data})
-  .then(users => dispatch(receiveUsers(users)))
+  .then(res => {return res.data})
+  .then(users => dispatch(receiveAllUsers(users)))
   .catch(err => console.error(`Mang, I couldn't filter the users! ${err.stack}`))
 }
 
