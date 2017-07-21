@@ -1,8 +1,7 @@
 import axios from 'axios'
-import { RECEIVE_ALL_USERS, AUTHENTICATED, RECEIVE_USER, RECEIVE_USERS } from '../constants'
-import { createNewUser, requestAllUsers,
-  beginUploading, doneUploading, requestUser,
-requestFilteredUsers } from './loading'
+import { RECEIVE_ALL_USERS, AUTHENTICATED, RECEIVE_USER } from '../constants'
+import { createNewUser, requestAllUsers, beginUploading,
+         doneUploading, requestUser, requestFilteredUsers } from './loading'
 
 /* --------- PURE ACTION CREATORS --------- */
 
@@ -13,7 +12,7 @@ export const receiveAllUsers = users => ({
 })
 
 export const receiveUser = user => ({
-  selected:user,
+  selected: user,
   loading: false,
   type: RECEIVE_USER
 })
@@ -23,11 +22,6 @@ export const authenticated = user => ({
   loading: false,
   type: AUTHENTICATED
 })
-
-// export const receiveUser = user => ({
-//   user,
-//   type: RECEIVE_USER
-// })
 
 /* --------- ASYNC ACTION CREATORS (THUNKS) --------- */
 
@@ -57,14 +51,28 @@ export const filteringUsers = query => dispatch => {
   .catch(err => console.error(`Mang, I couldn't filter the users! ${err.stack}`))
 }
 
-export const whoami = (history) => dispatch => {
+export const advancedFilteringUsers = body => dispatch => {
+  axios.post('/api/users/search/advanced', body)
+  .then(res => res.data)
+  .then(users => dispatch(receiveAllUsers(users)))
+  .catch(err => console.error(`Mang, I couldn't advanced filter the users! ${err.stack}`))
+}
+
+export const buildBodyThenSearch = (bodyBuilderFunc, coords) => {
+  return dispatch => {
+    dispatch(requestFilteredUsers())
+    const body = bodyBuilderFunc(coords)
+    dispatch(advancedFilteringUsers(body))
+  }
+}
+
+export const whoami = () => dispatch => {
   axios.get('/api/auth/whoami')
   .then(response => {
     const user = response.data
     dispatch(authenticated(user))
   })
   .catch(err => {
-    console.error(err)
     dispatch(authenticated(null))
   })
 }

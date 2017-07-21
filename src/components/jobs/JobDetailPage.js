@@ -8,7 +8,7 @@ import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
 
 class JobDetailPage extends Component {
 
-  componentDidMount () {
+  componentWillMount () {
     const {id} = this.props.match.params
     this.props.getJob(id)
   }
@@ -42,7 +42,7 @@ class JobDetailPage extends Component {
             skills={skills}
             job={job}
             history={history}
-            applyToJob={this.applyToJob}
+            applyToJob={this.sendApplication}
           />
         )
       }

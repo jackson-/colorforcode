@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { withRouter, Redirect } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { Row, Col, FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap'
 import { login } from 'APP/src/reducers/actions/users'
@@ -40,9 +40,9 @@ class LoginForm extends Component {
   }
 
   render () {
-    if (this.props.user) {
-      return <Redirect to='/dashboard/manage-jobs' />
-    }
+    // if (this.props.user) {
+    //   return <Redirect to='/dashboard/manage-jobs' />
+    // }
 
     return (
       <Row className='LoginForm'>

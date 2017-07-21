@@ -1,7 +1,5 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { withRouter } from 'react-router-dom'
-import { gettingUserProjects } from 'APP/src/reducers/actions/projects'
 import ProjectsList from './ProjectsList.js'
 import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
 

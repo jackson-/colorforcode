@@ -7,7 +7,8 @@ import ApplicantFields from '../auth/ApplicantRegisterFields'
 import '../auth/Form.css'
 import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
 
-export default class EditProfile extends Component {
+class EditProfile extends Component {
+
   constructor (props) {
     super(props)
     this.state = {
@@ -132,24 +133,24 @@ export default class EditProfile extends Component {
     } = this.state
 
     if (this.state.is_employer) {
-      !(
-          first_name &&
-          last_name &&
-          company_name &&
-          company_role &&
-          company_site &&
-          zip_code &&
-          email
-        )
+      return !(
+        first_name &&
+        last_name &&
+        company_name &&
+        company_role &&
+        company_site &&
+        zip_code &&
+        email
+      )
     } else {
-      !(
-          first_name &&
-          last_name &&
-          email &&
-          zip_code &&
-          location &&
-          work_auth
-        )
+      return !(
+        first_name &&
+        last_name &&
+        email &&
+        zip_code &&
+        location &&
+        work_auth
+      )
     }
   }
 
@@ -164,6 +165,7 @@ export default class EditProfile extends Component {
   }
 
   render () {
+    const {user} = this.props
     return (
       <Row className='EditProfile'>
         <ScrollToTopOnMount />
@@ -171,7 +173,7 @@ export default class EditProfile extends Component {
           <h1 className='EditProfile-header'>Edit Profile</h1>
           <form className='EditProfile-body' onSubmit={this.handleSubmit}>
             {
-              this.props.user.is_employer &&
+              user && user.is_employer &&
               <EmployerFields
                 state={this.state}
                 handleChange={this.handleChange}
@@ -179,7 +181,7 @@ export default class EditProfile extends Component {
               />
             }
             {
-              !this.props.user.is_employer &&
+              user && !user.is_employer &&
               <ApplicantFields
                 state={this.state}
                 handleChange={this.handleChange}
@@ -198,6 +200,8 @@ export default class EditProfile extends Component {
 }
 
 EditProfile.propTypes = {
-  user: PropTypes.object.isRequired,
+  user: PropTypes.object,
   updateUser: PropTypes.func.isRequired
 }
+
+export default EditProfile

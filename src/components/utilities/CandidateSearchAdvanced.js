@@ -5,7 +5,7 @@ import { FormGroup, FormControl, ControlLabel,
 import './SearchAdvanced.css'
 
 const CandidateSearchAdvanced = props => (
-  <form className='SearchAdvanced' onSubmit={props.filterUsers}>
+  <form className='SearchAdvanced' onSubmit={props.advancedFilterUsers}>
     <h3 className='SearchAdvanced__header'>Advanced Search</h3>
     {props.filtered &&
       <Row className='SearchAdvanced__button-container'>
@@ -41,8 +41,8 @@ const CandidateSearchAdvanced = props => (
       <Radio
         className='SearchAdvanced__radio'
         name='radioGroup'
-        value='date'
-        checked={props.state && props.state.sortBy === 'project_count'}
+        value='projectCount'
+        checked={props.state && props.state.sortBy === 'projectCount'}
       >
         Project Count
       </Radio>
@@ -66,7 +66,7 @@ const CandidateSearchAdvanced = props => (
 )
 
 CandidateSearchAdvanced.propTypes = {
-  filterUsers: PropTypes.func.isRequired,
+  advancedFilterUsers: PropTypes.func.isRequired,
   state: PropTypes.object.isRequired,
   handleChange: PropTypes.func.isRequired,
   clearFilter: PropTypes.func.isRequired,

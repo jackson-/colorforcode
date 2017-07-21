@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { Row, Col, FormGroup, ControlLabel, FormControl, Button, Checkbox } from 'react-bootstrap'
+import { Row, Col, FormGroup, ControlLabel,
+         FormControl, Button, Checkbox } from 'react-bootstrap'
 import axios from 'axios'
 import PropTypes from 'prop-types'
 import VirtualizedSelect from 'react-virtualized-select'
@@ -9,7 +10,7 @@ import 'react-virtualized-select/styles.css'
 import '../auth/Form.css'
 
 function arrowRenderer () {
-  return <span></span>
+  return <span />
 }
 
 export default class JobUpdateDisplay extends Component {

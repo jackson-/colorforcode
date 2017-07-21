@@ -162,9 +162,9 @@ class RegisterForm extends Component {
   }
 
   render () {
-    if (this.props.user) {
-      return <Redirect to='/dashboard/manage-jobs' />
-    }
+    // if (this.props.user) {
+    //   return <Redirect to='/dashboard/manage-jobs' />
+    // }
 
     return (
       <Row className='RegisterForm'>
