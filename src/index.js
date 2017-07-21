@@ -11,6 +11,7 @@ import RegisterForm from './components/auth/RegisterForm'
 import LoginForm from './components/auth/LoginForm'
 import PostNewJobForm from './components/jobs/PostNewJobForm'
 import JobDetailPage from './components/jobs/JobDetailPage'
+import UserDetailPage from './components/search/UserDetail'
 import Dashboard from './components/dashboard/Dashboard'
 import CandidateSearchPage from './components/search/CandidateSearchPage'
 import ProjectCreate from './components/projects/CreateProjectForm'
@@ -44,6 +45,7 @@ const App = () => (
           <Route exact path='/search/candidates' component={CandidateSearchPage} />
           <Route exact path='/projects' component={ProjectsPage} />
           <Route exact path='/projects/create' component={ProjectCreate} />
+          <Route exact path='/users/:id' component={UserDetailPage} />
         </Switch>
       </Container>
     </Router>

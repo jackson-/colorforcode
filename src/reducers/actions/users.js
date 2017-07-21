@@ -1,13 +1,20 @@
 import axios from 'axios'
-import { RECEIVE_ALL_USERS, AUTHENTICATED } from '../constants'
+import { RECEIVE_ALL_USERS, AUTHENTICATED, RECEIVE_USER, RECEIVE_USERS } from '../constants'
 import { createNewUser, requestAllUsers,
-  beginUploading, doneUploading } from './loading'
+  beginUploading, doneUploading, requestUser,
+requestFilteredUsers } from './loading'
 
 /* --------- PURE ACTION CREATORS ---------*/
 export const receiveAllUsers = users => ({
   users,
   loading: false,
   type: RECEIVE_ALL_USERS
+})
+
+export const receiveUser = user => ({
+  selected:user,
+  loading: false,
+  type: RECEIVE_USER
 })
 
 export const authenticated = user => ({
@@ -31,6 +38,25 @@ export const gettingAllUsers = () => dispatch => {
   .then(users => dispatch(receiveAllUsers(users)))
   .catch(err => console.error(`Mang, I couldn't find any users! ${err.stack}`))
 }
+
+export const gettingUserById = user_id => dispatch => {
+  dispatch(requestUser())
+  axios.get(`/api/users/${user_id}`)
+  .then(res => res.data)
+  .then(user => {
+    dispatch(receiveUser(user))
+  })
+  .catch(err => console.error(`Mang I couldn't find the user! ${err.stack}`))
+}
+
+export const filteringUsers = query => dispatch => {
+  dispatch(requestFilteredUsers())
+  axios.post('/api/users/search', {query})
+  .then(res => {return res.data})
+  .then(users => dispatch(receiveAllUsers(users)))
+  .catch(err => console.error(`Mang, I couldn't filter the users! ${err.stack}`))
+}
+
 
 export const whoami = (history) => dispatch => {
   axios.get('/api/auth/whoami')

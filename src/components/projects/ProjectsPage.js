@@ -110,8 +110,5 @@ const mapStateToProps = state => ({
 	loading: state.loading
 })
 
-const mapDispatchToProps = dispatch => ({
-	getProjects: user => dispatch(gettingUserProjects(user))
-})
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProjectsPage)
+export default connect(mapStateToProps, null)(ProjectsPage)

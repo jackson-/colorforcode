@@ -38,23 +38,31 @@ module.exports = require('express').Router()
     req.body.project.user_id = user.id
     Project.create(req.body.project)
     .then(createdProject => {
-      return Promise.all([
-        // createdProject.addUser(user.id),
-        createdProject.addSkills(skills)
-      ])
+        return createdProject.setUser(user.id)
     })
-    .spread((projectskill) => Project.findOne({
+    .then(createdProject => {
+      console.log("PROJ 2", createdProject.get())
+      return createdProject.addSkills(skills)
+    })
+    .then((addedSkills) => {
+      return User.findOne({
       where: {
-        id: projectskill[0][0].get().project_id
+        id: user.id
       },
-      include: [Skill, User]
-    }))
-    .then(project => esClient.create({
+      include: [
+        {model:Project, include:[Skill]}
+      ]
+    })})
+    .then(projectUser => {
+      console.log("USER", projectUser.get())
+      return esClient.update({
       index: 'data',
-      type: 'project',
-      id: `${project.id}`,
-      body: project.get()
-    }))
+      type: 'user',
+      id: `${user.id}`,
+      body: {
+        doc:projectUser.get()
+      }
+    })})
     .then(() => res.sendStatus(201))
     .catch(next)
   })
