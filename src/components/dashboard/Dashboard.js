@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { updatingUser } from '../../reducers/actions/users'
-import { deletingJob, creatingNewJob } from '../../reducers/actions/jobs'
+import { deletingJob, creatingNewJob, gettingJobById } from '../../reducers/actions/jobs'
 import EmployerDashboard from './EmployerDashboard'
 import ApplicantDashboard from './ApplicantDashboard'
 
@@ -16,16 +16,18 @@ class Dashboard extends Component {
         {!loading && user &&
           <div>
             {
-              user && user.is_employer &&
-                <EmployerDashboard
-                  user={this.props.user}
-                  jobs={user.employer.listings}
-                  updateUser={this.props.updateUser}
-                  closeJob={this.props.closeJob}
-                  duplicateJob={this.props.duplicateJob}
-                />
+              user && user.is_employer
+
+                ? <EmployerDashboard
+                    user={this.props.user}
+                    jobs={user.employer.listings}
+                    updateUser={this.props.updateUser}
+                    closeJob={this.props.closeJob}
+                    duplicateJob={this.props.duplicateJob}
+                  />
+
+                : <ApplicantDashboard />
             }
-            {user && !user.is_employer && <ApplicantDashboard user={this.props.user} updateUser={this.props.updateUser} />}
           </div>
         }
         {loading && <div>Loading...</div>}
@@ -46,6 +48,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
+  getJob: job_id => dispatch(gettingJobById(job_id)),
   closeJob: (id, history) => dispatch(deletingJob(id, history)),
   duplicateJob: (job, history) => dispatch(creatingNewJob(job, history)),
   updateUser: (user) => dispatch(updatingUser(user))

@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { withRouter } from 'react-router-dom'
 import JobInfoDisplay from './JobInfoDisplay'
 import JobUpdateDisplay from './JobUpdateDisplay'
 import { applyingToJob, gettingJobById, updatingJob, deletingJob } from 'APP/src/reducers/actions/jobs'
@@ -8,9 +7,9 @@ import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
 
 class JobDetailPage extends Component {
 
-  componentWillMount () {
+  componentDidMount () {
     const {id} = this.props.match.params
-    this.props.getJob(id)
+    if (!this.props.job) this.props.getJob(id)
   }
 
   applyToJob = () => {
@@ -22,7 +21,7 @@ class JobDetailPage extends Component {
   }
 
   render () {
-    const {user, job, skills, history} = this.props
+    const {user, job, skills, history, updateJob, deleteJob} = this.props
     let jobComponent = ''
     if (job) {
       if (user && user.is_employer && (user.employer.id === job.employer.id)) {
@@ -31,8 +30,8 @@ class JobDetailPage extends Component {
             user={user}
             skills={skills}
             job={job}
-            updateJob={this.props.updateJob}
-            deleteJob={this.props.deleteJob}
+            updateJob={updateJob}
+            deleteJob={deleteJob}
             history={history}
           />
         )
@@ -70,4 +69,4 @@ const mapDispatchToProps = dispatch => ({
   sendApplication: (user_id, job_id, history) => dispatch(applyingToJob(user_id, job_id, history))
 })
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(JobDetailPage))
+export default connect(mapStateToProps, mapDispatchToProps)(JobDetailPage)

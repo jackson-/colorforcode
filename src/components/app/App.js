@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Grid, Nav, Glyphicon, NavItem } from 'react-bootstrap'
 import { connect } from 'react-redux'
-import { BrowserRouter as Router, Route, withRouter } from 'react-router-dom'
+import { BrowserRouter as Router, Route, withRouter, Switch } from 'react-router-dom'
 import { LinkContainer } from 'react-router-bootstrap'
 import PropTypes from 'prop-types'
 import MainNav from './Navbar'
