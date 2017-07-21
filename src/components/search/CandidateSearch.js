@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Row } from 'react-bootstrap'
-import { gettingAllUsers, filteringProjects } from 'APP/src/reducers/actions/users'
+import { gettingAllUsers, filteringUsers } from 'APP/src/reducers/actions/users'
 import { gettingAllSkills } from 'APP/src/reducers/actions/skills'
 import SearchBar from '../utilities/SearchBar'
 import CandidateList from './CandidateList.js'
@@ -59,13 +59,13 @@ class CandidateSearch extends Component {
     }
   }
 
-  filterJobs = event => {
+  filterUsers = event => {
     // this is an event handler but we also use this in clearFilter,
     // in which case there's no event object to preventDefault of
     if (event) event.preventDefault()
 
     const {query} = this.state
-    this.props.filterJobs(query)
+    this.props.filterUsers(query)
     // ^ when query === '', all job listings are shown
     if (query) this.setState({filtered: true})
     // we only show the search results header if this.state.filtered === true
@@ -80,9 +80,9 @@ class CandidateSearch extends Component {
           type='project'
           inline
           query={this.state.query}
-          handleSubmit={this.filterJobs}
+          handleSubmit={this.filterUsers}
           handleChange={this.handleChange}
-          labelText='Filter project listings by keyword'
+          labelText='Filter users by skills'
           submitButtonText='Search users by skills'
         />
         {
@@ -111,7 +111,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   getUsers: post => dispatch(gettingAllUsers()),
   getSkills: post => dispatch(gettingAllSkills()),
-  filterProjects: query => dispatch(filteringProjects(query))
+  filterUsers: query => dispatch(filteringUsers(query))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(CandidateSearch)

@@ -1,9 +1,6 @@
 import React from 'react'
-// import './Home.css'
 import { Row, Col, Button, Glyphicon } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
-// import './Home.css'
-// import './JobCard.css'
 
 const CandidateList = props => {
   return (

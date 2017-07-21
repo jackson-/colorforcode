@@ -37,9 +37,7 @@ module.exports = db => db.define('project', {
 */
 
 module.exports.associations = (Project, {User, Skill, ProjectSkill}) => {
-  Project.belongsTo(User, {
-    through:"UserProject"
-  })
+  Project.belongsTo(User)
   Project.belongsToMany(Skill, {
     through: "ProjectSkill"
   })
