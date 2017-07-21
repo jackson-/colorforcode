@@ -1,9 +1,6 @@
 import React from 'react'
-// import './Home.css'
 import { Row, Col, Button, Glyphicon } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
-// import './Home.css'
-// import './JobCard.css'
 
 const CandidateList = props => {
   return (
@@ -29,15 +26,21 @@ const CandidateList = props => {
     }
     {props.users && props.users.map((data, i) => {
       const user = data._source
+      let skills = new Set([])
+      user.projects.forEach(p => {
+        p.skills.forEach(s => {
+          skills.add(s.title)
+        })
+      })
+      skills = [...skills].join(' ')
       return (
         <LinkContainer className='JobCard' key={i} to={`/users/${user.id}`}>
           <Row>
             <Col xs={12} sm={6} md={6} lg={6}>
-             <h2 className='JobCard-title'>{user.email} {user.first_name} {user.last_name}</h2>
-             <p className='JobCard-skills'>{user.projects.map(p => p.title).join(', ')}</p>
+             <h2 className='JobCard-title'>{user.email} | {user.first_name} {user.last_name} | Project Count: {user.projects.length}</h2>
+             <p className='JobCard-skills'>{skills}</p>
            </Col>
-
-         </Row>
+          </Row>
         </LinkContainer>
       )
     })}

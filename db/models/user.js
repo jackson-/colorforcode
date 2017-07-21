@@ -81,9 +81,7 @@ module.exports.associations = (User, {OAuth, Job, Skill, Employer, Project}) => 
     through: 'JobApplication',
     foreignKey: 'applicant_id'
   })
-  User.belongsToMany(Project, {
-    through: 'UserProject'
-  })
+  User.hasMany(Project)
 }
 
 function setEmailAndPassword (user) {

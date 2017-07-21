@@ -117,10 +117,17 @@ module.exports = require('express').Router()
         res.end();
       });
     })
-  .get('/:id', (req, res, next) =>
-    User.findById(req.params.id)
-    .then(user => res.json(user))
-    .catch(next))
+  .get('/:id', (req, res, next) => {
+    let body = {
+      query: {match: {id:req.params.id}},
+      from: 0
+    }
+    esClient.search({body, index: 'data', type: 'user'})
+    .then(results => {
+      return res.status(200).json(results.hits.hits[0])
+    })
+    .catch(next)
+  })
   .put('/:id',
     (req, res, next) => {
       console.log("REQ", req.params, req.body)

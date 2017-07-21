@@ -1,8 +1,9 @@
-import { RECEIVE_ALL_USERS, AUTHENTICATED } from './constants'
+import { RECEIVE_ALL_USERS, AUTHENTICATED, RECEIVE_USER } from './constants'
 
 const initialState = {
   all: [],
-  currentUser: null
+  currentUser: null,
+  selected:null,
 }
 
 const usersReducer = (state = initialState, action) => {
@@ -15,6 +16,12 @@ const usersReducer = (state = initialState, action) => {
     case AUTHENTICATED: return {
       all: [...state.all],
       currentUser: action.user
+    }
+
+    case RECEIVE_USER: return {
+      all: [...state.all],
+      selected: action.selected,
+      currentUser: {...state.currentUser} || null
     }
 
     default: return state

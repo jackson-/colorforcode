@@ -1,4 +1,5 @@
 import axios from 'axios'
+import {whoami} from './users'
 import { RECEIVE_ALL_PROJECTS, RECEIVE_PROJECT, RECEIVE_USER_PROJECTS } from '../constants'
 import { createNewProject, requestAllProjects, requestUserProjects,
          requestFilteredProjects, requestProject} from './loading'
@@ -69,6 +70,7 @@ export const creatingNewProject = projectPost => dispatch => {
   .then(res => res.data)
   // if the project is successfully created, we receive the update to date projects list
   .then(projects => console.log("YES WE DONE"))
+  .then(() => dispatch(whoami()))
   // otherwise we catch the error...
   .catch(err => console.error(`Sorry, cuz. We couldn't create that project post...${err.stack}`))
 }

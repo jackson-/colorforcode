@@ -175,7 +175,7 @@ const mapStateToProps = state => ({
   skills: state.skills.all
 })
 const mapDispatchToProps = dispatch => ({
-  createProject: job => dispatch(creatingNewProject(job)),
+  createProject: project => dispatch(creatingNewProject(project)),
   getSkills: () => dispatch(gettingAllSkills())
 })
 

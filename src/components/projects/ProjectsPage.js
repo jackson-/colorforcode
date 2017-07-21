@@ -7,18 +7,18 @@ import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
 
 class ProjectsPage extends Component {
 
-  constructor(props){
+  constructor (props) {
     super(props)
     this.state = {
       selectValue: [],
       selected_skills: [],
-      visible_projects: [],
+      visible_projects: []
     }
   }
 
-  _handleChange(input){
-		let viz = [];
-		let skill_ids = this.state.selected_skills;
+  _handleChange (input) {
+		let viz = []
+		let skill_ids = this.state.selected_skills
 
 		if (input === "" || input === null) {
 
@@ -113,8 +113,4 @@ const mapStateToProps = state => ({
 	loading: state.loading
 })
 
-const mapDispatchToProps = dispatch => ({
-	getProjects: user => dispatch(gettingUserProjects(user))
-})
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ProjectsPage))
+export default connect(mapStateToProps, null)(ProjectsPage)
