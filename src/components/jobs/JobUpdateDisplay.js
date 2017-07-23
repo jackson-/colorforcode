@@ -68,10 +68,15 @@ export default class JobUpdateDisplay extends Component {
     axios.get(`http://maps.googleapis.com/maps/api/geocode/json?address=${zip_code}`)
     .then(res => res.data)
     .then(json => {
-      const address = json.results[0].address_components
-      const city = address[1].long_name
-      const state = address.filter(a => a.types.includes('administrative_area_level_1'))[0].short_name
-      const location = `${city}, ${state}`
+      const address = json.results[0].address_components.filter(c => (
+        c.types.includes('locality') ||
+        c.types.includes('administrative_area_level_1') ||
+        c.types.includes('country')
+      ))
+      const city = address[0].long_name
+      const state = address[1].short_name
+      const country = address[2].long_name
+      const location = country === 'United States' ? `${city}, ${state}` : `${city}, ${state} ${country}`
       const coords = `${json.results[0].geometry.location.lat},${json.results[0].geometry.location.lng}`
       this.setState({coords, zip_code, location})
     })

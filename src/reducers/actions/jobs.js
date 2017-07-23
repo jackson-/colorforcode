@@ -127,7 +127,6 @@ export const gettingJobById = job_id => dispatch => {
 }
 
 export const creatingNewJob = (jobPost, history) => dispatch => {
-  let id;
   // set loading state to true to trigger UI changes
   dispatch(createNewJob())
   // create the new job
@@ -135,12 +134,9 @@ export const creatingNewJob = (jobPost, history) => dispatch => {
   .then(res => res.data)
   // if the job is successfully created, we fetch the updated jobs list
   .then(newJobId => {
-    id = newJobId
-    return dispatch(whoami())
-  })
-  .then(success => {
+    dispatch(whoami())
     if (history) {
-      history.push(`/dashboard/jobs/${id}`)
+      history.push(`/dashboard/manage-jobs`)
     }
   })
   // otherwise we catch the error...
