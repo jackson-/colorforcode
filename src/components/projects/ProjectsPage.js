@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 import ProjectsList from './ProjectsList.js'
 import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
 
@@ -83,7 +84,7 @@ class ProjectsPage extends Component {
 		this.setState(new_state);
 	}
 
-  render(){
+  render () {
     let visible_projects = []
     if(this.props.user && this.state.selectValue.length === 0 && this.state.selected_skills.length === 0){
       visible_projects = this.props.user.projects
@@ -91,15 +92,13 @@ class ProjectsPage extends Component {
       visible_projects = this.state.visible_projects
     }
     return (
-      <div className='JobBoard'>
+      <div>
         <ScrollToTopOnMount />
 				<h1>Projects</h1>
   			{
           this.props.loading
             ? <p>Loading....</p>
-            : <div>
-								<ProjectsList projects={visible_projects} />
-							</div>
+            : <ProjectsList projects={this.props.user.projects || []} />
   			}
       </div>
     )

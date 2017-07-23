@@ -24,7 +24,7 @@ class EmployerDashboard extends Component {
   }
 
   render () {
-    const {user} = this.props
+    const {user, updateUser} = this.props
     const firstName = user ? user.first_name : ''
     const jobs = user && user.is_employer && [...user.employer.listings]
 
@@ -55,20 +55,15 @@ class EmployerDashboard extends Component {
             <Col xs={12} sm={9} md={9} lg={9} className='Dashboard__content'>
               <ScrollToTopOnMount />
               <Route path='/dashboard/post-new-job' component={PostAJob} />
-              <Route path='/dashboard/manage-jobs' component={({history}) => (
+              <Route path='/dashboard/manage-jobs' component={() => (
                 <ManageJobs
-                  history={history}
                   closeJob={this.props.closeJob}
                   duplicateJob={this.props.duplicateJob}
                   jobs={jobs}
                 />
               )} />
-              <Route path='/dashboard/edit-profile' component={({history}) => (
-                <EditProfile
-                  user={user}
-                  updateUser={this.props.updateUser}
-                  history={history}
-                />
+              <Route path='/dashboard/edit-profile' component={() => (
+                <EditProfile user={user} updateUser={updateUser} />
               )} />
               <Route path='/dashboard/jobs/:id' component={JobDetailPage} />
             </Col>

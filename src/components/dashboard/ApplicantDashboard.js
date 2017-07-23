@@ -1,15 +1,14 @@
 import React from 'react'
-import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { BrowserRouter as Router, Route, withRouter } from 'react-router-dom'
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 import { LinkContainer } from 'react-router-bootstrap'
 import { Nav, NavItem, Row, Col, Glyphicon } from 'react-bootstrap'
-import { updatingUser } from '../../reducers/actions/users'
 import './Dashboard.css'
 import Sidebar from '../utilities/Sidebar'
 import EditProfile from './EditProfile'
 import Projects from '../projects/ProjectsPage'
 import ProjectCreate from '../projects/CreateProjectForm'
+import EditProject from '../projects/EditProjectForm'
 import JobDetailPage from '../jobs/JobDetailPage'
 import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
 
@@ -40,22 +39,19 @@ const ApplicantDashboard = ({user, updateUser}) => (
           />
         </Col>
         <Col xs={12} sm={9} md={9} lg={9} className='Dashboard__content'>
-          <Route exact path='/dashboard/applications' component={({history}) => (
+          <Route path='/dashboard/applications' component={({history}) => (
             <h1>APPLICATION HISTORY</h1>
           )} />
-          <Route exact path='/dashboard/saved-jobs' component={({history}) => (
+          <Route path='/dashboard/saved-jobs' component={({history}) => (
             <h1>SAVED JOBS</h1>
           )} />
-          <Route exact path='/dashboard/projects' component={Projects} />
-          <Route exact path='/dashboard/projects/create' component={ProjectCreate} />
-          <Route exact path='/dashboard/edit-profile' component={({history}) => (
-            <EditProfile
-              user={user}
-              updateUser={updateUser}
-              history={history}
-            />
+          <Route path='/dashboard/projects' component={Projects} />
+          <Route path='/dashboard/projects/create' component={ProjectCreate} />
+          <Route path='/dashboard/projects/:id' component={EditProject} />
+          <Route path='/dashboard/edit-profile' component={() => (
+            <EditProfile user={user} updateUser={updateUser} />
           )} />
-          <Route exact path='/dashboard/saved-jobs/:id' component={JobDetailPage} />
+          <Route path='/dashboard/saved-jobs/:id' component={JobDetailPage} />
         </Col>
       </div>
     </Row>
@@ -67,12 +63,4 @@ ApplicantDashboard.propTypes = {
   updateUser: PropTypes.func.isRequired
 }
 
-const mapStateToProps = state => ({
-  user: state.users.currentUser
-})
-
-const mapDispatchToProps = dispatch => ({
-  updateUser: (user) => dispatch(updatingUser(user))
-})
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ApplicantDashboard))
+export default ApplicantDashboard

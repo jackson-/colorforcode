@@ -30,7 +30,7 @@ export default class JobUpdateDisplay extends Component {
       compensation_type: this.props.job.compensation_type || '',
       travel_requirements: this.props.job.travel_requirements,
       country: 'US',
-      selectValue: this.formatInitialSkills() || '',
+      selectValue: this.formatInitialSkills() || [],
       employment_types: new Set([...this.props.job.employment_types]) || new Set([])
     }
   }

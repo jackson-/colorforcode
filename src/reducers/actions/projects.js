@@ -50,10 +50,9 @@ export const filteringProjects = query => dispatch => {
   .catch(err => console.error(`Mang, I couldn't filter the  projects! ${err.stack}`))
 }
 
-
-export const gettingProjectById = project_id => dispatch => {
+export const gettingProjectById = id => dispatch => {
   dispatch(requestProject())
-  axios.get(`/api/projects/${project_id}`)
+  axios.get(`/api/projects/${id}`)
   .then(res => res.data)
   .then(project => {
     dispatch(receiveProject(project))
@@ -63,13 +62,13 @@ export const gettingProjectById = project_id => dispatch => {
 }
 
 export const creatingNewProject = projectPost => dispatch => {
-  //set loading state to true to trigger UI changes
+  // set loading state to true to trigger UI changes
   dispatch(createNewProject())
   // create the new project
   axios.post('/api/projects', projectPost)
   .then(res => res.data)
-  // if the project is successfully created, we receive the update to date projects list
-  .then(projects => console.log("YES WE DONE"))
+  // if the project is successfully created, we receive the update to date
+  // projects list by regrabbing the user (projects are eager loaded)
   .then(() => dispatch(whoami()))
   // otherwise we catch the error...
   .catch(err => console.error(`Sorry, cuz. We couldn't create that project post...${err.stack}`))
@@ -78,7 +77,7 @@ export const creatingNewProject = projectPost => dispatch => {
 export const updatingProject = (postData, history) => dispatch => {
   axios.put(`/api/projects/${postData.project.id}`, postData)
   .then(() => {
-    history.push('/dashboard')
+    history.push('/dashboard/projects')
   })
   .catch(err => console.error(`Sorry, cuz. Couldn't update that project post...${err.stack}`))
 }
@@ -86,7 +85,7 @@ export const updatingProject = (postData, history) => dispatch => {
 export const deletingProject = (id, history) => dispatch => {
   axios.delete(`/api/projects/${id}`)
   .then(() => {
-    history.push('/dashboard')
+    history.push('/dashboard/projects')
   })
   .catch(err => console.error(`Sorry, cuz. Couldn't delete that project post...${err.stack}`))
 }

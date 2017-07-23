@@ -12,24 +12,26 @@ class EditProfile extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      email: this.props.user.email || '',
-      password: this.props.user.password || '',
-      passwordConfirm: this.props.user.passwordConfirm || '',
-      company_name: this.props.user.is_employer ? this.props.user.employer.name : '',
-      company_role: this.props.user.is_employer ? this.props.user.company_role : '',
-      story: this.props.user.story || '',
-      first_name: this.props.user.first_name || '',
-      last_name: this.props.user.last_name || '',
-      zip_code: this.props.user.zip_code || '',
-      location: this.props.user.location || '',
-      image_url: this.props.user.image_url || '',
-      company_site: this.props.user.is_employer ? this.props.user.employer.company_site : '',
-      personal_site: this.props.user.personal_site || '',
-      github: this.props.user.github || '',
-      linkedin: this.props.user.linkedin || '',
-      twitter: this.props.user.twitter || '',
-      work_auth: this.props.user.work_auth || '',
-      employment_type: new Set([...this.props.user.employment_type]) || new Set([])
+      email: this.props.user ? this.props.user.email : '',
+      password: '',
+      passwordConfirm: '',
+      company_name: this.props.user && this.props.user.is_employer ? this.props.user.employer.name : '',
+      company_role: this.props.user ? this.props.user.company_role : '',
+      story: this.props.user ? this.props.user.story : '',
+      first_name: this.props.user ? this.props.user.first_name : '',
+      last_name: this.props.user ? this.props.user.last_name : '',
+      zip_code: this.props.user ? this.props.user.zip_code : '',
+      location: this.props.user ? this.props.user.location : '',
+      image_url: this.props.user ? this.props.user.image_url : '',
+      company_site: this.props.user && this.props.user.is_employer ? this.props.user.employer.company_site : '',
+      personal_site: this.props.user ? this.props.user.personal_site : '',
+      github: this.props.user ? this.props.user.github : '',
+      linkedin: this.props.user ? this.props.user.linkedin : '',
+      twitter: this.props.user ? this.props.user.twitter : '',
+      work_auth: this.props.user ? this.props.user.work_auth : '',
+      employment_type: this.props.user && this.props.user.employment_type
+        ? new Set([...this.props.user.employment_type])
+        : new Set([])
     }
   }
 
@@ -74,42 +76,27 @@ class EditProfile extends Component {
 
   clearForm = () => {
     this.setState({
-      email: this.props.user.email || '',
-      password: this.props.user.password || '',
-      passwordConfirm: this.props.user.passwordConfirm || '',
-      company_name: this.props.user.is_employer ? this.props.user.employer.name : '',
-      company_role: this.props.user.is_employer ? this.props.user.company_role : '',
-      story: this.props.user.story || '',
-      first_name: this.props.user.first_name || '',
-      last_name: this.props.user.last_name || '',
-      zip_code: this.props.user.zip_code || '',
-      location: this.props.user.location || '',
-      image_url: this.props.user.image_url || '',
-      company_site: this.props.user.is_employer ? this.props.user.employer.company_site : '',
-      personal_site: this.props.user.personal_site || '',
-      github: this.props.user.github || '',
-      linkedin: this.props.user.linkedin || '',
-      twitter: this.props.user.twitter || '',
-      work_auth: this.props.user.work_auth || '',
-      employment_type: new Set([...this.props.user.employment_type]) || new Set([])
+      email: this.props.user ? this.props.user.email : '',
+      password: '',
+      passwordConfirm: '',
+      company_name: this.props.user && this.props.user.is_employer ? this.props.user.employer.name : '',
+      company_role: this.props.user ? this.props.user.company_role : '',
+      story: this.props.user ? this.props.user.story : '',
+      first_name: this.props.user ? this.props.user.first_name : '',
+      last_name: this.props.user ? this.props.user.last_name : '',
+      zip_code: this.props.user ? this.props.user.zip_code : '',
+      location: this.props.user ? this.props.user.location : '',
+      image_url: this.props.user ? this.props.user.image_url : '',
+      company_site: this.props.user && this.props.user.is_employer ? this.props.user.employer.company_site : '',
+      personal_site: this.props.user ? this.props.user.personal_site : '',
+      github: this.props.user ? this.props.user.github : '',
+      linkedin: this.props.user ? this.props.user.linkedin : '',
+      twitter: this.props.user ? this.props.user.twitter : '',
+      work_auth: this.props.user ? this.props.user.work_auth : '',
+      employment_type: this.props.user && this.props.user.employment_type
+        ? new Set([...this.props.user.employment_type])
+        : new Set([])
     })
-  }
-
-  toggleAccountType = event => {
-    const type = event.target.value
-    if (type === 'applicant') {
-      this.setState({
-        is_employer: false,
-        showApplicant: true,
-        showEmployer: false
-      })
-    } else {
-      this.setState({
-        is_employer: true,
-        showEmployer: true,
-        showApplicant: false
-      })
-    }
   }
 
   getValidationState = () => {
@@ -132,7 +119,7 @@ class EditProfile extends Component {
       work_auth
     } = this.state
 
-    if (this.state.is_employer) {
+    if (this.props.user.is_employer) {
       return !(
         first_name &&
         last_name &&
@@ -166,29 +153,33 @@ class EditProfile extends Component {
 
   render () {
     const {user} = this.props
+    let fields = ''
+    if (user && user.is_employer) {
+      fields = (
+        <EmployerFields
+          state={this.state}
+          handleChange={this.handleChange}
+          validate={this.getValidationState}
+        />
+      )
+    } else if (user && !user.is_employer) {
+      fields = (
+        <ApplicantFields
+          state={this.state}
+          handleChange={this.handleChange}
+          validate={this.getValidationState}
+          isChecked={this.isChecked}
+        />
+      )
+    }
+
     return (
       <Row className='EditProfile'>
         <ScrollToTopOnMount />
         <Col xs={12} sm={6} md={6} lg={6}>
           <h1 className='EditProfile-header'>Edit Profile</h1>
           <form className='EditProfile-body' onSubmit={this.handleSubmit}>
-            {
-              user && user.is_employer &&
-              <EmployerFields
-                state={this.state}
-                handleChange={this.handleChange}
-                validate={this.getValidationState}
-              />
-            }
-            {
-              user && !user.is_employer &&
-              <ApplicantFields
-                state={this.state}
-                handleChange={this.handleChange}
-                validate={this.getValidationState}
-                isChecked={this.isChecked}
-              />
-            }
+            {fields}
             <Button disabled={this.isInvalid()} className='primary' type='submit'>
               Update Profile
             </Button>

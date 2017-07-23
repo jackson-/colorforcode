@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Grid, Nav, Glyphicon, NavItem } from 'react-bootstrap'
 import { connect } from 'react-redux'
-import { BrowserRouter as Router, Route, withRouter, Switch } from 'react-router-dom'
+import { BrowserRouter as Router, Route, withRouter, Redirect } from 'react-router-dom'
 import { LinkContainer } from 'react-router-bootstrap'
 import PropTypes from 'prop-types'
 import MainNav from './Navbar'
@@ -23,15 +23,17 @@ class App extends Component {
       opacity: 0,
       height: 0,
       padding: 0,
-      marginBottom: 0
+      marginBottom: 0,
+      isEmployer: this.props.user ? this.props.user.is_employer : false
     }
   }
 
   toggleDashMenu = event => {
+    const height = this.state.isEmployer ? '215px' : '255px'
     if (event) event.preventDefault()
     this.setState({
       showDashMenu: true,
-      height: this.state.height === '215px' ? '0' : '215px',
+      height: this.state.height === height ? '0' : height,
       padding: this.state.padding === '75px 0 10px 0' ? '0' : '75px 0 10px 0',
       opacity: this.state.opacity === 0 ? 1 : 0,
       marginBottom: this.state.marginBottom === '-60px' ? 0 : '-60px'
@@ -73,7 +75,7 @@ class App extends Component {
     }
 
     const {user} = this.props
-
+    console.log(this.props.match)
     return (
       <Router>
         <div>
@@ -129,17 +131,10 @@ class App extends Component {
             <Route path='/register' component={RegisterForm} />
             <Route path='/login' component={LoginForm} />
             <Route path='/jobs/:id' component={JobDetailPage} />
-            {/* EMPLOYER DASHBOARD ROUTES */}
-            <Route path='/dashboard/post-new-job' component={Dashboard} />
-            <Route path='/dashboard/manage-jobs' component={Dashboard} />
-            <Route path='/dashboard/jobs/:id' component={Dashboard} />
-            {/* APPLICANT DASHBOARD ROUTES */}
-            <Route path='/dashboard/saved-jobs' component={Dashboard} />
-            <Route path='/dashboard/applications' component={Dashboard} />
-            <Route path='/dashboard/saved-jobs/:id' component={Dashboard} />
-            <Route path='/dashboard/projects' component={Dashboard} />
-            <Route path='/dashboard/projects/create' component={Dashboard} />
-            <Route path='/dashboard/edit-profile' component={Dashboard} />
+            <Route path='/dashboard/:action' component={() => {
+              if (!user) return <Redirect to='/login' />
+              return <Dashboard />
+            }} />
           </Grid>
         </div>
       </Router>

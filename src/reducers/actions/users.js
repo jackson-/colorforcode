@@ -73,6 +73,7 @@ export const whoami = () => dispatch => {
     dispatch(authenticated(user))
   })
   .catch(err => {
+    console.error(err.stack)
     dispatch(authenticated(null))
   })
 }
