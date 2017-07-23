@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Route, withRouter } from 'react-router-dom'
 import { LinkContainer } from 'react-router-bootstrap'
 import { Nav, NavItem, Row, Col, Glyphicon } from 'react-bootstrap'
 import './Dashboard.css'
@@ -12,7 +12,7 @@ import EditProject from '../projects/EditProjectForm'
 import JobDetailPage from '../jobs/JobDetailPage'
 import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
 
-const ApplicantDashboard = ({user, updateUser}) => (
+const ApplicantDashboard = ({skills, user, project, getProject, updateUser, updateProject}) => (
   <Router>
     <Row className='Dashboard'>
       <ScrollToTopOnMount />
@@ -34,6 +34,9 @@ const ApplicantDashboard = ({user, updateUser}) => (
                 <LinkContainer to='/dashboard/projects' className='Dashboard__nav-item'>
                   <NavItem><Glyphicon glyph='briefcase' /> Projects</NavItem>
                 </LinkContainer>
+                <LinkContainer to='/dashboard/add-project' className='Dashboard__nav-item'>
+                  <NavItem><Glyphicon glyph='plus-sign' /> Add Project</NavItem>
+                </LinkContainer>
               </Nav>
             }
           />
@@ -46,8 +49,15 @@ const ApplicantDashboard = ({user, updateUser}) => (
             <h1>SAVED JOBS</h1>
           )} />
           <Route path='/dashboard/projects' component={Projects} />
-          <Route path='/dashboard/projects/create' component={ProjectCreate} />
-          <Route path='/dashboard/projects/:id' component={EditProject} />
+          <Route path='/dashboard/add-project' component={ProjectCreate} />
+          <Route path='/dashboard/edit-project/:id' component={({match}) => (
+            <EditProject
+              skills={skills}
+              project={project}
+              getProject={getProject}
+              updateProject={updateProject}
+            />
+          )} />
           <Route path='/dashboard/edit-profile' component={() => (
             <EditProfile user={user} updateUser={updateUser} />
           )} />
@@ -60,7 +70,11 @@ const ApplicantDashboard = ({user, updateUser}) => (
 
 ApplicantDashboard.propTypes = {
   user: PropTypes.object,
-  updateUser: PropTypes.func.isRequired
+  skills: PropTypes.array,
+  updateProject: PropTypes.func.isRequired,
+  getProject: PropTypes.func.isRequired,
+  updateUser: PropTypes.func.isRequired,
+  project: PropTypes.object
 }
 
-export default ApplicantDashboard
+export default withRouter(ApplicantDashboard)

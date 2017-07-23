@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 import ProjectsList from './ProjectsList.js'
 import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
 
@@ -85,29 +85,23 @@ class ProjectsPage extends Component {
 	}
 
   render () {
-    let visible_projects = []
-    if(this.props.user && this.state.selectValue.length === 0 && this.state.selected_skills.length === 0){
-      visible_projects = this.props.user.projects
-    } else {
-      visible_projects = this.state.visible_projects
-    }
     return (
       <div>
         <ScrollToTopOnMount />
-				<h1>Projects</h1>
-  			{
+        <h1>Projects</h1>
+        {
           this.props.loading
             ? <p>Loading....</p>
             : <ProjectsList projects={this.props.user.projects || []} />
-  			}
+        }
       </div>
     )
   }
 }
 
 const mapStateToProps = state => ({
-  user:state.users.currentUser,
-	loading: state.loading
+  user: state.users.currentUser,
+  loading: state.loading
 })
 
-export default connect(mapStateToProps, null)(ProjectsPage)
+export default withRouter(connect(mapStateToProps)(ProjectsPage))

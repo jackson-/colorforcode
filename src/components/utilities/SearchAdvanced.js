@@ -110,12 +110,14 @@ const SearchAdvanced = props => (
 
 SearchAdvanced.propTypes = {
   toggleCheckbox: PropTypes.func.isRequired,
+  filterJobs: PropTypes.func.isRequired,
   handleChange: PropTypes.func.isRequired,
   clearFilter: PropTypes.func.isRequired,
   clearChip: PropTypes.func.isRequired,
   filtered: PropTypes.bool.isRequired,
   terms: PropTypes.array.isRequired,
-  query: PropTypes.string.isRequired
+  query: PropTypes.string.isRequired,
+  state: PropTypes.object.isRequired
 }
 
 export default SearchAdvanced

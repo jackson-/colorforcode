@@ -61,7 +61,7 @@ export const gettingProjectById = id => dispatch => {
   .catch(err => console.error(`Mang I couldn't find the project! ${err.stack}`))
 }
 
-export const creatingNewProject = projectPost => dispatch => {
+export const creatingNewProject = (projectPost, history) => dispatch => {
   // set loading state to true to trigger UI changes
   dispatch(createNewProject())
   // create the new project
@@ -69,23 +69,28 @@ export const creatingNewProject = projectPost => dispatch => {
   .then(res => res.data)
   // if the project is successfully created, we receive the update to date
   // projects list by regrabbing the user (projects are eager loaded)
-  .then(() => dispatch(whoami()))
+  .then(() => {
+    dispatch(whoami())
+    history.push('/dashboard/projects')
+  })
   // otherwise we catch the error...
-  .catch(err => console.error(`Sorry, cuz. We couldn't create that project post...${err.stack}`))
+  .catch(err => console.error(`Sorry, cuz. We couldn't create that new project...${err.stack}`))
 }
 
 export const updatingProject = (postData, history) => dispatch => {
   axios.put(`/api/projects/${postData.project.id}`, postData)
   .then(() => {
+    dispatch(whoami())
     history.push('/dashboard/projects')
   })
-  .catch(err => console.error(`Sorry, cuz. Couldn't update that project post...${err.stack}`))
+  .catch(err => console.error(`Sorry, cuz. Couldn't update that project...${err.stack}`))
 }
 
 export const deletingProject = (id, history) => dispatch => {
   axios.delete(`/api/projects/${id}`)
   .then(() => {
+    dispatch(whoami())
     history.push('/dashboard/projects')
   })
-  .catch(err => console.error(`Sorry, cuz. Couldn't delete that project post...${err.stack}`))
+  .catch(err => console.error(`Sorry, cuz. Couldn't delete that project...${err.stack}`))
 }

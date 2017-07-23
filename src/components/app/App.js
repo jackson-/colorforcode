@@ -29,7 +29,7 @@ class App extends Component {
   }
 
   toggleDashMenu = event => {
-    const height = this.state.isEmployer ? '215px' : '255px'
+    const height = this.state.isEmployer ? '215px' : '300px'
     if (event) event.preventDefault()
     this.setState({
       showDashMenu: true,
@@ -70,6 +70,7 @@ class App extends Component {
         {to: '/dashboard/applications', glyph: 'list-alt', text: 'Applications'},
         {to: '/dashboard/edit-profile', glyph: 'user', text: 'Edit Profile'},
         {to: '/dashboard/saved-jobs', glyph: 'heart', text: 'Saved Jobs'},
+        {to: '/dashboard/add-project', glyph: 'plus-sign', text: 'Add Project'},
         {to: '/dashboard/projects', glyph: 'briefcase', text: 'Projects'}
       ]
     }
@@ -131,6 +132,10 @@ class App extends Component {
             <Route path='/login' component={LoginForm} />
             <Route path='/jobs/:id' component={JobDetailPage} />
             <Route path='/dashboard/:action' component={() => {
+              if (!user) return <Redirect to='/login' />
+              return <Dashboard />
+            }} />
+            <Route path='/dashboard/:action/:id' component={() => {
               if (!user) return <Redirect to='/login' />
               return <Dashboard />
             }} />

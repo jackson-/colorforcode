@@ -85,7 +85,7 @@ export default class JobUpdateDisplay extends Component {
 
   handleChange = type => event => {
     const { value } = event.target
-    if (type === 'zip_code' && value.toString().length === 5) {
+    if (type === 'zip_code' && value.toString().length >= 5) {
       /* first we finish updating the state of the input, then we use the zip to find the rest of the location data by passing the callback to setState (an optional 2nd param) */
       this.setState({[type]: value}, this.handleLocation(value))
     } else if (type === 'employment_type') {
