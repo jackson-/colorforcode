@@ -162,9 +162,17 @@ class RegisterForm extends Component {
   }
 
   render () {
-    // if (this.props.user) {
-    //   return <Redirect to='/dashboard/manage-jobs' />
-    // }
+    if (this.props.user) {
+      return (
+        <Redirect
+          to={
+            this.props.user.is_employer
+              ? '/dashboard/manage-jobs'
+              : '/dashboard/saved-jobs'
+          }
+        />
+      )
+    }
 
     return (
       <Row className='RegisterForm'>
@@ -174,7 +182,7 @@ class RegisterForm extends Component {
           <form className='RegisterForm-body' onSubmit={this.handleSubmit}>
             <FormGroup controlId='is_employer' onChange={this.toggleAccountType}>
               <ControlLabel>What type of account would you like to create?</ControlLabel>
-              <FormControl componentClass="select">
+              <FormControl componentClass='select'>
                 <option>select an account type</option>
                 <option value='employer'>Employer</option>
                 <option value='applicant'>Applicant</option>
@@ -204,10 +212,13 @@ class RegisterForm extends Component {
   }
 }
 
+const mapStateToProps = state => ({
+  user: state.users.currentUser
+})
+
 const mapDispatchToProps = dispatch => ({
   createUser: (user) => dispatch(creatingNewUser(user))
 })
 
-const RegisterFormContainer = connect(null, mapDispatchToProps)(RegisterForm)
-
+const RegisterFormContainer = connect(mapStateToProps, mapDispatchToProps)(RegisterForm)
 export default withRouter(RegisterFormContainer)

@@ -75,7 +75,6 @@ class App extends Component {
     }
 
     const {user} = this.props
-    console.log(this.props.match)
     return (
       <Router>
         <div>

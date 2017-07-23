@@ -47,7 +47,11 @@ const NavBar = props => (
             ? <LinkContainer to='#' eventKey={3} className='dropdown-hover'>
                 <NavDropdown title='Account' id='account-dropdown'>
                   <LinkContainer
-                    to={props.user.is_employer ? '/dashboard/manage-jobs' : '/dashboard/saved-jobs'}
+                    to={
+                      props.user.is_employer
+                        ? '/dashboard/manage-jobs'
+                        : '/dashboard/saved-jobs'
+                    }
                     eventKey={3.1}
                   >
                     <MenuItem>Dashboard</MenuItem>
