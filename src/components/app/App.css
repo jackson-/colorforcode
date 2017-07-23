@@ -94,12 +94,14 @@
 }
 
 .Dashboard-menuToggle span {
-  padding: 15px;
-  margin: 5px;
+  padding: 9px 10px;
+  margin: 12px;
 }
 
 .Dashboard-menuToggle {
-  left: 185px;
+  width: auto;
+  float: right;
+  padding: 0;
 }
 
 .Dashboard-menu-collapse {

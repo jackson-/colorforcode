@@ -129,7 +129,7 @@ export default class JobUpdateDisplay extends Component {
     job.status = 'open'
     const skills = job.selectValue.map(skill => skill.value)
     delete job.selectValue
-    // const token = this.refs.card.state.token
+
     this.clearForm()
     this.props.updateJob({job, skills}, this.props.history)
   }

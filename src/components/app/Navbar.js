@@ -24,14 +24,14 @@ const NavBar = props => (
           <img src={navLogo} alt='HireBlack logo' height='40px' width='40px' />
         </LinkContainer>
       </NavbarBrand>
-        <Col
-          xsHidden={!props.user}
-          onClick={props.toggleDashMenu}
-          className='Dashboard-menuToggle'
-          xs={3} smHidden mdHidden lgHidden
-        >
-          <Glyphicon glyph='cog' />
-        </Col>
+      <Col
+        xsHidden={!props.user}
+        onClick={props.toggleDashMenu}
+        className='Dashboard-menuToggle'
+        xs={2} smHidden mdHidden lgHidden
+      >
+        <Glyphicon glyph='cog' />
+      </Col>
       <Navbar.Toggle />
     </Navbar.Header>
     <Navbar.Collapse>
