@@ -90,12 +90,12 @@
   font-size: larger;
   max-height: none;
   width: inherit;
-  height: 100vh;
+  height: calc(100vh - 60px);
 }
 
 .Dashboard-menuToggle span {
   padding: 9px 10px;
-  margin: 12px;
+  margin: 11px 12px 12px 0;
 }
 
 .Dashboard-menuToggle {
