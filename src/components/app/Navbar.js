@@ -1,27 +1,11 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { withRouter } from 'react-router-dom'
 import { LinkContainer } from 'react-router-bootstrap'
 import { Navbar, NavbarBrand, Nav, Glyphicon,
          Col, NavItem, NavDropdown, MenuItem } from 'react-bootstrap'
 import './App.css'
 import navLogo from '../../img/hireblack-logo-no-border.svg'
-
-/*
-  The .active class is being applied to '/' even when it isn't the current
-  location.pathname because all other paths are its children. This method
-  corrects for that.
-*/
-const onlyOneActiveMatch = (match, location) => {
-  if (match) return location.pathname === match.path
-  else return false
-}
-
-const showPostJob = (user) => {
-  let display = !user || (user && user.isEmployer)
-    ? 'block'
-    : 'none'
-  return display
-}
 
 const NavBar = props => (
   <Navbar fixedTop collapseOnSelect>
@@ -43,10 +27,10 @@ const NavBar = props => (
     </Navbar.Header>
     <Navbar.Collapse>
       <Nav>
-        <LinkContainer eventKey={1} to='/' isActive={onlyOneActiveMatch}>
+        <LinkContainer eventKey={1} to='/' isActive={props.onlyOneActiveMatch}>
           <NavItem>Home</NavItem>
         </LinkContainer>
-        <LinkContainer eventKey={2} to='/about' isActive={onlyOneActiveMatch}>
+        <LinkContainer eventKey={2} to='/about' isActive={props.onlyOneActiveMatch}>
           <NavItem>About</NavItem>
         </LinkContainer>
         {
@@ -81,7 +65,7 @@ const NavBar = props => (
               </LinkContainer>
         }
       </Nav>
-      <Nav pullRight style={{display: showPostJob(props.user)}}>
+      <Nav pullRight style={{display: props.showPostJob(props.user)}}>
         <LinkContainer to='/dashboard/post-new-job'>
           <NavItem hidden={!props.user || (props.user && props.user.is_employer)}><span className='btn-oval'>Post a job</span></NavItem>
         </LinkContainer>
@@ -89,5 +73,14 @@ const NavBar = props => (
     </Navbar.Collapse>
   </Navbar>
 )
+
+NavBar.propTypes = {
+  user: PropTypes.object,
+  logOut: PropTypes.func.isRequired,
+  history: PropTypes.object,
+  toggleDashMenu: PropTypes.func.isRequired,
+  showPostJob: PropTypes.func.isRequired,
+  onlyOneActiveMatch: PropTypes.func.isRequired
+}
 
 export default withRouter(NavBar)

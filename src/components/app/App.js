@@ -41,11 +41,21 @@ class App extends Component {
     })
   }
 
-  isNotDashRoute = () => {
-    const location = this.props.location
-      ? this.props.location.pathname.split('/')
-      : []
-    return location.includes('dashboard') === false
+  showPostJob = (user) => {
+    let display = !user || (user && user.isEmployer)
+      ? 'block'
+      : 'none'
+    return display
+  }
+
+  /*
+    The .active class is being applied to '/' even when it isn't the current
+    location.pathname because all other paths are its children. This method
+    corrects for that.
+  */
+  onlyOneActiveMatch = (match, location) => {
+    if (match) return location.pathname === match.path
+    else return false
   }
 
   logOut = history => event => {
@@ -85,6 +95,8 @@ class App extends Component {
             logOut={this.logOut}
             toggleDashMenu={this.toggleDashMenu}
             isNotDashRoute={this.isNotDashRoute()}
+            onlyOneActiveMatch={this.onlyOneActiveMatch}
+            showPostJob={this.showPostJob}
           />
           <Nav
             className='Dashboard-menu-collapse'
@@ -148,7 +160,6 @@ class App extends Component {
 
 App.propTypes = {
   user: PropTypes.object,
-  location: PropTypes.object,
   logOut: PropTypes.func.isRequired
 }
 
