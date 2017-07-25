@@ -6,6 +6,7 @@ import { gettingAllSkills } from 'APP/src/reducers/actions/skills'
 import SearchBar from '../utilities/SearchBar'
 import CandidateSearchAdvanced from '../utilities/CandidateSearchAdvanced'
 import CandidateList from './CandidateList.js'
+import axios from 'axios'
 // import './Home.css'
 
 class CandidateSearch extends Component {
@@ -24,6 +25,19 @@ class CandidateSearch extends Component {
 
   componentDidMount () {
     this.props.getUsers()
+  }
+
+  handleLocation(zip_code) {
+    axios.get(`http://maps.googleapis.com/maps/api/geocode/json?address=${zip_code}`)
+    .then(res => res.data)
+    .then(json => {
+      const city = json.results[0].address_components[1].long_name
+      const state = json.results[0].address_components[2].short_name
+      const location = `${city}, ${state}`
+      const coords = `${json.results[0].geometry.location.lat},${json.results[0].geometry.location.lng}`
+      this.setState({coords, zip_code, location})
+    })
+    .catch(err => console.error(err.stack))
   }
 
   handleChange = type => event => {
