@@ -11,6 +11,7 @@ import RegisterForm from '../auth/RegisterForm'
 import LoginForm from '../auth/LoginForm'
 import JobDetailPage from '../jobs/JobDetailPage'
 import Dashboard from '../dashboard/Dashboard'
+import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
 import './App.css'
 import { logout } from '../../reducers/actions/users'
 
@@ -85,45 +86,44 @@ class App extends Component {
             toggleDashMenu={this.toggleDashMenu}
             isNotDashRoute={this.isNotDashRoute()}
           />
-          {
-            <Nav
-              className='Dashboard-menu-collapse'
-              style={dashMenuStyle}
-              stacked
-              onSelect={this.toggleDashMenu}
-            >
-              {
-                user && user.is_employer &&
-                  dashMobileMenu.employer.map((link, i) => (
-                    <LinkContainer
-                      hidden={this.state.showDashMenu}
-                      to={link.to}
-                      className='Dashboard__nav-item'
-                      key={i}
-                    >
-                      <NavItem style={{opacity: this.state.opacity}}>
-                        <Glyphicon glyph={link.glyph} /> {link.text}
-                      </NavItem>
-                    </LinkContainer>
-                  ))
-              }
-              {
-                user && !user.is_employer &&
-                  dashMobileMenu.applicant.map((link, i) => (
-                    <LinkContainer
-                      hidden={this.state.showDashMenu}
-                      to={link.to}
-                      className='Dashboard__nav-item'
-                      key={i}
-                    >
-                      <NavItem style={{opacity: this.state.opacity}}>
-                        <Glyphicon glyph={link.glyph} /> {link.text}
-                      </NavItem>
-                    </LinkContainer>
-                  ))
-              }
-            </Nav>
-          }
+          <Nav
+            className='Dashboard-menu-collapse'
+            style={dashMenuStyle}
+            stacked
+            onSelect={this.toggleDashMenu}
+          >
+            {
+              user && user.is_employer &&
+                dashMobileMenu.employer.map((link, i) => (
+                  <LinkContainer
+                    hidden={this.state.showDashMenu}
+                    to={link.to}
+                    className='Dashboard__nav-item'
+                    key={i}
+                  >
+                    <NavItem style={{opacity: this.state.opacity}}>
+                      <Glyphicon glyph={link.glyph} /> {link.text}
+                    </NavItem>
+                  </LinkContainer>
+                ))
+            }
+            <ScrollToTopOnMount scroll={this.state.showDashMenu} />
+            {
+              user && !user.is_employer &&
+                dashMobileMenu.applicant.map((link, i) => (
+                  <LinkContainer
+                    hidden={this.state.showDashMenu}
+                    to={link.to}
+                    className='Dashboard__nav-item'
+                    key={i}
+                  >
+                    <NavItem style={{opacity: this.state.opacity}}>
+                      <Glyphicon glyph={link.glyph} /> {link.text}
+                    </NavItem>
+                  </LinkContainer>
+                ))
+            }
+          </Nav>
           <Grid fluid className='App'>
             {/* PUBLIC ROUTES */}
             <Route exact strict path='/' component={Home} />

@@ -16,6 +16,13 @@ const onlyOneActiveMatch = (match, location) => {
   else return false
 }
 
+const showPostJob = (user) => {
+  let display = !user || (user && user.isEmployer)
+    ? 'block'
+    : 'none'
+  return display
+}
+
 const NavBar = props => (
   <Navbar fixedTop collapseOnSelect>
     <Navbar.Header>
@@ -74,9 +81,9 @@ const NavBar = props => (
               </LinkContainer>
         }
       </Nav>
-      <Nav pullRight>
+      <Nav pullRight style={{display: showPostJob(props.user)}}>
         <LinkContainer to='/dashboard/post-new-job'>
-          <NavItem><span className='btn-oval'>Post a job</span></NavItem>
+          <NavItem hidden={!props.user || (props.user && props.user.is_employer)}><span className='btn-oval'>Post a job</span></NavItem>
         </LinkContainer>
       </Nav>
     </Navbar.Collapse>

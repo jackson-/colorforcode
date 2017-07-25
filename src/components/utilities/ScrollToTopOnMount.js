@@ -3,12 +3,12 @@ import { withRouter } from 'react-router-dom'
 
 class ScrollToTopOnMount extends Component {
 
-  componentDidMount (prevProps) {
+  componentWillReceiveProps (prevProps) {
     window.scrollTo(0, 0)
   }
 
   render () {
-    return <div></div>
+    return <div />
   }
 }
 
