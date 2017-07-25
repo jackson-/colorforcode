@@ -20,6 +20,106 @@ const job_skills = seed(JobSkill,
     4: {
       job_id: jobs.dev_ops.id,
       skill_id: skills.node.id
+    },
+    5: {
+      job_id: jobs.full_stack.id,
+      skill_id: skills.node.id
+    },
+    6: {
+      job_id: jobs.data.id,
+      skill_id: skills.react.id
+    },
+    7: {
+      job_id: jobs.data.id,
+      skill_id: skills.python.id
+    },
+    8: {
+      job_id: jobs.data.id,
+      skill_id: skills.d3.id
+    },
+    9: {
+      job_id: jobs.data.id,
+      skill_id: skills.rails.id
+    },
+    10: {
+      job_id: jobs.data.id,
+      skill_id: skills.ruby.id
+    },
+    11: {
+      job_id: jobs.data.id,
+      skill_id: skills.scala.id
+    },
+    12: {
+      job_id: jobs.dev_ops.id,
+      skill_id: skills.aws.id
+    },
+    13: {
+      job_id: jobs.dev_ops.id,
+      skill_id: skills.docker.id
+    },
+    14: {
+      job_id: jobs.backend.id,
+      skill_id: skills.rails.id
+    },
+    15: {
+      job_id: jobs.backend.id,
+      skill_id: skills.ruby.id
+    },
+    16: {
+      job_id: jobs.backend.id,
+      skill_id: skills.python.id
+    },
+    17: {
+      job_id: jobs.merchant.id,
+      skill_id: skills.rails.id
+    },
+    19: {
+      job_id: jobs.merchant.id,
+      skill_id: skills.react.id
+    },
+    20: {
+      job_id: jobs.merchant.id,
+      skill_id: skills.javascript.id
+    },
+    21: {
+      job_id: jobs.merchant.id,
+      skill_id: skills.ruby.id
+    },
+    22: {
+      job_id: jobs.merchant.id,
+      skill_id: skills.html5.id
+    },
+    23: {
+      job_id: jobs.merchant.id,
+      skill_id: skills.css3.id
+    },
+    24: {
+      job_id: jobs.merchant.id,
+      skill_id: skills.git.id
+    },
+    25: {
+      job_id: jobs.intern.id,
+      skill_id: skills.react.id
+    },
+    26: {
+      job_id: jobs.intern.id,
+      skill_id: skills.javascript.id
+    },
+    27: {
+      job_id: jobs.intern.id,
+      skill_id: skills.d3.id
+    },
+    28: {
+      job_id: jobs.intern.id,
+      skill_id: skills.html5.id
+    },
+    29: {
+      job_id: jobs.intern.id,
+      skill_id: skills.css3.id
+    },
+    30: {
+      job_id: jobs.intern.id,
+      skill_id: skills.git.id
     }
   })
 )
