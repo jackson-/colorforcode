@@ -14,7 +14,6 @@ const ApplicantRegisterFields = props => (
     <FormGroup controlId='password'>
       <ControlLabel>Password</ControlLabel>
       <FormControl
-        required
         type='password'
         value={props.state.password}
         onChange={props.handleChange('password')}
@@ -26,7 +25,6 @@ const ApplicantRegisterFields = props => (
     >
       <ControlLabel>Confirm Password</ControlLabel>
       <FormControl
-        required
         type='password'
         value={props.state.passwordConfirm}
         onChange={props.handleChange('passwordConfirm')}
@@ -53,7 +51,6 @@ const ApplicantRegisterFields = props => (
     <FormGroup controlId='story'>
       <ControlLabel>Personal Story</ControlLabel>
       <FormControl
-        required
         value={props.state.story}
         onChange={props.handleChange('story')}
       />
@@ -70,7 +67,7 @@ const ApplicantRegisterFields = props => (
     </FormGroup>
     <FormGroup controlId='work_auth' onChange={props.handleChange('work_auth')}>
       <ControlLabel>Work Authorization</ControlLabel>
-      <FormControl componentClass="select">
+      <FormControl componentClass='select' defaultValue={props.state.work_auth}>
         <option>select</option>
         <option value='US Citizen'>US Citizen</option>
         <option value='Canadian Citizen'>Canadian Citizen</option>
@@ -83,11 +80,21 @@ const ApplicantRegisterFields = props => (
       name='employment_type'
       onChange={props.handleChange('employment_type')}>
       <ControlLabel>Desired Employment Type(s)</ControlLabel>
-      <Checkbox value='Full-time'>Full-time</Checkbox>
-      <Checkbox value='Part-time'>Part-time</Checkbox>
-      <Checkbox value='Contract'>Contract</Checkbox>
-      <Checkbox value='Contract to Hire'>Contract to Hire</Checkbox>
-      <Checkbox value='Internship'>Internship</Checkbox>
+      <Checkbox defaultChecked={props.isChecked('Full-time')} value='Full-time'>
+        Full-time
+      </Checkbox>
+      <Checkbox defaultChecked={props.isChecked('Part-time')} value='Part-time'>
+        Part-time
+      </Checkbox>
+      <Checkbox defaultChecked={props.isChecked('Contract')} value='Contract'>
+        Contract
+      </Checkbox>
+      <Checkbox defaultChecked={props.isChecked('Contract to Hire')} value='Contract to Hire'>
+        Contract to Hire
+      </Checkbox>
+      <Checkbox defaultChecked={props.isChecked('Internship')} value='Internship'>
+        Internship
+      </Checkbox>
     </FormGroup>
     <FormGroup controlId='personal_site'>
       <ControlLabel>Personal Website (optional)</ControlLabel>

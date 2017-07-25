@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
+import { withRouter, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { Row, Col, FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap'
 import { login } from 'APP/src/reducers/actions/users'
 import './Form.css'
+import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
 
 class LoginForm extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       email: '',
@@ -34,12 +36,25 @@ class LoginForm extends Component {
     event.preventDefault()
     const { email, password } = this.state
     this.clearForm()
-    this.props.loginUser(email, password, this.props.history)
+    this.props.loginUser(email, password)
   }
 
-  render() {
+  render () {
+    if (this.props.user) {
+      return (
+        <Redirect
+          to={
+            this.props.user.is_employer
+              ? '/dashboard/manage-jobs'
+              : '/dashboard/saved-jobs'
+          }
+        />
+      )
+    }
+
     return (
       <Row className='LoginForm'>
+        <ScrollToTopOnMount />
         <Col xs={12} sm={6} md={6} lg={6}>
           <h1 className='LoginForm-header'>Log In</h1>
           <form className='LoginForm-body' onSubmit={this.handleSubmit}>
@@ -69,10 +84,14 @@ class LoginForm extends Component {
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  loginUser: (email, password, history) => dispatch(login(email, password, history))
+const mapStateToProps = state => ({
+  user: state.users.currentUser
 })
 
-const LoginFormContainer = connect(null, mapDispatchToProps)(LoginForm)
+const mapDispatchToProps = dispatch => ({
+  loginUser: (email, password) => dispatch(login(email, password))
+})
 
-export default LoginFormContainer
+const LoginFormContainer = connect(mapStateToProps, mapDispatchToProps)(LoginForm)
+
+export default withRouter(LoginFormContainer)

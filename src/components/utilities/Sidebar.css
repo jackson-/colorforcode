@@ -1,0 +1,16 @@
+/* needs to be inside of a flex container
+(see JobBoard class in Home.css) */
+.Sidebar {
+  width: 100%;
+}
+
+.Sidebar__header {
+  text-align: center;
+}
+
+.Sidebar__button-container {
+  padding: 10px 0;
+  display: block;
+  min-width: 180px;
+  background: #404648;
+}

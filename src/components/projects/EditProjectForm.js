@@ -1,9 +1,6 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { Row, Col, FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap'
-import { creatingNewProject } from 'APP/src/reducers/actions/projects'
-import { gettingAllSkills } from 'APP/src/reducers/actions/skills'
 import VirtualizedSelect from 'react-virtualized-select'
 import 'react-select/dist/react-select.css'
 import 'react-virtualized/styles.css'
@@ -12,27 +9,29 @@ import '../auth/Form.css'
 import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
 
 function arrowRenderer () {
-	return (
-		<span></span>
-	)
+  return (
+    <span></span>
+  )
 }
 
-class CreateProjectForm extends Component {
-  constructor(props) {
+class EditProjectForm extends Component {
+
+  constructor (props) {
     super(props)
     this.state = {
-      title: '',
-      description: '',
-      external_link: '',
-			learning_point: '',
-			pain_point: '',
-      selectValue: [],
-      selected_skills: [],
+      title: this.props.project.title || '',
+      description: this.props.project.description || '',
+      external_link: this.props.project.external_link || '',
+      learning_point: this.props.project.learning_point || '',
+      pain_point: this.props.project.pain_point || '',
+      selectValue: this.formatSkills(this.props.project.skills) || [],
+      selected_skills: []
     }
   }
 
-  componentDidMount(){
-    this.props.getSkills()
+  componentDidMount () {
+    const {id} = this.props.match.params
+    if (!this.props.project || this.props.project.id != id) this.props.getProject(id)
   }
 
   handleChange = type => event => {
@@ -40,10 +39,20 @@ class CreateProjectForm extends Component {
     this.setState({[type]: value})
   }
 
-  _selectSkill(data){
-		let skill_ids = data.split(',');
+  formatSkills = skills => {
+    if (skills) {
+      return skills.map(skill => ({
+        label: skill.title,
+        value: skill.id
+      }))
+    }
+    return null
+  }
+
+  _selectSkill = data => {
+		let skill_ids = data.split(',')
     let new_skills = []
-		if (skill_ids[0] !== "") {
+		if (skill_ids[0] !== '') {
       skill_ids.forEach((sk_id) => {
 				this.props.skills.forEach((s) => {
           if(s.id === parseInt(sk_id, 10)){
@@ -60,48 +69,36 @@ class CreateProjectForm extends Component {
 
   clearForm = () => {
     this.setState({
-      title: '',
-      description: '',
-      external_link: '',
-			learning_point:'',
-			pain_point:'',
-      selectValue:[],
-      selected_skills:[],
+      title: this.props.project.title ? this.props.project.title : '',
+      description: this.props.project.description ? this.props.project.description : '',
+      external_link: this.props.project.external_link ? this.props.project.external_link : '',
+      learning_point: this.props.project.learning_point ? this.props.project.learning_point : '',
+      pain_point: this.props.project.pain_point ? this.props.project.pain_point : '',
+      selectValue: this.props.project.skills ? this.formatSkills(this.props.project.skills) : [],
+      selected_skills: []
     })
   }
 
   handleSubmit = event => {
     event.preventDefault()
-    const { title, description, external_link, learning_point, pain_point } = this.state
+    let skills, project
 
-    const project = {
-      title, description, external_link, learning_point, pain_point
-    }
-
+    project = this.state
     project.user = this.props.user
-
-		const skills = []
-		this.state.selectValue.forEach((skill) => {
-			skills.push(skill.value)
-		})
-
-		// const token = this.refs.card.state.token
+    skills = this.state.selectValue.map((skill) => skill.value)
+    delete project.selectValue
+    delete project.selected_skills
     this.clearForm()
-    this.props.createProject({project, skills})
-		this.props.history.push('/')
+    this.props.updateProject({project, skills}, history)
   }
 
-  render() {
-    let skills = []
-
-    this.props.skills.forEach(s => {
-      skills.push({label:s.title, value:s.id})
-    })
+  render () {
+    let skills = this.props.skills ? this.formatSkills(this.props.skills) : []
     return (
       <Row className='PostJobForm'>
         <ScrollToTopOnMount />
         <Col xs={12} sm={6} md={6} lg={6}>
-          <h1 className='PostJobForm-header'>Create a new project</h1>
+          <h1 className='PostJobForm-header'>EDIT PROJECT</h1>
           <form className='PostJobForm-body' onSubmit={this.handleSubmit}>
             <FormGroup controlId='title'>
               <ControlLabel>Project Title</ControlLabel>
@@ -116,25 +113,25 @@ class CreateProjectForm extends Component {
             </ControlLabel>
             <VirtualizedSelect
               arrowRenderer={arrowRenderer}
-              clearable={true}
-              searchable={true}
+              clearable
+              searchable
               simpleValue
               labelKey='label'
               valueKey='value'
-              ref="job_search"
-              multi={true}
+              ref='job_search'
+              multi
               options={skills}
-              onChange={(data) => this._selectSkill(data)}
+              onChange={this._selectSkill}
               value={this.state.selectValue}
             />
-						<FormGroup controlId='external_link'>
-							<ControlLabel>External Link</ControlLabel>
-							<FormControl
-							type='url'
-							value={this.state.external_link}
-							onChange={this.handleChange('external_link')}
-							/>
-							</FormGroup>
+            <FormGroup controlId='external_link'>
+              <ControlLabel>External Link</ControlLabel>
+              <FormControl
+                type='url'
+                value={this.state.external_link}
+                onChange={this.handleChange('external_link')}
+              />
+            </FormGroup>
             <FormGroup controlId='description'>
               <ControlLabel>Project Description</ControlLabel>
               <FormControl
@@ -144,7 +141,7 @@ class CreateProjectForm extends Component {
                 onChange={this.handleChange('description')}
               />
             </FormGroup>
-						<FormGroup controlId='learning_point'>
+            <FormGroup controlId='learning_point'>
               <ControlLabel>Learning Point</ControlLabel>
               <FormControl
                 type='text'
@@ -153,7 +150,7 @@ class CreateProjectForm extends Component {
                 onChange={this.handleChange('learning_point')}
               />
             </FormGroup>
-						<FormGroup controlId='pain_point'>
+            <FormGroup controlId='pain_point'>
               <ControlLabel>Pain Point</ControlLabel>
               <FormControl
                 type='text'
@@ -170,15 +167,4 @@ class CreateProjectForm extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  user: state.users.currentUser,
-  skills: state.skills.all
-})
-const mapDispatchToProps = dispatch => ({
-  createProject: project => dispatch(creatingNewProject(project)),
-  getSkills: () => dispatch(gettingAllSkills())
-})
-
-const CreateProjectFormContainer = connect(mapStateToProps, mapDispatchToProps)(CreateProjectForm)
-
-export default withRouter(CreateProjectFormContainer)
+export default withRouter(EditProjectForm)

@@ -4,6 +4,7 @@ import { RECEIVE_JOBS, RECEIVE_JOB, RECEIVE_APPLIED_JOBS,
 import { createNewJob, requestAllJobs, requestFilteredJobs,
          requestJob, requestUserJobs, applyToJob, requestAppliedJobs } from './loading'
 import { gettingAllSkills } from './skills'
+import { whoami } from './users'
 
 /* --------- PURE ACTION CREATORS --------- */
 export const receiveJob = job => ({
@@ -93,14 +94,14 @@ export const applyingToJob = (user_id, job_id, history) => dispatch => {
   axios.post(`/api/jobs/${job_id}/apply`, {user_id, job_id})
   .then(() => {
     dispatch(appliedToJob())
-    history.push('/')
+    history.push('/dashboard/applications')
   })
   .catch(err => console.error(`Mang, I couldn't apply to the job! ${err.stack}`))
 }
 
-export const gettingUserJobs = (employer) => dispatch => {
+export const gettingUserJobs = employerId => dispatch => {
   dispatch(requestUserJobs())
-  axios.get(`/api/jobs/employer/${employer.id}`)
+  axios.get(`/api/jobs/employer/${employerId}`)
   .then(res => res.data)
   .then(jobs => dispatch(receiveUserJobs(jobs)))
   .catch(err => console.error(`Mang, I couldn't find the jobs! ${err.stack}`))
@@ -125,30 +126,33 @@ export const gettingJobById = job_id => dispatch => {
   .catch(err => console.error(`Mang I couldn't find the job! ${err.stack}`))
 }
 
-export const creatingNewJob = jobPost => dispatch => {
-  //set loading state to true to trigger UI changes
+export const creatingNewJob = (jobPost, history) => dispatch => {
+  // set loading state to true to trigger UI changes
   dispatch(createNewJob())
   // create the new job
   axios.post('/api/jobs', jobPost)
   .then(res => res.data)
-  // if the job is successfully created, we receive the update to date jobs list
-  .then(jobs => dispatch(gettingAllJobs()))
+  // if the job is successfully created, we fetch the updated jobs list
+  .then(newJobId => {
+    dispatch(whoami())
+    if (history) {
+      history.push(`/dashboard/manage-jobs`)
+    }
+  })
   // otherwise we catch the error...
   .catch(err => console.error(`Sorry, cuz. We couldn't create that job post...${err.stack}`))
 }
 
 export const updatingJob = (postData, history) => dispatch => {
   axios.put(`/api/jobs/${postData.job.id}`, postData)
-  .then(() => {
-    history.push('/dashboard')
-  })
+  .then(() => dispatch(whoami()))
+  .then(() => history.push('/dashboard/manage-jobs'))
   .catch(err => console.error(`Sorry, cuz. Couldn't update that job post...${err.stack}`))
 }
 
 export const deletingJob = (id, history) => dispatch => {
   axios.delete(`/api/jobs/${id}`)
-  .then(() => {
-    history.push('/dashboard')
-  })
+  .then(() => dispatch(whoami()))
+  .then(() => history.push('/dashboard/manage-jobs'))
   .catch(err => console.error(`Sorry, cuz. Couldn't delete that job post...${err.stack}`))
 }

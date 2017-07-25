@@ -1,17 +1,23 @@
-import { RECEIVE_ALL_PROJECTS, RECEIVE_PROJECT } from './constants'
+import { RECEIVE_ALL_PROJECTS, RECEIVE_PROJECT, AUTHENTICATED } from './constants'
 
 const initialState = {
-  all: null,
-  currentProject: null,
+  all: [],
+  currentProject: null
 }
 
-const projectsReducer = (state=initialState, action) => {
+const projectsReducer = (state = initialState, action) => {
   switch (action.type) {
+    case AUTHENTICATED: return {
+      all: action.user.projects,
+      currentProject: {...state.currentProject} || null
+    }
     case RECEIVE_PROJECT: return {
+      all: [...state.all] || [],
       currentProject: action.project
     }
     case RECEIVE_ALL_PROJECTS: return {
-      all: action.projects
+      all: action.projects,
+      currentProject: {...state.currentProject} || null
     }
     default: return state
   }

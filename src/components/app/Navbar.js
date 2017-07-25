@@ -1,8 +1,8 @@
 import React from 'react'
+import { withRouter } from 'react-router-dom'
 import { LinkContainer } from 'react-router-bootstrap'
-import { Navbar, NavbarBrand, Nav,
-         NavItem, NavDropdown, MenuItem } from 'react-bootstrap'
-import { connect } from 'react-redux'
+import { Navbar, NavbarBrand, Nav, Glyphicon,
+         Col, NavItem, NavDropdown, MenuItem } from 'react-bootstrap'
 import './App.css'
 import navLogo from '../../img/hireblack-logo-no-border.svg'
 
@@ -16,14 +16,29 @@ const onlyOneActiveMatch = (match, location) => {
   else return false
 }
 
+const showPostJob = (user) => {
+  let display = !user || (user && user.isEmployer)
+    ? 'block'
+    : 'none'
+  return display
+}
+
 const NavBar = props => (
-  <Navbar style={props.style} fixedTop collapseOnSelect>
+  <Navbar fixedTop collapseOnSelect>
     <Navbar.Header>
       <NavbarBrand>
         <LinkContainer to='/'>
-          <img src={navLogo} alt='HireBlack logo' height='40px' width='40px'/>
+          <img src={navLogo} alt='HireBlack logo' height='40px' width='40px' />
         </LinkContainer>
       </NavbarBrand>
+      <Col
+        xsHidden={!props.user}
+        onClick={props.toggleDashMenu}
+        className='Dashboard-menuToggle'
+        xs={2} smHidden mdHidden lgHidden
+      >
+        <Glyphicon glyph='cog' />
+      </Col>
       <Navbar.Toggle />
     </Navbar.Header>
     <Navbar.Collapse>
@@ -38,10 +53,17 @@ const NavBar = props => (
           props.user
             ? <LinkContainer to='#' eventKey={3} className='dropdown-hover'>
                 <NavDropdown title='Account' id='account-dropdown'>
-                  <LinkContainer to='/dashboard' eventKey={3.1}>
+                  <LinkContainer
+                    to={
+                      props.user.is_employer
+                        ? '/dashboard/manage-jobs'
+                        : '/dashboard/saved-jobs'
+                    }
+                    eventKey={3.1}
+                  >
                     <MenuItem>Dashboard</MenuItem>
                   </LinkContainer>
-                  <LinkContainer to='#' eventKey={3.2} onClick={props.logoutUser(props.history)}>
+                  <LinkContainer to='#' eventKey={3.1} onClick={props.logOut(props.history)}>
                     <MenuItem >Logout</MenuItem>
                   </LinkContainer>
                 </NavDropdown>
@@ -59,15 +81,13 @@ const NavBar = props => (
               </LinkContainer>
         }
       </Nav>
-      <Nav pullRight>
-        <LinkContainer to='/post-new-job'>
-          <NavItem><span className='btn-oval'>Post a job</span></NavItem>
+      <Nav pullRight style={{display: showPostJob(props.user)}}>
+        <LinkContainer to='/dashboard/post-new-job'>
+          <NavItem hidden={!props.user || (props.user && props.user.is_employer)}><span className='btn-oval'>Post a job</span></NavItem>
         </LinkContainer>
       </Nav>
     </Navbar.Collapse>
   </Navbar>
 )
 
-const mapStateToProps = state => ({ history: state.history })
-
-export default connect(mapStateToProps)(NavBar)
+export default withRouter(NavBar)

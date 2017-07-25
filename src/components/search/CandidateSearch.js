@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Row, Col } from 'react-bootstrap'
-import { gettingAllUsers, filteringUsers } from 'APP/src/reducers/actions/users'
+import { gettingAllUsers, filteringUsers, buildBodyThenSearch } from 'APP/src/reducers/actions/users'
+import { grabbingCoords } from 'APP/src/reducers/actions/jobs'
 import { gettingAllSkills } from 'APP/src/reducers/actions/skills'
 import SearchBar from '../utilities/SearchBar'
 import CandidateSearchAdvanced from '../utilities/CandidateSearchAdvanced'
@@ -15,15 +16,21 @@ class CandidateSearch extends Component {
     this.state = {
       query: '',
       terms: [],
-      pendingTerms:[],
+      coords: '',
+      pendingTerms: [],
       filtered: false,
-      distance:'',
-      project_count:null
+      distance: '',
+      sortBy: ''
     }
   }
 
   componentDidMount () {
     this.props.getUsers()
+    if (!this.props.user || !this.props.user.coords) {
+      grabbingCoords()
+      .then(coords => this.setState({coords}))
+      .catch(err => console.error(err))
+    }
   }
 
   handleChange = type => event => {
@@ -68,6 +75,20 @@ class CandidateSearch extends Component {
     )
   }
 
+  clearFilter = (filter) => {
+    if (filter) {
+      // clear the search bar, show all job listings, and hide search header
+      this.setState({
+        query: '',
+        filtered: false
+      })
+      this.filterJobs()
+    } else {
+      // just clear the search bar, nbd
+      this.setState({query: ''})
+    }
+  }
+
   filterUsers = event => {
     // this is an event handler but we also use this in clearFilter,
     // in which case there's no event object to preventDefault of
@@ -75,30 +96,27 @@ class CandidateSearch extends Component {
 
     const {query} = this.state
     this.props.filterUsers(query)
-    // ^ when query === '', all job listings are shown
+    // ^ when query === '', all users are shown
     if (query) this.setState({filtered: true, terms: [...this.state.pendingTerms]})
     // we only show the search results header if this.state.filtered === true
     this.clearFilter()
   }
 
   buildBody = coords => {
-    const {terms, distance, employment_types, sortBy} = this.state
-    let must = {};
-    [...employment_types].forEach(type => {
-      must.match = {employment_types: type}
-    })
-    let should = terms.map(term => ({term: {_all: term}}))
+    const {terms, distance, sortBy} = this.state
+    let must = terms.map(term => ({term: {_all: term}}))
     const body = {
       query: {
         bool: {
           must,
-          should,
           filter: [
 
           ]
         }
       },
-      sort: [{_score: {order: 'desc'}}]
+      sort: [
+        {_score: {order: 'desc'}}
+      ]
     }
     if (distance) {
       body.query.bool.filter.push({
@@ -108,7 +126,15 @@ class CandidateSearch extends Component {
         }
       })
     }
-    if (sortBy === 'date') body.sort.push({updated_at: {order: 'desc'}})
+    if (sortBy === 'projectCount') {
+      body.sort.push({
+        _script: {
+          type: 'number',
+          script: 'params._source?.projects?.length ?: 0',
+          order: 'desc'
+        }
+      })
+    }
     if (sortBy === 'distance') {
       body.sort = [{
         _geo_distance: {
@@ -119,7 +145,19 @@ class CandidateSearch extends Component {
         }
       }]
     }
+    console.log('ADV SEARCH BODY: ', body)
     return body
+  }
+
+  advancedFilterUsers = event => {
+    event.preventDefault()
+    const coords = this.props.user.coords
+      ? this.props.user.coords
+      : this.state.coords
+    this.setState(
+      {filtered: true},
+      () => this.props.advancedFilterJobs(this.buildBody, coords)
+    )
   }
 
   render () {
@@ -133,27 +171,26 @@ class CandidateSearch extends Component {
           handleSubmit={this.filterUsers}
           handleChange={this.handleChange('query')}
           labelText='Filter users by skills'
-          submitButtonText='Search users by skills'
+          submitButtonText='Search'
         />
-        {
-          this.props.loading
-            ? <p>Loading Candidates...</p>
-            :
-            <div className='container__flex'>
-              <Col className='SearchAdvanced__container' xs={12} sm={3} md={3} lg={3}>
-                <CandidateSearchAdvanced
-                  filterJobs={this.advancedFilterUsers}
-                  handleChange={this.handleChange}
-                  clearFilter={this.clearFilter}
-                  clearChip={this.clearChip}
-                  filtered={this.state.filtered}
-                  query={this.state.query}
-                  terms={this.state.terms}
-                  state={this.state}
-                />
-              </Col>
-              <Col xs={12} sm={9} md={9} lg={9}>
-                <CandidateList
+        <div className='container__flex'>
+          <Col className='SearchAdvanced__container' xs={12} sm={3} md={3} lg={3}>
+            <CandidateSearchAdvanced
+              advancedFilterUsers={this.advancedFilterUsers}
+              handleChange={this.handleChange}
+              clearFilter={this.clearFilter}
+              clearChip={this.clearChip}
+              filtered={this.state.filtered}
+              query={this.state.query}
+              terms={this.state.terms}
+              state={this.state}
+            />
+          </Col>
+          <Col xs={12} sm={9} md={9} lg={9}>
+            {
+              this.state.loading
+                ? <p>Loading Candidates...</p>
+                : <CandidateList
                     filtered={this.state.filtered}
                     users={users}
                     query={this.state.query}
@@ -161,10 +198,9 @@ class CandidateSearch extends Component {
                     clearChip={this.clearChip}
                     terms={this.state.terms}
                   />
-              </Col>
-            </div>
-
-        }
+            }
+          </Col>
+        </div>
       </Row>
     )
   }
@@ -179,7 +215,10 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   getUsers: post => dispatch(gettingAllUsers()),
   getSkills: post => dispatch(gettingAllSkills()),
-  filterUsers: query => dispatch(filteringUsers(query))
+  filterUsers: query => dispatch(filteringUsers(query)),
+  advancedFilterUsers: (bodyBuilderFunc, coords) => {
+    return dispatch(buildBodyThenSearch(bodyBuilderFunc, coords))
+  }
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(CandidateSearch)

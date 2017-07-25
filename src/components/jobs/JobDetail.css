@@ -58,11 +58,11 @@
 }
 
 .JobInfo--summary {
-  min-width: 350px;
+
 }
 
 .JobInfo--summary-section {
-  padding: 10px 15px;
+  padding: 10px 0px;
   height: auto;
 }
 
@@ -146,7 +146,7 @@ and (min-width: 768px) {
   }
 
   .JobInfo--summary {
-    padding: 0 0 0 40px;
+    padding: 0 40px 0 40px;
   }
 
   .JobInfo--sidebar {

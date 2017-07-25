@@ -1,22 +1,23 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { gettingUserProjects } from 'APP/src/reducers/actions/projects'
+import { withRouter } from 'react-router-dom'
 import ProjectsList from './ProjectsList.js'
+import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
 
 class ProjectsPage extends Component {
 
-  constructor(props){
+  constructor (props) {
     super(props)
     this.state = {
       selectValue: [],
       selected_skills: [],
-      visible_projects: [],
+      visible_projects: []
     }
   }
 
-  _handleChange(input){
-		let viz = [];
-		let skill_ids = this.state.selected_skills;
+  _handleChange (input) {
+		let viz = []
+		let skill_ids = this.state.selected_skills
 
 		if (input === "" || input === null) {
 
@@ -83,32 +84,24 @@ class ProjectsPage extends Component {
 		this.setState(new_state);
 	}
 
-  render(){
-    let visible_projects = []
-    if(this.props.user && this.state.selectValue.length === 0 && this.state.selected_skills.length === 0){
-      visible_projects = this.props.user.projects
-    } else {
-      visible_projects = this.state.visible_projects
-    }
+  render () {
     return (
-      <div className='JobBoard'>
-				<h1>Projects</h1>
-  			{
+      <div>
+        <ScrollToTopOnMount />
+        <h1>Projects</h1>
+        {
           this.props.loading
             ? <p>Loading....</p>
-            : <div>
-								<ProjectsList projects={visible_projects} />
-							</div>
-  			}
+            : <ProjectsList projects={this.props.user.projects || []} />
+        }
       </div>
     )
   }
 }
 
 const mapStateToProps = state => ({
-  user:state.users.currentUser,
-	loading: state.loading
+  user: state.users.currentUser,
+  loading: state.loading
 })
 
-
-export default connect(mapStateToProps, null)(ProjectsPage)
+export default withRouter(connect(mapStateToProps)(ProjectsPage))
