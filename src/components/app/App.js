@@ -41,13 +41,6 @@ class App extends Component {
     })
   }
 
-  isNotDashRoute = () => {
-    const location = this.props.location
-      ? this.props.location.pathname.split('/')
-      : []
-    return location.includes('dashboard') === false
-  }
-
   logOut = history => event => {
     event.preventDefault()
     this.props.logOut(history)
@@ -84,7 +77,6 @@ class App extends Component {
             user={this.props.user}
             logOut={this.logOut}
             toggleDashMenu={this.toggleDashMenu}
-            isNotDashRoute={this.isNotDashRoute()}
           />
           <Nav
             className='Dashboard-menu-collapse'
@@ -92,6 +84,7 @@ class App extends Component {
             stacked
             onSelect={this.toggleDashMenu}
           >
+            <ScrollToTopOnMount scroll={this.state.showDashMenu} />
             {
               user && user.is_employer &&
                 dashMobileMenu.employer.map((link, i) => (
@@ -107,7 +100,6 @@ class App extends Component {
                   </LinkContainer>
                 ))
             }
-            <ScrollToTopOnMount scroll={this.state.showDashMenu} />
             {
               user && !user.is_employer &&
                 dashMobileMenu.applicant.map((link, i) => (
