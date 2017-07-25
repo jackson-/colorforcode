@@ -11,6 +11,7 @@ import ProjectCreate from '../projects/CreateProjectForm'
 import EditProject from '../projects/EditProjectForm'
 import JobDetailPage from '../jobs/JobDetailPage'
 import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
+import ImageUploader from './ImageUploader'
 
 const ApplicantDashboard = ({skills, user, project, getProject, updateUser, updateProject}) => (
   <Router>
@@ -22,6 +23,7 @@ const ApplicantDashboard = ({skills, user, project, getProject, updateUser, upda
             headerText={`Welcome, ${user.first_name}`}
             content={
               <Nav className='Sidebar__button-container' stacked>
+                <ImageUploader user={user} />
                 <LinkContainer to='/dashboard/applications' className='Dashboard__nav-item'>
                   <NavItem><Glyphicon glyph='list-alt' /> Applications</NavItem>
                 </LinkContainer>

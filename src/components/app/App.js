@@ -94,7 +94,6 @@ class App extends Component {
             user={this.props.user}
             logOut={this.logOut}
             toggleDashMenu={this.toggleDashMenu}
-            isNotDashRoute={this.isNotDashRoute()}
             onlyOneActiveMatch={this.onlyOneActiveMatch}
             showPostJob={this.showPostJob}
           />
