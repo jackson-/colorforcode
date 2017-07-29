@@ -10,6 +10,7 @@ module.exports = db => db.define('job', {
     type: Sequelize.TEXT,
     allowNull: false
   },
+  status: Sequelize.STRING,
   application_email: Sequelize.STRING,
   cc_email: Sequelize.STRING,
   application_url: Sequelize.STRING,
@@ -42,13 +43,13 @@ module.exports = db => db.define('job', {
          })
 */
 
-module.exports.associations = (Job, {User, Employer, Skill, JobSkill}) => {
+module.exports.associations = (Job, {User, Employer, Skill, JobSkill, JobApplication}) => {
   Job.belongsToMany(User, {
-    as: 'applicant',
+    as: 'applicants',
     through: 'JobApplication'
   })
   Job.belongsToMany(Skill, {
-    through: "JobSkill"
+    through: 'JobSkill'
   })
   Job.belongsTo(Employer)
 }

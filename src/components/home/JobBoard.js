@@ -25,16 +25,13 @@ class JobBoard extends Component {
     }
   }
 
-  componentWillMount () {
+  componentDidMount () {
+    this.props.getJobs()
     if (!this.props.user || !this.props.user.coords) {
       grabbingCoords()
       .then(coords => this.setState({coords}))
       .catch(err => console.error(err))
     }
-  }
-
-  componentDidMount () {
-    this.props.getJobs()
   }
 
   handleChange = type => event => {
@@ -162,7 +159,6 @@ class JobBoard extends Component {
 
   render () {
     let jobs = this.props.jobs || []
-    console.log(this.state)
     return (
       <Row className='JobBoard'>
         <SearchBar

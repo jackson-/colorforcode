@@ -1,17 +1,19 @@
 import React from 'react'
-import { Row, Jumbotron } from 'react-bootstrap'
-// import './Home.css'
+import { Row, Jumbotron, Col } from 'react-bootstrap'
+import '../home/Home.css'
 import CandidateSearch from './CandidateSearch'
+import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
 
 const Home = (props) => {
-  return(
+  return (
     <div className='Home'>
-      <header className='Home-header'>
+      <header className='Home-header candidate'>
+        <ScrollToTopOnMount />
         <Row>
           <Jumbotron className='Home-hero'>
-            <div className='parallax-content'>
+            <Col className='parallax-content' xs={12} sm={12} md={12} lg={12}>
               <h1 className='tagline'>Welcome to HireBlack</h1>
-            </div>
+            </Col>
           </Jumbotron>
         </Row>
       </header>

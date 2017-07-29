@@ -2,8 +2,8 @@
 
 /* ------ Misc (App-wide) ------ */
 
-.active, a:hover, a:focus {
-  color: #12CD6A;
+.nav .open>a, .nav .open>a:focus, .nav .open>a:hover {
+  background: none;
 }
 
 .container__flex {
@@ -15,6 +15,10 @@
   .container__flex {
     flex-direction: row;
   }
+}
+
+.glyphicon {
+  padding-right: 5px;
 }
 
 /* ------ Navbar ------ */
@@ -40,6 +44,7 @@
   margin-top: 6px;
 }
 
+.active, a:hover, a:focus,
 .navbar-default .navbar-nav>.active>a,
 .navbar-default .navbar-nav>.active>a:hover,
 .navbar-default .navbar-nav>.active>a:focus,
@@ -85,7 +90,27 @@
   font-size: larger;
   max-height: none;
   width: inherit;
-  height: 100vh;
+  height: calc(100vh - 60px);
+}
+
+.Dashboard-menuToggle span {
+  padding: 9px 10px;
+  margin: 11px 12px 12px 0;
+}
+
+.Dashboard-menuToggle {
+  width: auto;
+  float: right;
+  padding: 0;
+}
+
+.Dashboard-menu-collapse {
+  padding: 75px 0 10px 0;
+  margin-bottom: -60px;
+  display: block;
+  min-width: 180px;
+  background: #404648;
+  transition: all .65s ease-in-out;
 }
 
 .dropdown-menu {
@@ -140,4 +165,35 @@ and (min-width: 768px) {
   background: #C33A3C;
   border-color: #C33A3C;
   color: #FFFFFF;
+}
+
+.btn-xs {
+  width: auto !important;
+  background: none;
+}
+
+.btn-xs.btn-danger {
+  background: #53585A !important;
+  border: solid 2px #53585A ;
+}
+
+.btn-xs.btn-danger:hover {
+  background: #C33A3C !important;
+  border-color: #C33A3C;
+  color: #FFFFFF;
+  transition: all 0.1s ease-in;
+  transition-duration: 0.1s;
+}
+
+.btn-xs.btn-primary {
+  background: #53585A !important;
+  border: solid 2px #53585A ;
+}
+
+.btn-xs.btn-primary:hover {
+  background: #12CD6A !important;
+  border: solid 2px #12CD6A;
+  color: #FFFFFF;
+  transition: all 0.1s ease-in;
+  transition-duration: 0.1s;
 }

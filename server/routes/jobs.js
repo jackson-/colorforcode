@@ -52,7 +52,7 @@ module.exports = require('express').Router()
   })
 
   .post('/', (req, res, next) => {
-    const {skills} = req.body
+    const {skills, job} = req.body
     // const  token = req.body.token
     // stripe.charges.create({
     //   amount: 2,
@@ -62,21 +62,27 @@ module.exports = require('express').Router()
     // }, function(err, charge) {
     //   console.log("ERR", err, "CHARGE", charge)
     // });
-    Job.create(req.body.job)
-    .then(createdJob => createdJob.addSkills(skills))
-    .then(jobskill => Job.findOne({
-      where: {
-        id: jobskill[0][0].get().job_id
-      },
-      include: [Skill, Employer]
-    }))
+    let newJobId = null
+    Job.create(job)
+    .then(createdJob => {
+      newJobId = createdJob.id
+      return createdJob.addSkills(skills)
+    })
+    .then(jobskill => {
+      return Job.findOne({
+        where: {
+          id: jobskill[0][0].get().job_id
+        },
+        include: [Skill, Employer]
+      })
+    })
     .then(job => esClient.create({
       index: 'data',
       type: 'job',
       id: `${job.id}`,
       body: job.get()
     }))
-    .then(() => res.sendStatus(201))
+    .then(() => res.json(newJobId))
     .catch(next)
   })
 
@@ -94,22 +100,23 @@ module.exports = require('express').Router()
   .put('/:id',
     (req, res, next) => {
       const {job, skills} = req.body
-      Job.findById(req.params.id)
-      .then(foundJob => foundJob.update(job))
-      .then(updatedJob => updatedJob.addSkills(skills))
+      Job.update(job, {
+        where: {id: req.params.id},
+        returning: true
+      })
+      .spread((numJobsUpdated, updatedJobsArr) => {
+        const updatedJob = updatedJobsArr[0]
+        return updatedJob.addSkills(skills)
+      })
       .then(() => Job.findOne({
-        where: {
-          id: req.params.id
-        },
+        where: {id: req.params.id},
         include: [Skill, Employer]
       }))
       .then(editedJob => esClient.update({
         index: 'data',
         type: 'job',
         id: req.params.id,
-        body: {
-          doc: editedJob.get()
-        }
+        body: {doc: editedJob.get()}
       }))
       .then(() => res.sendStatus(200))
       .catch(next)
@@ -117,12 +124,14 @@ module.exports = require('express').Router()
 
   .delete('/:id',
     (req, res, next) => {
-      Job.destroy({
-        where: {
-          id: req.params.id
-        }
+      // we 'close' the job in Postgres but we delete the job from Elasticsearch,
+      // that way the job won't show up in job searches but the job data still
+      // can be seen and managed in the employer's (recruiter(s)) dashboard
+      Job.update({status: 'closed'}, {
+        where: {id: req.params.id},
+        returning: true
       })
-      .then(deletedJob => esClient.delete({
+      .spread((numClosedJobs, closedJobsArr) => esClient.delete({
         index: 'data',
         type: 'job',
         id: req.params.id
@@ -139,6 +148,7 @@ module.exports = require('express').Router()
       .then(application => res.sendStatus(201))
       .catch(next)
     })
+
   .get('/apps/:id',
     (req, res, next) =>
       User.findOne({
@@ -147,13 +157,13 @@ module.exports = require('express').Router()
         },
         include: [{ association: 'Job' }]
       })
-      .then(jobs => {
-        return res.json(jobs)})
+      .then(jobs => res.json(jobs))
       .catch(next))
+
   .get('/employer/:id',
     (req, res, next) => {
       Job.findAll({
-        where:{
+        where: {
           employer_id: req.params.id
         },
         include: [Employer, Skill]

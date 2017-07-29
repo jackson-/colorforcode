@@ -1,23 +1,35 @@
 import React from 'react'
-import { Row, Jumbotron } from 'react-bootstrap'
+import { withRouter } from 'react-router-dom'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
+import { Row, Col, Jumbotron } from 'react-bootstrap'
 import './Home.css'
 import JobBoard from './JobBoard'
+import CandidateSearch from '../search/CandidateSearch'
+import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
 
-const Home = (props) => {
-  return(
-    <div className='Home'>
-      <header className='Home-header'>
-        <Row>
-          <Jumbotron className='Home-hero'>
-            <div className='parallax-content'>
-              <h1 className='tagline'>Welcome to HireBlack</h1>
-            </div>
-          </Jumbotron>
-        </Row>
-      </header>
-      <JobBoard />
-    </div>
-  )
+const Home = props => (
+  <div className='Home'>
+    <header className='Home-header'>
+      <ScrollToTopOnMount />
+      <Row>
+        <Jumbotron className='Home-hero'>
+          <Col className='parallax-content' xs={12} sm={12} md={12} lg={12}>
+            <h1 className='tagline'>Welcome to HireBlack</h1>
+          </Col>
+        </Jumbotron>
+      </Row>
+    </header>
+    {props.user && props.user.is_employer ? <CandidateSearch /> : <JobBoard />}
+  </div>
+)
+
+Home.propTypes = {
+  user: PropTypes.object
 }
 
-export default Home
+const mapStateToProps = state => ({
+  user: state.users.currentUser
+})
+
+export default withRouter(connect(mapStateToProps)(Home))

@@ -31,7 +31,6 @@ const EmployerRegisterFields = props => (
     <FormGroup controlId='password'>
       <ControlLabel>Password</ControlLabel>
       <FormControl
-        required
         type='password'
         value={props.state.password}
         onChange={props.handleChange('password')}
@@ -43,7 +42,6 @@ const EmployerRegisterFields = props => (
     >
       <ControlLabel>Confirm Password</ControlLabel>
       <FormControl
-        required
         type='password'
         value={props.state.passwordConfirm}
         onChange={props.handleChange('passwordConfirm')}
@@ -63,6 +61,7 @@ const EmployerRegisterFields = props => (
       <ControlLabel>Company Role</ControlLabel>
       <FormControl
         required
+        defaultValue={props.state.company_role}
         componentClass='select'
         onChange={props.handleChange('company_role')}
       >

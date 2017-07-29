@@ -5,11 +5,12 @@ import axios from 'axios'
 import { creatingNewUser } from 'APP/src/reducers/actions/users'
 import EmployerFields from './EmployerRegisterFields'
 import ApplicantFields from './ApplicantRegisterFields'
-import { withRouter } from 'react-router-dom'
+import { withRouter, Redirect } from 'react-router-dom'
 import './Form.css'
+import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
 
 class RegisterForm extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       email: '',
@@ -17,7 +18,7 @@ class RegisterForm extends Component {
       passwordConfirm: '',
       company_name: '',
       company_role: '',
-      story:'',
+      story: '',
       first_name: '',
       last_name: '',
       zip_code: '',
@@ -33,11 +34,19 @@ class RegisterForm extends Component {
     }
   }
 
-  handleLocation(zip_code) {
+  handleLocation = zip_code => {
     axios.get(`http://maps.googleapis.com/maps/api/geocode/json?address=${zip_code}`)
     .then(res => res.data)
     .then(json => {
-      const location = json.results[0].formatted_address
+      const address = json.results[0].address_components.filter(c => (
+        c.types.includes('locality') ||
+        c.types.includes('administrative_area_level_1') ||
+        c.types.includes('country')
+      ))
+      const city = address[0].long_name
+      const state = address[1].short_name
+      const country = address[2].long_name
+      const location = country === 'United States' ? `${city}, ${state}` : `${city}, ${state} ${country}`
       const coords = `${json.results[0].geometry.location.lat},${json.results[0].geometry.location.lng}`
       this.setState({coords, zip_code, location})
     })
@@ -104,7 +113,7 @@ class RegisterForm extends Component {
     }
   }
 
-  getValidationState() {
+  getValidationState = () => {
     const { password, passwordConfirm } = this.state
     if (password === '' || passwordConfirm === '') return null
     else if (password === passwordConfirm) return 'success'
@@ -157,18 +166,31 @@ class RegisterForm extends Component {
     // turn the set into an array (postgres rejects sets)
     newUser.employment_type = [...newUser.employment_type]
     this.clearForm()
-    this.props.createUser(newUser, this.props.history)
+    this.props.createUser(newUser)
   }
 
-  render() {
+  render () {
+    if (this.props.user) {
+      return (
+        <Redirect
+          to={
+            this.props.user.is_employer
+              ? '/dashboard/manage-jobs'
+              : '/dashboard/saved-jobs'
+          }
+        />
+      )
+    }
+
     return (
       <Row className='RegisterForm'>
+        <ScrollToTopOnMount />
         <Col xs={12} sm={6} md={6} lg={6}>
           <h1 className='RegisterForm-header'>Register</h1>
           <form className='RegisterForm-body' onSubmit={this.handleSubmit}>
             <FormGroup controlId='is_employer' onChange={this.toggleAccountType}>
               <ControlLabel>What type of account would you like to create?</ControlLabel>
-              <FormControl componentClass="select">
+              <FormControl componentClass='select'>
                 <option>select an account type</option>
                 <option value='employer'>Employer</option>
                 <option value='applicant'>Applicant</option>
@@ -198,10 +220,13 @@ class RegisterForm extends Component {
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  createUser: (user, history) => dispatch(creatingNewUser(user, history))
+const mapStateToProps = state => ({
+  user: state.users.currentUser
 })
 
-const RegisterFormContainer = connect(null, mapDispatchToProps)(RegisterForm)
+const mapDispatchToProps = dispatch => ({
+  createUser: (user) => dispatch(creatingNewUser(user))
+})
 
+const RegisterFormContainer = connect(mapStateToProps, mapDispatchToProps)(RegisterForm)
 export default withRouter(RegisterFormContainer)
