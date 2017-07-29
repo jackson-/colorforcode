@@ -27,19 +27,19 @@ const job_skills = seed(JobSkill,
 const project_skills = seed(ProjectSkill,
   ({skills, projects}) => ({
     1: {
-      job_id: projects.d1.id,
+      project_id: projects.d1.id,
       skill_id: skills.react.id
     },
     2: {
-      job_id: projects.d1.id,
+      project_id: projects.d1.id,
       skill_id: skills.nginx.id
     },
     3: {
-      job_id: projects.c1.id,
+      project_id: projects.c1.id,
       skill_id: skills.mongo.id
     },
     4: {
-      job_id: projects.c2.id,
+      project_id: projects.c2.id,
       skill_id: skills.node.id
     }
   })

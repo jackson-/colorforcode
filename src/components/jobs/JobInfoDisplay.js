@@ -17,7 +17,7 @@ export default class JobInfoDisplay extends Component {
   }
 
   render () {
-    const {job} = this.props
+    const {job, user} = this.props
     let skills, employer, datePosted
 
     if (job) {
@@ -74,9 +74,11 @@ export default class JobInfoDisplay extends Component {
                   </section>
                 </Col>
                 <Col className='JobInfo--sidebar' xs={12} sm={5} md={4} lg={4}>
-                  <Button className='btn-oval' onClick={this.props.applyToJob}>
+                  {user &&
+                    <Button className='btn-oval' onClick={this.props.applyToJob}>
                     APPLY FOR JOB
-                  </Button>
+                    </Button>
+                  }
                   <Button className='btn-oval btn-oval__black'>
                     SAVE JOB
                   </Button>

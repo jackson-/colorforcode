@@ -41,6 +41,7 @@ class JobDetailPage extends Component {
             skills={skills}
             job={job}
             history={history}
+            user={user}
             applyToJob={this.sendApplication}
           />
         )

@@ -30,7 +30,7 @@ class RegisterForm extends Component {
       linkedin: '',
       twitter: '',
       work_auth: '',
-      employment_type: new Set([])
+      employment_types: new Set([])
     }
   }
 
@@ -51,6 +51,10 @@ class RegisterForm extends Component {
       this.setState({coords, zip_code, location})
     })
     .catch(err => console.error(err.stack))
+  }
+
+  isChecked = type => {
+    return this.state.employment_types.has(type)
   }
 
   handleChange = type => event => {
@@ -210,6 +214,7 @@ class RegisterForm extends Component {
                 state={this.state}
                 handleChange={this.handleChange}
                 validate={this.getValidationState}
+                isChecked={this.isChecked}
               />
             }
             <Button disabled={this.isInvalid()} className='primary' type='submit'>Create Account</Button>
