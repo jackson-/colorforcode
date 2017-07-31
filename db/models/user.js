@@ -82,7 +82,7 @@ module.exports.associations = (User, {OAuth, Job, Skill, Employer, Project}) => 
     foreignKey: 'applicant_id'
   })
   User.belongsToMany(Job, {
-    as: 'saved_jobs',
+    as: 'savedJobs',
     through: 'User_SavedJobs'
   })
   User.hasMany(Project)

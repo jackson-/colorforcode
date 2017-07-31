@@ -5,7 +5,7 @@ import './JobDetail.css'
 
 export default class JobInfoDisplay extends Component {
 
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       email: ''
@@ -16,9 +16,27 @@ export default class JobInfoDisplay extends Component {
     this.setState({email: event.target.value})
   }
 
+  applyToJob = () => {
+    const {user, job, applyToJob, history} = this.props
+    applyToJob(user.id, job.id, history)
+  }
+
+  saveJob = () => {
+    const {user, job, saveJob} = this.props
+    let savedJobsArr = user.savedJobs.map(j => j.id)
+    savedJobsArr.push(job.id)
+    saveJob({userId: user.id, savedJobsArr})
+  }
+
+  unsaveJob = () => {
+    const {user, job, unsaveJob} = this.props
+    let savedJobsArr = user.savedJobs.filter(j => j.id !== job.id).map(j => j.id)
+    unsaveJob({userId: user.id, savedJobsArr})
+  }
+
   render () {
-    const {job} = this.props
-    let skills, employer, datePosted
+    const {job, user, applyToJob} = this.props
+    let skills, employer, datePosted, saved
 
     if (job) {
       employer = job.employer
@@ -26,6 +44,11 @@ export default class JobInfoDisplay extends Component {
       if (job.skills) {
         skills = job.skills.map((skill, i) => skill.title)
       }
+    }
+
+    if (user && job) {
+      saved = user.savedJobs.filter(j => j.id === job.id).length > 0
+      console.log(saved)
     }
 
     return (
@@ -74,11 +97,14 @@ export default class JobInfoDisplay extends Component {
                   </section>
                 </Col>
                 <Col className='JobInfo--sidebar' xs={12} sm={5} md={4} lg={4}>
-                  <Button className='btn-oval' onClick={this.props.applyToJob}>
+                  <Button className='btn-oval' onClick={applyToJob}>
                     APPLY FOR JOB
                   </Button>
-                  <Button className='btn-oval btn-oval__black'>
-                    SAVE JOB
+                  <Button
+                    className='btn-oval btn-oval__black'
+                    onClick={!saved ? this.saveJob : this.unsaveJob}
+                  >
+                    {!saved ? 'SAVE JOB' : 'UNSAVE JOB'}
                   </Button>
                   <div className='JobInfo--subscribe-container'>
                     <h4>

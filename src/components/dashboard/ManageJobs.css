@@ -1,8 +1,10 @@
-.ManageJobs {
+.ManageJobs,
+.SavedJobs {
   padding: 5px 10px;
 }
 
-.ManageJobs-header {
+.ManageJobs-header,
+.SavedJobs-header {
   text-align: center;
 }
 
@@ -29,11 +31,13 @@ tbody > tr:hover {
 }
 
 @media only screen and (min-width: 768px) {
-  .ManageJobs {
+  .ManageJobs,
+  .SavedJobs {
     padding: 5px 40px;
   }
 
-  .ManageJobs-header {
+  .ManageJobs-header,
+  .SavedJobs-header {
     text-align: left;
   }
 

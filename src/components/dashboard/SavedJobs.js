@@ -15,25 +15,17 @@ export default class SavedJobs extends Component {
     }
   }
 
-  handleDuplicate = job => event => {
-    event.preventDefault()
-    job.skills = job.skills.map(skill => skill.id)
-    delete job.id
-    delete job.created_at
-    delete job.updated_at
-    job.status = 'open'
-    this.props.duplicateJob({job, skills: job.skills}, this.props.history)
-  }
-
-  handleClose = id => () => {
-    this.props.closeJob(id, this.props.history)
+  handleRemove = id => () => {
+    const savedJobs = this.props.user.savedJobs.filter(job => job.id !== id)
+    const savedJobsIds = savedJobs.map(job => job.id)
+    this.props.updateUser(this.props.user, savedJobsIds)
   }
 
   render () {
     const {jobs} = this.props
     return (
       <Row className='SavedJobs'>
-        <h1 className='SavedJobs-header'>MANAGE JOBS</h1>
+        <h1 className='SavedJobs-header'>SAVED JOBS</h1>
         <Table responsive>
           <thead>
             <tr>
@@ -45,38 +37,23 @@ export default class SavedJobs extends Component {
             </tr>
           </thead>
           <tbody>
-            {jobs.map((job, i) => (
+            {jobs && jobs.map((job, i) => (
               <tr key={i}>
                 <td>
                   {
                     job.status === 'closed'
                       ? job.title
-                      : <Link to={`/dashboard/jobs/${job.id}`}>{job.title}</Link>
+                      : <Link to={`/dashboard/saved-jobs/${job.id}`}>{job.title}</Link>
                   }
                 </td>
                 <td>
-                  {
-                    job.status === 'open'
-                    ? (
-                      <Button
-                        onClick={this.handleClose(job.id)}
-                        bsSize='xsmall'
-                        bsStyle='danger'
-                      >
-                        <Glyphicon glyph='trash' /> close
-                      </Button>
-                    )
-
-                    : (
-                      <Button
-                        onClick={this.handleDuplicate(job)}
-                        bsSize='xsmall'
-                        bsStyle='primary'
-                      >
-                        <Glyphicon glyph='retweet' /> duplicate
-                      </Button>
-                    )
-                  }
+                  <Button
+                    onClick={this.handleRemove(job.id)}
+                    bsSize='xsmall'
+                    bsStyle='danger'
+                  >
+                    <Glyphicon glyph='trash' /> remove
+                  </Button>
                 </td>
                 <td>{job.status}</td>
                 <td>{this.mostRecentDate(job)}</td>
@@ -91,7 +68,8 @@ export default class SavedJobs extends Component {
 }
 
 SavedJobs.propTypes = {
+  user: PropTypes.object,
   updateUser: PropTypes.func.isRequired,
-  jobs: PropTypes.array.isRequired,
+  jobs: PropTypes.array,
   history: PropTypes.object
 }

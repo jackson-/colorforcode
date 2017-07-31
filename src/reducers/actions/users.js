@@ -114,10 +114,10 @@ export const creatingNewEmployer = employer => dispatch => {
   .catch(err => console.error(`Couldn't create employer ${employer.name}...${err.stack}`))
 }
 
-export const updatingUser = (user) => dispatch => {
+export const updatingUser = (user, savedJobs) => dispatch => {
   // set loading state to true to trigger UI changes
   // update the user
-  axios.put(`/api/users/${user.id}`, {user})
+  axios.put(`/api/users/${user.id}`, {user, savedJobs})
   .then(res => res.data)
   // if the user is successfully updated, we fetch the updated users list
   .then(updatedUser => {

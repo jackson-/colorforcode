@@ -10,10 +10,11 @@ import Projects from '../projects/ProjectsPage'
 import ProjectCreate from '../projects/CreateProjectForm'
 import EditProject from '../projects/EditProjectForm'
 import JobDetailPage from '../jobs/JobDetailPage'
+import SavedJobs from './SavedJobs'
 import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
 import ImageUploader from './ImageUploader'
 
-const ApplicantDashboard = ({skills, user, project, getProject, updateUser, updateProject}) => (
+const ApplicantDashboard = ({skills, jobs, user, project, getProject, updateUser, updateProject}) => (
   <Router>
     <Row className='Dashboard'>
       <ScrollToTopOnMount />
@@ -48,7 +49,12 @@ const ApplicantDashboard = ({skills, user, project, getProject, updateUser, upda
             <h1>APPLICATION HISTORY</h1>
           )} />
           <Route path='/dashboard/saved-jobs' component={({history}) => (
-            <h1>SAVED JOBS</h1>
+            <SavedJobs
+              jobs={jobs}
+              user={user}
+              updateUser={updateUser}
+              history={history}
+            />
           )} />
           <Route path='/dashboard/projects' component={Projects} />
           <Route path='/dashboard/add-project' component={ProjectCreate} />
@@ -71,6 +77,7 @@ const ApplicantDashboard = ({skills, user, project, getProject, updateUser, upda
 )
 
 ApplicantDashboard.propTypes = {
+  jobs: PropTypes.array,
   user: PropTypes.object,
   skills: PropTypes.array,
   updateProject: PropTypes.func.isRequired,
