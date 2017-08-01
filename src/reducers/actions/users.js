@@ -66,11 +66,18 @@ export const buildBodyThenSearch = (bodyBuilderFunc, coords) => {
   }
 }
 
-export const whoami = () => dispatch => {
+export const whoami = (history) => dispatch => {
   axios.get('/api/auth/whoami')
   .then(response => {
     const user = response.data
     dispatch(authenticated(user))
+    if (history) {
+      history.push(
+      user.is_employer
+        ? '/dashboard/manage-jobs'
+        : '/dashboard/saved-jobs'
+      )
+    }
   })
   .catch(err => {
     console.error(err.stack)
@@ -78,9 +85,9 @@ export const whoami = () => dispatch => {
   })
 }
 
-export const login = (email, password) => dispatch => {
+export const login = (email, password, history) => dispatch => {
   axios.post('/api/auth/login/local', {email, password})
-  .then(() => dispatch(whoami()))
+  .then(() => dispatch(whoami(history)))
   .catch(() => dispatch(whoami()))
 }
 

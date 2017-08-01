@@ -183,6 +183,10 @@ and (min-width: 768px) {
   background: none;
 }
 
+.btn-xs--action {
+  margin: 2px;
+}
+
 .btn-xs.btn-danger {
   background: #53585A !important;
   border: solid 2px #53585A ;

@@ -36,7 +36,9 @@ tbody > tr:hover {
 
 @media only screen and (min-width: 768px) {
   .ManageJobs,
-  .SavedJobs {
+  .SavedJobs,
+  .Applications,
+  .Projects {
     padding: 5px 40px;
   }
 

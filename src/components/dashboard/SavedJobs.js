@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Table, Row, Button, Glyphicon } from 'react-bootstrap'
 import { Link, withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types'
+import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
 import './ManageJobs.css'
 
 class SavedJobs extends Component {
@@ -31,6 +32,7 @@ class SavedJobs extends Component {
     return (
       <Row className='SavedJobs'>
         <h1 className='SavedJobs-header'>SAVED JOBS</h1>
+        <ScrollToTopOnMount />
         <Table responsive>
           <thead>
             <tr>
@@ -55,6 +57,7 @@ class SavedJobs extends Component {
                   {
                     job.status === 'open' &&
                       <Button
+                        className='btn-xs--action'
                         onClick={this.applyToJob(job.id)}
                         bsSize='xsmall'
                         bsStyle='primary'
@@ -64,6 +67,7 @@ class SavedJobs extends Component {
                   }
                   <Button
                     onClick={this.unsaveJob(job.id)}
+                    className='btn-xs--action'
                     bsSize='xsmall'
                     bsStyle='danger'
                   >

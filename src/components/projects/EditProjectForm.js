@@ -85,15 +85,26 @@ class EditProjectForm extends Component {
 
     project = this.state
     project.user = this.props.user
-    skills = this.state.selectValue.map((skill) => skill.value)
+    project.id = this.props.project.id
+    skills = this.state.selected_skills
+      ? this.state.selected_skills
+      : project.selectValue.map(s => s.id)
     delete project.selectValue
     delete project.selected_skills
     this.clearForm()
-    this.props.updateProject({project, skills}, history)
+    console.log({project, skills})
+    this.props.updateProject({project, skills}, this.props.history)
+  }
+
+  handleDelete = (id, history) => event => {
+    event.preventDefault()
+    this.props.deleteProject(id, history)
   }
 
   render () {
     let skills = this.props.skills ? this.formatSkills(this.props.skills) : []
+    let {project, history} = this.props
+    console.log(this.state)
     return (
       <Row className='PostJobForm'>
         <ScrollToTopOnMount />
@@ -159,8 +170,11 @@ class EditProjectForm extends Component {
                 onChange={this.handleChange('pain_point')}
               />
             </FormGroup>
-            <Button className='primary' type='submit'>Save</Button>
+            <Button className='btn-oval' type='submit'>SAVE PROJECT</Button>
           </form>
+          <Button className='btn-oval btn-oval__black btn-oval__danger' onClick={this.handleDelete(project.id, history)}>
+            DELETE PROJECT
+          </Button>
         </Col>
       </Row>
     )

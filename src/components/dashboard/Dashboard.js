@@ -6,7 +6,7 @@ import { updatingUser } from '../../reducers/actions/users'
 import { gettingAllJobs, deletingJob, creatingNewJob,
          applyingToJob, unsavingJob } from '../../reducers/actions/jobs'
 import { gettingProjectById, updatingProject,
-         receiveProject } from 'APP/src/reducers/actions/projects'
+         receiveProject, deletingProject } from 'APP/src/reducers/actions/projects'
 import EmployerDashboard from './EmployerDashboard'
 import ApplicantDashboard from './ApplicantDashboard'
 
@@ -22,10 +22,10 @@ class Dashboard extends Component {
       duplicateJob,
       updateUser,
       updateProject,
+      deleteProject,
       getProject,
       project,
-      skills,
-      location
+      skills
     } = this.props
     return (
       <div>
@@ -43,12 +43,12 @@ class Dashboard extends Component {
                   />
 
                 : <ApplicantDashboard
-                    location={location}
                     project={project}
                     skills={skills}
                     user={user}
                     updateUser={updateUser}
                     updateProject={updateProject}
+                    deleteProject={deleteProject}
                     getProject={getProject}
                     receiveProject={receiveProject}
                     unsaveJob={unsaveJob}
@@ -72,6 +72,7 @@ Dashboard.propTypes = {
   closeJob: PropTypes.func.isRequired,
   duplicateJob: PropTypes.func.isRequired,
   updateProject: PropTypes.func.isRequired,
+  deleteProject: PropTypes.func.isRequired,
   getProject: PropTypes.func.isRequired,
   getJobs: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
@@ -96,6 +97,7 @@ const mapDispatchToProps = dispatch => ({
   updateUser: (user) => dispatch(updatingUser(user)),
   getProject: (id) => dispatch(gettingProjectById(id)),
   updateProject: (project, history) => dispatch(updatingProject(project, history)),
+  deleteProject: (projectId, history) => dispatch(deletingProject(projectId, history)),
   receiveProject: (project) => dispatch(receiveProject(project))
 })
 

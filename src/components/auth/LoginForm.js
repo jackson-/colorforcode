@@ -36,22 +36,18 @@ class LoginForm extends Component {
     event.preventDefault()
     const { email, password } = this.state
     this.clearForm()
-    this.props.loginUser(email, password)
+    this.props.loginUser(email, password, this.props.history)
   }
 
   render () {
     if (this.props.user) {
-      return (
-        <Redirect
-          to={
-            this.props.user.is_employer
-              ? '/dashboard/manage-jobs'
-              : '/dashboard/saved-jobs'
-          }
-        />
+      this.props.history.push(
+        this.props.user.is_employer
+          ? '/dashboard/manage-jobs'
+          : '/dashboard/saved-jobs'
       )
+      return null
     }
-
     return (
       <Row className='LoginForm'>
         <ScrollToTopOnMount />
@@ -89,7 +85,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  loginUser: (email, password) => dispatch(login(email, password))
+  loginUser: (email, password, history) => dispatch(login(email, password, history))
 })
 
 const LoginFormContainer = connect(mapStateToProps, mapDispatchToProps)(LoginForm)

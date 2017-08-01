@@ -5,8 +5,9 @@ import { LinkContainer } from 'react-router-bootstrap'
 import { Nav, NavItem, Row, Col, Glyphicon } from 'react-bootstrap'
 import './Dashboard.css'
 import Sidebar from '../utilities/Sidebar'
+import Applications from './Applications'
 import EditProfile from './EditProfile'
-import Projects from '../projects/ProjectsPage'
+import Projects from './Projects'
 import ProjectCreate from '../projects/CreateProjectForm'
 import EditProject from '../projects/EditProjectForm'
 import JobDetailPage from '../jobs/JobDetailPage'
@@ -22,6 +23,7 @@ const ApplicantDashboard = ({
   getProject,
   updateUser,
   updateProject,
+  deleteProject,
   unsaveJob,
   applyToJob
 }) => {
@@ -57,7 +59,7 @@ const ApplicantDashboard = ({
           </Col>
           <Col xs={12} sm={9} md={9} lg={9} className='Dashboard__content'>
             <Route exact path='/dashboard/applications' component={({history}) => (
-              <h1>APPLICATION HISTORY</h1>
+              <Applications user={user} />
             )} />
             <Route exact path='/dashboard/saved-jobs' component={({history}) => (
               <SavedJobs
@@ -69,14 +71,18 @@ const ApplicantDashboard = ({
                 applyToJob={applyToJob}
               />
             )} />
-            <Route exact path='/dashboard/projects' component={Projects} />
+            <Route exact path='/dashboard/projects' component={() => (
+              <Projects deleteProject={deleteProject} user={user} />
+            )} />
             <Route exact path='/dashboard/add-project' component={ProjectCreate} />
-            <Route exact path='/dashboard/edit-project/:id' component={({match}) => (
+            <Route exact path='/dashboard/edit-project/:id' component={({match, history}) => (
               <EditProject
+                history={history}
                 skills={skills}
                 project={project}
                 getProject={getProject}
                 updateProject={updateProject}
+                deleteProject={deleteProject}
               />
             )} />
             <Route exact path='/dashboard/edit-profile' component={() => (
@@ -95,6 +101,7 @@ ApplicantDashboard.propTypes = {
   user: PropTypes.object,
   skills: PropTypes.array,
   updateProject: PropTypes.func.isRequired,
+  deleteProject: PropTypes.func.isRequired,
   getProject: PropTypes.func.isRequired,
   updateUser: PropTypes.func.isRequired,
   applyToJob: PropTypes.func.isRequired,
