@@ -21,6 +21,17 @@
   padding-right: 5px;
 }
 
+.user-avatar {
+  max-width: 100px;
+  margin: auto;
+}
+
+.avatar-btn {
+  margin: 15px auto;
+  display: block;
+  color: #E4E4E4;
+}
+
 /* ------ Navbar ------ */
 
 .navbar {

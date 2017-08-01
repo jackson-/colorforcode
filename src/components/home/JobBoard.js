@@ -199,8 +199,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  getJobs: post => dispatch(gettingAllJobs()),
-  getSkills: post => dispatch(gettingAllSkills()),
+  getJobs: () => dispatch(gettingAllJobs()),
+  getSkills: () => dispatch(gettingAllSkills()),
   filterJobs: query => dispatch(filteringJobs(query)),
   advancedFilterJobs: (bodyBuilder, coords) => {
     dispatch(buildBodyThenSearch(bodyBuilder, coords))

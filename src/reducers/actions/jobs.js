@@ -5,6 +5,7 @@ import { createNewJob, requestAllJobs, requestFilteredJobs,
          requestJob, requestUserJobs, applyToJob, requestAppliedJobs } from './loading'
 import { gettingAllSkills } from './skills'
 import { whoami } from './users'
+import { receiveError } from './errors'
 
 /* --------- PURE ACTION CREATORS --------- */
 export const receiveJob = job => ({
@@ -155,4 +156,23 @@ export const deletingJob = (id, history) => dispatch => {
   .then(() => dispatch(whoami()))
   .then(() => history.push('/dashboard/manage-jobs'))
   .catch(err => console.error(`Sorry, cuz. Couldn't delete that job post...${err.stack}`))
+}
+
+export const savingJob = ({userId, savedJobsArr}) => dispatch => {
+  if (!userId) {
+    return dispatch(receiveError({
+      status: null,
+      message: 'Sign in or register to save jobs.'
+    }))
+  }
+
+  axios.put(`/api/users/${userId}`, {savedJobsArr})
+  .then(() => dispatch(whoami()))
+  .catch(err => console.error(`Sorry, cuz. Couldn't save job for user ${userId}...${err.stack}`))
+}
+
+export const unsavingJob = ({userId, savedJobsArr}) => dispatch => {
+  axios.put(`/api/users/${userId}`, {savedJobsArr})
+  .then(() => dispatch(whoami()))
+  .catch(err => console.error(`Sorry, cuz. Couldn't unsave job for user ${userId}...${err.stack}`))
 }
