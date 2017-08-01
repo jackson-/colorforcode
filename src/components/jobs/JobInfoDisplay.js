@@ -75,13 +75,15 @@ export default class JobInfoDisplay extends Component {
                 </Col>
                 <Col className='JobInfo--sidebar' xs={12} sm={5} md={4} lg={4}>
                   {user &&
-                    <Button className='btn-oval' onClick={this.props.applyToJob}>
-                    APPLY FOR JOB
-                    </Button>
+                    <div>
+                      <Button className='btn-oval' onClick={this.props.applyToJob}>
+                      APPLY FOR JOB
+                      </Button>
+                      <Button className='btn-oval btn-oval__black'>
+                        SAVE JOB
+                      </Button>
+                    </div>
                   }
-                  <Button className='btn-oval btn-oval__black'>
-                    SAVE JOB
-                  </Button>
                   <div className='JobInfo--subscribe-container'>
                     <h4>
                       Get alerted about similar jobs!
