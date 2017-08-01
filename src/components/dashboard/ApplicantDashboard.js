@@ -82,6 +82,7 @@ const ApplicantDashboard = ({
             <Route exact path='/dashboard/edit-profile' component={() => (
               <EditProfile user={user} updateUser={updateUser} />
             )} />
+            <Route exact path='/dashboard/saved-jobs/:id' component={JobDetailPage} />
           </Col>
         </div>
       </Row>

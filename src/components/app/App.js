@@ -143,11 +143,11 @@ class App extends Component {
             <Route exact path='/login' component={LoginForm} />
             <Route exact path='/jobs/:id' component={JobDetailPage} />
             {/* PRIVATE ROUTES */}
-            <Route path='/dashboard/:action' component={() => {
+            <Route exact path='/dashboard/:action' component={() => {
               if (!user) return <Redirect to='/login' />
               return <Dashboard />
             }} />
-            <Route path='/dashboard/:action/:id' component={() => {
+            <Route exact path='/dashboard/:action/:id' component={() => {
               if (!user) return <Redirect to='/login' />
               return <Dashboard />
             }} />

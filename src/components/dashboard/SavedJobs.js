@@ -48,7 +48,7 @@ class SavedJobs extends Component {
                   {
                     job.status === 'closed'
                       ? job.title
-                      : <Link to={`/jobs/${job.id}`}>{job.title}</Link>
+                      : <Link to={`/dashboard/saved-jobs/${job.id}`}>{job.title}</Link>
                   }
                 </td>
                 <td>

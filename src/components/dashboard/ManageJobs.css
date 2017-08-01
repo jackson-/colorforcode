@@ -1,6 +1,10 @@
 .ManageJobs,
-.SavedJobs {
+.SavedJobs,
+.Applications,
+.Projects {
   padding: 5px 10px;
+  background: #E4E4E4;
+  height: 100%;
 }
 
 .ManageJobs-header,

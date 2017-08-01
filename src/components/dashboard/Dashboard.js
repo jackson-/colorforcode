@@ -3,8 +3,10 @@ import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { updatingUser } from '../../reducers/actions/users'
-import { gettingAllJobs, deletingJob, creatingNewJob, applyingToJob, unsavingJob } from '../../reducers/actions/jobs'
-import { gettingProjectById, updatingProject, receiveProject } from 'APP/src/reducers/actions/projects'
+import { gettingAllJobs, deletingJob, creatingNewJob,
+         applyingToJob, unsavingJob } from '../../reducers/actions/jobs'
+import { gettingProjectById, updatingProject,
+         receiveProject } from 'APP/src/reducers/actions/projects'
 import EmployerDashboard from './EmployerDashboard'
 import ApplicantDashboard from './ApplicantDashboard'
 
@@ -22,7 +24,8 @@ class Dashboard extends Component {
       updateProject,
       getProject,
       project,
-      skills
+      skills,
+      location
     } = this.props
     return (
       <div>
@@ -40,6 +43,7 @@ class Dashboard extends Component {
                   />
 
                 : <ApplicantDashboard
+                    location={location}
                     project={project}
                     skills={skills}
                     user={user}
