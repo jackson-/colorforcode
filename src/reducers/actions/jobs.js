@@ -94,6 +94,7 @@ export const applyingToJob = (user_id, job_id, history) => dispatch => {
   dispatch(applyToJob())
   axios.post(`/api/jobs/${job_id}/apply`, {user_id, job_id})
   .then(() => {
+    dispatch(whoami())
     dispatch(appliedToJob())
     history.push('/dashboard/applications')
   })

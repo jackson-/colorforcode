@@ -171,15 +171,12 @@ class RegisterForm extends Component {
 
   render () {
     if (this.props.user) {
-      return (
-        <Redirect
-          to={
-            this.props.user.is_employer
-              ? '/dashboard/manage-jobs'
-              : '/dashboard/saved-jobs'
-          }
-        />
+      this.props.history.push(
+        this.props.user.is_employer
+          ? '/dashboard/manage-jobs'
+          : '/dashboard/saved-jobs'
       )
+      return null
     }
 
     return (

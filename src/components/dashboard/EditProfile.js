@@ -5,6 +5,7 @@ import axios from 'axios'
 import EmployerFields from '../auth/EmployerRegisterFields'
 import ApplicantFields from '../auth/ApplicantRegisterFields'
 import '../auth/Form.css'
+import './Dashboard.css'
 import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
 
 class EditProfile extends Component {

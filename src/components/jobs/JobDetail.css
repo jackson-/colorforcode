@@ -6,7 +6,11 @@
 }
 
 .JobInfo {
-  padding: 60px 0 0 0;
+  padding-top: 60px;
+  background: #FFFFFF;
+  height: 100%;
+  overflow: auto;
+  margin: 0 -15px;
 }
 
 .JobInfo--header {
@@ -57,8 +61,9 @@
   font-size: .75em;
 }
 
-.JobInfo--summary {
-
+.JobInfo--summary,
+.JobInfo--sidebar {
+  background: #FFFFFF;
 }
 
 .JobInfo--summary-section {

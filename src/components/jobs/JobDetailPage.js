@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
 import JobInfoDisplay from './JobInfoDisplay'
 import JobUpdateDisplay from './JobUpdateDisplay'
 import { applyingToJob, gettingJobById, updatingJob, deletingJob, savingJob, unsavingJob } from 'APP/src/reducers/actions/jobs'
@@ -13,7 +14,7 @@ class JobDetailPage extends Component {
   }
 
   render () {
-    const {user, job, skills, history, updateJob, deleteJob, saveJob, unsaveJob} = this.props
+    const {user, job, skills, history, location, updateJob, deleteJob, saveJob, unsaveJob} = this.props
     let jobComponent = ''
     if (job) {
       if (user && user.is_employer && (user.employer.id === job.employer.id)) {
@@ -41,7 +42,6 @@ class JobDetailPage extends Component {
         )
       }
     }
-
     return (
       <div className='JobDetailPage'>
         <ScrollToTopOnMount />
@@ -66,4 +66,4 @@ const mapDispatchToProps = dispatch => ({
   unsaveJob: (userId, savedJobs) => dispatch(unsavingJob(userId, savedJobs))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(JobDetailPage)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(JobDetailPage))

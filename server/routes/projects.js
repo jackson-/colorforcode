@@ -82,7 +82,8 @@ module.exports = require('express').Router()
       var grouped = _.groupBy(results.hits.hits, (p) => {
         return p._source.user_id
       })
-      return res.status(200).json(grouped)})
+      return res.status(200).json(grouped)
+    })
     .catch(next)
   })
 
@@ -94,7 +95,8 @@ module.exports = require('express').Router()
       var grouped = _.groupBy(advancedResults, (p) => {
         return p._source.user_id
       })
-      return res.status(200).json(grouped)})
+      return res.status(200).json(grouped)
+    })
     .catch(next)
   })
 
@@ -112,38 +114,50 @@ module.exports = require('express').Router()
   .put('/:id',
     (req, res, next) => {
       const {project, skills} = req.body
+      let updated
       Project.findById(req.params.id)
       .then(foundProject => foundProject.update(project))
-      .then(updatedProject => updatedProject.addSkills(skills))
+      .then(updatedProject => updatedProject.setSkills(skills))
       .then(() => Project.findOne({
         where: {
           id: req.params.id
         },
         include: [Skill, User]
       }))
-      .then(editedProject => esClient.update({
+      .then(editedProject => {
+        updated = editedProject
+        return User.findById(editedProject.user_id, {
+          include: [{model: Project, include: [Skill]}]
+        })
+      })
+      .then(updatedUser => esClient.update({
         index: 'data',
-        type: 'project',
-        id: req.params.id,
-        body: {
-          doc: editedProject.get()
-        }
+        type: 'user',
+        id: updatedUser.id,
+        body: {doc: updatedUser.get()}
       }))
-      .then(() => res.sendStatus(200))
+      .then(() => res.status(200).json(updated))
       .catch(next)
     })
 
   .delete('/:id',
     (req, res, next) => {
-      Project.destroy({
-        where: {
-          id: req.params.id
-        }
+      let id = null
+      Project.findById(req.params.id)
+      .then(project => {
+        id = project.user_id
+        return project.destroy()
       })
-      .then(deletedProject => esClient.delete({
+      .then(deletedProject => {
+        return User.findById(id, {
+          include: [{model: Project, include: [Skill]}]
+        })
+      })
+      .then(updatedUser => esClient.update({
         index: 'data',
-        type: 'project',
-        id: req.params.id
+        type: 'user',
+        id: updatedUser.id,
+        body: {doc: updatedUser.get()}
       }))
       .then(() => res.sendStatus(204))
       .catch(next)
