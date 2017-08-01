@@ -101,7 +101,6 @@ export const creatingNewUser = (user) => dispatch => {
   .then(res => res.data)
   // if the user is successfully created, we receive the updated users list
   .then(newUser => {
-    dispatch(gettingAllUsers())
     dispatch(login(newUser.email, newUser.password))
     dispatch(whoami())
   })
@@ -115,14 +114,13 @@ export const creatingNewEmployer = employer => dispatch => {
   .catch(err => console.error(`Couldn't create employer ${employer.name}...${err.stack}`))
 }
 
-export const updatingUser = (user) => dispatch => {
+export const updatingUser = (user, savedJobs) => dispatch => {
   // set loading state to true to trigger UI changes
   // update the user
-  axios.put(`/api/users/${user.id}`, {user})
+  axios.put(`/api/users/${user.id}`, {user, savedJobs})
   .then(res => res.data)
   // if the user is successfully updated, we fetch the updated users list
   .then(updatedUser => {
-    dispatch(gettingAllUsers())
     dispatch(whoami())
   })
   // otherwise we catch the error...
@@ -132,14 +130,12 @@ export const updatingUser = (user) => dispatch => {
 export const uploadingAvatar = (user, file) => dispatch => {
   dispatch(beginUploading())
   user.image_url = `https://s3.amazonaws.com/hireblack/avatars/${file.name}`
-  const options = {headers: {'Content-Type':file.type}};
+  const options = {headers: {'Content-Type': file.type}}
   axios.get(
     `http://localhost:1337/api/users/avatars/sign-s3?&file-name=${file.name}&file-type=${file.type}`
   )
   .then(res => axios.put(res.data.signedRequest, file, options))
-  .then(() => {
-    dispatch(updatingUser(user))
-  })
+  .then(() => dispatch(updatingUser(user)))
   .then(() => dispatch(doneUploading()))
   .catch(err => console.error(`Mang, I couldn't upload the avatar! ${err.stack}`))
 }
@@ -147,14 +143,12 @@ export const uploadingAvatar = (user, file) => dispatch => {
 export const uploadingResume = (user, file) => dispatch => {
   dispatch(beginUploading())
   user.resume_url = `https://s3.amazonaws.com/hireblack/resumes/${file.name}`
-  const options = {headers: {'Content-Type':file.type}};
+  const options = {headers: {'Content-Type': file.type}}
   axios.get(
     `http://localhost:1337/api/users/resumes/sign-s3?&file-name=${file.name}&file-type=${file.type}`
   )
   .then(res => axios.put(res.data.signedRequest, file, options))
-  .then(() => {
-    dispatch(updatingUser(user))
-  })
+  .then(() => dispatch(updatingUser(user)))
   .then(() => dispatch(doneUploading()))
   .catch(err => console.error(`Mang, I couldn't upload the resume! ${err.stack}`))
 }

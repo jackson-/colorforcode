@@ -41,11 +41,21 @@ class App extends Component {
     })
   }
 
-  isNotDashRoute = () => {
-    const location = this.props.location
-      ? this.props.location.pathname.split('/')
-      : []
-    return location.includes('dashboard') === false
+  showPostJob = (user) => {
+    let display = !user || (user && user.isEmployer)
+      ? 'block'
+      : 'none'
+    return display
+  }
+
+  /*
+    The .active class is being applied to '/' even when it isn't the current
+    location.pathname because all other paths are its children. This method
+    corrects for that.
+  */
+  onlyOneActiveMatch = (match, location) => {
+    if (match) return location.pathname === match.path
+    else return false
   }
 
   logOut = history => event => {
@@ -84,7 +94,8 @@ class App extends Component {
             user={this.props.user}
             logOut={this.logOut}
             toggleDashMenu={this.toggleDashMenu}
-            isNotDashRoute={this.isNotDashRoute()}
+            onlyOneActiveMatch={this.onlyOneActiveMatch}
+            showPostJob={this.showPostJob}
           />
           <Nav
             className='Dashboard-menu-collapse'
@@ -127,10 +138,11 @@ class App extends Component {
           <Grid fluid className='App'>
             {/* PUBLIC ROUTES */}
             <Route exact strict path='/' component={Home} />
-            <Route path='/about' component={About} />
-            <Route path='/register' component={RegisterForm} />
-            <Route path='/login' component={LoginForm} />
-            <Route path='/jobs/:id' component={JobDetailPage} />
+            <Route exact path='/about' component={About} />
+            <Route exact path='/register' component={RegisterForm} />
+            <Route exact path='/login' component={LoginForm} />
+            <Route exact path='/jobs/:id' component={JobDetailPage} />
+            {/* PRIVATE ROUTES */}
             <Route path='/dashboard/:action' component={() => {
               if (!user) return <Redirect to='/login' />
               return <Dashboard />
@@ -148,7 +160,6 @@ class App extends Component {
 
 App.propTypes = {
   user: PropTypes.object,
-  location: PropTypes.object,
   logOut: PropTypes.func.isRequired
 }
 

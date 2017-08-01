@@ -6,13 +6,15 @@ import jobs from './jobsReducer'
 import users from './usersReducer'
 import skills from './skillsReducer'
 import projects from './projectsReducer'
+import error from './errorReducer'
 
 const rootReducer = combineReducers({
   loading,
   jobs,
   users,
   skills,
-  projects
+  projects,
+  error
 })
 
 export default rootReducer
