@@ -138,10 +138,11 @@ class App extends Component {
           <Grid fluid className='App'>
             {/* PUBLIC ROUTES */}
             <Route exact strict path='/' component={Home} />
-            <Route path='/about' component={About} />
-            <Route path='/register' component={RegisterForm} />
-            <Route path='/login' component={LoginForm} />
-            <Route path='/jobs/:id' component={JobDetailPage} />
+            <Route exact path='/about' component={About} />
+            <Route exact path='/register' component={RegisterForm} />
+            <Route exact path='/login' component={LoginForm} />
+            <Route exact path='/jobs/:id' component={JobDetailPage} />
+            {/* PRIVATE ROUTES */}
             <Route path='/dashboard/:action' component={() => {
               if (!user) return <Redirect to='/login' />
               return <Dashboard />

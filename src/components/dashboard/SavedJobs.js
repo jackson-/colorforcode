@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { Table, Row, Button, Glyphicon } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import './ManageJobs.css'
 
-export default class SavedJobs extends Component {
+class SavedJobs extends Component {
 
   mostRecentDate = job => {
     const {created_at, updated_at} = job
@@ -15,14 +15,19 @@ export default class SavedJobs extends Component {
     }
   }
 
-  handleRemove = id => () => {
-    const savedJobs = this.props.user.savedJobs.filter(job => job.id !== id)
-    const savedJobsIds = savedJobs.map(job => job.id)
-    this.props.updateUser(this.props.user, savedJobsIds)
+  applyToJob = id => () => {
+    const {user, applyToJob, history} = this.props
+    applyToJob(user.id, id, history)
+  }
+
+  unsaveJob = id => () => {
+    const {user, unsaveJob} = this.props
+    let savedJobsArr = user.savedJobs.filter(j => j.id !== id).map(j => j.id)
+    unsaveJob({userId: user.id, savedJobsArr})
   }
 
   render () {
-    const {jobs} = this.props
+    const jobs = this.props.user.savedJobs
     return (
       <Row className='SavedJobs'>
         <h1 className='SavedJobs-header'>SAVED JOBS</h1>
@@ -43,16 +48,26 @@ export default class SavedJobs extends Component {
                   {
                     job.status === 'closed'
                       ? job.title
-                      : <Link to={`/dashboard/saved-jobs/${job.id}`}>{job.title}</Link>
+                      : <Link to={`/jobs/${job.id}`}>{job.title}</Link>
                   }
                 </td>
                 <td>
+                  {
+                    job.status === 'open' &&
+                      <Button
+                        onClick={this.applyToJob(job.id)}
+                        bsSize='xsmall'
+                        bsStyle='primary'
+                      >
+                        <Glyphicon glyph='briefcase' /> apply
+                      </Button>
+                  }
                   <Button
-                    onClick={this.handleRemove(job.id)}
+                    onClick={this.unsaveJob(job.id)}
                     bsSize='xsmall'
                     bsStyle='danger'
                   >
-                    <Glyphicon glyph='trash' /> remove
+                    <Glyphicon glyph='trash' /> unsave
                   </Button>
                 </td>
                 <td>{job.status}</td>
@@ -69,7 +84,12 @@ export default class SavedJobs extends Component {
 
 SavedJobs.propTypes = {
   user: PropTypes.object,
-  updateUser: PropTypes.func.isRequired,
+  updateUser: PropTypes.func,
+  applyToJob: PropTypes.func,
+  saveJob: PropTypes.func,
+  unsaveJob: PropTypes.func,
   jobs: PropTypes.array,
   history: PropTypes.object
 }
+
+export default withRouter(SavedJobs)

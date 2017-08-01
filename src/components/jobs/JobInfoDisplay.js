@@ -35,7 +35,7 @@ export default class JobInfoDisplay extends Component {
   }
 
   render () {
-    const {job, user, applyToJob} = this.props
+    const {job, user} = this.props
     let skills, employer, datePosted, saved
 
     if (job) {
@@ -48,7 +48,6 @@ export default class JobInfoDisplay extends Component {
 
     if (user && job) {
       saved = user.savedJobs.filter(j => j.id === job.id).length > 0
-      console.log(saved)
     }
 
     return (
@@ -97,7 +96,7 @@ export default class JobInfoDisplay extends Component {
                   </section>
                 </Col>
                 <Col className='JobInfo--sidebar' xs={12} sm={5} md={4} lg={4}>
-                  <Button className='btn-oval' onClick={applyToJob}>
+                  <Button className='btn-oval' onClick={this.applyToJob}>
                     APPLY FOR JOB
                   </Button>
                   <Button
