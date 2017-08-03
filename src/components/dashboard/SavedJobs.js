@@ -18,7 +18,7 @@ class SavedJobs extends Component {
 
   applyToJob = id => () => {
     const {user, applyToJob, history} = this.props
-    applyToJob(user.id, id, history)
+    applyToJob(user, id, history)
   }
 
   unsaveJob = id => () => {

@@ -30,7 +30,7 @@ class RegisterForm extends Component {
       linkedin: '',
       twitter: '',
       work_auth: '',
-      employment_type: new Set([])
+      employment_types: new Set([])
     }
   }
 
@@ -53,18 +53,22 @@ class RegisterForm extends Component {
     .catch(err => console.error(err.stack))
   }
 
+  isChecked = type => {
+    return this.state.employment_types.has(type)
+  }
+
   handleChange = type => event => {
     const {value} = event.target
     if (type === 'zip_code' && value.toString().length === 5) {
       /* first we finish updating the state of the input, then we use the zip to find the rest of the location data by passing the callback to setState (an optional 2nd param) */
       this.setState({[type]: value}, this.handleLocation(value))
-    } else if (type === 'employment_type') {
-      this.state.employment_type.has(value)
-        ? this.state.employment_type.delete(value)
-        : this.state.employment_type.add(value)
-      const employment_type = new Set([...this.state.employment_type])
+    } else if (type === 'employment_types') {
+      this.state.employment_types.has(value)
+        ? this.state.employment_types.delete(value)
+        : this.state.employment_types.add(value)
+      const employment_types = new Set([...this.state.employment_types])
       /* ^Using a Set instead of an array because we need the data values to be unique */
-      this.setState({employment_type})
+      this.setState({employment_types})
     } else if (type === 'work_auth' || type === 'company_role') {
       value === 'select'
         ? this.setState({[type]: ''})
@@ -92,7 +96,7 @@ class RegisterForm extends Component {
       linkedin: '',
       twitter: '',
       work_auth: '',
-      employment_type: new Set([])
+      employment_types: new Set([])
     })
   }
 
@@ -164,7 +168,7 @@ class RegisterForm extends Component {
     event.preventDefault()
     const newUser = {...this.state}
     // turn the set into an array (postgres rejects sets)
-    newUser.employment_type = [...newUser.employment_type]
+    newUser.employment_types = [...newUser.employment_types]
     this.clearForm()
     this.props.createUser(newUser)
   }
@@ -207,6 +211,7 @@ class RegisterForm extends Component {
                 state={this.state}
                 handleChange={this.handleChange}
                 validate={this.getValidationState}
+                isChecked={this.isChecked}
               />
             }
             <Button disabled={this.isInvalid()} className='primary' type='submit'>Create Account</Button>

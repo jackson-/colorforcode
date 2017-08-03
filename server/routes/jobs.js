@@ -3,6 +3,7 @@
 var stripe = require("stripe")(
   "API_SECRET"
 )
+var nodemailer = require('nodemailer');
 // var stripe = require("stripe")(
 //   "sk_test_BQokikJOvBiI2HlWgH4olfQ2"
 // );
@@ -142,9 +143,33 @@ module.exports = require('express').Router()
 
   .post('/:id/apply',
     (req, res, next) => {
-      const user_id = req.body.user_id
+      const user = req.body.user
       Job.findById(req.params.id)
-      .then(foundJob => foundJob.addApplicant(user_id))
+      .then(foundJob => {
+        var transporter = nodemailer.createTransport({
+          service: 'gmail',
+          auth: {
+            user: 'jackson.t.devin@gmail.com',
+            pass: '3rdEyeFly6733'
+          }
+        });
+        var mailOptions = {
+          from: 'jackson.t.devin@gmail.com',
+          to: `${foundJob.application_email}, ${foundJob.cc_email}`,
+          subject: 'New Applications!',
+          html: `<p>${user.first_name} ${user.last_name} just applied to ${foundJob.title}!
+          Check them out <a href='http://localhost:3000/users/${user.id}'>here</a>.</p>`
+        };
+
+        transporter.sendMail(mailOptions, function(error, info){
+          if (error) {
+            console.log(error);
+          } else {
+            console.log('Email sent: ' + info.response);
+          }
+        });
+        return foundJob.addApplicant(user.id)
+      })
       .then(application => res.sendStatus(201))
       .catch(next)
     })
