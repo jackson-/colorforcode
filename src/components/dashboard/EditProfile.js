@@ -30,8 +30,8 @@ class EditProfile extends Component {
       linkedin: this.props.user ? this.props.user.linkedin : '',
       twitter: this.props.user ? this.props.user.twitter : '',
       work_auth: this.props.user ? this.props.user.work_auth : '',
-      employment_type: this.props.user && this.props.user.employment_type
-        ? new Set([...this.props.user.employment_type])
+      employment_types: this.props.user && this.props.user.employment_types
+        ? new Set([...this.props.user.employment_types])
         : new Set([])
     }
   }
@@ -60,13 +60,13 @@ class EditProfile extends Component {
     if (type === 'zip_code' && value.toString().length >= 5) {
       /* first we finish updating the state of the input, then we use the zip to find the rest of the location data by passing the callback to setState (an optional 2nd param) */
       this.setState({[type]: value}, this.handleLocation(value))
-    } else if (type === 'employment_type') {
-      this.state.employment_type.has(value)
-        ? this.state.employment_type.delete(value)
-        : this.state.employment_type.add(value)
-      const employment_type = new Set([...this.state.employment_type])
+    } else if (type === 'employment_types') {
+      this.state.employment_types.has(value)
+        ? this.state.employment_types.delete(value)
+        : this.state.employment_types.add(value)
+      const employment_types = new Set([...this.state.employment_types])
       /* ^Using a Set instead of an array because we need the data values to be unique */
-      this.setState({employment_type})
+      this.setState({employment_types})
     } else if (type === 'work_auth' || type === 'company_role') {
       value === 'select'
         ? this.setState({[type]: ''})
@@ -77,7 +77,7 @@ class EditProfile extends Component {
   }
 
   isChecked = type => {
-    return this.state.employment_type.has(type)
+    return this.state.employment_types.has(type)
   }
 
   clearForm = () => {
@@ -99,8 +99,8 @@ class EditProfile extends Component {
       linkedin: this.props.user ? this.props.user.linkedin : '',
       twitter: this.props.user ? this.props.user.twitter : '',
       work_auth: this.props.user ? this.props.user.work_auth : '',
-      employment_type: this.props.user && this.props.user.employment_type
-        ? new Set([...this.props.user.employment_type])
+      employment_types: this.props.user && this.props.user.employment_types
+        ? new Set([...this.props.user.employment_types])
         : new Set([])
     })
   }
@@ -152,7 +152,7 @@ class EditProfile extends Component {
     const user = {...this.state}
     user.id = this.props.user.id
     // turn the set into an array (postgres rejects sets)
-    user.employment_type = [...user.employment_type]
+    user.employment_types = [...user.employment_types]
     this.clearForm()
     this.props.updateUser(user)
   }

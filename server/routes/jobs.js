@@ -1,9 +1,5 @@
-'use strict'
-
-var stripe = require("stripe")(
-  "API_SECRET"
-)
-var nodemailer = require('nodemailer');
+const stripe = require('stripe')('API_SECRET')
+const nodemailer = require('nodemailer')
 // var stripe = require("stripe")(
 //   "sk_test_BQokikJOvBiI2HlWgH4olfQ2"
 // );
@@ -143,7 +139,7 @@ module.exports = require('express').Router()
 
   .post('/:id/apply',
     (req, res, next) => {
-      const user = req.body.user
+      const {user} = req.body
       Job.findById(req.params.id)
       .then(foundJob => {
         var transporter = nodemailer.createTransport({
