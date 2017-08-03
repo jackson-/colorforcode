@@ -1,5 +1,5 @@
 const db = require('APP/db')
-const {User, Employer} = db
+const {User, Employer, Skill, Project} = db
 const aws = require('aws-sdk')
 const S3_BUCKET = 'hireblack'
 const elasticsearch = require('elasticsearch')
@@ -133,15 +133,37 @@ module.exports = require('express').Router()
 
   .put('/:id', (req, res, next) => {
     const {user, savedJobsArr} = req.body
-    console.log(req.body)
+
     if (savedJobsArr) {
       User.findById(req.params.id)
       .then(foundUser => foundUser.setSavedJobs(savedJobsArr))
+      .then(() => {
+        return User.findById(req.params.id, {
+          include: [{model: Project, include: [Skill]}]
+        })
+        .then(updatedUser => esClient.update({
+          index: 'data',
+          type: 'user',
+          id: req.params.id,
+          body: {doc: updatedUser.get()}
+        }))
+      })
       .then(() => res.sendStatus(200))
       .catch(next)
     } else {
       User.findById(req.params.id)
       .then(foundUser => foundUser.update(user))
+      .then(() => {
+        return User.findById(req.params.id, {
+          include: [{model: Project, include: [Skill]}]
+        })
+        .then(updatedUser => esClient.update({
+          index: 'data',
+          type: 'user',
+          id: req.params.id,
+          body: {doc: updatedUser.get()}
+        }))
+      })
       .then(() => res.sendStatus(200))
       .catch(next)
     }

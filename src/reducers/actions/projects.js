@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {whoami} from './users'
+import { whoami } from './users'
 import { RECEIVE_ALL_PROJECTS, RECEIVE_PROJECT, RECEIVE_USER_PROJECTS } from '../constants'
 import { createNewProject, requestAllProjects, requestUserProjects,
          requestFilteredProjects, requestProject} from './loading'
@@ -32,7 +32,6 @@ export const gettingAllProjects = () => dispatch => {
   .then(projects => dispatch(receiveAllProjects(projects)))
   .catch(err => console.error(`Mang, I couldn't find the projects! ${err.stack}`))
 }
-
 
 export const gettingUserProjects = (user) => dispatch => {
   dispatch(requestUserProjects())
@@ -79,9 +78,10 @@ export const creatingNewProject = (projectPost, history) => dispatch => {
 
 export const updatingProject = (postData, history) => dispatch => {
   axios.put(`/api/projects/${postData.project.id}`, postData)
-  .then(() => {
+  .then(project => {
     dispatch(whoami())
-    history.push('/dashboard/projects')
+    dispatch(receiveProject(project))
+    if (history) history.push('/dashboard/projects')
   })
   .catch(err => console.error(`Sorry, cuz. Couldn't update that project...${err.stack}`))
 }
@@ -90,7 +90,7 @@ export const deletingProject = (id, history) => dispatch => {
   axios.delete(`/api/projects/${id}`)
   .then(() => {
     dispatch(whoami())
-    history.push('/dashboard/projects')
+    if (history) history.push('/dashboard/projects')
   })
   .catch(err => console.error(`Sorry, cuz. Couldn't delete that project...${err.stack}`))
 }

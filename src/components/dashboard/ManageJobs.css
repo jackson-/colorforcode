@@ -1,6 +1,10 @@
 .ManageJobs,
-.SavedJobs {
+.SavedJobs,
+.Applications,
+.Projects {
   padding: 5px 10px;
+  background: #E4E4E4;
+  height: 100%;
 }
 
 .ManageJobs-header,
@@ -32,7 +36,9 @@ tbody > tr:hover {
 
 @media only screen and (min-width: 768px) {
   .ManageJobs,
-  .SavedJobs {
+  .SavedJobs,
+  .Applications,
+  .Projects {
     padding: 5px 40px;
   }
 
