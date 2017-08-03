@@ -18,7 +18,7 @@ export default class JobInfoDisplay extends Component {
 
   applyToJob = () => {
     const {user, job, applyToJob, history} = this.props
-    applyToJob(user.id, job.id, history)
+    applyToJob(user, job.id, history)
   }
 
   saveJob = () => {

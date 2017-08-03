@@ -61,7 +61,7 @@ const mapDispatchToProps = dispatch => ({
   getJob: jobId => dispatch(gettingJobById(jobId)),
   updateJob: (job, history) => dispatch(updatingJob(job, history)),
   deleteJob: (id, history) => dispatch(deletingJob(id, history)),
-  sendApplication: (userId, jobId, history) => dispatch(applyingToJob(userId, jobId, history)),
+  sendApplication: (user, jobId, history) => dispatch(applyingToJob(user, jobId, history)),
   saveJob: (userId, savedJobs) => dispatch(savingJob(userId, savedJobs)),
   unsaveJob: (userId, savedJobs) => dispatch(unsavingJob(userId, savedJobs))
 })
