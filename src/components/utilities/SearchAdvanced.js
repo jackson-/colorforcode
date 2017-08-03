@@ -25,7 +25,7 @@ const SearchAdvanced = props => (
       </Row>
     }
     <FormGroup
-      controlId='SearchAdvanced__job-types'
+      controlId='job-types'
       name='search-advanced__job-types'
       onChange={props.toggleCheckbox}
     >
@@ -68,15 +68,15 @@ const SearchAdvanced = props => (
       </Checkbox>
     </FormGroup>
     <FormGroup
-      controlId='SearchAdvanced-zipcode'
+      controlId='zipcode'
       className='SearchAdvanced__zipcode'
-      onChange={props.handleChange('zipcode')}
+      onChange={props.handleChange('zip_code')}
     >
       <ControlLabel>ZIP CODE</ControlLabel>
-      <FormControl type='tel' value={props.state.zipcode} />
+      <FormControl type='tel' value={props.state.zip_code} />
     </FormGroup>
     <FormGroup
-      controlId='SearchAdvanced-distance'
+      controlId='distance'
       className='SearchAdvanced__distance'
       onChange={props.handleChange('distance')}
     >
@@ -84,7 +84,7 @@ const SearchAdvanced = props => (
       <FormControl type='tel' value={props.state.distance} />
     </FormGroup>
     <FormGroup
-      controlId='SearchAdvanced__sort-by'
+      controlId='sort-by'
       name='SearchAdvanced__sort-by'
       onChange={props.handleChange('sortBy')}
     >

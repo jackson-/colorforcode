@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Row, Col } from 'react-bootstrap'
-import { gettingAllJobs, filteringJobs, grabbingCoords, buildBodyThenSearch } from 'APP/src/reducers/actions/jobs'
+import axios from 'axios'
+import { gettingAllJobs, filteringJobs, buildBodyThenSearch } from 'APP/src/reducers/actions/jobs'
 import { gettingAllSkills } from 'APP/src/reducers/actions/skills'
 import SearchBar from '../utilities/SearchBar'
 import SearchAdvanced from '../utilities/SearchAdvanced'
@@ -27,11 +28,16 @@ class JobBoard extends Component {
 
   componentDidMount () {
     this.props.getJobs()
-    if (!this.props.user || !this.props.user.coords) {
-      grabbingCoords()
-      .then(coords => this.setState({coords}))
-      .catch(err => console.error(err))
-    }
+  }
+
+  handleLocation = zip_code => {
+    axios.get(`http://maps.googleapis.com/maps/api/geocode/json?address=${zip_code}`)
+    .then(res => res.data)
+    .then(json => {
+      const coords = `${json.results[0].geometry.location.lat},${json.results[0].geometry.location.lng}`
+      this.setState({coords, zip_code})
+    })
+    .catch(err => console.error(err.stack))
   }
 
   handleChange = type => event => {
@@ -39,10 +45,10 @@ class JobBoard extends Component {
     const nextState = {}
     nextState[`${type}`] = value
     if (type === 'query') nextState.pendingTerms = value.split(' ')
-    if (type === 'zipcode' && value.toString().length === 5) {
+    if (type === 'zip_code' && value.toString().length === 5) {
       /* first we finish updating the state of the input, then we use the zip to find the rest of the location data by passing the callback to setState (an optional 2nd param) */
       this.setState({[type]: value}, this.handleLocation(value))
-    } else{
+    } else {
       this.setState(nextState)
     }
   }
@@ -122,14 +128,14 @@ class JobBoard extends Component {
     }
     if (sortBy === 'date') body.sort.push({updated_at: {order: 'desc'}})
     if (sortBy === 'distance') {
-      body.sort = [{
+      body.sort.push({
         _geo_distance: {
           coords,
           order: 'asc',
           unit: 'mi',
           distance_type: 'arc'
         }
-      }]
+      })
     }
     return body
   }
