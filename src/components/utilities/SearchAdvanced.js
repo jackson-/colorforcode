@@ -68,6 +68,14 @@ const SearchAdvanced = props => (
       </Checkbox>
     </FormGroup>
     <FormGroup
+      controlId='SearchAdvanced-zipcode'
+      className='SearchAdvanced__zipcode'
+      onChange={props.handleChange('zipcode')}
+    >
+      <ControlLabel>MAX DISTANCE (miles)</ControlLabel>
+      <FormControl type='number' value={props.state.zipcode} />
+    </FormGroup>
+    <FormGroup
       controlId='SearchAdvanced-distance'
       className='SearchAdvanced__distance'
       onChange={props.handleChange('distance')}

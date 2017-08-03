@@ -90,9 +90,9 @@ export const buildBodyThenSearch = (bodyBuilderFunc, coords) => {
   }
 }
 
-export const applyingToJob = (user_id, job_id, history) => dispatch => {
+export const applyingToJob = (user, job_id, history) => dispatch => {
   dispatch(applyToJob())
-  axios.post(`/api/jobs/${job_id}/apply`, {user_id, job_id})
+  axios.post(`/api/jobs/${job_id}/apply`, {user, job_id})
   .then(() => {
     dispatch(whoami())
     dispatch(appliedToJob())

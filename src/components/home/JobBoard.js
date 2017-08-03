@@ -18,6 +18,7 @@ class JobBoard extends Component {
       terms: [],
       distance: '',
       sortBy: '',
+      zip_code: '',
       employment_types: new Set([]),
       filtered: false,
       coords: ''
@@ -38,7 +39,12 @@ class JobBoard extends Component {
     const nextState = {}
     nextState[`${type}`] = value
     if (type === 'query') nextState.pendingTerms = value.split(' ')
-    this.setState(nextState)
+    if (type === 'zipcode' && value.toString().length === 5) {
+      /* first we finish updating the state of the input, then we use the zip to find the rest of the location data by passing the callback to setState (an optional 2nd param) */
+      this.setState({[type]: value}, this.handleLocation(value))
+    } else{
+      this.setState(nextState)
+    }
   }
 
   toggleJobTypes = event => {
