@@ -34,7 +34,8 @@ class JobBoard extends Component {
     axios.get(`http://maps.googleapis.com/maps/api/geocode/json?address=${zip_code}`)
     .then(res => res.data)
     .then(json => {
-      const coords = `${json.results[0].geometry.location.lat},${json.results[0].geometry.location.lng}`
+      const {location} = json.results[0].geometry
+      const coords = `${location.lat},${location.lng}`
       this.setState({coords, zip_code})
     })
     .catch(err => console.error(err.stack))
@@ -45,7 +46,7 @@ class JobBoard extends Component {
     const nextState = {}
     nextState[`${type}`] = value
     if (type === 'query') nextState.pendingTerms = value.split(' ')
-    if (type === 'zip_code' && value.toString().length === 5) {
+    if (type === 'zip_code' && value.toString().length >= 5) {
       /* first we finish updating the state of the input, then we use the zip to find the rest of the location data by passing the callback to setState (an optional 2nd param) */
       this.setState({[type]: value}, this.handleLocation(value))
     } else {
