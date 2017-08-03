@@ -134,37 +134,31 @@ module.exports = require('express').Router()
   .put('/:id', (req, res, next) => {
     const {user, savedJobsArr} = req.body
 
-    if (savedJobsArr) {
-      User.findById(req.params.id)
-      .then(foundUser => foundUser.setSavedJobs(savedJobsArr))
-      .then(() => {
-        return User.findById(req.params.id, {
-          include: [{model: Project, include: [Skill]}]
-        })
-        .then(updatedUser => esClient.update({
+    User.findById(req.params.id)
+    .then(foundUser => {
+      // the same route is used to save jobs for users and to update users,
+      // but these tasks are never simultaneous
+      return savedJobsArr
+        ? foundUser.setSavedJobs(savedJobsArr)
+        : foundUser.update(user)
+    })
+    .then(() => {
+      return User.findById(req.params.id, {
+        include: [{model: Project, include: [Skill]}]
+      })
+    })
+    .then(updatedUser => {
+      // employer-users aren't in our ES data layer
+      if (!updatedUser.is_employer) {
+        return esClient.update({
           index: 'data',
           type: 'user',
           id: req.params.id,
           body: {doc: updatedUser.get()}
-        }))
-      })
-      .then(() => res.sendStatus(200))
-      .catch(next)
-    } else {
-      User.findById(req.params.id)
-      .then(foundUser => foundUser.update(user))
-      .then(() => {
-        return User.findById(req.params.id, {
-          include: [{model: Project, include: [Skill]}]
         })
-        .then(updatedUser => esClient.update({
-          index: 'data',
-          type: 'user',
-          id: req.params.id,
-          body: {doc: updatedUser.get()}
-        }))
-      })
-      .then(() => res.sendStatus(200))
-      .catch(next)
-    }
+      }
+      return
+    })
+    .then(() => res.sendStatus(200))
+    .catch(next)
   })

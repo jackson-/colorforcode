@@ -21,7 +21,7 @@ module.exports = db => db.define('user', {
   },
   story: TEXT,
   work_auth: STRING,
-  employment_type: ARRAY(STRING),
+  employment_types: ARRAY(STRING),
   personal_site: STRING,
   github: STRING,
   linkedin: STRING,

@@ -76,9 +76,9 @@ const ApplicantRegisterFields = props => (
       </FormControl>
     </FormGroup>
     <FormGroup
-      controlId='employment_type'
-      name='employment_type'
-      onChange={props.handleChange('employment_type')}>
+      controlId='employment_types'
+      name='employment_types'
+      onChange={props.handleChange('employment_types')}>
       <ControlLabel>Desired Employment Type(s)</ControlLabel>
       <Checkbox defaultChecked={props.isChecked('Full-time')} value='Full-time'>
         Full-time
