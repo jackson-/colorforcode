@@ -71,7 +71,7 @@ class PostJobForm extends Component {
     if (type === 'zip_code' && value.toString().length === 5) {
       /* first we finish updating the state of the input, then we use the zip to find the rest of the location data by passing the callback to setState (an optional 2nd param) */
       this.setState({[type]: value}, this.handleLocation(value))
-    } else if (type === 'employment_type') {
+    } else if (type === 'employment_types') {
       this.state.employment_types.has(value)
         ? this.state.employment_types.delete(value)
         : this.state.employment_types.add(value)
@@ -213,9 +213,9 @@ class PostJobForm extends Component {
               />
             </FormGroup>
             <FormGroup
-              controlId='employment_type'
-              name='employment_type'
-              onChange={this.handleChange('employment_type')}>
+              controlId='employment_types'
+              name='employment_types'
+              onChange={this.handleChange('employment_types')}>
               <ControlLabel>Employment Type(s)</ControlLabel>
               <Checkbox value='Full-time'>Full-time</Checkbox>
               <Checkbox value='Part-time'>Part-time</Checkbox>

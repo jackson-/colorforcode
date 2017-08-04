@@ -25,13 +25,12 @@ class App extends Component {
       opacity: 0,
       height: 0,
       padding: 0,
-      marginBottom: 0,
-      isEmployer: this.props.user ? this.props.user.is_employer : false
+      marginBottom: 0
     }
   }
 
   toggleDashMenu = event => {
-    const height = this.state.isEmployer ? '215px' : '300px'
+    let height = this.props.user.is_employer ? '215px' : '300px'
     if (event) event.preventDefault()
     this.setState({
       showDashMenu: true,
@@ -42,8 +41,8 @@ class App extends Component {
     })
   }
 
-  showPostJob = (user) => {
-    let display = !user || (user && user.isEmployer)
+  showPostJob = user => {
+    let display = !user || (user && user.is_employer)
       ? 'block'
       : 'none'
     return display
@@ -140,6 +139,20 @@ class App extends Component {
             {/* PUBLIC ROUTES */}
             <Route exact strict path='/' component={Home} />
             <Route exact path='/about' component={About} />
+            <Route exact path='/dashboard' component={() => {
+              return user && user.is_employer
+                ? <Redirect to='/dashboard/manage-jobs' />
+                : <Redirect to='/dashboard/saved-jobs' />
+            }} />
+            <Route exact path='/register' component={() => {
+              if (!user) return <RegisterForm />
+              return <Redirect to='/dashboard' />
+            }} />
+            <Route exact path='/login' component={() => {
+              if (!user) return <LoginForm />
+              return <Redirect to='/dashboard' />
+            }} />
+            <Route exact path='/jobs/:id' component={JobDetailPage} />
             {/* PRIVATE ROUTES */}
             <Route exact path='/dashboard/:action' component={() => {
               if (!user) return <Redirect to='/login' />

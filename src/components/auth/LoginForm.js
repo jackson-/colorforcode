@@ -40,14 +40,6 @@ class LoginForm extends Component {
   }
 
   render () {
-    if (this.props.user) {
-      this.props.history.push(
-        this.props.user.is_employer
-          ? '/dashboard/manage-jobs'
-          : '/dashboard/saved-jobs'
-      )
-      return null
-    }
     return (
       <Row className='LoginForm'>
         <ScrollToTopOnMount />
