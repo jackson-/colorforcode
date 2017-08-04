@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { gettingUserById } from 'APP/src/reducers/actions/users'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 
 class UserDetailPage extends Component {
   componentDidMount() {
@@ -23,7 +24,7 @@ class UserDetailPage extends Component {
             <ul>
               {user && user.projects.map((project, i) => {
                 return (
-                    <li>
+                    <li key={i}>
                       <p>Title: {project.title}</p>
                       <p>Description: {project.description}</p>
                       <p className='JobCard-skills'>{project.skills.map(s => s.title).join(', ')}</p>
@@ -38,9 +39,12 @@ class UserDetailPage extends Component {
   }
 }
 
+UserDetailPage.propTypes = {
+  history: PropTypes.object.isRequired
+}
+
 const mapStateToProps = state => ({
   user: state.users.selected,
-  history: state.router.history
 })
 
 const mapDispatchToProps = dispatch => ({

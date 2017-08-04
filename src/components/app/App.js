@@ -10,6 +10,7 @@ import About from '../about/About'
 import RegisterForm from '../auth/RegisterForm'
 import LoginForm from '../auth/LoginForm'
 import JobDetailPage from '../jobs/JobDetailPage'
+import UserDetailPage from '../search/UserDetail'
 import Dashboard from '../dashboard/Dashboard'
 import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
 import './App.css'
@@ -139,9 +140,6 @@ class App extends Component {
             {/* PUBLIC ROUTES */}
             <Route exact strict path='/' component={Home} />
             <Route exact path='/about' component={About} />
-            <Route exact path='/register' component={RegisterForm} />
-            <Route exact path='/login' component={LoginForm} />
-            <Route exact path='/jobs/:id' component={JobDetailPage} />
             {/* PRIVATE ROUTES */}
             <Route exact path='/dashboard/:action' component={() => {
               if (!user) return <Redirect to='/login' />
@@ -151,6 +149,10 @@ class App extends Component {
               if (!user) return <Redirect to='/login' />
               return <Dashboard />
             }} />
+            <Route exact path='/jobs/:id' component={JobDetailPage} />
+            <Route exact path='/login' component={LoginForm} />
+            <Route exact path='/register' component={RegisterForm} />
+            <Route exact path='/users/:id' component={UserDetailPage} />
           </Grid>
         </div>
       </Router>
