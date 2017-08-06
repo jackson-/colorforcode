@@ -198,7 +198,6 @@ class JobBoard extends Component {
             }
           </Col>
         </div>
-
       </Row>
     )
   }

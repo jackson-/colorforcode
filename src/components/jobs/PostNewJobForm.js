@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Row, Col, FormGroup, ControlLabel, FormControl, Button, Checkbox } from 'react-bootstrap'
+import Modal from 'APP/src/components/utilities/Modal'
 import axios from 'axios'
 import { creatingNewJob } from 'APP/src/reducers/actions/jobs'
 import { gettingAllSkills } from 'APP/src/reducers/actions/skills'
@@ -39,7 +40,9 @@ class PostJobForm extends Component {
       cvc: null,
       token: null,
       status: 'open',
-      app_method: 'email'
+      app_method: 'email',
+      finished:false,
+      modal:null
     }
   }
 
@@ -139,6 +142,7 @@ class PostJobForm extends Component {
   }
 
   render () {
+    const {modal} = this.state
     let skills = this.props.skills.map(s => ({label: s.title, value: s.id}))
     return (
       <Row className='PostJobForm'>
@@ -254,6 +258,13 @@ class PostJobForm extends Component {
             <Button className='primary' type='submit'>Post Job</Button>
           </form>
         </Col>
+        {this.state.finished && modal &&
+
+          <Modal
+            title={modal.title}
+            body={modal.body}
+          />
+        }
       </Row>
     )
   }

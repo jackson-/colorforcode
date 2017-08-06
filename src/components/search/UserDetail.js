@@ -1,43 +1,99 @@
 import React, { Component } from 'react'
 import { gettingUserById } from 'APP/src/reducers/actions/users'
+import { Row, Col, Button, FormControl, ControlLabel } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
 class UserDetailPage extends Component {
-  componentDidMount() {
+  componentWillMount() {
     const {id} = this.props.match.params
     this.props.getUser(id)
   }
 
   render() {
-    let user = null
-    const user_source = this.props.user
-    if(user_source){
-      user = user_source._source
-    }
+    const saved = null
+    const {match} = this.props
+    const user = this.props.user ? this.props.user._source : null
+    let paddingTop = match.path === '/jobs/:id' ? '60px' : '0'
     return (
-      <div className='JobDetailPage'>
+      <Row className='JobInfo Dashboard__content--white' style={{paddingTop}}>
         {user &&
-          <div>
-            <h1>{user.first_name} {user.last_name}</h1>
-            <p>{user.email}</p>
-            <ul>
-              {user && user.projects.map((project, i) => {
-                return (
-                    <li key={i}>
-                      <p>Title: {project.title}</p>
-                      <p>Description: {project.description}</p>
-                      <p className='JobCard-skills'>{project.skills.map(s => s.title).join(', ')}</p>
-                    </li>
-                  )
-              })}
-            </ul>
-          </div>
-        }
-      </div>
+        <Col xs={12} sm={12} md={12} lg={12}>
+          <Row className='JobInfo--header'>
+            <Col xs={12} sm={12} md={12} lg={12}>
+              <Row>
+                <Col className='header-left' xs={12} sm={6} md={6} lg={6}>
+                  <h5 className='JobInfo--header-employer'>{user.first_name} {user.last_name}</h5>
+                  <p className='JobInfo--header-location'>{`${user.location}`}</p>
+                </Col>
+                <Col className='header-right' xs={12} sm={6} md={3} mdOffset={3} lg={3} lgOffset={3}>
+                  <h5 className='JobInfo--header-payrate'>
+                    {user.compensation_type === 'Hourly'
+                       ? `Pay: ${user.pay_rate}/hr`
+                       : `Pay: ${user.pay_rate}/yr`
+                    }
+                  </h5>
+                  {user.employment_types && user.employment_types.map((type, i) => (
+                    <span key={i} className='JobInfo--header-type'>{type}</span>
+                  ))}
+                </Col>
+              </Row>
+            </Col>
+          </Row>
+          <Row className='JobInfo--body'>
+            <Col xs={12} sm={12} md={12} lg={12}>
+              <Row>
+                <div className='container__flex--sidebar'>
+                  <Col className='JobInfo--summary' xs={12} sm={7} md={8} lg={8}>
+                    <section className='JobInfo--summary-section'>
+                      <h2>Projects</h2>
+                      <ul>
+                        {user.projects && user.projects.map((project, i) => (
+                          <li key={i} className='JobInfo--header-type'>{project.title}
+                            <p className='JobCard-skills'>{project.skills.map(skill => skill.title).join(', ')}</p>
+                          </li>
+                        ))}
+                      </ul>
+                    </section>
+                  </Col>
+                  <Col className='JobInfo--sidebar' xs={12} sm={5} md={4} lg={4}>
+                    <Button
+                      className='btn-oval btn-oval__black'
+                      onClick={!saved ? this.saveJob : this.unsaveJob}
+                    >
+                      {!saved ? 'SAVE USER' : 'UNSAVE USER'}
+                    </Button>
+                    <div className='JobInfo--subscribe-container'>
+                      <h4>
+                        Reach out to this user!
+                      </h4>
+                      <form>
+                        <ControlLabel srOnly>Email</ControlLabel>
+                        <FormControl
+                          type='email'
+                          placeholder='EMAIL'
+                          onChange={this.handleChange}
+                        />
+                        <Button type='submit' className='JobInfo--subscribe-button'>
+                          SEND
+                        </Button>
+                      </form>
+                    </div>
+                  </Col>
+                </div>
+              </Row>
+            </Col>
+          </Row>
+        </Col>
+      }
+      </Row>
     )
   }
 }
+
+// {skills && skills.map((skill, i) => (
+//   <span key={i} className='skill-chip'>{skill}</span>
+// ))}
 
 UserDetailPage.propTypes = {
   history: PropTypes.object.isRequired

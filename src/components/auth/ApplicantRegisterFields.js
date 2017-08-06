@@ -51,6 +51,7 @@ const ApplicantRegisterFields = props => (
     <FormGroup controlId='story'>
       <ControlLabel>Personal Story</ControlLabel>
       <FormControl
+        componentClass="textarea"
         value={props.state.story}
         onChange={props.handleChange('story')}
       />
