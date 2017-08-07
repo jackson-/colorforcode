@@ -14,7 +14,7 @@ class UserDetailPage extends Component {
     const saved = null
     const {match} = this.props
     const user = this.props.user ? this.props.user._source : null
-    let paddingTop = match.path === '/jobs/:id' ? '60px' : '0'
+    let paddingTop = match.path === '/users/:id' ? '60px' : '0'
     return (
       <Row className='JobInfo Dashboard__content--white' style={{paddingTop}}>
         {user &&
@@ -28,10 +28,7 @@ class UserDetailPage extends Component {
                 </Col>
                 <Col className='header-right' xs={12} sm={6} md={3} mdOffset={3} lg={3} lgOffset={3}>
                   <h5 className='JobInfo--header-payrate'>
-                    {user.compensation_type === 'Hourly'
-                       ? `Pay: ${user.pay_rate}/hr`
-                       : `Pay: ${user.pay_rate}/yr`
-                    }
+                    {user.personal_site}
                   </h5>
                   {user.employment_types && user.employment_types.map((type, i) => (
                     <span key={i} className='JobInfo--header-type'>{type}</span>
@@ -61,7 +58,7 @@ class UserDetailPage extends Component {
                       className='btn-oval btn-oval__black'
                       onClick={!saved ? this.saveJob : this.unsaveJob}
                     >
-                      {!saved ? 'SAVE USER' : 'UNSAVE USER'}
+                      {!saved ? 'SAVE' : 'UNSAVE'}
                     </Button>
                     <div className='JobInfo--subscribe-container'>
                       <h4>
