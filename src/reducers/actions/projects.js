@@ -4,6 +4,7 @@ import { RECEIVE_ALL_PROJECTS, RECEIVE_PROJECT, RECEIVE_USER_PROJECTS } from '..
 import { createNewProject, requestAllProjects, requestUserProjects,
          requestFilteredProjects, requestProject} from './loading'
 import { gettingAllSkills } from './skills'
+import { receiveAlert } from './alert'
 
 /* --------- PURE ACTION CREATORS --------- */
 
@@ -70,7 +71,7 @@ export const creatingNewProject = (projectPost, history) => dispatch => {
   // projects list by regrabbing the user (projects are eager loaded)
   .then(() => {
     dispatch(whoami())
-    history.push('/dashboard/projects')
+    dispatch(receiveAlert({'title':'Success!', body:"You created a project!"}))
   })
   // otherwise we catch the error...
   .catch(err => console.error(`Sorry, cuz. We couldn't create that new project...${err.stack}`))
@@ -81,7 +82,8 @@ export const updatingProject = (postData, history) => dispatch => {
   .then(project => {
     dispatch(whoami())
     dispatch(receiveProject(project))
-    if (history) history.push('/dashboard/projects')
+    dispatch(receiveAlert({'title':'Success!', body:"You updated the project!"}))
+    // if (history) history.push('/dashboard/projects')
   })
   .catch(err => console.error(`Sorry, cuz. Couldn't update that project...${err.stack}`))
 }

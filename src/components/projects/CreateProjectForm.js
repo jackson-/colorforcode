@@ -10,6 +10,8 @@ import 'react-virtualized/styles.css'
 import 'react-virtualized-select/styles.css'
 import '../auth/Form.css'
 import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
+import Modal from 'APP/src/components/utilities/Modal'
+
 
 function arrowRenderer () {
 	return (
@@ -93,7 +95,7 @@ class CreateProjectForm extends Component {
 
   render() {
     let skills = []
-
+		const {alert} = this.props
     this.props.skills.forEach(s => {
       skills.push({label:s.title, value:s.id})
     })
@@ -165,6 +167,14 @@ class CreateProjectForm extends Component {
             <Button className='primary' type='submit'>Save</Button>
           </form>
         </Col>
+				{alert &&
+          <Modal
+            title={alert.title}
+            body={alert.body}
+            show={true}
+            next="/dashboard/projects"
+          />
+        }
       </Row>
     )
   }
@@ -172,7 +182,8 @@ class CreateProjectForm extends Component {
 
 const mapStateToProps = state => ({
   user: state.users.currentUser,
-  skills: state.skills.all
+  skills: state.skills.all,
+	alert:state.alert
 })
 const mapDispatchToProps = dispatch => ({
   createProject: project => dispatch(creatingNewProject(project)),

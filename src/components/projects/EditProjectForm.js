@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
+import {connect} from 'react-redux'
 import { Row, Col, FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap'
 import VirtualizedSelect from 'react-virtualized-select'
 import 'react-select/dist/react-select.css'
@@ -7,6 +8,8 @@ import 'react-virtualized/styles.css'
 import 'react-virtualized-select/styles.css'
 import '../auth/Form.css'
 import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
+import Modal from 'APP/src/components/utilities/Modal'
+
 
 function arrowRenderer () {
   return (
@@ -104,7 +107,7 @@ class EditProjectForm extends Component {
   render () {
     let skills = this.props.skills ? this.formatSkills(this.props.skills) : []
     let {project, history} = this.props
-    console.log(this.state)
+    const {alert} = this.props
     return (
       <Row className='PostJobForm'>
         <ScrollToTopOnMount />
@@ -176,9 +179,23 @@ class EditProjectForm extends Component {
             DELETE PROJECT
           </Button>
         </Col>
+        {alert &&
+          <Modal
+            title={alert.title}
+            body={alert.body}
+            show={true}
+            next="/dashboard/projects"
+          />
+        }
       </Row>
     )
   }
 }
 
-export default withRouter(EditProjectForm)
+const mapStateToProps = state => ({
+	alert:state.alert
+})
+
+const EditProjectFormContainer = connect(mapStateToProps, null)(EditProjectForm)
+
+export default withRouter(EditProjectFormContainer)

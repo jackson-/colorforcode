@@ -41,8 +41,6 @@ class PostJobForm extends Component {
       token: null,
       status: 'open',
       app_method: 'email',
-      finished:false,
-      modal:null
     }
   }
 
@@ -142,7 +140,8 @@ class PostJobForm extends Component {
   }
 
   render () {
-    const {modal} = this.state
+    const {alert} = this.props
+    console.log(alert, this.state.show)
     let skills = this.props.skills.map(s => ({label: s.title, value: s.id}))
     return (
       <Row className='PostJobForm'>
@@ -258,11 +257,12 @@ class PostJobForm extends Component {
             <Button className='primary' type='submit'>Post Job</Button>
           </form>
         </Col>
-        {this.state.finished && modal &&
-
+        {alert &&
           <Modal
-            title={modal.title}
-            body={modal.body}
+            title={alert.title}
+            body={alert.body}
+            show={true}
+            next="/dashboard/manage-jobs"
           />
         }
       </Row>
@@ -272,7 +272,8 @@ class PostJobForm extends Component {
 
 const mapStateToProps = state => ({
   user: state.users.currentUser,
-  skills: state.skills.all
+  skills: state.skills.all,
+  alert:state.alert,
 })
 const mapDispatchToProps = dispatch => ({
   createJobPost: (post, history) => dispatch(creatingNewJob(post, history)),

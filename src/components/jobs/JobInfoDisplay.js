@@ -1,14 +1,17 @@
 import React, { Component } from 'react'
 import { Row, Col, Button, FormControl, ControlLabel } from 'react-bootstrap'
 import { withRouter } from 'react-router-dom'
+import {connect} from 'react-redux'
 import './JobDetail.css'
+import Modal from 'APP/src/components/utilities/Modal'
+
 
 class JobInfoDisplay extends Component {
 
   constructor (props) {
     super(props)
     this.state = {
-      email: ''
+      email: '',
     }
   }
 
@@ -35,7 +38,7 @@ class JobInfoDisplay extends Component {
   }
 
   render () {
-    const {job, user, match} = this.props
+    const {job, user, match, alert} = this.props
     let skills, employer, datePosted, saved
 
     if (job) {
@@ -131,9 +134,21 @@ class JobInfoDisplay extends Component {
             </Col>
           </Row>
         </Col>
+        {alert &&
+          <Modal
+            title={alert.title}
+            body={alert.body}
+            show={true}
+            next="/dashboard/applications"
+          />
+        }
       </Row>
     )
   }
 }
 
-export default withRouter(JobInfoDisplay)
+const mapStateToProps = state => ({
+  alert:state.alert,
+})
+
+export default withRouter(connect(mapStateToProps, null)(JobInfoDisplay))

@@ -1,30 +1,41 @@
-import React from 'react'
+import React, {Component} from 'react'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 import './Sidebar.css'
 import {Modal, Button} from 'react-bootstrap'
+import {withRouter} from 'react-router-dom'
+import {dismissAlert} from 'APP/src/reducers/actions/alert'
 
-const MyModal = props => (
-  <div className="static-modal">
-  <Modal.Dialog>
-    <Modal.Header>
-      <Modal.Title>{props.title}</Modal.Title>
-    </Modal.Header>
+class MyModal extends Component {
 
-    <Modal.Body>
-      {props.body}
-    </Modal.Body>
+  onHide = () => {
+    this.props.dismissAlert()
+    this.props.history.push(this.props.next)
+  }
 
-    <Modal.Footer>
-      <Button>Close</Button>
-    </Modal.Footer>
+  render(){
+    return (
+      <Modal show={this.props.show} onHide={this.onHide}>
+        <Modal.Header closeButton>
+          <Modal.Title>{this.props.title}</Modal.Title>
+        </Modal.Header>
 
-  </Modal.Dialog>
-  </div>
-)
+        <Modal.Body>
+          {this.props.body}
+        </Modal.Body>
+
+      </Modal>
+    )
+  }
+}
+
+const mapDispatchToProps = dispatch => ({
+  dismissAlert: (history) => dispatch(dismissAlert(history)),
+})
 
 MyModal.propTypes = {
   title: PropTypes.string,
   body: PropTypes.string
 }
 
-export default MyModal
+export default withRouter(connect(null, mapDispatchToProps)(MyModal))

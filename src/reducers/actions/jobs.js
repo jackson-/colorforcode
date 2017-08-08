@@ -5,7 +5,7 @@ import { createNewJob, requestAllJobs, requestFilteredJobs,
          requestJob, requestUserJobs, applyToJob, requestAppliedJobs } from './loading'
 import { gettingAllSkills } from './skills'
 import { whoami } from './users'
-import { receiveError } from './errors'
+import { receiveAlert } from './alert'
 
 /* --------- PURE ACTION CREATORS --------- */
 export const receiveJob = job => ({
@@ -96,7 +96,9 @@ export const applyingToJob = (user, job_id, history) => dispatch => {
   .then(() => {
     dispatch(whoami())
     dispatch(appliedToJob())
-    history.push('/dashboard/applications')
+    dispatch(receiveAlert({'title':'Success!', body:"You've applied to this job. If this recruiter reaches out" +
+    " to your email you'll be guaranteed a phone interview!"}))
+    // history.push('/dashboard/applications')
   })
   .catch(err => console.error(`Mang, I couldn't apply to the job! ${err.stack}`))
 }
@@ -137,9 +139,7 @@ export const creatingNewJob = (jobPost, history) => dispatch => {
   // if the job is successfully created, we fetch the updated jobs list
   .then(newJobId => {
     dispatch(whoami())
-    if (history) {
-      history.push(`/dashboard/manage-jobs`)
-    }
+    dispatch(receiveAlert({'title':'Success!', body:"Your job has been posted."}))
   })
   // otherwise we catch the error...
   .catch(err => console.error(`Sorry, cuz. We couldn't create that job post...${err.stack}`))
@@ -161,7 +161,7 @@ export const deletingJob = (id, history) => dispatch => {
 
 export const savingJob = ({userId, savedJobsArr}) => dispatch => {
   if (!userId) {
-    return dispatch(receiveError({
+    return dispatch(receiveAlert({
       status: null,
       message: 'Sign in or register to save jobs.'
     }))
