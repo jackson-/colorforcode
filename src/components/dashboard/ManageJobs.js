@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Table, Row, Button, Glyphicon } from 'react-bootstrap'
+import { Table, Row, Button, Glyphicon, Accordion, Panel } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import './ManageJobs.css'
@@ -31,60 +31,29 @@ export default class ManageJobs extends Component {
 
   render () {
     const {jobs} = this.props
+    console.log("JOBS", jobs)
     return (
       <Row className='ManageJobs'>
         <h1 className='ManageJobs-header'>MANAGE JOBS</h1>
-        <Table responsive>
-          <thead>
-            <tr>
-              <td>JOB TITLE</td>
-              <td>ACTIONS</td>
-              <td>STATUS</td>
-              <td>LAST UPDATED</td>
-              <td>APPLICANTS</td>
-            </tr>
-          </thead>
-          <tbody>
+        <Accordion>
             {jobs.map((job, i) => (
-              <tr key={i}>
-                <td>
-                  {
-                    job.status === 'closed'
-                      ? job.title
-                      : <Link to={`/dashboard/jobs/${job.id}`}>{job.title}</Link>
-                  }
-                </td>
-                <td>
-                  {
-                    job.status === 'open'
-                    ? (
-                      <Button
-                        onClick={this.handleClose(job.id)}
-                        bsSize='xsmall'
-                        bsStyle='danger'
-                      >
-                        <Glyphicon glyph='trash' /> close
-                      </Button>
-                    )
-
-                    : (
-                      <Button
-                        onClick={this.handleDuplicate(job)}
-                        bsSize='xsmall'
-                        bsStyle='primary'
-                      >
-                        <Glyphicon glyph='retweet' /> duplicate
-                      </Button>
-                    )
-                  }
-                </td>
-                <td>{job.status}</td>
-                <td>{this.mostRecentDate(job)}</td>
-                <td>{job.applicants.length}</td>
-              </tr>
+                <Panel header={job.title} eventKey={i}>
+                  <Table responsive>
+                    <tbody>
+                      {job.applicants.map((app, j) =>
+                        <tr>
+                          <td><a href={"/users/" + app.id}>{app.first_name} {app.last_name}</a></td>
+                          <td>{app.location}</td>
+                          <td><a href={app.github} target="_blank">Github</a></td>
+                          <td><a href={app.linkedin} target="_blank">LinkedIn</a></td>
+                          <td><a href={app.twitter} target="_blank">Twitter</a></td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </Table>
+                </Panel>
             ))}
-          </tbody>
-        </Table>
+        </Accordion>
       </Row>
     )
   }
