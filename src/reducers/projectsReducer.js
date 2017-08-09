@@ -9,7 +9,7 @@ const projectsReducer = (state = initialState, action) => {
   switch (action.type) {
     case AUTHENTICATED: return {
       all: action.user.projects,
-      currentProject: {...state.currentProject} || null
+      currentProject: null
     }
     case RECEIVE_PROJECT: return {
       all: [...state.all] || [],
@@ -17,7 +17,7 @@ const projectsReducer = (state = initialState, action) => {
     }
     case RECEIVE_ALL_PROJECTS: return {
       all: action.projects,
-      currentProject: {...state.currentProject} || null
+      currentProject: null
     }
     default: return state
   }

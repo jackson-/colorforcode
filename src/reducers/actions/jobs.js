@@ -96,9 +96,13 @@ export const applyingToJob = (user, job_id, history) => dispatch => {
   .then(() => {
     dispatch(whoami())
     dispatch(appliedToJob())
-    dispatch(receiveAlert({'title':'Success!', body:"You've applied to this job. If this recruiter reaches out" +
-    " to your email you'll be guaranteed a phone interview!"}))
-    // history.push('/dashboard/applications')
+    dispatch(receiveAlert({
+      type: 'confirmation',
+      style: 'success',
+      title: 'Success!',
+      body: 'You\'ve applied to this job. If this recruiter reaches out to your email you\'ll be guaranteed a phone interview!',
+      next: '/dashboard/applications'
+    }))
   })
   .catch(err => console.error(`Mang, I couldn't apply to the job! ${err.stack}`))
 }
@@ -139,7 +143,13 @@ export const creatingNewJob = (jobPost, history) => dispatch => {
   // if the job is successfully created, we fetch the updated jobs list
   .then(newJobId => {
     dispatch(whoami())
-    dispatch(receiveAlert({'title':'Success!', body:"Your job has been posted."}))
+    dispatch(receiveAlert({
+      type: 'confirmation',
+      style: 'success',
+      title: 'Success!',
+      body: 'Job successfully posted.',
+      next: '/dashboard/manage-jobs'
+    }))
   })
   // otherwise we catch the error...
   .catch(err => console.error(`Sorry, cuz. We couldn't create that job post...${err.stack}`))
@@ -147,15 +157,31 @@ export const creatingNewJob = (jobPost, history) => dispatch => {
 
 export const updatingJob = (postData, history) => dispatch => {
   axios.put(`/api/jobs/${postData.job.id}`, postData)
-  .then(() => dispatch(whoami()))
-  .then(() => history.push('/dashboard/manage-jobs'))
+  .then(() => {
+    dispatch(whoami())
+    dispatch(receiveAlert({
+      type: 'confirmation',
+      style: 'success',
+      title: 'Success!',
+      body: 'Job successfully updated.',
+      next: '/dashboard/manage-jobs'
+    }))
+  })
   .catch(err => console.error(`Sorry, cuz. Couldn't update that job post...${err.stack}`))
 }
 
 export const deletingJob = (id, history) => dispatch => {
   axios.delete(`/api/jobs/${id}`)
-  .then(() => dispatch(whoami()))
-  .then(() => history.push('/dashboard/manage-jobs'))
+  .then(() => {
+    dispatch(whoami())
+    dispatch(receiveAlert({
+      type: 'confirmation',
+      style: 'success',
+      title: 'Success!',
+      body: 'Job successfully deleted.',
+      next: '/dashboard/manage-jobs'
+    }))
+  })
   .catch(err => console.error(`Sorry, cuz. Couldn't delete that job post...${err.stack}`))
 }
 

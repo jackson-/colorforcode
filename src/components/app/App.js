@@ -13,6 +13,7 @@ import JobDetailPage from '../jobs/JobDetailPage'
 import UserDetailPage from '../search/UserDetail'
 import Dashboard from '../dashboard/Dashboard'
 import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
+import Modal from '../utilities/Modal'
 import './App.css'
 import { logout } from '../../reducers/actions/users'
 
@@ -86,7 +87,7 @@ class App extends Component {
       ]
     }
 
-    const {user} = this.props
+    const {user, alert} = this.props
     return (
       <Router>
         <div>
@@ -135,10 +136,25 @@ class App extends Component {
                 ))
             }
           </Nav>
+          {
+            alert &&
+            <Modal
+              style={alert.style}
+              title={alert.title}
+              body={alert.body}
+              show={this.props.alert !== null}
+              next={alert.next}
+            />
+          }
           <Grid fluid className='App'>
             {/* PUBLIC ROUTES */}
             <Route exact strict path='/' component={Home} />
             <Route exact path='/about' component={About} />
+            <Route exact path='/jobs/:id' component={JobDetailPage} />
+            <Route exact path='/login' component={LoginForm} />
+            <Route exact path='/register' component={RegisterForm} />
+            <Route exact path='/users/:id' component={UserDetailPage} />
+            {/* PRIVATE ROUTES */}
             <Route exact path='/dashboard' component={() => {
               return user && user.is_employer
                 ? <Redirect to='/dashboard/manage-jobs' />
@@ -152,20 +168,14 @@ class App extends Component {
               if (!user) return <LoginForm />
               return <Redirect to='/dashboard' />
             }} />
-            <Route exact path='/jobs/:id' component={JobDetailPage} />
-            {/* PRIVATE ROUTES */}
             <Route exact path='/dashboard/:action' component={() => {
               if (!user) return <Redirect to='/login' />
-              return <Dashboard />
+              return <Dashboard location={location} />
             }} />
             <Route exact path='/dashboard/:action/:id' component={() => {
               if (!user) return <Redirect to='/login' />
               return <Dashboard />
             }} />
-            <Route exact path='/jobs/:id' component={JobDetailPage} />
-            <Route exact path='/login' component={LoginForm} />
-            <Route exact path='/register' component={RegisterForm} />
-            <Route exact path='/users/:id' component={UserDetailPage} />
           </Grid>
         </div>
       </Router>
@@ -175,10 +185,15 @@ class App extends Component {
 
 App.propTypes = {
   user: PropTypes.object,
+  alert: PropTypes.object,
   logOut: PropTypes.func.isRequired
 }
 
-const mapStateToProps = state => ({ user: state.users.currentUser })
+const mapStateToProps = state => ({
+  user: state.users.currentUser,
+  alert: state.alert
+})
+
 const mapDispatchToProps = dispatch => ({ logOut: (history) => dispatch(logout(history)) })
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App))

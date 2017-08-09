@@ -27,9 +27,7 @@ class EmployerDashboard extends Component {
     const {user, updateUser} = this.props
     const firstName = user ? user.first_name : ''
     const jobs = user && user.is_employer && [...user.employer.listings]
-
-    if (!this.props.user) return <Redirect to='/login' from='/dashboard/manage-jobs' />
-
+    console.log('Dashboard thinks location is: ', this.props.location)
     return (
       <Router>
         <Row className='Dashboard'>
@@ -54,18 +52,23 @@ class EmployerDashboard extends Component {
             </Col>
             <Col xs={12} sm={9} md={9} lg={9} className='Dashboard__content'>
               <ScrollToTopOnMount />
-              <Route path='/dashboard/post-new-job' component={PostAJob} />
-              <Route path='/dashboard/manage-jobs' component={() => (
+              <Route
+                exact
+                location={location}
+                path='/dashboard/post-new-job'
+                component={PostAJob}
+              />
+              <Route exact path='/dashboard/manage-jobs' component={() => (
                 <ManageJobs
                   closeJob={this.props.closeJob}
                   duplicateJob={this.props.duplicateJob}
                   jobs={jobs}
                 />
               )} />
-              <Route path='/dashboard/edit-profile' component={() => (
+              <Route exact path='/dashboard/edit-profile' component={() => (
                 <EditProfile user={user} updateUser={updateUser} />
               )} />
-              <Route path='/dashboard/jobs/:id' component={JobDetailPage} />
+              <Route exact path='/dashboard/jobs/:id' component={JobDetailPage} />
             </Col>
           </div>
         </Row>
