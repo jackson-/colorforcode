@@ -71,7 +71,13 @@ export const creatingNewProject = (projectPost, history) => dispatch => {
   // projects list by regrabbing the user (projects are eager loaded)
   .then(() => {
     dispatch(whoami())
-    dispatch(receiveAlert({'title':'Success!', body:"You created a project!"}))
+    dispatch(receiveAlert({
+      type: 'confirmation',
+      style: 'success',
+      title: 'Success!',
+      body: 'New project successfully added to your profile.',
+      next: '/dashboard/projects'
+    }))
   })
   // otherwise we catch the error...
   .catch(err => console.error(`Sorry, cuz. We couldn't create that new project...${err.stack}`))
@@ -80,11 +86,16 @@ export const creatingNewProject = (projectPost, history) => dispatch => {
 export const updatingProject = (postData, history) => dispatch => {
   axios.put(`/api/projects/${postData.project.id}`, postData)
   .then(project => {
-    dispatch(whoami())
-    dispatch(receiveProject(project))
-    dispatch(receiveAlert({'title':'Success!', body:"You updated the project!"}))
-    // if (history) history.push('/dashboard/projects')
+    dispatch(whoami)
+    return dispatch(receiveProject(project))
   })
+  .then(() => dispatch(receiveAlert({
+    type: 'confirmation',
+    style: 'success',
+    title: 'Success!',
+    body: 'Your project has been successfully updated.',
+    next: '/dashboard/projects'
+  })))
   .catch(err => console.error(`Sorry, cuz. Couldn't update that project...${err.stack}`))
 }
 
@@ -92,7 +103,13 @@ export const deletingProject = (id, history) => dispatch => {
   axios.delete(`/api/projects/${id}`)
   .then(() => {
     dispatch(whoami())
-    if (history) history.push('/dashboard/projects')
+    dispatch(receiveAlert({
+      type: 'confirmation',
+      style: 'success',
+      title: 'Success!',
+      body: 'Your project has been successfully deleted.',
+      next: '/dashboard/projects'
+    }))
   })
   .catch(err => console.error(`Sorry, cuz. Couldn't delete that project...${err.stack}`))
 }

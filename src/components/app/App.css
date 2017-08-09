@@ -2,19 +2,23 @@
 
 /* ------ Misc (App-wide) ------ */
 
-.nav .open>a, .nav .open>a:focus, .nav .open>a:hover {
-  background: none;
+.alert {
+  border: none !important;
+}
+
+.modal-content {
+  background: #DFF0D8;
+}
+
+.modal-title {
+  font-weight: bold;
+  font-size: 1.25em;
+  color: #3c763d;
 }
 
 .container__flex {
   display: flex;
   flex-direction: column;
-}
-
-@media only screen and (min-width: 500px) {
-  .container__flex {
-    flex-direction: row;
-  }
 }
 
 .glyphicon {
@@ -30,6 +34,12 @@
   margin: 15px auto;
   display: block;
   color: #E4E4E4;
+}
+
+@media only screen and (min-width: 500px) {
+  .container__flex {
+    flex-direction: row;
+  }
 }
 
 /* ------ Navbar ------ */
@@ -137,6 +147,12 @@ and (min-width: 768px) {
     display: block;
     transition: all 0.1s ease-in-out;
     transition-duration: 0.2s;
+  }
+
+  .nav .open>a,
+  .nav .open>a:focus,
+  .nav .open>a:hover {
+    background: none;
   }
 }
 

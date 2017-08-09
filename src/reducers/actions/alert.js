@@ -5,6 +5,6 @@ export const receiveAlert = alert => ({
   type: RECEIVE_ALERT
 })
 
-export const dismissAlert= () => ({
+export const dismissAlert = () => ({
   type: DISMISS_ALERT
 })

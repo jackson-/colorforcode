@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import {connect} from 'react-redux'
+import PropTypes from 'prop-types'
 import { Row, Col, FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap'
 import VirtualizedSelect from 'react-virtualized-select'
 import 'react-select/dist/react-select.css'
@@ -8,12 +9,10 @@ import 'react-virtualized/styles.css'
 import 'react-virtualized-select/styles.css'
 import '../auth/Form.css'
 import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
-import Modal from 'APP/src/components/utilities/Modal'
-
 
 function arrowRenderer () {
   return (
-    <span></span>
+    <span />
   )
 }
 
@@ -22,13 +21,13 @@ class EditProjectForm extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      title: this.props.project.title || '',
-      description: this.props.project.description || '',
-      external_link: this.props.project.external_link || '',
-      learning_point: this.props.project.learning_point || '',
-      pain_point: this.props.project.pain_point || '',
-      selectValue: this.formatSkills(this.props.project.skills) || [],
-      selected_skills: []
+      title: this.props.project ? this.props.project.title : '',
+      description: this.props.project ? this.props.project.description : '',
+      external_link: this.props.project ? this.props.project.external_link : '',
+      learning_point: this.props.project ? this.props.project.learning_point : '',
+      pain_point: this.props.project ? this.props.project.pain_point : '',
+      selectValue: this.props.project ? this.formatSkills(this.props.project.skills) : [],
+      selectedSkills: []
     }
   }
 
@@ -53,32 +52,20 @@ class EditProjectForm extends Component {
   }
 
   _selectSkill = data => {
-		let skill_ids = data.split(',')
-    let new_skills = []
-		if (skill_ids[0] !== '') {
-      skill_ids.forEach((sk_id) => {
-				this.props.skills.forEach((s) => {
-          if(s.id === parseInt(sk_id, 10)){
-            new_skills.push({label: s.title, value: s.id})
+    let skillIds = data.split(',')
+    let newSkills = []
+    if (skillIds[0] !== '') {
+      skillIds.forEach((id) => {
+        this.props.skills.forEach((s) => {
+          if (s.id === parseInt(id, 10)) {
+            newSkills.push({label: s.title, value: s.id})
           }
         })
-			});
-		}
+      })
+    }
     this.setState({
-      selectValue: [...new_skills],
-      selected_skills: skill_ids
-    })
-	}
-
-  clearForm = () => {
-    this.setState({
-      title: this.props.project.title ? this.props.project.title : '',
-      description: this.props.project.description ? this.props.project.description : '',
-      external_link: this.props.project.external_link ? this.props.project.external_link : '',
-      learning_point: this.props.project.learning_point ? this.props.project.learning_point : '',
-      pain_point: this.props.project.pain_point ? this.props.project.pain_point : '',
-      selectValue: this.props.project.skills ? this.formatSkills(this.props.project.skills) : [],
-      selected_skills: []
+      selectValue: [...newSkills],
+      selectedSkills: skillIds
     })
   }
 
@@ -89,25 +76,24 @@ class EditProjectForm extends Component {
     project = this.state
     project.user = this.props.user
     project.id = this.props.project.id
-    skills = this.state.selected_skills
-      ? this.state.selected_skills
+    skills = this.state.selectedSkills
+      ? this.state.selectedSkills
       : project.selectValue.map(s => s.id)
     delete project.selectValue
-    delete project.selected_skills
-    this.clearForm()
-    console.log({project, skills})
+    delete project.selectedSkills
     this.props.updateProject({project, skills}, this.props.history)
   }
 
-  handleDelete = (id, history) => event => {
+  handleDelete = event => {
     event.preventDefault()
-    this.props.deleteProject(id, history)
+    const {project, history} = this.props
+    this.props.deleteProject(project.id, history)
   }
 
   render () {
     let skills = this.props.skills ? this.formatSkills(this.props.skills) : []
-    let {project, history} = this.props
-    const {alert} = this.props
+    let {alert} = this.props
+    console.log('RERENDERING')
     return (
       <Row className='PostJobForm'>
         <ScrollToTopOnMount />
@@ -175,27 +161,30 @@ class EditProjectForm extends Component {
             </FormGroup>
             <Button className='btn-oval' type='submit'>SAVE PROJECT</Button>
           </form>
-          <Button className='btn-oval btn-oval__black btn-oval__danger' onClick={this.handleDelete(project.id, history)}>
+          <Button className='btn-oval btn-oval__black btn-oval__danger' onClick={this.handleDelete}>
             DELETE PROJECT
           </Button>
         </Col>
-        {alert &&
-          <Modal
-            title={alert.title}
-            body={alert.body}
-            show={true}
-            next="/dashboard/projects"
-          />
-        }
       </Row>
     )
   }
 }
 
+EditProjectForm.propTypes = {
+  alert: PropTypes.object,
+  history: PropTypes.object,
+  project: PropTypes.object,
+  skills: PropTypes.array,
+  match: PropTypes.object,
+  user: PropTypes.object,
+  updateProject: PropTypes.func,
+  deleteProject: PropTypes.func,
+  getProject: PropTypes.func
+}
+
 const mapStateToProps = state => ({
-	alert:state.alert
+  alert: state.alert,
+  project: state.projects.currentProject
 })
 
-const EditProjectFormContainer = connect(mapStateToProps, null)(EditProjectForm)
-
-export default withRouter(EditProjectFormContainer)
+export default withRouter(connect(mapStateToProps)(EditProjectForm))
