@@ -121,16 +121,6 @@ class App extends Component {
             }
             <ScrollToTopOnMount scroll={this.state.showDashMenu} />
             {
-              alert &&
-              <Modal
-                style={alert.style}
-                title={alert.title}
-                body={alert.body}
-                show={this.props.alert !== null}
-                next={alert.next}
-              />
-            }
-            {
               user && !user.is_employer &&
                 dashMobileMenu.applicant.map((link, i) => (
                   <LinkContainer
@@ -146,10 +136,25 @@ class App extends Component {
                 ))
             }
           </Nav>
+          {
+            alert &&
+            <Modal
+              style={alert.style}
+              title={alert.title}
+              body={alert.body}
+              show={this.props.alert !== null}
+              next={alert.next}
+            />
+          }
           <Grid fluid className='App'>
             {/* PUBLIC ROUTES */}
             <Route exact strict path='/' component={Home} />
             <Route exact path='/about' component={About} />
+            <Route exact path='/jobs/:id' component={JobDetailPage} />
+            <Route exact path='/login' component={LoginForm} />
+            <Route exact path='/register' component={RegisterForm} />
+            <Route exact path='/users/:id' component={UserDetailPage} />
+            {/* PRIVATE ROUTES */}
             <Route exact path='/dashboard' component={() => {
               return user && user.is_employer
                 ? <Redirect to='/dashboard/manage-jobs' />
@@ -163,20 +168,14 @@ class App extends Component {
               if (!user) return <LoginForm />
               return <Redirect to='/dashboard' />
             }} />
-            <Route exact path='/jobs/:id' component={JobDetailPage} />
-            {/* PRIVATE ROUTES */}
             <Route exact path='/dashboard/:action' component={() => {
               if (!user) return <Redirect to='/login' />
-              return <Dashboard />
+              return <Dashboard location={location} />
             }} />
             <Route exact path='/dashboard/:action/:id' component={() => {
               if (!user) return <Redirect to='/login' />
               return <Dashboard />
             }} />
-            <Route exact path='/jobs/:id' component={JobDetailPage} />
-            <Route exact path='/login' component={LoginForm} />
-            <Route exact path='/register' component={RegisterForm} />
-            <Route exact path='/users/:id' component={UserDetailPage} />
           </Grid>
         </div>
       </Router>
@@ -194,6 +193,7 @@ const mapStateToProps = state => ({
   user: state.users.currentUser,
   alert: state.alert
 })
+
 const mapDispatchToProps = dispatch => ({ logOut: (history) => dispatch(logout(history)) })
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App))

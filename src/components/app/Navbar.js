@@ -35,7 +35,8 @@ const NavBar = props => (
         </LinkContainer>
         {
           props.user
-            ? <LinkContainer to='#' eventKey={3} className='dropdown-hover'>
+            ? (
+              <LinkContainer to='#' eventKey={3} className='dropdown-hover'>
                 <NavDropdown title='Account' id='account-dropdown'>
                   <LinkContainer
                     to={
@@ -52,8 +53,10 @@ const NavBar = props => (
                   </LinkContainer>
                 </NavDropdown>
               </LinkContainer>
+            )
 
-            : <LinkContainer to='#' eventKey={3} className='dropdown-hover'>
+            : (
+              <LinkContainer to='#' eventKey={3} className='dropdown-hover'>
                 <NavDropdown title='Account' id='account-dropdown'>
                   <LinkContainer to='/login' eventKey={3.1}>
                     <MenuItem>Login</MenuItem>
@@ -63,11 +66,14 @@ const NavBar = props => (
                   </LinkContainer>
                 </NavDropdown>
               </LinkContainer>
+            )
         }
       </Nav>
       <Nav pullRight style={{display: props.showPostJob(props.user)}}>
         <LinkContainer to='/dashboard/post-new-job'>
-          <NavItem hidden={!props.user || (props.user && props.user.is_employer)}><span className='btn-oval'>Post a job</span></NavItem>
+          <NavItem hidden={props.showPostJob}>
+            <span className='btn-oval'>Post a job</span>
+          </NavItem>
         </LinkContainer>
       </Nav>
     </Navbar.Collapse>
