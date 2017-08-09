@@ -8,6 +8,7 @@ import Sidebar from '../utilities/Sidebar'
 import PostAJob from '../jobs/PostNewJobForm'
 import ManageJobs from './ManageJobs'
 import EditProfile from './EditProfile'
+import ApplicantsList from './ApplicantsList'
 import JobDetailPage from '../jobs/JobDetailPage'
 import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
 
@@ -40,6 +41,9 @@ class EmployerDashboard extends Component {
                     <LinkContainer to='/dashboard/post-new-job' className='Dashboard__nav-item'>
                       <NavItem><Glyphicon glyph='plus-sign' /> Post New Job</NavItem>
                     </LinkContainer>
+                    <LinkContainer to='/dashboard/applicants' className='Dashboard__nav-item'>
+                      <NavItem><Glyphicon glyph='list-alt' /> Applicants</NavItem>
+                    </LinkContainer>
                     <LinkContainer to='/dashboard/manage-jobs' className='Dashboard__nav-item'>
                       <NavItem><Glyphicon glyph='list-alt' /> Manage Jobs</NavItem>
                     </LinkContainer>
@@ -58,6 +62,11 @@ class EmployerDashboard extends Component {
                 path='/dashboard/post-new-job'
                 component={PostAJob}
               />
+              <Route exact path='/dashboard/applicants' component={() => (
+                <ApplicantsList
+                  jobs={jobs}
+                />
+              )} />
               <Route exact path='/dashboard/manage-jobs' component={() => (
                 <ManageJobs
                   closeJob={this.props.closeJob}
