@@ -12,26 +12,26 @@ import '../auth/Form.css'
 import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
 
 function arrowRenderer () {
-	return (
-		<span></span>
-	)
+  return (
+    <span />
+  )
 }
 
 class CreateProjectForm extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       title: '',
       description: '',
       external_link: '',
-			learning_point: '',
-			pain_point: '',
+      learning_point: '',
+      pain_point: '',
       selectValue: [],
-      selected_skills: [],
+      selected_skills: []
     }
   }
 
-  componentDidMount(){
+  componentDidMount () {
     this.props.getSkills()
   }
 
@@ -80,22 +80,21 @@ class CreateProjectForm extends Component {
 
     project.user = this.props.user
 
-		const skills = []
-		this.state.selectValue.forEach((skill) => {
-			skills.push(skill.value)
-		})
+    const skills = []
+    this.state.selectValue.forEach((skill) => {
+      skills.push(skill.value)
+    })
 
-		// const token = this.refs.card.state.token
+    // const token = this.refs.card.state.token
     this.clearForm()
     this.props.createProject({project, skills})
-		this.props.history.push('/')
+    this.props.history.push('/')
   }
 
-  render() {
+  render () {
     let skills = []
-
     this.props.skills.forEach(s => {
-      skills.push({label:s.title, value:s.id})
+      skills.push({label: s.title, value: s.id})
     })
     return (
       <Row className='PostJobForm'>
@@ -116,25 +115,25 @@ class CreateProjectForm extends Component {
             </ControlLabel>
             <VirtualizedSelect
               arrowRenderer={arrowRenderer}
-              clearable={true}
-              searchable={true}
+              clearable
+              searchable
               simpleValue
               labelKey='label'
               valueKey='value'
-              ref="job_search"
-              multi={true}
+              ref='job_search'
+              multi
               options={skills}
               onChange={(data) => this._selectSkill(data)}
               value={this.state.selectValue}
             />
-						<FormGroup controlId='external_link'>
-							<ControlLabel>External Link</ControlLabel>
-							<FormControl
-							type='url'
-							value={this.state.external_link}
-							onChange={this.handleChange('external_link')}
-							/>
-							</FormGroup>
+            <FormGroup controlId='external_link'>
+              <ControlLabel>External Link</ControlLabel>
+              <FormControl
+                type='url'
+                value={this.state.external_link}
+                onChange={this.handleChange('external_link')}
+              />
+            </FormGroup>
             <FormGroup controlId='description'>
               <ControlLabel>Project Description</ControlLabel>
               <FormControl
@@ -144,7 +143,7 @@ class CreateProjectForm extends Component {
                 onChange={this.handleChange('description')}
               />
             </FormGroup>
-						<FormGroup controlId='learning_point'>
+            <FormGroup controlId='learning_point'>
               <ControlLabel>Learning Point</ControlLabel>
               <FormControl
                 type='text'
@@ -153,7 +152,7 @@ class CreateProjectForm extends Component {
                 onChange={this.handleChange('learning_point')}
               />
             </FormGroup>
-						<FormGroup controlId='pain_point'>
+            <FormGroup controlId='pain_point'>
               <ControlLabel>Pain Point</ControlLabel>
               <FormControl
                 type='text'
@@ -174,11 +173,10 @@ const mapStateToProps = state => ({
   user: state.users.currentUser,
   skills: state.skills.all
 })
+
 const mapDispatchToProps = dispatch => ({
   createProject: project => dispatch(creatingNewProject(project)),
   getSkills: () => dispatch(gettingAllSkills())
 })
 
-const CreateProjectFormContainer = connect(mapStateToProps, mapDispatchToProps)(CreateProjectForm)
-
-export default withRouter(CreateProjectFormContainer)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(CreateProjectForm))

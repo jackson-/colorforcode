@@ -5,7 +5,7 @@ import axios from 'axios'
 import { creatingNewUser } from 'APP/src/reducers/actions/users'
 import EmployerFields from './EmployerRegisterFields'
 import ApplicantFields from './ApplicantRegisterFields'
-import { withRouter, Redirect } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 import './Form.css'
 import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
 

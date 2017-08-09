@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Row, Col, Button, FormControl, ControlLabel } from 'react-bootstrap'
 import { withRouter } from 'react-router-dom'
+import PropTypes from 'prop-types'
 import './JobDetail.css'
 
 class JobInfoDisplay extends Component {
@@ -134,6 +135,16 @@ class JobInfoDisplay extends Component {
       </Row>
     )
   }
+}
+
+JobInfoDisplay.propTypes = {
+  user: PropTypes.object,
+  history: PropTypes.object,
+  match: PropTypes.object,
+  job: PropTypes.object,
+  saveJob: PropTypes.func,
+  unsaveJob: PropTypes.func,
+  applyToJob: PropTypes.func
 }
 
 export default withRouter(JobInfoDisplay)

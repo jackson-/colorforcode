@@ -27,6 +27,7 @@ class Dashboard extends Component {
       project,
       skills
     } = this.props
+
     return (
       <div>
         {!loading && user &&
@@ -40,6 +41,7 @@ class Dashboard extends Component {
                     updateUser={updateUser}
                     closeJob={closeJob}
                     duplicateJob={duplicateJob}
+                    match={this.props.match}
                   />
 
                 : <ApplicantDashboard

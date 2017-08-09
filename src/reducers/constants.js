@@ -39,5 +39,5 @@ export const RECEIVE_PROJECT = 'RECEIVE_PROJECT'
 export const RECEIVE_USER_PROJECTS = 'RECEIVE_USER_PROJECTS'
 
 /* ----------- ERRORS ------------ */
-export const RECEIVE_ERROR = 'RECEIVE_ERROR'
-export const DISMISS_ERROR = 'DISMISS_ERROR'
+export const RECEIVE_ALERT = 'RECEIVE_ALERT'
+export const DISMISS_ALERT = 'DISMISS_ALERT'

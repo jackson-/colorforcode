@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { Row, Col, Button, FormGroup, Image, ButtonToolbar,
+import { Row, Col, Button, FormGroup, Image,
          FormControl, ControlLabel, Glyphicon } from 'react-bootstrap'
 import { uploadingAvatar } from '../../reducers/actions/users'
 import blankAvatar from './blank-avatar.png'
@@ -58,7 +58,7 @@ class ImageUploader extends Component {
 
   render () {
     const {user} = this.props
-    const {uploaded_uri, changeAvatar} = this.state
+    const {changeAvatar} = this.state
     return (
       <Row>
         <Col>
@@ -66,14 +66,15 @@ class ImageUploader extends Component {
             className='user-avatar'
             circle
             responsive
-            src={user.image_url ? user.image_url : blankAvatar }
+            src={user.image_url ? user.image_url : blankAvatar}
             alt={`${user.first_name}'s' avatar`}
           />
         </Col>
         <Col xs={12} sm={12} md={12} lg={12}>
           {
             changeAvatar
-            ? <form onSubmit={this.handleSubmit} encType='multipart/form-data'>
+            ? (
+              <form onSubmit={this.handleSubmit} encType='multipart/form-data'>
                 <FormGroup controlId='profile-pic'>
                   <ControlLabel srOnly>Profile picture</ControlLabel>
                   <FormControl type='file' onChange={this.handleFile} />
@@ -94,10 +95,12 @@ class ImageUploader extends Component {
                   Cancel
                 </Button>
               </form>
-
-            : <Button className='avatar-btn' bsSize='xs' onClick={this.handleChangeAvatar}>
+            )
+            : (
+              <Button className='avatar-btn' bsSize='xs' onClick={this.handleChangeAvatar}>
                 <Glyphicon glyph='camera' /> Change Avatar
               </Button>
+            )
           }
         </Col>
       </Row>
