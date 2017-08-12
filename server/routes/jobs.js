@@ -16,11 +16,12 @@ module.exports = require('express').Router()
   .get('/', (req, res, next) => {
     let body = {
       query: {match_all: {}},
-      from: 0
+      from: 0,
+      size:10
     }
     esClient.search({body, index: 'data', type: 'job'})
     .then(results => {
-      return res.status(200).json(results.hits.hits)
+      return res.status(200).json({total:results.hits.total, hits:results.hits.hits})
     })
     .catch(next)
   })
@@ -36,18 +37,24 @@ module.exports = require('express').Router()
       type: 'job',
       body: {
         query,
-        from:req.body.from ? req.body.from : 0
+        from:req.body.from ? req.body.from : 0,
+        size:10
       }
     })
-    .then(results => res.status(200).json(results.hits.hits))
+    .then(results => res.status(200).json({total:results.hits.total, hits:results.hits.hits}))
     .catch(next)
   })
 
   // advanced search
   .post('/search/advanced', (req, res, next) => {
     const {body} = req
+    body.size = 10
+    console.log("BODY", body)
     esClient.search({body, index: 'data', type: 'job'})
-    .then(advancedResults => res.status(200).json(advancedResults.hits.hits))
+    .then(advancedResults => {
+      console.log("HITS", advancedResults)
+      return res.status(200).json({total:advancedResults.hits.total, hits:advancedResults.hits.hits})
+    })
     .catch(next)
   })
 

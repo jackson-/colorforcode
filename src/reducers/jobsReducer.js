@@ -4,7 +4,8 @@ const initialState = {
   all: null,
   currentJob: null,
   user_jobs: null,
-  applied_jobs: null
+  applied_jobs: null,
+  total:null,
 }
 
 const jobsReducer = (state = initialState, action) => {
@@ -13,7 +14,8 @@ const jobsReducer = (state = initialState, action) => {
       currentJob: action.job
     }
     case RECEIVE_JOBS: return {
-      all: action.jobs
+      all: action.jobs.hits,
+      total:action.jobs.total
     }
     case RECEIVE_USER_JOBS: return {
       user_jobs: action.jobs
