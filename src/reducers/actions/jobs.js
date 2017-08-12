@@ -82,10 +82,10 @@ export const grabbingCoords = () => {
   })
 }
 
-export const buildBodyThenSearch = (bodyBuilderFunc, coords) => {
+export const buildBodyThenSearch = (bodyBuilderFunc, coords, from) => {
   return dispatch => {
     dispatch(requestFilteredJobs())
-    const body = bodyBuilderFunc(coords)
+    const body = bodyBuilderFunc(coords, from)
     dispatch(advancedFilteringJobs(body))
   }
 }
