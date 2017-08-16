@@ -71,13 +71,10 @@ class UserDetailPage extends Component {
                     </section>
                   </Col>
                   <Col className='JobInfo--sidebar' xs={12} sm={5} md={4} lg={4}>
-                    <Image
-                    className='user-avatar'
-                    circle
-                    responsive
-                    src={user.resume_url ? user.resume_url : blankAvatar }
-                    alt={`${user.first_name}'s' resume`}
-                    />
+                    {user.resume_url &&
+                      <a href={user.resume_url} alt={`${user.first_name}'s' resume`}>
+                      {user.first_name}'s Resume</a>
+                    }
                     <Button
                       className='btn-oval btn-oval__black'
                       onClick={!saved ? this.saveJob : this.unsaveJob}
