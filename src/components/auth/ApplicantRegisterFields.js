@@ -48,15 +48,31 @@ const ApplicantRegisterFields = props => (
         onChange={props.handleChange('last_name')}
       />
     </FormGroup>
-    <FormGroup controlId='story'>
-      <ControlLabel>Personal Story</ControlLabel>
+    <FormGroup controlId='title'>
+      <ControlLabel>Role You're Seeking</ControlLabel>
       <FormControl
-        componentClass="textarea"
-        value={props.state.story}
-        onChange={props.handleChange('story')}
+        value={props.state.title}
+        onChange={props.handleChange('title')}
+        placeholder='e.g., Senior Interaction Designer'
       />
     </FormGroup>
-    {/* with zip_code we auto find user's city, state and country */}
+    <FormGroup controlId='headline'>
+      <ControlLabel>Profile Headline</ControlLabel>
+      <FormControl
+        value={props.state.headline}
+        onChange={props.handleChange('headline')}
+        placeholder='e.g., Clean coder, fast runner.'
+      />
+    </FormGroup>
+    <FormGroup controlId='summary'>
+      <ControlLabel>Personal Summary</ControlLabel>
+      <FormControl
+        componentClass="textarea"
+        value={props.state.summary}
+        onChange={props.handleChange('summary')}
+      />
+    </FormGroup>
+    {/* with zip_code we auto find user's city, state and country along with their coords */}
     <FormGroup controlId='zip_code'>
       <ControlLabel>Zip Code</ControlLabel>
       <FormControl

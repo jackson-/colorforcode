@@ -83,7 +83,7 @@ class JobInfoDisplay extends Component {
           <Row className='JobInfo--body'>
             <Col xs={12} sm={12} md={12} lg={12}>
               <Row>
-                <div className='container__flex--sidebar'>
+                <div className='JobInfo__container-flex--sidebar'>
                   <Col className='JobInfo--summary' xs={12} sm={7} md={8} lg={8}>
                     <section className='JobInfo--summary-section'>
                       <h2>Description</h2>

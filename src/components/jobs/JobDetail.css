@@ -1,6 +1,6 @@
 @import url(../../fonts.css);
 
-.container__flex--sidebar {
+.JobInfo__container-flex--sidebar {
   display: flex;
   flex-direction: column;
 }
@@ -122,14 +122,9 @@
   transition-duration: 0.2s;
 }
 
-@media only screen and (min-width: 620px) {
-  .container__flex--sidebar {
-    flex-direction: row;
-  }
-}
-
 @media only screen
 and (min-width: 768px) {
+
   .JobInfo--header {
     padding: 25px;
   }
@@ -156,5 +151,11 @@ and (min-width: 768px) {
 
   .JobInfo--sidebar {
     padding: 30px 40px 30px 0;
+  }
+}
+
+@media only screen and (min-width: 620px) {
+  .JobInfo__container-flex--sidebar  {
+    flex-direction: row;
   }
 }

@@ -1,0 +1,44 @@
+/* to remove padding from Col */
+.chip-container {
+  padding: 0;
+}
+/* flex container that wraps the chips */
+.chip-wrapper {
+  display: flex;
+  flex-direction: row;
+  margin: 0 auto;
+}
+
+/* individual chips */
+.chip-round {
+  font-size: 11px;
+  font-family: Open Sans Bold;
+  color: #12CD6A;
+  background: #FFFFFF;
+  border-radius: 25px;
+  display: inline-block;
+  padding: 5px 10px;
+}
+
+.chip-round:not(:last-child) {
+  margin: 0 10px 0 0;
+}
+
+.chip-square {
+  background: #FFFFFF;
+  border-radius: 3px;
+  border: 2px solid #12CD6A;
+  color: #12CD6A;
+  font-size: 14px;
+  font-family: Open Sans Bold;
+  padding: 5px 10px;
+  margin: 10px 5px 0 0;
+  display: inline-block;
+  width: auto !important;
+}
+
+@media only screen and (min-width: 992px) {
+  .chip-wrapper {
+    margin: 0 0 0 30px;
+  }
+}
