@@ -34,7 +34,7 @@ class ImageUploader extends Component {
   handleFile = event => {
     const reader = new FileReader()
     const file = event.target.files[0]
-
+    debugger
     reader.onload = (upload) => {
       this.setState({
         file,

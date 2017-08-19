@@ -7,6 +7,8 @@ const esClient = new elasticsearch.Client({
   host: '127.0.0.1:9200',
   log: 'error'
 })
+const tinify = require("tinify");
+tinify.key = "lm8HbN3+BXgdBe9KvYLG3+KkS7SISwCHXcbW1ybx";
 
 module.exports = require('express').Router()
 
@@ -62,41 +64,51 @@ module.exports = require('express').Router()
   })
 
   .get('/avatars/sign-s3', (req, res) => {
-    const s3 = new aws.S3({
-      accessKeyId: 'AKIAJBADUWOAWQFRHKKQ',
-      secretAccessKey: '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'
-    })
+    var source = tinify.fromFile(req.query['file-name']);
     const fileName = req.query['file-name']
     const fileType = req.query['file-type']
-    const s3Params = {
-      Bucket: S3_BUCKET,
-      Key: `avatars/${fileName}`,
-      Expires: 60,
-      ContentType: fileType,
-      ACL: 'public-read'
-    }
-
-    s3.getSignedUrl('putObject', s3Params, (err, data) => {
-      if (err) {
-        console.error(err)
-        return res.end()
-      }
-      const returnData = {
-        signedRequest: data,
-        url: `https://${S3_BUCKET}.s3.amazonaws.com/${fileName}`
-      }
-      res.write(JSON.stringify(returnData))
-      res.end()
+    source.store({
+      service: "s3",
+      aws_access_key_id: "AKIAJBADUWOAWQFRHKKQ",
+      aws_secret_access_key: "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",
+      region: "us-east-1",
+      path: `${S3_BUCKET}/resumes/${fileName}`
     })
+    // const s3 = new aws.S3({
+    //   accessKeyId: 'AKIAJBADUWOAWQFRHKKQ',
+    //   secretAccessKey: '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'
+    // })
+    // const fileName = req.query['file-name']
+    // const fileType = req.query['file-type']
+    // const s3Params = {
+    //   Bucket: S3_BUCKET,
+    //   Key: `avatars/${fileName}`,
+    //   Expires: 60,
+    //   ContentType: fileType,
+    //   ACL: 'public-read'
+    // }
+    //
+    // s3.getSignedUrl('putObject', s3Params, (err, data) => {
+    //   if (err) {
+    //     console.error(err)
+    //     return res.end()
+    //   }
+    //   const returnData = {
+    //     signedRequest: data,
+    //     url: `https://${S3_BUCKET}.s3.amazonaws.com/${fileName}`
+    //   }
+    //   res.write(JSON.stringify(returnData))
+    //   res.end()
+    // })
   })
 
   .get('/resumes/sign-s3', (req, res) => {
+    const fileName = req.query['file-name']
+    const fileType = req.query['file-type']
     const s3 = new aws.S3({
       accessKeyId: 'AKIAJBADUWOAWQFRHKKQ',
       secretAccessKey: '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'
     })
-    const fileName = req.query['file-name']
-    const fileType = req.query['file-type']
     const s3Params = {
       Bucket: S3_BUCKET,
       Key: `resumes/${fileName}`,

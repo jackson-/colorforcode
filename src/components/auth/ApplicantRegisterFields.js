@@ -1,6 +1,5 @@
 import React from 'react'
 import { FormGroup, ControlLabel, FormControl, Checkbox, HelpBlock } from 'react-bootstrap'
-
 const ApplicantRegisterFields = props => (
   <div>
     <FormGroup controlId='email'>

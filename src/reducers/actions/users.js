@@ -2,7 +2,6 @@ import axios from 'axios'
 import { RECEIVE_ALL_USERS, AUTHENTICATED, RECEIVE_USER } from '../constants'
 import { createNewUser, requestAllUsers, beginUploading,
          doneUploading, requestUser, requestFilteredUsers } from './loading'
-
 /* --------- PURE ACTION CREATORS --------- */
 
 export const receiveAllUsers = users => ({
@@ -137,6 +136,7 @@ export const updatingUser = (user, savedJobs) => dispatch => {
 export const uploadingAvatar = (user, file) => dispatch => {
   dispatch(beginUploading())
   user.image_url = `https://s3.amazonaws.com/hireblack/avatars/${file.name}`
+  debugger
   const options = {headers: {'Content-Type': file.type}}
   axios.get(
     `http://localhost:1337/api/users/avatars/sign-s3?&file-name=${file.name}&file-type=${file.type}`

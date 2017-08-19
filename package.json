@@ -90,6 +90,7 @@
     "sendmail": "^1.1.1",
     "sequelize": "^3.24.6",
     "stripe": "^4.19.0",
+    "tinify": "^1.5.0",
     "underscore": "^1.8.3"
   },
   "devDependencies": {

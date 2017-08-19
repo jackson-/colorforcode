@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import axios from 'axios'
 import EmployerFields from '../auth/EmployerRegisterFields'
 import ApplicantFields from '../auth/ApplicantRegisterFields'
+import ResumeUploader from '../dashboard/ResumeUploader'
 import '../auth/Form.css'
 import './Dashboard.css'
 import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
@@ -161,6 +162,7 @@ class EditProfile extends Component {
     user.employment_types = [...user.employment_types]
     this.clearForm()
     this.props.updateUser(user)
+    this.props.uploadResume(this.props.user, this.refs.resume.state.file)
   }
 
   render () {
@@ -192,6 +194,10 @@ class EditProfile extends Component {
           <h1 className='EditProfile-header'>Edit Profile</h1>
           <form className='EditProfile-body' onSubmit={this.handleSubmit}>
             {fields}
+            {user.resume_url &&
+              <a href={user.resume_url}><p>Current Resume</p></a>
+            }
+            <ResumeUploader ref="resume" uploadResume={this.props.uploadResume}  user={this.props.user}/>
             <Button disabled={this.isInvalid()} className='primary' type='submit'>
               Update Profile
             </Button>
