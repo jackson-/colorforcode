@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Row, Col } from 'react-bootstrap'
+import { Row, Col, Button } from 'react-bootstrap'
 import { gettingAllUsers, filteringUsers, buildBodyThenSearch } from 'APP/src/reducers/actions/users'
 import { grabbingCoords } from 'APP/src/reducers/actions/jobs'
 import { gettingAllSkills } from 'APP/src/reducers/actions/skills'
@@ -21,7 +21,9 @@ class CandidateSearch extends Component {
       pendingTerms: [],
       filtered: false,
       distance: '',
-      sortBy: ''
+      sortBy: '',
+      page_num:1,
+      from:0,
     }
   }
 
@@ -116,7 +118,7 @@ class CandidateSearch extends Component {
     this.clearFilter()
   }
 
-  buildBody = coords => {
+  buildBody = (coords, from) => {
     const {terms, distance, sortBy} = this.state
     let must = terms.map(term => ({term: {_all: term}}))
     const body = {
@@ -160,18 +162,41 @@ class CandidateSearch extends Component {
       }]
     }
     console.log('ADV SEARCH BODY: ', body)
+    body.from = from
     return body
   }
 
-  advancedFilterUsers = event => {
+  handlePagination(users, sign){
+    let page_num = 1
+    let from = 0
+    const next_page= eval(`${this.state.page_num} ${sign} 1`)
+    if(sign){
+      const nextPageHasItems = (!(this.props.users.length < 10) || sign === "-" )
+      if(next_page > 0 && nextPageHasItems){
+        page_num = next_page
+        from = eval(`${this.state.from} ${sign} 10`)
+      } else{
+        return {page_num:null, from}
+      }
+    }
+    return {page_num, from}
+  }
+
+  advancedFilterUsers = event = (sign) => {
     event.preventDefault()
     const coords = this.props.user.coords
       ? this.props.user.coords
       : this.state.coords
-    this.setState(
-      {filtered: true},
-      () => this.props.advancedFilterJobs(this.buildBody, coords)
-    )
+      const {page_num, from} = this.handlePagination(this.props.users, sign)
+      if(!page_num){
+        return
+      }
+      this.setState(
+        { filtered: true,
+          page_num,
+          from},
+        () => this.props.advancedFilterUsers(this.buildBody, coords, from)
+      )
   }
 
   render () {
@@ -201,6 +226,19 @@ class CandidateSearch extends Component {
             />
           </Col>
           <Col xs={12} sm={9} md={9} lg={9}>
+            <Row>
+              <Col className="paginate"  xs={12} sm={12} md={12} lg={12}>
+                <Button onClick={() => this.advancedFilterUsers("-")}>
+                Back
+                </Button>
+                <p className="page-number">
+                {this.state.page_num}
+                </p>
+                <Button onClick={() => this.advancedFilterUsers("+")}>
+                Next
+                </Button>
+              </Col>
+            </Row>
             {
               this.state.loading
                 ? <p>Loading Candidates...</p>
@@ -222,6 +260,7 @@ class CandidateSearch extends Component {
 
 const mapStateToProps = state => ({
   users: state.users.all,
+  user: state.users.currentUser,
   skills: state.skills.all,
   loading: state.loading
 })
@@ -230,8 +269,8 @@ const mapDispatchToProps = dispatch => ({
   getUsers: post => dispatch(gettingAllUsers()),
   getSkills: post => dispatch(gettingAllSkills()),
   filterUsers: query => dispatch(filteringUsers(query)),
-  advancedFilterUsers: (bodyBuilderFunc, coords) => {
-    return dispatch(buildBodyThenSearch(bodyBuilderFunc, coords))
+  advancedFilterUsers: (bodyBuilderFunc, coords, from) => {
+    return dispatch(buildBodyThenSearch(bodyBuilderFunc, coords, from))
   }
 })
 

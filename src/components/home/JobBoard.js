@@ -217,22 +217,24 @@ class JobBoard extends Component {
             />
           </Col>
           <Col xs={12} sm={9} md={9} lg={9}>
+            <Row>
+              <Col className="paginate"  xs={12} sm={12} md={12} lg={12}>
+                <Button onClick={() => this.advancedFilterJobs("-")}>
+                Back
+                </Button>
+                <p className="page-number">
+                {this.state.page_num}
+                </p>
+                <Button onClick={() => this.advancedFilterJobs("+")}>
+                Next
+                </Button>
+              </Col>
+            </Row>
             {this.props.loading
               ? <p>Loading Job Listings...</p>
               : <JobList filtered={this.state.filtered} jobs={jobs} />
             }
           </Col>
-          <div>
-            <Button onClick={() => this.advancedFilterJobs("-")}>
-              Back
-            </Button>
-            <span>
-              {this.state.page_num}
-            </span>
-            <Button onClick={() => this.advancedFilterJobs("+")}>
-              Next
-            </Button>
-          </div>
         </div>
       </Row>
     )

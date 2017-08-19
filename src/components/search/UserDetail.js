@@ -63,7 +63,7 @@ class UserDetailPage extends Component {
                             <p>{project.description}</p>
                             <h5>Learning Point</h5>
                             <p>{project.learning_point}</p>
-                            <h5>Learning Point</h5>
+                            <h5>Pain Point</h5>
                             <p>{project.pain_point}</p>
                           </li>
                         ))}
