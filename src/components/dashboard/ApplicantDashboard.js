@@ -34,7 +34,7 @@ const ApplicantDashboard = ({
         <div className='container__flex'>
           <Col xsHidden sm={3} md={3} lg={3} className='Dashboard__sidebar'>
             <Sidebar
-              headerText={`Welcome, ${user.first_name}`}
+              header={`Welcome, ${user.first_name}`}
               content={
                 <Nav className='Sidebar__button-container' stacked>
                   <ImageUploader user={user} />

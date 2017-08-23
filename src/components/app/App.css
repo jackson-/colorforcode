@@ -126,12 +126,11 @@
 }
 
 .Dashboard-menu-collapse {
-  padding: 75px 0 10px 0;
-  margin-bottom: -60px;
-  display: block;
   min-width: 180px;
   background: #404648;
   transition: all .65s ease-in-out;
+  z-index: 5;
+  position: relative;
 }
 
 .dropdown-menu {

@@ -28,14 +28,13 @@ class EmployerDashboard extends Component {
     const {user, updateUser} = this.props
     const firstName = user ? user.first_name : ''
     const jobs = user && user.is_employer && [...user.employer.listings]
-    console.log('Dashboard thinks location is: ', this.props.location)
     return (
       <Router>
         <Row className='Dashboard'>
           <div className='container__flex'>
             <Col xsHidden sm={3} md={3} lg={3} className='Dashboard__sidebar'>
               <Sidebar
-                headerText={`Welcome, ${firstName}`}
+                header={`Welcome, ${firstName}`}
                 content={
                   <Nav className='Sidebar__button-container' stacked>
                     <LinkContainer to='/dashboard/post-new-job' className='Dashboard__nav-item'>

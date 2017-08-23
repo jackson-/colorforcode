@@ -5,6 +5,7 @@
   height: 100%;
   overflow: auto;
   margin: 0 -15px;
+  padding-top: 60px !important;
 }
 
 .UserDetail__header {
@@ -38,12 +39,6 @@
   font-size: 1.25em;
   font-family: Open Sans Bold;
   margin: 10px auto;
-}
-
-.UserDetail__header- {
-  font-size: 17px;
-  font-family: Open Sans Bold;
-  margin-top: 10px;
 }
 
 .UserDetail__header-location {
@@ -128,7 +123,7 @@ and (min-width: 992px) {
 
   .UserDetail__header-location {
     padding-left: 30px;
-    margin: 0 0 5px 0;
+    margin: 5px 0 0 0;
   }
 
   .header-left {

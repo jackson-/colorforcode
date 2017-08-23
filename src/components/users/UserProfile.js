@@ -16,11 +16,11 @@ class UserProfile extends Component {
 
   componentWillMount () {
     const {id} = this.props.match.params
-    this.props.getUser(id)
+    if (!this.props.user) this.props.getUser(id)
   }
 
   render () {
-    const {match} = this.props
+    const {match, showDashMenu} = this.props
     const user = this.props.user ? this.props.user._source : null
     const links = [
       {type: 'github', label: 'Github Profile', component: <GithubIcon />},
@@ -40,11 +40,9 @@ class UserProfile extends Component {
         }
       })
     }
-    // below we're fixing the unnecessary padding when this component
-    // is rendered by the applicant dashboard
-    let paddingTop = match.path === '/users/:id' ? '60px' : '0'
+
     return (
-      <Row className='UserDetail Dashboard__content--white' style={{paddingTop}}>
+      <Row className='UserDetail Dashboard__content--white'>
         {user &&
         <Col xs={12} sm={12} md={12} lg={12}>
           <Row className='UserDetail__header'>
@@ -124,7 +122,8 @@ UserProfile.propTypes = {
   history: PropTypes.object,
   match: PropTypes.object,
   getUser: PropTypes.func,
-  user: PropTypes.object
+  user: PropTypes.object,
+  padding: PropTypes.string
 }
 
 const mapStateToProps = state => ({
