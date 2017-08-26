@@ -60,12 +60,12 @@ class JobInfoDisplay extends Component {
           <Row className='JobInfo--header'>
             <Col xs={12} sm={12} md={12} lg={12}>
               <Row>
-                <Col className='header-left' xs={12} sm={6} md={6} lg={6}>
+                <Col className='JobInfo__header-left' xs={12} sm={6} md={6} lg={6}>
                   <h1 className='JobInfo--header-title'>{job.title}</h1>
                   <h5 className='JobInfo--header-employer'>{employer.name}</h5>
                   <p className='JobInfo--header-location'>{`${job.location}`}</p>
                 </Col>
-                <Col className='header-right' xs={12} sm={6} md={3} mdOffset={3} lg={3} lgOffset={3}>
+                <Col className='JobInfo__header-right' xs={12} sm={6} md={3} mdOffset={3} lg={3} lgOffset={3}>
                   <h5 className='JobInfo--header-payrate'>
                     {job.compensation_type === 'Hourly'
                        ? `Pay: ${job.pay_rate}/hr`

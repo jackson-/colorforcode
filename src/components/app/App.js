@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
-import { Grid, Nav, Glyphicon, NavItem } from 'react-bootstrap'
+import { Grid } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { BrowserRouter as Router, Route, withRouter, Redirect } from 'react-router-dom'
-import { LinkContainer } from 'react-router-bootstrap'
 import PropTypes from 'prop-types'
 import MainNav from './Navbar'
 import Home from '../home/Home'
@@ -12,7 +11,7 @@ import LoginForm from '../auth/LoginForm'
 import JobDetailPage from '../jobs/JobDetailPage'
 import UserProfile from '../users/UserProfile'
 import Dashboard from '../dashboard/Dashboard'
-import Modal from '../utilities/Modal'
+import AlertModal from '../utilities/AlertModal'
 import NavCollapse from './NavCollapse'
 import './App.css'
 import { logout } from '../../reducers/actions/users'
@@ -109,7 +108,7 @@ class App extends Component {
           />
           {
             alert &&
-            <Modal
+            <AlertModal
               style={alert.style}
               title={alert.title}
               body={alert.body}

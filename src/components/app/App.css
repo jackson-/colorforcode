@@ -2,20 +2,6 @@
 
 /* ------ Misc (App-wide) ------ */
 
-.alert {
-  border: none !important;
-}
-
-.modal-content {
-  background: #DFF0D8;
-}
-
-.modal-title {
-  font-weight: bold;
-  font-size: 1.25em;
-  color: #3c763d;
-}
-
 .container__flex {
   display: flex;
   flex-direction: column;
@@ -66,11 +52,6 @@
   margin-top: 6px;
 }
 
-.nav-links {
-  position: absolute;
-  left: 100px;
-}
-
 .active, a:hover, a:focus,
 .navbar-default .navbar-nav>.active>a,
 .navbar-default .navbar-nav>.active>a:hover,
@@ -104,11 +85,6 @@
   cursor: pointer;
 }
 
-.nav-button-container {
-  position: absolute;
-  right: 30px;
-}
-
 .navbar-default .navbar-toggle,
 .navbar-default .navbar-toggle:hover,
 .navbar-default .navbar-toggle:focus {
@@ -123,6 +99,7 @@
   max-height: none;
   width: inherit;
   height: calc(100vh - 60px);
+  background: #FFFFFF;
 }
 
 .Dashboard-menuToggle span {
@@ -150,7 +127,7 @@
   border: none;
 }
 
-/* desktop only dropdown open on hover */
+/* tablet & desktop only */
 @media only screen
 and (min-width: 768px) {
   .dropdown:hover .dropdown-menu {
@@ -168,6 +145,16 @@ and (min-width: 768px) {
   .navbar-brand {
     position: absolute;
     left: 60px;
+  }
+
+  .nav-links {
+    position: absolute;
+    left: 100px;
+  }
+
+  .nav-button-container {
+    position: absolute;
+    right: 30px;
   }
 }
 
