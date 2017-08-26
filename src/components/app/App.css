@@ -47,6 +47,7 @@
 .navbar {
   background: #FFFFFF;
   margin: 0;
+  height: 63px;
 }
 
 .nav a {
@@ -63,6 +64,11 @@
 .navbar-default .navbar-nav>li>a {
   color: #333333;
   margin-top: 6px;
+}
+
+.nav-links {
+  position: absolute;
+  left: 100px;
 }
 
 .active, a:hover, a:focus,
@@ -94,8 +100,13 @@
 
 .navbar-brand {
   padding: 0;
-  margin: 6px 15px;
+  margin: 6px 20px;
   cursor: pointer;
+}
+
+.nav-button-container {
+  position: absolute;
+  right: 30px;
 }
 
 .navbar-default .navbar-toggle,
@@ -152,6 +163,11 @@ and (min-width: 768px) {
   .nav .open>a:focus,
   .nav .open>a:hover {
     background: none;
+  }
+
+  .navbar-brand {
+    position: absolute;
+    left: 60px;
   }
 }
 
