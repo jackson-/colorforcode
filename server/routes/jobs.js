@@ -49,14 +49,6 @@ module.exports = require('express').Router()
   // advanced search
   .post('/search/advanced', (req, res, next) => {
     const {body} = req
-    // body.size = 10
-    // console.log("BODY", body)
-    // esClient.search({body, index: 'data', type: 'job'})
-    // .then(advancedResults => {
-    //   console.log("HITS", advancedResults)
-    //   return res.status(200).json({total:advancedResults.hits.total, hits:advancedResults.hits.hits})
-    // })
-    // .catch(next)
     const offset = body.from
     const limit = body.size
     const tsquery = body.query
@@ -69,6 +61,41 @@ module.exports = require('express').Router()
     { model: db.Post }).then((result) =>{
       console.log("REUSLT", result)
       return res.status(200).json({result:result[0]})
+    });
+  })
+
+  .post('/search/experiment', (req, res, next) => {
+    const {body} = req
+    const offset = body.from
+    const limit = body.size
+    // const tsquery = body.query
+    console.log(body.query)
+    const options = {
+        model: db.Job,
+        // include: [db.Skill],
+        hasJoin:true,
+    }
+    // db.Model.$validateIncludedElements(options)
+    const query = "SELECT * "+
+      "FROM (SELECT job.*, job.id as id, " +
+            `ST_Distance(job.the_geom, ST_MakePoint(${body.coords})::geography) as distance, ` +
+             "job.title as title, " +
+             "job.description as description, " +
+             "array_agg(skill.title) as skills, " +
+             "setweight(to_tsvector(job.title), 'A') || " +
+            " setweight(to_tsvector(job.description), 'B') || " +
+             "setweight(to_tsvector('simple', skill.title), 'A') || " +
+             "setweight(to_tsvector('simple', coalesce(string_agg(skill.title, ' '))), 'B') as document " +
+      "FROM job " +
+      "JOIN jobskill ON jobskill.job_id = job.id " +
+      "LEFT JOIN skill ON skill.id = jobskill.skill_id " +
+      // "JOIN skill jb2 ON jobskill.skill_id = skill.id " +
+      "GROUP BY job.id, skill.id) p_search " +
+      `WHERE p_search.document @@ to_tsquery('english', '${body.query}') ` +
+      `ORDER BY ts_rank(p_search.document, to_tsquery('english', '${body.query}')) DESC, p_search.distance ASC;`
+    db.query( query,
+      options).then((result) =>{
+      return res.status(200).json({result:result})
     });
   })
 

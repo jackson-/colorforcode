@@ -59,7 +59,7 @@ module.exports.associations = (Job, {User, Employer, Skill, JobSkill, JobApplica
     through: 'JobApplication'
   })
   Job.belongsToMany(Skill, {
-    through: 'JobSkill'
+    through: 'jobskill'
   })
   Job.belongsTo(Employer)
 }
