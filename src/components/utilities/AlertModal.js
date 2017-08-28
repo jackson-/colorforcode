@@ -10,13 +10,17 @@ class AlertModal extends Component {
   onHide = () => {
     const {next, history, dismissAlert} = this.props
     dismissAlert()
-    history.push(next)
+    if (next) history.push(next)
   }
 
   render () {
     const {body, title, show, style} = this.props
     return (
-      <Modal className='' show={show} onHide={this.onHide}>
+      <Modal
+        className='AlertModal'
+        show={show}
+        onHide={this.onHide}
+      >
         <Modal.Header closeButton>
           <Modal.Title className='AlertModal__title'>
             <Glyphicon glyph='check' /> {title}

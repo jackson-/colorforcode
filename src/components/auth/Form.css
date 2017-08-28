@@ -122,7 +122,8 @@
 .form-group input[type=file] {
   padding: 15px;
   max-width: 200px;
-  color: inherit;
+  color: #FFFFFF;
+  margin: 0 auto;
 }
 
 .radio, .checkbox {

@@ -63,7 +63,6 @@
 .link,
 .twitter,
 .linkedin {
-  fill: #FFFFFF;
   padding-top: 2px;
 }
 
@@ -99,7 +98,11 @@
 }
 
 .portfolio-card {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
   padding: 0;
+  min-height: 270px;
   width: 100%;
   background: none;
   border: 1px solid #9FA5A9;
@@ -127,8 +130,12 @@
 }
 
 .portfolio-card__text {
+  flex: 1;
   text-align: left;
   padding: 0 10px;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
 }
 
 .summary {
@@ -233,18 +240,7 @@ and (min-width: 992px) {
   .link,
   .twitter,
   .linkedin {
-    transition: all .35s ease-in-out;
-    fill: transparent;
-    stroke: white;
     padding-top: 2px;
-  }
-
-  .github:hover,
-  .link:hover,
-  .twitter:hover,
-  .linkedin:hover {
-    transform: scale(1.25);
-    fill: #FFFFFF;
   }
 
   .portfolio {

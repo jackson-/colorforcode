@@ -2,7 +2,8 @@ import axios from 'axios'
 import { whoami } from './users'
 import { RECEIVE_ALL_PROJECTS, RECEIVE_PROJECT, RECEIVE_USER_PROJECTS } from '../constants'
 import { createNewProject, requestAllProjects, requestUserProjects,
-         requestFilteredProjects, requestProject} from './loading'
+         requestFilteredProjects, requestProject, updateProject,
+         beginUploading, doneUploading } from './loading'
 import { gettingAllSkills } from './skills'
 import { receiveAlert } from './alert'
 
@@ -61,7 +62,7 @@ export const gettingProjectById = id => dispatch => {
   .catch(err => console.error(`Mang I couldn't find the project! ${err.stack}`))
 }
 
-export const creatingNewProject = (projectPost, history) => dispatch => {
+export const creatingNewProject = (projectPost) => dispatch => {
   // set loading state to true to trigger UI changes
   dispatch(createNewProject())
   // create the new project
@@ -83,7 +84,9 @@ export const creatingNewProject = (projectPost, history) => dispatch => {
   .catch(err => console.error(`Sorry, cuz. We couldn't create that new project...${err.stack}`))
 }
 
-export const updatingProject = (postData, history) => dispatch => {
+export const updatingProject = (postData) => dispatch => {
+  console.log('EDITING PROJECT', postData.project)
+  dispatch(updateProject())
   axios.put(`/api/projects/${postData.project.id}`, postData)
   .then(project => {
     dispatch(whoami)
@@ -97,6 +100,33 @@ export const updatingProject = (postData, history) => dispatch => {
     next: '/dashboard/projects'
   })))
   .catch(err => console.error(`Sorry, cuz. Couldn't update that project...${err.stack}`))
+}
+
+export const uploadingScreenshot = (project, file) => dispatch => {
+  const name = `project-${project.id}-created-${project.created_at}-by-user-${project.user_id}`
+  dispatch(beginUploading())
+  project.screenshot = `https://s3.amazonaws.com/hireblack/screenshots/${name}`
+  const options = {headers: {'Content-Type': file.type}}
+
+  axios.get(
+    `http://localhost:1337/api/projects/screenshots/sign-s3?&file-name=${name}&file-type=${file.type}`
+  )
+  .then(res => {
+    console.log('PUTTING SIGNED REQUEST TO AWS', res.data.signedRequest)
+    axios.put(res.data.signedRequest, file, options)
+  })
+  .then(() => dispatch(updatingProject({project})))
+  .then(() => dispatch(doneUploading()))
+  .catch((err) => {
+    console.error(err)
+    dispatch(receiveAlert({
+      type: 'error',
+      style: 'danger',
+      title: 'Uh Oh!',
+      body: 'Sorry, we could not upload that project screenshot. Please try again.',
+      next: null
+    }))
+  })
 }
 
 export const deletingProject = (id, history) => dispatch => {

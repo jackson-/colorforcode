@@ -2,11 +2,11 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import './IconBar.css'
 
-const SVGIconBar = ({icons}) => (
+const SVGIconBar = ({icons, color}) => (
   <div className='icons'>
     {
       icons.map((icon, i) => (
-        <a key={i} href={icon.url} target='_blank' className='icon'>
+        <a key={i} href={icon.url} target='_blank' className={`icon icon-${color}`}>
           <span className='sr-only'>{icon.text}</span>
           {icon.component}
         </a>
@@ -16,6 +16,7 @@ const SVGIconBar = ({icons}) => (
 )
 
 SVGIconBar.propTypes = {
+  color: PropTypes.string,
   justify: PropTypes.string, // any of the justify-content flextbox property options
   icons: PropTypes.arrayOf(PropTypes.object)
   /* ^ icon objects should be structured as follows:

@@ -6,6 +6,11 @@
   margin: 0 auto;
 }
 
+.icon {
+  cursor: pointer;
+  height: 25px;
+}
+
 .icon:not(:first-child):not(:last-child) {
   margin: 10px;
 }
@@ -16,6 +21,14 @@
 
 .icon:last-child {
   margin: 10px 0 10px 10px;
+}
+
+.icon-green path {
+  fill: #12CD6A;
+}
+
+.icon-white path {
+  fill: #FFFFFF;
 }
 
 @media only screen and (min-width: 768px) and (max-width: 991px) {
@@ -29,5 +42,37 @@
   .icons {
     margin: 0;
     padding-top: 10px;
+  }
+
+  .icon-green svg,
+  .icon-white svg,
+  .icon-green path,
+  .icon-white path {
+    transition: all .35s ease-in-out;
+  }
+
+  .icon-green path {
+    fill: transparent;
+    stroke: #12CD6A;
+    stroke-width: 1.5px;
+  }
+
+  .icon-white path {
+    fill: transparent;
+    stroke: #FFFFFF;
+    stroke-width: 1.5px;
+  }
+
+  .icon-white:hover svg,
+  .icon-green:hover svg {
+    transform: scale(1.25);
+  }
+
+  .icon-green:hover path {
+    fill: #12CD6A;
+  }
+
+  .icon-white:hover path {
+    fill: #FFFFFF;
   }
 }

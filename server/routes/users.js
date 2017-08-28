@@ -78,7 +78,7 @@ module.exports = require('express').Router()
 
     s3.getSignedUrl('putObject', s3Params, (err, data) => {
       if (err) {
-        console.error(err)
+        console.error(err.stack)
         return res.end()
       }
       const returnData = {
@@ -86,7 +86,7 @@ module.exports = require('express').Router()
         url: `https://${S3_BUCKET}.s3.amazonaws.com/${fileName}`
       }
       res.write(JSON.stringify(returnData))
-      res.end()
+      res.sendStatus(200)
     })
   })
 

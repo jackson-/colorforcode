@@ -1,19 +1,21 @@
 
 const Sequelize = require('sequelize')
-const db = require('..')
 
 module.exports = db => db.define('project', {
   title: {
     type: Sequelize.STRING,
     allowNull: false
   },
-  description: {
-    type: Sequelize.TEXT,
+  screenshot: Sequelize.STRING,
+  problem: Sequelize.TEXT,
+  approach: Sequelize.TEXT,
+  challenges: Sequelize.TEXT,
+  outcome: Sequelize.TEXT,
+  site: Sequelize.STRING,
+  repo: {
+    type: Sequelize.STRING,
     allowNull: false
-  },
-  learning_point: Sequelize.TEXT,
-  pain_point: Sequelize.TEXT,
-  external_link: Sequelize.TEXT,
+  }
 })
 
 // Belongs to Many associations create a join table.
@@ -39,6 +41,6 @@ module.exports = db => db.define('project', {
 module.exports.associations = (Project, {User, Skill, ProjectSkill}) => {
   Project.belongsTo(User)
   Project.belongsToMany(Skill, {
-    through: "ProjectSkill"
+    through: 'ProjectSkill'
   })
 }
