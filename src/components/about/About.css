@@ -861,14 +861,14 @@ p {
   line-height: 1.5;
   margin-bottom: 20px;
 }
-.bg-primary {
+.about .bg-primary {
   background-color: #12CD6A;
 }
-.bg-dark {
+.about .bg-dark {
   background-color: #222222;
   color: white;
 }
-.text-faded {
+.about .text-faded {
   color: rgba(255, 255, 255, 0.7);
 }
 section {
@@ -877,7 +877,7 @@ section {
 aside {
   padding: 50px 0;
 }
-.no-padding {
+.about .no-padding {
   padding: 0;
 }
 #about-header {
@@ -942,28 +942,28 @@ aside {
     margin-right: auto;
   }
 }
-.section-heading {
+ .about .section-heading {
   margin-top: 0;
 }
-.service-box {
+.about .service-box {
   max-width: 400px;
   margin: 50px auto 0;
 }
 @media (min-width: 992px) {
-  .service-box {
+  .about .service-box {
     margin: 20px auto 0;
   }
 }
-.service-box p {
+.about .service-box p {
   margin-bottom: 0;
 }
-.portfolio-box {
+.about .portfolio-box {
   position: relative;
   display: block;
   max-width: 650px;
   margin: 0 auto;
 }
-.portfolio-box .portfolio-box-caption {
+.about .portfolio-box .portfolio-box-caption {
   color: white;
   opacity: 0;
   display: block;

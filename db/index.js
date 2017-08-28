@@ -4,6 +4,7 @@ const app = require('APP')
 const debug = require('debug')(`${app.name}:db`) // DEBUG=your_app_name:db
 const chalk = require('chalk')
 const Sequelize = require('sequelize')
+let SearchModel = require('pg-search-sequelize');
 
 const name = (app.env.DATABASE_NAME || app.name) + (app.isTesting ? '_test' : '')
 
@@ -29,7 +30,25 @@ const db = module.exports = new Sequelize(url, {
 //
 //   const {User, Product} = require('APP/db')
 //
-Object.assign(db, require('./models')(db),
+const models = require('./models')(db)
+
+// Object.keys(models).forEach(key => {
+//   let model = models[key];
+//   if ('referenceModel' in model.options) model.referenceModel = models[model.options.referenceModel];
+//
+//   if ('search' in model.options) new SearchModel(model);
+//   if ('search' in model.options) console.log("OPTIoNS",model, model.options);
+//   if ('customHooks' in model.options && 'afterSave' in model.options.customHooks) {
+//     let callback = () => model.options.customHooks.afterSave(models);
+//     model.afterCreate(callback);
+//     model.afterBulkCreate(callback);
+//     model.afterDestroy(callback);
+//     model.afterBulkDestroy(callback);
+//     model.afterUpdate(callback);
+//     model.afterBulkUpdate(callback);
+//   }
+// });
+Object.assign(db, models,
   // We'll also make createAndSync available. It's sometimes useful in tests.
   {createAndSync})
 
@@ -58,6 +77,7 @@ function createAndSync(force=app.isTesting, retries=0, maxRetries=5) {
       return new Promise(resolve =>
         // 'child_process.exec' docs: https://nodejs.org/api/child_process.html#child_process_child_process_exec_command_options_callback
         require('child_process').exec(`createdb "${name}"`, resolve)
-      ).then(() => createAndSync(true, retries + 1))
+      ).then(() => createAndSync(true, retries + 1)
+  )
     })
 }

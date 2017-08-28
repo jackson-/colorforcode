@@ -3,6 +3,7 @@ const nodemailer = require('nodemailer')
 // var stripe = require("stripe")(
 //   "sk_test_BQokikJOvBiI2HlWgH4olfQ2"
 // );
+const Sequelize = require('sequelize')
 const db = require('APP/db')
 const {Job, Employer, Skill, User} = db
 const elasticsearch = require('elasticsearch')
@@ -48,14 +49,27 @@ module.exports = require('express').Router()
   // advanced search
   .post('/search/advanced', (req, res, next) => {
     const {body} = req
-    body.size = 10
-    console.log("BODY", body)
-    esClient.search({body, index: 'data', type: 'job'})
-    .then(advancedResults => {
-      console.log("HITS", advancedResults)
-      return res.status(200).json({total:advancedResults.hits.total, hits:advancedResults.hits.hits})
-    })
-    .catch(next)
+    // body.size = 10
+    // console.log("BODY", body)
+    // esClient.search({body, index: 'data', type: 'job'})
+    // .then(advancedResults => {
+    //   console.log("HITS", advancedResults)
+    //   return res.status(200).json({total:advancedResults.hits.total, hits:advancedResults.hits.hits})
+    // })
+    // .catch(next)
+    const offset = body.from
+    const limit = body.size
+    const tsquery = body.query
+    var query = tsquery.indexOf(' ') == -1 ? "to_tsquery('english','" + tsquery + "')" : "plainto_tsquery('english','" + tsquery + "')";
+    db.query("SELECT *, ST_Distance(the_geom, ST_MakePoint(40.6655101,-73.8918897)::geography) AS Distance, ts_rank_cd(vector," + query + ",1)" +
+    " AS rank FROM job WHERE vector @@ " + query +
+    " ORDER BY rank DESC, id DESC" +
+    `OFFSET ${offset}` +
+    `LIMIT ${limit}`,
+    { model: db.Post }).then((result) =>{
+      console.log("REUSLT", result)
+      return res.status(200).json({result:result[0]})
+    });
   })
 
   .post('/', (req, res, next) => {

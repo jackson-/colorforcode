@@ -20,9 +20,19 @@ module.exports = db => db.define('job', {
   employment_types: Sequelize.ARRAY(Sequelize.STRING),
   pay_rate: Sequelize.STRING,
   compensation_type: Sequelize.STRING,
-  travel_requirements: Sequelize.STRING
-})
+  travel_requirements: Sequelize.STRING,
+  the_geom: 'geometry(Point,4326)',
+},{ tableName: 'job',
+    customHooks: {
 
+    },
+    hooks:{
+      afterSave: models => models.JobMaterializedView.refresh(),
+      afterValidate: function (job, options) {
+         job.the_geom = db.fn('ST_SetSRID', db.fn('ST_MakePoint', job.coords.split(',')[0], job.coords.split(',')[0]), '4326');
+       }
+    },
+  })
 // Belongs to Many associations create a join table.
 
 // In this case we've defined JobApplicant and JobSkillRelationship ourselves in order to add additional

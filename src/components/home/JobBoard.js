@@ -104,42 +104,46 @@ class JobBoard extends Component {
 
   buildBody = (coords,from) => {
     const {terms, distance, employment_types, sortBy} = this.state
-    let must = {};
-    [...employment_types].forEach(type => {
-      must.match = {employment_types: type}
-    })
-    let should = terms.map(term => ({term: {_all: term}}))
-    const body = {
-      query: {
-        bool: {
-          must,
-          should,
-          filter: [
-
-          ]
-        }
-      },
-      sort: [{_score: {order: 'desc'}}]
-    }
-    if (distance) {
-      body.query.bool.filter.push({
-        geo_distance: {
-          coords,
-          distance: `${distance}mi`
-        }
-      })
-    }
-    if (sortBy === 'date') body.sort.push({updated_at: {order: 'desc'}})
-    if (sortBy === 'distance') {
-      body.sort.push({
-        _geo_distance: {
-          coords,
-          order: 'asc',
-          unit: 'mi',
-          distance_type: 'arc'
-        }
-      })
-    }
+    const body{}
+    // let must = {};
+    // [...employment_types].forEach(type => {
+    //   must.match = {employment_types: type}
+    // })
+    // let should = terms.map(term => ({term: {_all: term}}))
+    // const body = {
+    //   query: {
+    //     bool: {
+    //       must,
+    //       should,
+    //       filter: [
+    //
+    //       ]
+    //     }
+    //   },
+    //   sort: [{_score: {order: 'desc'}}]
+    // }
+    // if (distance) {
+    //   body.query.bool.filter.push({
+    //     geo_distance: {
+    //       coords,
+    //       distance: `${distance}mi`
+    //     }
+    //   })
+    // }
+    // if (sortBy === 'date') body.sort.push({updated_at: {order: 'desc'}})
+    // if (sortBy === 'distance') {
+    //   body.sort.push({
+    //     _geo_distance: {
+    //       coords,
+    //       order: 'asc',
+    //       unit: 'mi',
+    //       distance_type: 'arc'
+    //     }
+    //   })
+    // }
+    body.terms = terms
+    body.distance = distance
+    body.employment_types = employment_types
     body.from = from
     return body
   }
