@@ -78,18 +78,17 @@ module.exports = require('express').Router()
     // db.Model.$validateIncludedElements(options)
     const query = "SELECT * "+
       "FROM (SELECT job.*, job.id as id, " +
-            `ST_Distance(job.the_geom, ST_MakePoint(${body.coords})::geography) as distance, ` +
-             "job.title as title, " +
-             "job.description as description, " +
-             "array_agg(skill.title) as skills, " +
-             "setweight(to_tsvector(job.title), 'A') || " +
-            " setweight(to_tsvector(job.description), 'B') || " +
-             "setweight(to_tsvector('simple', skill.title), 'A') || " +
-             "setweight(to_tsvector('simple', coalesce(string_agg(skill.title, ' '))), 'B') as document " +
+        `ST_Distance(job.the_geom, ST_MakePoint(${body.coords})::geography) as distance, ` +
+         "job.title as title, " +
+         "job.description as description, " +
+         "array_agg(skill.title) as skills, " +
+         "setweight(to_tsvector(job.title), 'A') || " +
+         "setweight(to_tsvector(job.description), 'B') || " +
+         "setweight(to_tsvector('simple', skill.title), 'A') || " +
+         "setweight(to_tsvector('simple', coalesce(string_agg(skill.title, ' '))), 'B') as document " +
       "FROM job " +
       "JOIN jobskill ON jobskill.job_id = job.id " +
       "LEFT JOIN skill ON skill.id = jobskill.skill_id " +
-      // "JOIN skill jb2 ON jobskill.skill_id = skill.id " +
       "GROUP BY job.id, skill.id) p_search " +
       `WHERE p_search.document @@ to_tsquery('english', '${body.query}') ` +
       `ORDER BY ts_rank(p_search.document, to_tsquery('english', '${body.query}')) DESC, p_search.distance ASC;`
