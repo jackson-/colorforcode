@@ -6,15 +6,14 @@ import headerLogo from 'APP/src/img/header.jpg'
 const About = props => (
   <Route path='/about' render={() => (
     <div className='About'>
-
-    <header id='about-header'>
+    <header id='About__header'>
         <div className="header-content">
             <div className="header-content-inner">
                 <h1 id="homeHeading">var HireBlack = Diversity + Talent</h1>
                 <hr />
-                <p>What happens when premium opportunities meet premium Black technology professionals?
-                No need to wonder. It's HireBlack. The different perspectives and experience our job seekers
-                provide are changing the industry for the better.</p>
+                <p>
+                  {`What happens when premium opportunities meet premium Black technology professionals? No need to wonder. It's HireBlack. The different perspectives and experience our job seekers provide are changing the industry for the better.`}
+                </p>
             </div>
         </div>
     </header>
