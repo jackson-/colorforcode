@@ -2,13 +2,14 @@ import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { updatingUser } from '../../reducers/actions/users'
+import { updatingUser, uploadingResume } from '../../reducers/actions/users'
 import { gettingAllJobs, deletingJob, creatingNewJob,
          applyingToJob, unsavingJob } from '../../reducers/actions/jobs'
 import { gettingProjectById, updatingProject,
          receiveProject, deletingProject } from 'APP/src/reducers/actions/projects'
 import EmployerDashboard from './EmployerDashboard'
 import ApplicantDashboard from './ApplicantDashboard'
+
 
 class Dashboard extends Component {
 
@@ -22,6 +23,7 @@ class Dashboard extends Component {
       duplicateJob,
       updateUser,
       updateProject,
+      uploadResume,
       deleteProject,
       getProject,
       project,
@@ -50,6 +52,7 @@ class Dashboard extends Component {
                     user={user}
                     updateUser={updateUser}
                     updateProject={updateProject}
+                    uploadResume={uploadResume}
                     deleteProject={deleteProject}
                     getProject={getProject}
                     receiveProject={receiveProject}
@@ -97,6 +100,7 @@ const mapDispatchToProps = dispatch => ({
   closeJob: (id, history) => dispatch(deletingJob(id, history)),
   duplicateJob: (job, history) => dispatch(creatingNewJob(job, history)),
   updateUser: (user) => dispatch(updatingUser(user)),
+  uploadResume: (user, file) => dispatch(uploadingResume(user, file)),
   getProject: (id) => dispatch(gettingProjectById(id)),
   updateProject: (project, history) => dispatch(updatingProject(project, history)),
   deleteProject: (projectId, history) => dispatch(deletingProject(projectId, history)),

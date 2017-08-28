@@ -23,6 +23,7 @@ const ApplicantDashboard = ({
   getProject,
   updateUser,
   updateProject,
+  uploadResume,
   deleteProject,
   unsaveJob,
   applyToJob
@@ -91,7 +92,7 @@ const ApplicantDashboard = ({
               />
             )} />
             <Route exact path='/dashboard/edit-profile' component={() => (
-              <EditProfile user={user} updateUser={updateUser} />
+              <EditProfile user={user} updateUser={updateUser} uploadResume={uploadResume}/>
             )} />
             <Route exact path='/dashboard/saved-jobs/:id' component={JobDetailPage} />
             <Route exact path='/dashboard/jobs/:id' component={JobDetailPage} />
@@ -110,6 +111,7 @@ ApplicantDashboard.propTypes = {
   deleteProject: PropTypes.func.isRequired,
   getProject: PropTypes.func.isRequired,
   updateUser: PropTypes.func.isRequired,
+  uploadResume: PropTypes.func.isRequired,
   applyToJob: PropTypes.func.isRequired,
   unsaveJob: PropTypes.func.isRequired,
   project: PropTypes.object
