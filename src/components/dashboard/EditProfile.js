@@ -19,7 +19,9 @@ class EditProfile extends Component {
       passwordConfirm: '',
       company_name: this.props.user && this.props.user.is_employer ? this.props.user.employer.name : '',
       company_role: this.props.user ? this.props.user.company_role : '',
-      story: this.props.user ? this.props.user.story : '',
+      headline: this.props.user ? this.props.user.headline : '',
+      title: this.props.user ? this.props.user.title : '',
+      summary: this.props.user ? this.props.user.summary : '',
       first_name: this.props.user ? this.props.user.first_name : '',
       last_name: this.props.user ? this.props.user.last_name : '',
       zip_code: this.props.user ? this.props.user.zip_code : '',
@@ -88,7 +90,9 @@ class EditProfile extends Component {
       passwordConfirm: '',
       company_name: this.props.user && this.props.user.is_employer ? this.props.user.employer.name : '',
       company_role: this.props.user ? this.props.user.company_role : '',
-      story: this.props.user ? this.props.user.story : '',
+      headline: this.props.user ? this.props.user.headline : '',
+      title: this.props.user ? this.props.user.title : '',
+      summary: this.props.user ? this.props.user.summary : '',
       first_name: this.props.user ? this.props.user.first_name : '',
       last_name: this.props.user ? this.props.user.last_name : '',
       zip_code: this.props.user ? this.props.user.zip_code : '',
@@ -123,6 +127,7 @@ class EditProfile extends Component {
       email,
       zip_code,
       location,
+      title,
       work_auth
     } = this.state
 
@@ -143,7 +148,8 @@ class EditProfile extends Component {
         email &&
         zip_code &&
         location &&
-        work_auth
+        work_auth &&
+        title
       )
     }
   }

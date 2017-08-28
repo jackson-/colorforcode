@@ -2,15 +2,15 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import './Sidebar.css'
 
-const Sidebar = props => (
+const Sidebar = ({content, header}) => (
   <div className='Sidebar'>
-    <h3 className='Sidebar__header'>{props.headerText}</h3>
-    {props.content}
+    <h3 className='Sidebar__header'>{header}</h3>
+    {content}
   </div>
 )
 
 Sidebar.propTypes = {
-  headerText: PropTypes.string,
+  header: PropTypes.string,
   content: PropTypes.node
 }
 

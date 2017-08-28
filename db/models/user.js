@@ -19,7 +19,9 @@ module.exports = db => db.define('user', {
       notEmpty: true
     }
   },
-  story: TEXT,
+  headline: STRING,
+  summary: TEXT,
+  title: STRING,
   work_auth: STRING,
   employment_types: ARRAY(STRING),
   personal_site: STRING,
