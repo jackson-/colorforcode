@@ -1,6 +1,6 @@
 @import url(../../fonts.css);
 
-.container__flex--sidebar {
+.JobInfo__container-flex--sidebar {
   display: flex;
   flex-direction: column;
 }
@@ -22,7 +22,7 @@
   box-shadow: 0 -17px 15px -17px #099b4e inset;
 }
 
-.header-left {
+.JobInfo__header-left {
   text-align: center;
 }
 
@@ -42,7 +42,7 @@
   font-size: .75em;
 }
 
-.header-right {
+.JobInfo__header-right {
   text-align: center;
 }
 
@@ -89,7 +89,7 @@
   padding: 5px 10px;
   margin: 10px 5px 0 0;
   display: inline-block;
-  width: auto !important;
+  width: auto;
 }
 
 .JobInfo--sidebar {
@@ -122,16 +122,11 @@
   transition-duration: 0.2s;
 }
 
-@media only screen and (min-width: 620px) {
-  .container__flex--sidebar {
-    flex-direction: row;
-  }
-}
-
 @media only screen
 and (min-width: 768px) {
+
   .JobInfo--header {
-    padding: 25px;
+    padding: 25px 35px;
   }
   .JobInfo--header-title {
     margin: 0;
@@ -142,19 +137,25 @@ and (min-width: 768px) {
     margin-top: 15px;
   }
 
-  .header-left {
+  .JobInfo__header-left {
     text-align: left;
   }
 
-  .header-right {
+  .JobInfo__header-right {
     text-align: right;
   }
 
   .JobInfo--summary {
-    padding: 0 40px 0 40px;
+    padding: 0 50px 0 50px;
   }
 
   .JobInfo--sidebar {
-    padding: 30px 40px 30px 0;
+    padding: 50px 50px 50px 0;
+  }
+}
+
+@media only screen and (min-width: 620px) {
+  .JobInfo__container-flex--sidebar  {
+    flex-direction: row;
   }
 }

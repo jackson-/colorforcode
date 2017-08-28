@@ -1,27 +1,32 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import './Sidebar.css'
 import { Modal, Alert, Glyphicon } from 'react-bootstrap'
 import { withRouter } from 'react-router-dom'
 import { dismissAlert } from 'APP/src/reducers/actions/alert'
 
-class MyModal extends Component {
+class AlertModal extends Component {
 
   onHide = () => {
     const {next, history, dismissAlert} = this.props
     dismissAlert()
-    history.push(next)
+    if (next) history.push(next)
   }
 
   render () {
     const {body, title, show, style} = this.props
     return (
-      <Modal show={show} onHide={this.onHide}>
+      <Modal
+        className='AlertModal'
+        show={show}
+        onHide={this.onHide}
+      >
         <Modal.Header closeButton>
-          <Modal.Title><Glyphicon glyph='check' /> {title}</Modal.Title>
+          <Modal.Title className='AlertModal__title'>
+            <Glyphicon glyph='check' /> {title}
+          </Modal.Title>
         </Modal.Header>
-        <Alert bsStyle={style}>
+        <Alert className='AlertModal__alert' bsStyle={style}>
           <p>{body}</p>
           {alert.signed && <p><em>{alert.signed}</em></p>}
         </Alert>
@@ -34,7 +39,7 @@ const mapDispatchToProps = dispatch => ({
   dismissAlert: () => dispatch(dismissAlert())
 })
 
-MyModal.propTypes = {
+AlertModal.propTypes = {
   title: PropTypes.string,
   body: PropTypes.string,
   next: PropTypes.string,
@@ -44,4 +49,4 @@ MyModal.propTypes = {
   dismissAlert: PropTypes.func
 }
 
-export default withRouter(connect(null, mapDispatchToProps)(MyModal))
+export default withRouter(connect(null, mapDispatchToProps)(AlertModal))

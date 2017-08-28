@@ -1,0 +1,13 @@
+.AlertModal__alert {
+  border: none !important;
+}
+
+.AlertModal__content {
+  background: #DFF0D8;
+}
+
+.AlertModal__title {
+  font-weight: bold;
+  font-size: 1.25em;
+  color: #3c763d;
+}
