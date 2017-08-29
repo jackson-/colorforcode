@@ -2,13 +2,24 @@
 
 /* ------ Misc (App-wide) ------ */
 
-.nav .open>a, .nav .open>a:focus, .nav .open>a:hover {
-  background: none;
-}
-
 .container__flex {
   display: flex;
   flex-direction: column;
+}
+
+.glyphicon {
+  padding-right: 5px;
+}
+
+.user-avatar {
+  max-width: 100px;
+  margin: auto;
+}
+
+.avatar-btn {
+  margin: 15px auto;
+  display: block;
+  color: #E4E4E4;
 }
 
 @media only screen and (min-width: 500px) {
@@ -17,15 +28,12 @@
   }
 }
 
-.glyphicon {
-  padding-right: 5px;
-}
-
 /* ------ Navbar ------ */
 
 .navbar {
   background: #FFFFFF;
   margin: 0;
+  height: 63px;
 }
 
 .nav a {
@@ -73,7 +81,7 @@
 
 .navbar-brand {
   padding: 0;
-  margin: 6px 15px;
+  margin: 6px 20px;
   cursor: pointer;
 }
 
@@ -91,6 +99,7 @@
   max-height: none;
   width: inherit;
   height: calc(100vh - 60px);
+  background: #FFFFFF;
 }
 
 .Dashboard-menuToggle span {
@@ -105,12 +114,11 @@
 }
 
 .Dashboard-menu-collapse {
-  padding: 75px 0 10px 0;
-  margin-bottom: -60px;
-  display: block;
   min-width: 180px;
   background: #404648;
   transition: all .65s ease-in-out;
+  z-index: 5;
+  position: relative;
 }
 
 .dropdown-menu {
@@ -119,13 +127,34 @@
   border: none;
 }
 
-/* desktop only dropdown open on hover */
+/* tablet & desktop only */
 @media only screen
 and (min-width: 768px) {
   .dropdown:hover .dropdown-menu {
     display: block;
     transition: all 0.1s ease-in-out;
     transition-duration: 0.2s;
+  }
+
+  .nav .open>a,
+  .nav .open>a:focus,
+  .nav .open>a:hover {
+    background: none;
+  }
+
+  .navbar-brand {
+    position: absolute;
+    left: 60px;
+  }
+
+  .nav-links {
+    position: absolute;
+    left: 100px;
+  }
+
+  .nav-button-container {
+    position: absolute;
+    right: 30px;
   }
 }
 
@@ -170,6 +199,10 @@ and (min-width: 768px) {
 .btn-xs {
   width: auto !important;
   background: none;
+}
+
+.btn-xs--action {
+  margin: 2px;
 }
 
 .btn-xs.btn-danger {

@@ -58,8 +58,8 @@ passport.deserializeUser(
     debug('will deserialize user.id=%d', id)
     User.findById(id, {
       include: [
-        {model: Employer, include: [
-          {
+        {model: Employer,
+          include: [{
             model: Job,
             as: 'listings',
             include: [
@@ -69,7 +69,10 @@ passport.deserializeUser(
           }
         ]},
         {model: Project, include: [Skill]},
-        {model: Job, as: 'applications', through: 'JobApplication'}
+        {model: Job, as: 'applications', through: 'JobApplication'},
+        {model: Job, as: 'savedJobs', through: 'User_SavedJobs', include: [
+          {model: User, as: 'applicants', through: 'JobApplication'}
+        ]}
       ],
       order: [
         [Employer, {model: Job, as: 'listings'}, 'status', 'DESC'],

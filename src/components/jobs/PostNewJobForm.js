@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
 import { Row, Col, FormGroup, ControlLabel, FormControl, Button, Checkbox } from 'react-bootstrap'
 import axios from 'axios'
 import { creatingNewJob } from 'APP/src/reducers/actions/jobs'
@@ -71,7 +72,7 @@ class PostJobForm extends Component {
     if (type === 'zip_code' && value.toString().length === 5) {
       /* first we finish updating the state of the input, then we use the zip to find the rest of the location data by passing the callback to setState (an optional 2nd param) */
       this.setState({[type]: value}, this.handleLocation(value))
-    } else if (type === 'employment_type') {
+    } else if (type === 'employment_types') {
       this.state.employment_types.has(value)
         ? this.state.employment_types.delete(value)
         : this.state.employment_types.add(value)
@@ -120,13 +121,13 @@ class PostJobForm extends Component {
     this.props.createJobPost({job, skills}, this.props.history)
   }
 
-  _selectSkill(data){
+  _selectSkill = data => {
     let skill_ids = data.split(',')
     let new_skills = []
     if (skill_ids[0] !== '') {
-      skill_ids.forEach((sk_id) => {
+      skill_ids.forEach((id) => {
         this.props.skills.forEach((s) => {
-          if (s.id === parseInt(sk_id, 10)) {
+          if (s.id === parseInt(id, 10)) {
             new_skills.push({label: s.title, value: s.id})
           }
         })
@@ -143,7 +144,7 @@ class PostJobForm extends Component {
     return (
       <Row className='PostJobForm'>
         <Col xs={12} sm={6} md={6} lg={6}>
-          <h1 className='PostJobForm-header'>Post a new job</h1>
+          <h1 className='PostJobForm-header'>POST NEW JOB</h1>
           <form className='PostJobForm-body' onSubmit={this.handleSubmit}>
             <FormGroup controlId='title'>
               <ControlLabel>Job Title</ControlLabel>
@@ -213,9 +214,9 @@ class PostJobForm extends Component {
               />
             </FormGroup>
             <FormGroup
-              controlId='employment_type'
-              name='employment_type'
-              onChange={this.handleChange('employment_type')}>
+              controlId='employment_types'
+              name='employment_types'
+              onChange={this.handleChange('employment_types')}>
               <ControlLabel>Employment Type(s)</ControlLabel>
               <Checkbox value='Full-time'>Full-time</Checkbox>
               <Checkbox value='Part-time'>Part-time</Checkbox>
@@ -263,6 +264,7 @@ const mapStateToProps = state => ({
   user: state.users.currentUser,
   skills: state.skills.all
 })
+
 const mapDispatchToProps = dispatch => ({
   createJobPost: (post, history) => dispatch(creatingNewJob(post, history)),
   getSkills: post => dispatch(gettingAllSkills())
@@ -276,4 +278,4 @@ PostJobForm.propTypes = {
   history: PropTypes.object.isRequired
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PostJobForm)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(PostJobForm))

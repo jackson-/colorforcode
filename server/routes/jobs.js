@@ -1,8 +1,5 @@
-'use strict'
-
-var stripe = require("stripe")(
-  "API_SECRET"
-)
+const stripe = require('stripe')('API_SECRET')
+const nodemailer = require('nodemailer')
 // var stripe = require("stripe")(
 //   "sk_test_BQokikJOvBiI2HlWgH4olfQ2"
 // );
@@ -19,11 +16,12 @@ module.exports = require('express').Router()
   .get('/', (req, res, next) => {
     let body = {
       query: {match_all: {}},
-      from: 0
+      from: 0,
+      size:10
     }
     esClient.search({body, index: 'data', type: 'job'})
     .then(results => {
-      return res.status(200).json(results.hits.hits)
+      return res.status(200).json({total:results.hits.total, hits:results.hits.hits})
     })
     .catch(next)
   })
@@ -37,17 +35,26 @@ module.exports = require('express').Router()
     esClient.search({
       index: 'data',
       type: 'job',
-      body: {query}
+      body: {
+        query,
+        from:req.body.from ? req.body.from : 0,
+        size:10
+      }
     })
-    .then(results => res.status(200).json(results.hits.hits))
+    .then(results => res.status(200).json({total:results.hits.total, hits:results.hits.hits}))
     .catch(next)
   })
 
   // advanced search
   .post('/search/advanced', (req, res, next) => {
     const {body} = req
+    body.size = 10
+    console.log("BODY", body)
     esClient.search({body, index: 'data', type: 'job'})
-    .then(advancedResults => res.status(200).json(advancedResults.hits.hits))
+    .then(advancedResults => {
+      console.log("HITS", advancedResults)
+      return res.status(200).json({total:advancedResults.hits.total, hits:advancedResults.hits.hits})
+    })
     .catch(next)
   })
 
@@ -142,9 +149,33 @@ module.exports = require('express').Router()
 
   .post('/:id/apply',
     (req, res, next) => {
-      const user_id = req.body.user_id
+      const {user} = req.body
       Job.findById(req.params.id)
-      .then(foundJob => foundJob.addApplicant(user_id))
+      .then(foundJob => {
+        var transporter = nodemailer.createTransport({
+          service: 'gmail',
+          auth: {
+            user: 'jackson.t.devin@gmail.com',
+            pass: '3rdEyeFly6733'
+          }
+        });
+        var mailOptions = {
+          from: 'jackson.t.devin@gmail.com',
+          to: `${foundJob.application_email}, ${foundJob.cc_email}`,
+          subject: 'New Applications!',
+          html: `<p>${user.first_name} ${user.last_name} just applied to ${foundJob.title}!
+          Check them out <a href='http://localhost:3000/users/${user.id}'>here</a>.</p>`
+        };
+
+        transporter.sendMail(mailOptions, function(error, info){
+          if (error) {
+            console.log(error);
+          } else {
+            console.log('Email sent: ' + info.response);
+          }
+        });
+        return foundJob.addApplicant(user.id)
+      })
       .then(application => res.sendStatus(201))
       .catch(next)
     })

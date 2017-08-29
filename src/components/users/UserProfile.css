@@ -1,0 +1,254 @@
+@import url(../../fonts.css);
+
+.UserDetail {
+  padding-top: 60px;
+}
+
+.UserDetail__header {
+  background: #12CD6A;
+  min-height: 200px;
+  height: auto;
+  padding: 25px;
+  color: #FFFFFF;
+  font-family: Open Sans Regular;
+  box-shadow: 0 -17px 15px -17px #099B4E inset;
+}
+
+.UserDetail__header-avatar {
+  width: 50%;
+  max-width: 150px;
+  margin: auto;
+  transition: opacity .35s ease-in;
+}
+
+.header-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  text-align: center;
+}
+
+.UserDetail__header-name {
+  font-family: Open Sans Bold;
+  font-size: 1.5em;
+  text-align: center;
+}
+
+.UserDetail__header-title {
+  font-size: 1em;
+  font-family: Open Sans Bold;
+  margin: 10px auto;
+}
+
+.UserDetail__header-headline {
+  font-size: 1em;
+  text-align: center;
+}
+
+.UserDetail__header-location {
+  font-size: .75em;
+  margin: 0 auto 15px;
+}
+
+.header-right {
+  height: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.github,
+.link,
+.twitter,
+.linkedin {
+  padding-top: 2px;
+}
+
+.linkedin {
+  margin-bottom: -2px;
+}
+
+.twitter,
+.link {
+  margin-bottom: 8px;
+}
+
+.UserDetail__body-section {
+  padding: 0;
+}
+
+.UserDetail__body-header {
+  margin-top: 0;
+  padding-bottom: 15px;
+  color: #12CD6A;
+}
+
+.portfolio {
+  padding: 25px;
+}
+
+.portfolio-card-container:not(:first-child) {
+  padding-top: 25px;
+}
+
+.portfolio-card-container:first-child {
+  padding-top: 5px;
+}
+
+.portfolio-card {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  padding: 0;
+  min-height: 270px;
+  width: 100%;
+  background: none;
+  border: 1px solid #9FA5A9;
+  border-radius: 0;
+}
+
+.screenshot-placeholder {
+  width: 100%;
+  height: 169px;
+  background: #9FA5A9;
+}
+
+.UserDetail__project-screenshot {
+  object-fit: cover;
+  object-position: center;
+  filter: grayscale();
+  height: inherit;
+  width: 100%;
+  transition: all .35s ease-in-out;
+  margin: 0;
+}
+
+.UserDetail__project-screenshot:hover {
+  filter: none;
+}
+
+.portfolio-card__text {
+  flex: 1;
+  text-align: left;
+  padding: 0 10px;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+}
+
+.summary {
+  background: #9FA5A9;
+  padding: 25px;
+  color: #FFFFFF;
+  height: 100%;
+  font-size: .75em;
+  font-family: Open Sans Regular;
+}
+
+.text-white {
+  color: #FFFFFF;
+}
+
+.summary-text {
+  font-size: 1.15em;
+  margin-bottom: 15px;
+}
+
+@media only screen
+and (max-width: 320px) {
+  .UserDetail__header-headline {
+    font-size: .75em;
+  }
+}
+
+@media only screen
+and (min-width: 768px) {
+  .header-left-container {
+    padding-left: 0;
+  }
+
+  .header-right-container {
+    padding-right: 0;
+  }
+
+  .header-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    height: 160px;
+    text-align: left;
+  }
+
+  .header-right {
+    align-items: flex-end;
+    height: 160px;
+  }
+
+  .UserDetail__header-name {
+    margin: 0;
+    padding-bottom: 15px;
+    font-size: 2em;
+    text-align: left;
+  }
+
+  .UserDetail__header-headline {
+    text-align: left;
+    font-size: .85em;
+  }
+
+  .UserDetail__header-title {
+    font-size: 1em;
+    margin: 15px 0;
+    padding: 0;
+  }
+
+  .UserDetail__header-location {
+    margin: 8px 0;
+    font-size: 1em
+  }
+
+  .portfolio-card-container {
+    padding-top: 6px !important;
+  }
+}
+
+@media only screen
+and (min-width: 992px) {
+  .UserDetail__header {
+    padding: 15px;
+    height: 180px;
+  }
+
+  .header-left {
+    margin-left: 30px;
+  }
+
+  .header-right {
+    margin-right: 35px;
+  }
+
+  .UserDetail__header-avatar {
+    width: auto;
+    min-width: 100px;
+    max-width: 150px;
+    margin: 7% auto 0;
+  }
+
+  .github,
+  .link,
+  .twitter,
+  .linkedin {
+    padding-top: 2px;
+  }
+
+  .portfolio {
+    padding: 50px 50px 0;
+  }
+
+  .summary {
+    padding: 50px;
+    height: fill;
+  }
+}

@@ -1,8 +1,16 @@
-.ManageJobs {
+.ManageJobs,
+.Applicants,
+.SavedJobs,
+.Applications,
+.Projects {
   padding: 5px 10px;
+  background: #E4E4E4;
+  height: 100%;
 }
 
-.ManageJobs-header {
+.ManageJobs-header,
+.Applicants-header,
+.SavedJobs-header {
   text-align: center;
 }
 
@@ -28,12 +36,42 @@ tbody > tr:hover {
   transition-duration: 0.1s;
 }
 
+/* ---- APPLICANTS ---- */
+
+.Applicants .panel-group {
+  margin-top: 23px;
+}
+
+.Applicants__panel .panel-heading {
+  cursor: pointer;
+}
+
+.Applicants__panel .table-responsive {
+  margin: 0;
+}
+
+.Applicants__panel .table {
+  background: none;
+}
+
+.Applicants__panel .icons {
+  margin-top: -10px;
+  padding: 0;
+}
+
 @media only screen and (min-width: 768px) {
-  .ManageJobs {
+  .ManageJobs,
+  .Applicants,
+  .SavedJobs,
+  .Applications,
+  .Projects {
     padding: 5px 40px;
   }
 
-  .ManageJobs-header {
+  .Applicants-header,
+  .ManageJobs-header,
+  .Applications-header,
+  .SavedJobs-header {
     text-align: left;
   }
 

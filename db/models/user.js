@@ -19,9 +19,11 @@ module.exports = db => db.define('user', {
       notEmpty: true
     }
   },
-  story: TEXT,
+  headline: STRING,
+  summary: TEXT,
+  title: STRING,
   work_auth: STRING,
-  employment_type: ARRAY(STRING),
+  employment_types: ARRAY(STRING),
   personal_site: STRING,
   github: STRING,
   linkedin: STRING,
@@ -80,6 +82,10 @@ module.exports.associations = (User, {OAuth, Job, Skill, Employer, Project}) => 
     as: 'applications',
     through: 'JobApplication',
     foreignKey: 'applicant_id'
+  })
+  User.belongsToMany(Job, {
+    as: 'savedJobs',
+    through: 'User_SavedJobs'
   })
   User.hasMany(Project)
 }

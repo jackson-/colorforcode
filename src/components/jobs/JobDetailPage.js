@@ -1,27 +1,21 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
 import JobInfoDisplay from './JobInfoDisplay'
 import JobUpdateDisplay from './JobUpdateDisplay'
-import { applyingToJob, gettingJobById, updatingJob, deletingJob } from 'APP/src/reducers/actions/jobs'
+import { applyingToJob, gettingJobById, updatingJob, deletingJob, savingJob, unsavingJob } from 'APP/src/reducers/actions/jobs'
 import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
 
 class JobDetailPage extends Component {
 
   componentDidMount () {
     const {id} = this.props.match.params
+    // Do not change != to !==. This is intentional!!!!
     if (!this.props.job || (this.props.job.id != id)) this.props.getJob(id)
   }
 
-  applyToJob = () => {
-    this.props.sendApplication(
-      this.props.user.id,
-      this.props.job.id,
-      this.props.history
-    )
-  }
-
   render () {
-    const {user, job, skills, history, updateJob, deleteJob} = this.props
+    const {user, job, skills, history, location, updateJob, deleteJob, saveJob, unsaveJob} = this.props
     let jobComponent = ''
     if (job) {
       if (user && user.is_employer && (user.employer.id === job.employer.id)) {
@@ -38,15 +32,17 @@ class JobDetailPage extends Component {
       } else {
         jobComponent = (
           <JobInfoDisplay
+            user={user}
             skills={skills}
             job={job}
             history={history}
-            applyToJob={this.sendApplication}
+            applyToJob={this.props.sendApplication}
+            saveJob={saveJob}
+            unsaveJob={unsaveJob}
           />
         )
       }
     }
-
     return (
       <div className='JobDetailPage'>
         <ScrollToTopOnMount />
@@ -63,10 +59,12 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  getJob: job_id => dispatch(gettingJobById(job_id)),
+  getJob: jobId => dispatch(gettingJobById(jobId)),
   updateJob: (job, history) => dispatch(updatingJob(job, history)),
   deleteJob: (id, history) => dispatch(deletingJob(id, history)),
-  sendApplication: (user_id, job_id, history) => dispatch(applyingToJob(user_id, job_id, history))
+  sendApplication: (user, jobId, history) => dispatch(applyingToJob(user, jobId, history)),
+  saveJob: (userId, savedJobs) => dispatch(savingJob(userId, savedJobs)),
+  unsaveJob: (userId, savedJobs) => dispatch(unsavingJob(userId, savedJobs))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(JobDetailPage)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(JobDetailPage))

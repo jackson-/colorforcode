@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
-import { Grid, Nav, Glyphicon, NavItem } from 'react-bootstrap'
+import { Grid } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { BrowserRouter as Router, Route, withRouter, Redirect } from 'react-router-dom'
-import { LinkContainer } from 'react-router-bootstrap'
 import PropTypes from 'prop-types'
 import MainNav from './Navbar'
 import Home from '../home/Home'
@@ -10,8 +9,10 @@ import About from '../about/About'
 import RegisterForm from '../auth/RegisterForm'
 import LoginForm from '../auth/LoginForm'
 import JobDetailPage from '../jobs/JobDetailPage'
+import UserProfile from '../users/UserProfile'
 import Dashboard from '../dashboard/Dashboard'
-import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
+import AlertModal from '../utilities/AlertModal'
+import NavCollapse from './NavCollapse'
 import './App.css'
 import { logout } from '../../reducers/actions/users'
 
@@ -21,24 +22,42 @@ class App extends Component {
     super(props)
     this.state = {
       showDashMenu: false,
-      opacity: 0,
-      height: 0,
-      padding: 0,
-      marginBottom: 0,
-      isEmployer: this.props.user ? this.props.user.is_employer : false
+      opacity: '0',
+      height: '0',
+      padding: '0',
+      marginBottom: '0',
+      display: 'none'
     }
   }
 
   toggleDashMenu = event => {
-    const height = this.state.isEmployer ? '215px' : '300px'
+    let height = this.props.user.is_employer ? '215px' : '300px'
     if (event) event.preventDefault()
     this.setState({
       showDashMenu: true,
       height: this.state.height === height ? '0' : height,
       padding: this.state.padding === '75px 0 10px 0' ? '0' : '75px 0 10px 0',
-      opacity: this.state.opacity === 0 ? 1 : 0,
-      marginBottom: this.state.marginBottom === '-60px' ? 0 : '-60px'
+      marginBottom: this.state.marginBottom === '-60px' ? '0' : '-60px',
+      opacity: this.state.opacity === '1' ? '0' : '1',
+      display: this.state.display === 'block' ? 'none' : 'block'
     })
+  }
+
+  showPostJob = user => {
+    let display = !user || (user && user.is_employer)
+      ? 'block'
+      : 'none'
+    return display
+  }
+
+  /*
+    The .active class is being applied to '/' even when it isn't the current
+    location.pathname because all other paths are its children. This method
+    corrects for that.
+  */
+  onlyOneActiveMatch = (match, location) => {
+    if (match) return location.pathname === match.path
+    else return false
   }
 
   logOut = history => event => {
@@ -50,8 +69,8 @@ class App extends Component {
     const dashMenuStyle = {
       padding: this.state.padding,
       height: this.state.height,
-      opacity: this.state.opacity,
-      marginBottom: this.state.marginBottom
+      marginBottom: this.state.marginBottom,
+      opacity: this.state.opacity
     }
 
     const dashMobileMenu = {
@@ -69,7 +88,7 @@ class App extends Component {
       ]
     }
 
-    const {user} = this.props
+    const {user, alert} = this.props
     return (
       <Router>
         <div>
@@ -77,10 +96,16 @@ class App extends Component {
             user={this.props.user}
             logOut={this.logOut}
             toggleDashMenu={this.toggleDashMenu}
+<<<<<<< HEAD
+=======
+            onlyOneActiveMatch={this.onlyOneActiveMatch}
+            showPostJob={this.showPostJob}
+>>>>>>> 3b1f9c20a607822c3ed24e0a99bfebab423f5552
           />
-          <Nav
-            className='Dashboard-menu-collapse'
+          <NavCollapse
+            collapse={this.toggleDashMenu}
             style={dashMenuStyle}
+<<<<<<< HEAD
             stacked
             onSelect={this.toggleDashMenu}
           >
@@ -116,18 +141,49 @@ class App extends Component {
                 ))
             }
           </Nav>
+=======
+            state={this.state}
+            user={user}
+            menu={dashMobileMenu}
+          />
+          {
+            alert &&
+            <AlertModal
+              style={alert.style}
+              title={alert.title}
+              body={alert.body}
+              show={this.props.alert !== null}
+              next={alert.next}
+            />
+          }
+>>>>>>> 3b1f9c20a607822c3ed24e0a99bfebab423f5552
           <Grid fluid className='App'>
             {/* PUBLIC ROUTES */}
             <Route exact strict path='/' component={Home} />
-            <Route path='/about' component={About} />
-            <Route path='/register' component={RegisterForm} />
-            <Route path='/login' component={LoginForm} />
-            <Route path='/jobs/:id' component={JobDetailPage} />
-            <Route path='/dashboard/:action' component={() => {
-              if (!user) return <Redirect to='/login' />
-              return <Dashboard />
+            <Route exact path='/about' component={About} />
+            <Route exact path='/jobs/:id' component={JobDetailPage} />
+            <Route exact path='/login' component={LoginForm} />
+            <Route exact path='/register' component={RegisterForm} />
+            <Route exact path='/users/:id' component={UserProfile} />
+            {/* PRIVATE ROUTES */}
+            <Route exact path='/dashboard' component={() => {
+              return user && user.is_employer
+                ? <Redirect to='/dashboard/manage-jobs' />
+                : <Redirect to='/dashboard/saved-jobs' />
             }} />
-            <Route path='/dashboard/:action/:id' component={() => {
+            <Route exact path='/register' component={() => {
+              if (!user) return <RegisterForm />
+              return <Redirect to='/dashboard' />
+            }} />
+            <Route exact path='/login' component={() => {
+              if (!user) return <LoginForm />
+              return <Redirect to='/dashboard' />
+            }} />
+            <Route exact path='/dashboard/:action' component={() => {
+              if (!user) return <Redirect to='/login' />
+              return <Dashboard location={location} />
+            }} />
+            <Route exact path='/dashboard/:action/:id' component={() => {
               if (!user) return <Redirect to='/login' />
               return <Dashboard />
             }} />
@@ -140,11 +196,15 @@ class App extends Component {
 
 App.propTypes = {
   user: PropTypes.object,
-  location: PropTypes.object,
+  alert: PropTypes.object,
   logOut: PropTypes.func.isRequired
 }
 
-const mapStateToProps = state => ({ user: state.users.currentUser })
+const mapStateToProps = state => ({
+  user: state.users.currentUser,
+  alert: state.alert
+})
+
 const mapDispatchToProps = dispatch => ({ logOut: (history) => dispatch(logout(history)) })
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App))

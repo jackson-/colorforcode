@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Row, Col } from 'react-bootstrap'
-import { gettingAllJobs, filteringJobs, grabbingCoords, buildBodyThenSearch } from 'APP/src/reducers/actions/jobs'
+import { Row, Col, Button } from 'react-bootstrap'
+import axios from 'axios'
+import { gettingAllJobs, filteringJobs, buildBodyThenSearch } from 'APP/src/reducers/actions/jobs'
 import { gettingAllSkills } from 'APP/src/reducers/actions/skills'
 import SearchBar from '../utilities/SearchBar'
 import SearchAdvanced from '../utilities/SearchAdvanced'
@@ -18,19 +19,28 @@ class JobBoard extends Component {
       terms: [],
       distance: '',
       sortBy: '',
+      zip_code: '',
       employment_types: new Set([]),
       filtered: false,
-      coords: ''
+      coords: '',
+      page_num:1,
+      from:0,
     }
   }
 
   componentDidMount () {
     this.props.getJobs()
-    if (!this.props.user || !this.props.user.coords) {
-      grabbingCoords()
-      .then(coords => this.setState({coords}))
-      .catch(err => console.error(err))
-    }
+  }
+
+  handleLocation = zip_code => {
+    axios.get(`http://maps.googleapis.com/maps/api/geocode/json?address=${zip_code}`)
+    .then(res => res.data)
+    .then(json => {
+      const {location} = json.results[0].geometry
+      const coords = `${location.lat},${location.lng}`
+      this.setState({coords, zip_code})
+    })
+    .catch(err => console.error(err.stack))
   }
 
   handleChange = type => event => {
@@ -38,7 +48,12 @@ class JobBoard extends Component {
     const nextState = {}
     nextState[`${type}`] = value
     if (type === 'query') nextState.pendingTerms = value.split(' ')
-    this.setState(nextState)
+    if (type === 'zip_code' && value.toString().length >= 5) {
+      /* first we finish updating the state of the input, then we use the zip to find the rest of the location data by passing the callback to setState (an optional 2nd param) */
+      this.setState({[type]: value}, this.handleLocation(value))
+    } else {
+      this.setState(nextState)
+    }
   }
 
   toggleJobTypes = event => {
@@ -87,7 +102,7 @@ class JobBoard extends Component {
     }
   }
 
-  buildBody = coords => {
+  buildBody = (coords,from) => {
     const {terms, distance, employment_types, sortBy} = this.state
     let must = {};
     [...employment_types].forEach(type => {
@@ -116,26 +131,49 @@ class JobBoard extends Component {
     }
     if (sortBy === 'date') body.sort.push({updated_at: {order: 'desc'}})
     if (sortBy === 'distance') {
-      body.sort = [{
+      body.sort.push({
         _geo_distance: {
           coords,
           order: 'asc',
           unit: 'mi',
           distance_type: 'arc'
         }
-      }]
+      })
     }
+    body.from = from
     return body
   }
 
-  advancedFilterJobs = event => {
+  handlePagination(jobs, sign){
+    let page_num = 1
+    let from = 0
+    const next_page= eval(`${this.state.page_num} ${sign} 1`)
+    if(sign){
+      const nextPageHasItems = (!(this.props.jobs.length < 10) || sign === "-" )
+      if(next_page > 0 && nextPageHasItems){
+        page_num = next_page
+        from = eval(`${this.state.from} ${sign} 10`)
+      } else{
+        return null
+      }
+    }
+    return {page_num, from}
+  }
+
+  advancedFilterJobs = event = (sign) => {
     event.preventDefault()
     const coords = this.props.user.coords
       ? this.props.user.coords
       : this.state.coords
+    const {page_num, from} = this.handlePagination(this.props.jobs, sign)
+    if(!page_num){
+      return
+    }
     this.setState(
-      {filtered: true},
-      () => this.props.advancedFilterJobs(this.buildBody, coords)
+      { filtered: true,
+        page_num,
+        from},
+      () => this.props.advancedFilterJobs(this.buildBody, coords, from)
     )
   }
 
@@ -184,8 +222,18 @@ class JobBoard extends Component {
               : <JobList filtered={this.state.filtered} jobs={jobs} />
             }
           </Col>
+          <div>
+            <Button onClick={() => this.advancedFilterJobs("-")}>
+              Back
+            </Button>
+            <span>
+              {this.state.page_num}
+            </span>
+            <Button onClick={() => this.advancedFilterJobs("+")}>
+              Next
+            </Button>
+          </div>
         </div>
-
       </Row>
     )
   }
@@ -195,15 +243,15 @@ const mapStateToProps = state => ({
   user: state.users.currentUser,
   jobs: state.jobs.all,
   skills: state.skills.all,
-  loading: state.loading
+  loading: state.loading,
 })
 
 const mapDispatchToProps = dispatch => ({
-  getJobs: post => dispatch(gettingAllJobs()),
-  getSkills: post => dispatch(gettingAllSkills()),
+  getJobs: () => dispatch(gettingAllJobs()),
+  getSkills: () => dispatch(gettingAllSkills()),
   filterJobs: query => dispatch(filteringJobs(query)),
-  advancedFilterJobs: (bodyBuilder, coords) => {
-    dispatch(buildBodyThenSearch(bodyBuilder, coords))
+  advancedFilterJobs: (bodyBuilder, coords, from) => {
+    dispatch(buildBodyThenSearch(bodyBuilder, coords, from))
   }
 })
 

@@ -1,8 +1,135 @@
 .About {
+  font-family: Merriweather, 'Helvetica Neue', Arial, sans-serif;
+  padding-top: 63px;
+  text-align: center;
+  overflow: hidden;
+  background-image: url('../../img/about-hero.jpg');
+  background-position: fixed;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+/* HEADER */
+.About__hero {
+  color: white;
+  height: 100vh;
+  width: calc(100vw - 20px);
+  margin: 0;
+  padding: -15px;
+}
+
+.About__hero-content {
+  padding: 100px 15px 100px;
+  position: relative;
+  text-align: center;
+  width: 100%;
+}
+
+.About__hero-heading {
+  font-size: 30px;
+  font-weight: 700;
   text-align: center;
 }
 
-.About-header {
-  padding-top: 75px;
-  color: #000000;
+.About__hero-separator {
+  margin: 30px auto;
+  border-color: #12CD6A;
+  border-width: 3px;
+  max-width: 50px;
+}
+
+.About__hero-text {
+  color: #FFFFFF;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 16px;
+  font-weight: 300;
+  margin-bottom: 50px;
+}
+
+.About__text {
+  font-size: 16px;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+.About__section {
+  padding: 100px 0;
+}
+
+.bg-primary {
+  background: #12CD6A;
+}
+
+.bg-dark {
+  background: #222222;
+  color: #FFFFFF;
+}
+
+.section-heading {
+  margin-top: 0;
+}
+
+.About__separator {
+  border-color: #12CD6A;
+  border-width: 3px;
+  max-width: 50px;
+}
+
+.About__separator-white {
+  border-color: #FFFFFF;
+  border-width: 3px;
+  max-width: 50px;
+}
+
+.service-box {
+  margin: 50px auto 0;
+  max-width: 400px;
+}
+
+.service-box .About-text  {
+  margin-bottom: 0;
+}
+
+.text-faded {
+  color: #FFFFFF;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.text-primary {
+  color: #12CD6A;
+}
+
+.sr-icons {
+  font-size: 3em;
+}
+
+@media (min-width: 768px) {
+
+  .About__hero-content {
+    margin-left: auto;
+    margin-right: auto;
+    padding: 13% 40px 0;
+  }
+
+  .About__hero-heading {
+    font-size: 2.5em;
+  }
+
+  .About__hero-text {
+    font-size: 18px;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 65%;
+  }
+
+  .About__text {
+    margin: auto;
+    max-width: 80%;
+  }
+}
+
+@media (min-width: 992px) {
+  .service-box {
+    margin: 20px auto 0;
+  }
 }

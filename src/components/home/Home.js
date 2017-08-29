@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 import { Row, Col, Jumbotron } from 'react-bootstrap'
 import './Home.css'
 import JobBoard from './JobBoard'
-import CandidateSearch from '../search/CandidateSearch'
+import CandidateSearch from '../users/CandidateSearch'
 import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
 
 const Home = props => (

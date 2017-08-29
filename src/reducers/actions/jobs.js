@@ -5,6 +5,7 @@ import { createNewJob, requestAllJobs, requestFilteredJobs,
          requestJob, requestUserJobs, applyToJob, requestAppliedJobs } from './loading'
 import { gettingAllSkills } from './skills'
 import { whoami } from './users'
+import { receiveAlert } from './alert'
 
 /* --------- PURE ACTION CREATORS --------- */
 export const receiveJob = job => ({
@@ -81,20 +82,27 @@ export const grabbingCoords = () => {
   })
 }
 
-export const buildBodyThenSearch = (bodyBuilderFunc, coords) => {
+export const buildBodyThenSearch = (bodyBuilderFunc, coords, from) => {
   return dispatch => {
     dispatch(requestFilteredJobs())
-    const body = bodyBuilderFunc(coords)
+    const body = bodyBuilderFunc(coords, from)
     dispatch(advancedFilteringJobs(body))
   }
 }
 
-export const applyingToJob = (user_id, job_id, history) => dispatch => {
+export const applyingToJob = (user, job_id, history) => dispatch => {
   dispatch(applyToJob())
-  axios.post(`/api/jobs/${job_id}/apply`, {user_id, job_id})
+  axios.post(`/api/jobs/${job_id}/apply`, {user, job_id})
   .then(() => {
+    dispatch(whoami())
     dispatch(appliedToJob())
-    history.push('/dashboard/applications')
+    dispatch(receiveAlert({
+      type: 'confirmation',
+      style: 'success',
+      title: 'Success!',
+      body: 'You\'ve applied to this job. If this recruiter reaches out to your email you\'ll be guaranteed a phone interview!',
+      next: '/dashboard/applications'
+    }))
   })
   .catch(err => console.error(`Mang, I couldn't apply to the job! ${err.stack}`))
 }
@@ -135,9 +143,13 @@ export const creatingNewJob = (jobPost, history) => dispatch => {
   // if the job is successfully created, we fetch the updated jobs list
   .then(newJobId => {
     dispatch(whoami())
-    if (history) {
-      history.push(`/dashboard/manage-jobs`)
-    }
+    dispatch(receiveAlert({
+      type: 'confirmation',
+      style: 'success',
+      title: 'Success!',
+      body: 'Job successfully posted.',
+      next: '/dashboard/manage-jobs'
+    }))
   })
   // otherwise we catch the error...
   .catch(err => console.error(`Sorry, cuz. We couldn't create that job post...${err.stack}`))
@@ -145,14 +157,49 @@ export const creatingNewJob = (jobPost, history) => dispatch => {
 
 export const updatingJob = (postData, history) => dispatch => {
   axios.put(`/api/jobs/${postData.job.id}`, postData)
-  .then(() => dispatch(whoami()))
-  .then(() => history.push('/dashboard/manage-jobs'))
+  .then(() => {
+    dispatch(whoami())
+    dispatch(receiveAlert({
+      type: 'confirmation',
+      style: 'success',
+      title: 'Success!',
+      body: 'Job successfully updated.',
+      next: '/dashboard/manage-jobs'
+    }))
+  })
   .catch(err => console.error(`Sorry, cuz. Couldn't update that job post...${err.stack}`))
 }
 
 export const deletingJob = (id, history) => dispatch => {
   axios.delete(`/api/jobs/${id}`)
-  .then(() => dispatch(whoami()))
-  .then(() => history.push('/dashboard/manage-jobs'))
+  .then(() => {
+    dispatch(whoami())
+    dispatch(receiveAlert({
+      type: 'confirmation',
+      style: 'success',
+      title: 'Success!',
+      body: 'Job successfully deleted.',
+      next: '/dashboard/manage-jobs'
+    }))
+  })
   .catch(err => console.error(`Sorry, cuz. Couldn't delete that job post...${err.stack}`))
+}
+
+export const savingJob = ({userId, savedJobsArr}) => dispatch => {
+  if (!userId) {
+    return dispatch(receiveAlert({
+      status: null,
+      message: 'Sign in or register to save jobs.'
+    }))
+  }
+
+  axios.put(`/api/users/${userId}`, {savedJobsArr})
+  .then(() => dispatch(whoami()))
+  .catch(err => console.error(`Sorry, cuz. Couldn't save job for user ${userId}...${err.stack}`))
+}
+
+export const unsavingJob = ({userId, savedJobsArr}) => dispatch => {
+  axios.put(`/api/users/${userId}`, {savedJobsArr})
+  .then(() => dispatch(whoami()))
+  .catch(err => console.error(`Sorry, cuz. Couldn't unsave job for user ${userId}...${err.stack}`))
 }
