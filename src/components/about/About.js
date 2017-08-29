@@ -26,11 +26,11 @@ const About = props => (
             lg={8} lgOffset={2}
           >
             <h2 className='section-heading'>
-              Employers, we've got what you need!
+              {`Employers, we've got what you need!`}
             </h2>
             <hr className='About__separator-white' />
             <p className='About__text text-faded'>
-              Diversity empowers innovation. Innovation is what companies look for in the talent they hire. HireBlack provides a platform for hiring employers and Black engineers and designers seeking opportunities to meet and fill the gap of racial inequality in the current tech landscape.
+              {`Diversity empowers innovation. Innovation is what companies look for in the talent they hire. HireBlack provides a platform for hiring employers and Black engineers and designers seeking opportunities to meet and fill the gap of racial inequality in the current tech landscape.`}
             </p>
           </Col>
         </Row>
@@ -89,7 +89,7 @@ const About = props => (
             </h2>
             <hr className='About__separator-white' />
             <p className='About__text text-faded'>
-              It feels good to know that an employer is looking for someone like you when you walk into an interview. HireBlack is a platform that provides just that. We connect talented black designers and engineers with innovative companies that don't just talk about the value of diversity—they cultivate it.
+              {`It feels good to know that an employer is looking for someone like you when you walk into an interview. HireBlack is a platform that provides just that. We connect talented black designers and engineers with innovative companies that don't just talk about the value of diversity—they cultivate it.`}
             </p>
           </Col>
         </Row>
