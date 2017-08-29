@@ -178,7 +178,6 @@ class RegisterForm extends Component {
   render () {
     return (
       <Row className='RegisterForm'>
-        <ScrollToTopOnMount />
         <Col xs={12} sm={12} md={12} lg={12}>
           <div className='form-container'>
             <h1 className='RegisterForm-header'>Register</h1>
@@ -197,6 +196,7 @@ class RegisterForm extends Component {
                   state={this.state}
                   handleChange={this.handleChange}
                   validate={this.getValidationState}
+                  isInvalid={this.isInvalid()}
                 />
               }
               {
@@ -206,11 +206,9 @@ class RegisterForm extends Component {
                   handleChange={this.handleChange}
                   validate={this.getValidationState}
                   isChecked={this.isChecked}
+                  isInvalid={this.isInvalid()}
                 />
               }
-              <Button disabled={this.isInvalid()} className='primary' type='submit'>
-                Create Account
-              </Button>
             </form>
           </div>
         </Col>
