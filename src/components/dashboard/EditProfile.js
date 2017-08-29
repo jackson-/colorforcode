@@ -41,21 +41,21 @@ class EditProfile extends Component {
 
   handleLocation = zip_code => {
     axios.get(`http://maps.googleapis.com/maps/api/geocode/json?address=${zip_code}`)
-    .then(res => res.data)
-    .then(json => {
-      const address = json.results[0].address_components.filter(c => (
-        c.types.includes('locality') ||
-        c.types.includes('administrative_area_level_1') ||
-        c.types.includes('country')
-      ))
-      const city = address[0].long_name
-      const state = address[1].short_name
-      const country = address[2].long_name
-      const location = country === 'United States' ? `${city}, ${state}` : `${city}, ${state} ${country}`
-      const coords = `${json.results[0].geometry.location.lat},${json.results[0].geometry.location.lng}`
-      this.setState({coords, zip_code, location})
-    })
-    .catch(err => console.error(err.stack))
+      .then(res => res.data)
+      .then(json => {
+        const address = json.results[0].address_components.filter(c => (
+          c.types.includes('locality') ||
+          c.types.includes('administrative_area_level_1') ||
+          c.types.includes('country')
+        ))
+        const city = address[0].long_name
+        const state = address[1].short_name
+        const country = address[2].long_name
+        const location = country === 'United States' ? `${city}, ${state}` : `${city}, ${state} ${country}`
+        const coords = `${json.results[0].geometry.location.lat},${json.results[0].geometry.location.lng}`
+        this.setState({coords, zip_code, location})
+      })
+      .catch(err => console.error(err.stack))
   }
 
   handleChange = type => event => {
@@ -192,12 +192,19 @@ class EditProfile extends Component {
         <ScrollToTopOnMount />
         <Col xs={12} sm={6} md={6} lg={6}>
           <h1 className='EditProfile-header'>Edit Profile</h1>
+          {
+            !user.is_employer &&
+            <ResumeUploader
+              ref='resume'
+              uploadResume={this.props.uploadResume}
+              user={this.props.user}
+            />
+          }
           <form className='EditProfile-body' onSubmit={this.handleSubmit}>
             {fields}
             {user.resume_url &&
               <a href={user.resume_url}><p>Current Resume</p></a>
             }
-            <ResumeUploader ref="resume" uploadResume={this.props.uploadResume}  user={this.props.user}/>
             <Button disabled={this.isInvalid()} className='primary' type='submit'>
               Update Profile
             </Button>
@@ -210,7 +217,8 @@ class EditProfile extends Component {
 
 EditProfile.propTypes = {
   user: PropTypes.object,
-  updateUser: PropTypes.func.isRequired
+  updateUser: PropTypes.func,
+  uploadResume: PropTypes.func
 }
 
 export default EditProfile

@@ -24,11 +24,11 @@ class UserDetailPage extends Component {
             <Col xs={12} sm={12} md={12} lg={12}>
               <Row>
                 <Image
-                className='user-avatar'
-                circle
-                responsive
-                src={user.image_url ? user.image_url : blankAvatar }
-                alt={`${user.first_name}'s' avatar`}
+                  className='user-avatar'
+                  circle
+                  responsive
+                  src={user.image_url ? user.image_url : blankAvatar}
+                  alt={`${user.first_name}'s' avatar`}
                 />
                 <Col className='header-left' xs={12} sm={6} md={6} lg={6}>
                   <h5 className='JobInfo--header-employer'>{user.first_name} {user.last_name}</h5>

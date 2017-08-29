@@ -118,7 +118,10 @@ class EditProjectForm extends Component {
               type='Screenshot'
             />
           </div>
-          <Button className='btn-oval btn-oval__black btn-oval__danger' onClick={this.handleDelete}>
+          <Button
+            className='btn-oval btn-oval__black btn-oval__danger'
+            onClick={this.handleDelete}
+          >
             DELETE PROJECT
           </Button>
         </Col>
