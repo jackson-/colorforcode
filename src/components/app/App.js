@@ -96,52 +96,12 @@ class App extends Component {
             user={this.props.user}
             logOut={this.logOut}
             toggleDashMenu={this.toggleDashMenu}
-<<<<<<< HEAD
-=======
             onlyOneActiveMatch={this.onlyOneActiveMatch}
             showPostJob={this.showPostJob}
->>>>>>> 3b1f9c20a607822c3ed24e0a99bfebab423f5552
           />
           <NavCollapse
             collapse={this.toggleDashMenu}
             style={dashMenuStyle}
-<<<<<<< HEAD
-            stacked
-            onSelect={this.toggleDashMenu}
-          >
-            <ScrollToTopOnMount scroll={this.state.showDashMenu} />
-            {
-              user && user.is_employer &&
-                dashMobileMenu.employer.map((link, i) => (
-                  <LinkContainer
-                    hidden={this.state.showDashMenu}
-                    to={link.to}
-                    className='Dashboard__nav-item'
-                    key={i}
-                  >
-                    <NavItem style={{opacity: this.state.opacity}}>
-                      <Glyphicon glyph={link.glyph} /> {link.text}
-                    </NavItem>
-                  </LinkContainer>
-                ))
-            }
-            {
-              user && !user.is_employer &&
-                dashMobileMenu.applicant.map((link, i) => (
-                  <LinkContainer
-                    hidden={this.state.showDashMenu}
-                    to={link.to}
-                    className='Dashboard__nav-item'
-                    key={i}
-                  >
-                    <NavItem style={{opacity: this.state.opacity}}>
-                      <Glyphicon glyph={link.glyph} /> {link.text}
-                    </NavItem>
-                  </LinkContainer>
-                ))
-            }
-          </Nav>
-=======
             state={this.state}
             user={user}
             menu={dashMobileMenu}
@@ -156,7 +116,6 @@ class App extends Component {
               next={alert.next}
             />
           }
->>>>>>> 3b1f9c20a607822c3ed24e0a99bfebab423f5552
           <Grid fluid className='App'>
             {/* PUBLIC ROUTES */}
             <Route exact strict path='/' component={Home} />

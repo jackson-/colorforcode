@@ -35,33 +35,19 @@ export default class Applicants extends Component {
     })
   }
 
-  handleDuplicate = job => event => {
-    event.preventDefault()
-    job.skills = job.skills.map(skill => skill.id)
-    delete job.id
-    delete job.created_at
-    delete job.updated_at
-    job.status = 'open'
-    this.props.duplicateJob({job, skills: job.skills}, this.props.history)
-  }
-
-  handleClose = id => () => {
-    this.props.closeJob(id, this.props.history)
-  }
-
   render () {
     const {jobs} = this.props
     if (jobs) this.sortByDate(jobs)
     return (
       <Row className='Applicants'>
         <h1 className='Applicants-header'>YOUR APPLICANTS</h1>
-        <Accordion defaultActiveKey={} activeKey={this.state.activeKey}>
+        <Accordion defaultActiveKey={1} activeKey={this.state.activeKey}>
           {
             jobs.filter(job => !!job.applicants).map((job, i) => (
               <Panel
                 key={i}
                 header={job.title}
-                eventKey={job.id}
+                eventKey={i + 1}
                 className='Applicants__panel'
                 onClick={this.handleSelect(i + 1)}
               >
