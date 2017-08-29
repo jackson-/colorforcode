@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Table, Row, Button, Glyphicon, Accordion, Panel } from 'react-bootstrap'
+import { Table, Row, Button, Glyphicon } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import './ManageJobs.css'

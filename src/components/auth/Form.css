@@ -139,14 +139,19 @@
 }
 
 @media only screen
-and (max-width: 767px) {
-  .form-group textarea {
-    width: 80vw;
+and (min-width: 767px) {
+  .form-container{
+    margin: 0 auto;
+    max-width: min-content;
   }
 }
 
 @media only screen
 and (max-width: 767px) {
+  .form-group textarea {
+    width: 80vw;
+  }
+
   .EditProfile,
   .PostJobForm,
   .UpdateJobForm {

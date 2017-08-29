@@ -13,6 +13,8 @@ class RegisterForm extends Component {
   constructor (props) {
     super(props)
     this.state = {
+      showEmployer: false,
+      showApplicant: false,
       email: '',
       password: '',
       passwordConfirm: '',
@@ -36,21 +38,21 @@ class RegisterForm extends Component {
 
   handleLocation = zip_code => {
     axios.get(`http://maps.googleapis.com/maps/api/geocode/json?address=${zip_code}`)
-    .then(res => res.data)
-    .then(json => {
-      const address = json.results[0].address_components.filter(c => (
-        c.types.includes('locality') ||
-        c.types.includes('administrative_area_level_1') ||
-        c.types.includes('country')
-      ))
-      const city = address[0].long_name
-      const state = address[1].short_name
-      const country = address[2].long_name
-      const location = country === 'United States' ? `${city}, ${state}` : `${city}, ${state} ${country}`
-      const coords = `${json.results[0].geometry.location.lat},${json.results[0].geometry.location.lng}`
-      this.setState({coords, zip_code, location})
-    })
-    .catch(err => console.error(err.stack))
+      .then(res => res.data)
+      .then(json => {
+        const address = json.results[0].address_components.filter(c => (
+          c.types.includes('locality') ||
+          c.types.includes('administrative_area_level_1') ||
+          c.types.includes('country')
+        ))
+        const city = address[0].long_name
+        const state = address[1].short_name
+        const country = address[2].long_name
+        const location = country === 'United States' ? `${city}, ${state}` : `${city}, ${state} ${country}`
+        const coords = `${json.results[0].geometry.location.lat},${json.results[0].geometry.location.lng}`
+        this.setState({coords, zip_code, location})
+      })
+      .catch(err => console.error(err.stack))
   }
 
   isChecked = type => {
@@ -177,36 +179,40 @@ class RegisterForm extends Component {
     return (
       <Row className='RegisterForm'>
         <ScrollToTopOnMount />
-        <Col xs={12} sm={6} md={6} lg={6}>
-          <h1 className='RegisterForm-header'>Register</h1>
-          <form className='RegisterForm-body' onSubmit={this.handleSubmit}>
-            <FormGroup controlId='is_employer' onChange={this.toggleAccountType}>
-              <ControlLabel>What type of account would you like to create?</ControlLabel>
-              <FormControl componentClass='select'>
-                <option>select an account type</option>
-                <option value='employer'>Employer</option>
-                <option value='applicant'>Applicant</option>
-              </FormControl>
-            </FormGroup>
-            {
-              this.state.showEmployer &&
-              <EmployerFields
-                state={this.state}
-                handleChange={this.handleChange}
-                validate={this.getValidationState}
-              />
-            }
-            {
-              this.state.showApplicant &&
-              <ApplicantFields
-                state={this.state}
-                handleChange={this.handleChange}
-                validate={this.getValidationState}
-                isChecked={this.isChecked}
-              />
-            }
-            <Button disabled={this.isInvalid()} className='primary' type='submit'>Create Account</Button>
-          </form>
+        <Col xs={12} sm={12} md={12} lg={12}>
+          <div className='form-container'>
+            <h1 className='RegisterForm-header'>Register</h1>
+            <form className='RegisterForm-body' onSubmit={this.handleSubmit}>
+              <FormGroup controlId='is_employer' onChange={this.toggleAccountType}>
+                <ControlLabel>What type of account would you like to create?</ControlLabel>
+                <FormControl componentClass='select'>
+                  <option>select an account type</option>
+                  <option value='employer'>Employer</option>
+                  <option value='applicant'>Applicant</option>
+                </FormControl>
+              </FormGroup>
+              {
+                this.state.showEmployer &&
+                <EmployerFields
+                  state={this.state}
+                  handleChange={this.handleChange}
+                  validate={this.getValidationState}
+                />
+              }
+              {
+                this.state.showApplicant &&
+                <ApplicantFields
+                  state={this.state}
+                  handleChange={this.handleChange}
+                  validate={this.getValidationState}
+                  isChecked={this.isChecked}
+                />
+              }
+              <Button disabled={this.isInvalid()} className='primary' type='submit'>
+                Create Account
+              </Button>
+            </form>
+          </div>
         </Col>
       </Row>
     )

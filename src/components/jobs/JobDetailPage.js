@@ -15,7 +15,7 @@ class JobDetailPage extends Component {
   }
 
   render () {
-    const {user, job, skills, history, location, updateJob, deleteJob, saveJob, unsaveJob} = this.props
+    const {user, job, skills, history, updateJob, deleteJob, saveJob, unsaveJob} = this.props
     let jobComponent = ''
     if (job) {
       if (user && user.is_employer && (user.employer.id === job.employer.id)) {

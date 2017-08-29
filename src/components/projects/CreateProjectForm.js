@@ -3,8 +3,7 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import ProjectFields from './ProjectFields'
-import { Row, Col, FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap'
-import VirtualizedSelect from 'react-virtualized-select'
+import { Row, Col } from 'react-bootstrap'
 import { creatingNewProject } from 'APP/src/reducers/actions/projects'
 import { gettingAllSkills } from 'APP/src/reducers/actions/skills'
 import 'react-select/dist/react-select.css'
@@ -101,7 +100,7 @@ class CreateProjectForm extends Component {
       <Row className='PostJobForm'>
         <ScrollToTopOnMount />
         <Col xs={12} sm={6} md={6} lg={6}>
-          <h1 className='PostJobForm-header'>Create a new project</h1>
+          <h1 className='PostJobForm-header'>Add New Project</h1>
           <ProjectFields
             handleSubmit={this.handleSubmit}
             handleChange={this.handleChange}

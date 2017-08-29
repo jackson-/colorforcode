@@ -117,34 +117,34 @@ class App extends Component {
             />
           }
           <Grid fluid className='App'>
+
             {/* PUBLIC ROUTES */}
             <Route exact strict path='/' component={Home} />
             <Route exact path='/about' component={About} />
             <Route exact path='/jobs/:id' component={JobDetailPage} />
-            <Route exact path='/login' component={LoginForm} />
-            <Route exact path='/register' component={RegisterForm} />
+            <Route exact path='/register' component={() => {
+              if (!user) return <RegisterForm />
+              return <Redirect to='/dashboard' />
+            }} />
+            <Route path='/login' component={({location}) => {
+              if (!user) return <LoginForm />
+              return <Redirect to='/dashboard' />
+            }} />
             <Route exact path='/users/:id' component={UserProfile} />
+
             {/* PRIVATE ROUTES */}
             <Route exact path='/dashboard' component={() => {
               return user && user.is_employer
                 ? <Redirect to='/dashboard/manage-jobs' />
                 : <Redirect to='/dashboard/saved-jobs' />
             }} />
-            <Route exact path='/register' component={() => {
-              if (!user) return <RegisterForm />
-              return <Redirect to='/dashboard' />
-            }} />
-            <Route exact path='/login' component={() => {
-              if (!user) return <LoginForm />
-              return <Redirect to='/dashboard' />
-            }} />
             <Route exact path='/dashboard/:action' component={() => {
-              if (!user) return <Redirect to='/login' />
+              // if (!user) return <Redirect to='/login' />
               return <Dashboard location={location} />
             }} />
             <Route exact path='/dashboard/:action/:id' component={() => {
-              if (!user) return <Redirect to='/login' />
-              return <Dashboard />
+              // if (!user) return <Redirect to='/login' />
+              return <Dashboard location={location} />
             }} />
           </Grid>
         </div>

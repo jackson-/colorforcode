@@ -49,6 +49,15 @@
   padding-bottom: 25px;
 }
 
+.paginate-container {
+  padding: 25px 0 0;
+}
+
+.btn-paginate {
+  margin: 0 25px;
+  max-width: 60px;
+}
+
 @media only screen
 and (max-width: 500px) {
   .Home-hero {
