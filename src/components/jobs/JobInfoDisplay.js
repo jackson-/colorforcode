@@ -37,7 +37,7 @@ class JobInfoDisplay extends Component {
 
   render () {
     const {job, user, match} = this.props
-    let skills, employer, datePosted, saved
+    let skills, employer, datePosted, saved, applied
 
     if (job) {
       employer = job.employer
@@ -49,6 +49,7 @@ class JobInfoDisplay extends Component {
 
     if (user && job) {
       saved = user.savedJobs.filter(j => j.id === job.id).length > 0
+      applied = user.applications.filter(a => a.id === job.id).length > 0
     }
     // below we're fixing the unnecessary padding when this component
     // is rendered by the applicant dashboard
@@ -67,9 +68,10 @@ class JobInfoDisplay extends Component {
                 </Col>
                 <Col className='JobInfo__header-right' xs={12} sm={6} md={3} mdOffset={3} lg={3} lgOffset={3}>
                   <h5 className='JobInfo--header-payrate'>
-                    {job.compensation_type === 'Hourly'
-                       ? `Pay: ${job.pay_rate}/hr`
-                       : `Pay: ${job.pay_rate}/yr`
+                    {
+                      job.compensation_type === 'Hourly'
+                        ? `Pay: ${job.pay_rate}/hr`
+                        : `Pay: ${job.pay_rate}/yr`
                     }
                   </h5>
                   {job.employment_types && job.employment_types.map((type, i) => (
@@ -101,8 +103,8 @@ class JobInfoDisplay extends Component {
                     </section>
                   </Col>
                   <Col className='JobInfo--sidebar' xs={12} sm={5} md={4} lg={4}>
-                    <Button className='btn-oval' onClick={this.applyToJob}>
-                      APPLY FOR JOB
+                    <Button className='btn-oval' onClick={this.applyToJob} disabled={applied}>
+                      {applied ? `YOU'VE APPLIED` : 'APPLY FOR JOB'}
                     </Button>
                     <Button
                       className='btn-oval btn-oval__black'
