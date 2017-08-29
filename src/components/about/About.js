@@ -101,7 +101,7 @@ const About = props => (
             lg={8} lgOffset={2}
           >
             <h2 className='section-heading'>
-              Let's Get In Touch!
+              {`Let's Get In Touch!`}
             </h2>
             <hr className='About__separator' />
             <p className='About__text'>
