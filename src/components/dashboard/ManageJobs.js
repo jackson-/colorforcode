@@ -5,7 +5,6 @@ import PropTypes from 'prop-types'
 import './ManageJobs.css'
 
 export default class ManageJobs extends Component {
-
   mostRecentDate = job => {
     const {created_at, updated_at} = job
     if (Date.parse(created_at) < Date.parse(updated_at)) {
@@ -31,7 +30,6 @@ export default class ManageJobs extends Component {
 
   render () {
     const {jobs} = this.props
-    console.log("JOBS", jobs)
     return (
       <Row className='ManageJobs'>
         <h1 className='ManageJobs-header'>MANAGE JOBS</h1>

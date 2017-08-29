@@ -63,18 +63,20 @@ class EmployerDashboard extends Component {
               />
               <Route exact path='/dashboard/applicants' component={() => (
                 <ApplicantsList
+                  location={location}
                   jobs={jobs}
                 />
               )} />
               <Route exact path='/dashboard/manage-jobs' component={() => (
                 <ManageJobs
+                  location={location}
                   closeJob={this.props.closeJob}
                   duplicateJob={this.props.duplicateJob}
                   jobs={jobs}
                 />
               )} />
               <Route exact path='/dashboard/edit-profile' component={() => (
-                <EditProfile user={user} updateUser={updateUser} />
+                <EditProfile user={user} updateUser={updateUser} location={location} />
               )} />
               <Route exact path='/dashboard/jobs/:id' component={JobDetailPage} />
             </Col>
