@@ -104,7 +104,7 @@ class JobBoard extends Component {
 
   buildBody = (coords,from) => {
     const {terms, distance, employment_types, sortBy} = this.state
-    const body{}
+    const body = {}
     // let must = {};
     // [...employment_types].forEach(type => {
     //   must.match = {employment_types: type}

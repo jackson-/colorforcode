@@ -81,17 +81,18 @@ module.exports = require('express').Router()
         `ST_Distance(job.the_geom, ST_MakePoint(${body.coords})::geography) as distance, ` +
          "job.title as title, " +
          "job.description as description, " +
-         "array_agg(skill.title) as skills, " +
+         "(SELECT array_agg(skill.title) FROM skill LEFT JOIN jobskill ON jobskill.skill_id=skill.id WHERE jobskill.job_id=job.id) AS skills, " +
          "setweight(to_tsvector(job.title), 'A') || " +
          "setweight(to_tsvector(job.description), 'B') || " +
          "setweight(to_tsvector('simple', skill.title), 'A') || " +
          "setweight(to_tsvector('simple', coalesce(string_agg(skill.title, ' '))), 'B') as document " +
       "FROM job " +
       "JOIN jobskill ON jobskill.job_id = job.id " +
-      "LEFT JOIN skill ON skill.id = jobskill.skill_id " +
+      "INNER JOIN skill ON skill.id = jobskill.skill_id " +
       "GROUP BY job.id, skill.id) p_search " +
       `WHERE p_search.document @@ to_tsquery('english', '${body.query}') ` +
       `ORDER BY ts_rank(p_search.document, to_tsquery('english', '${body.query}')) DESC, p_search.distance ASC;`
+    console.log("QUERY", query)
     db.query( query,
       options).then((result) =>{
       return res.status(200).json({result:result})
