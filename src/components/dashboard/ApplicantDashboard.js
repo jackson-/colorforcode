@@ -35,10 +35,15 @@ const ApplicantDashboard = ({
         <div className='container__flex'>
           <Col xsHidden sm={3} md={3} lg={3} className='Dashboard__sidebar'>
             <Sidebar
-              headerText={`Welcome, ${user.first_name}`}
+              header={`Welcome, ${user.first_name}`}
               content={
                 <Nav className='Sidebar__button-container' stacked>
-                  <ImageUploader user={user} />
+                  <ImageUploader
+                    user={user}
+                    type='Avatar'
+                    label='Profile Picture'
+                    buttonText='Change Avatar'
+                  />
                   <LinkContainer to='/dashboard/applications' className='Dashboard__nav-item'>
                     <NavItem><Glyphicon glyph='list-alt' /> Applications</NavItem>
                   </LinkContainer>

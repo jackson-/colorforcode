@@ -172,7 +172,7 @@ export default class JobUpdateDisplay extends Component {
                   multi
                   options={skills}
                   onChange={(data) => this._selectSkill(data)}
-                  value={this.state.selectValue || this.formatInitialSkills()}
+                  value={this.state.selectValue}
                 />
                 <FormGroup controlId='description'>
                   <ControlLabel>JOB DESCRIPTION</ControlLabel>

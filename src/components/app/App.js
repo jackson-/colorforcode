@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
-import { Grid, Nav, Glyphicon, NavItem } from 'react-bootstrap'
+import { Grid } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { BrowserRouter as Router, Route, withRouter, Redirect } from 'react-router-dom'
-import { LinkContainer } from 'react-router-bootstrap'
 import PropTypes from 'prop-types'
 import MainNav from './Navbar'
 import Home from '../home/Home'
@@ -10,10 +9,10 @@ import About from '../about/About'
 import RegisterForm from '../auth/RegisterForm'
 import LoginForm from '../auth/LoginForm'
 import JobDetailPage from '../jobs/JobDetailPage'
-import UserDetailPage from '../users/UserDetail'
+import UserProfile from '../users/UserProfile'
 import Dashboard from '../dashboard/Dashboard'
-import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
-import Modal from '../utilities/Modal'
+import AlertModal from '../utilities/AlertModal'
+import NavCollapse from './NavCollapse'
 import './App.css'
 import { logout } from '../../reducers/actions/users'
 
@@ -23,10 +22,11 @@ class App extends Component {
     super(props)
     this.state = {
       showDashMenu: false,
-      opacity: 0,
-      height: 0,
-      padding: 0,
-      marginBottom: 0
+      opacity: '0',
+      height: '0',
+      padding: '0',
+      marginBottom: '0',
+      display: 'none'
     }
   }
 
@@ -37,8 +37,9 @@ class App extends Component {
       showDashMenu: true,
       height: this.state.height === height ? '0' : height,
       padding: this.state.padding === '75px 0 10px 0' ? '0' : '75px 0 10px 0',
-      opacity: this.state.opacity === 0 ? 1 : 0,
-      marginBottom: this.state.marginBottom === '-60px' ? 0 : '-60px'
+      marginBottom: this.state.marginBottom === '-60px' ? '0' : '-60px',
+      opacity: this.state.opacity === '1' ? '0' : '1',
+      display: this.state.display === 'block' ? 'none' : 'block'
     })
   }
 
@@ -68,8 +69,8 @@ class App extends Component {
     const dashMenuStyle = {
       padding: this.state.padding,
       height: this.state.height,
-      opacity: this.state.opacity,
-      marginBottom: this.state.marginBottom
+      marginBottom: this.state.marginBottom,
+      opacity: this.state.opacity
     }
 
     const dashMobileMenu = {
@@ -98,47 +99,16 @@ class App extends Component {
             onlyOneActiveMatch={this.onlyOneActiveMatch}
             showPostJob={this.showPostJob}
           />
-          <Nav
-            className='Dashboard-menu-collapse'
+          <NavCollapse
+            collapse={this.toggleDashMenu}
             style={dashMenuStyle}
-            stacked
-            onSelect={this.toggleDashMenu}
-          >
-            {
-              user && user.is_employer &&
-                dashMobileMenu.employer.map((link, i) => (
-                  <LinkContainer
-                    hidden={this.state.showDashMenu}
-                    to={link.to}
-                    className='Dashboard__nav-item'
-                    key={i}
-                  >
-                    <NavItem style={{opacity: this.state.opacity}}>
-                      <Glyphicon glyph={link.glyph} /> {link.text}
-                    </NavItem>
-                  </LinkContainer>
-                ))
-            }
-            <ScrollToTopOnMount scroll={this.state.showDashMenu} />
-            {
-              user && !user.is_employer &&
-                dashMobileMenu.applicant.map((link, i) => (
-                  <LinkContainer
-                    hidden={this.state.showDashMenu}
-                    to={link.to}
-                    className='Dashboard__nav-item'
-                    key={i}
-                  >
-                    <NavItem style={{opacity: this.state.opacity}}>
-                      <Glyphicon glyph={link.glyph} /> {link.text}
-                    </NavItem>
-                  </LinkContainer>
-                ))
-            }
-          </Nav>
+            state={this.state}
+            user={user}
+            menu={dashMobileMenu}
+          />
           {
             alert &&
-            <Modal
+            <AlertModal
               style={alert.style}
               title={alert.title}
               body={alert.body}
@@ -153,7 +123,7 @@ class App extends Component {
             <Route exact path='/jobs/:id' component={JobDetailPage} />
             <Route exact path='/login' component={LoginForm} />
             <Route exact path='/register' component={RegisterForm} />
-            <Route exact path='/users/:id' component={UserDetailPage} />
+            <Route exact path='/users/:id' component={UserProfile} />
             {/* PRIVATE ROUTES */}
             <Route exact path='/dashboard' component={() => {
               return user && user.is_employer

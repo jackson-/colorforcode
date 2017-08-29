@@ -37,6 +37,20 @@
   width: auto !important;
 }
 
+.chip-round-bordered {
+  font-size: 11px;
+  font-family: Open Sans Bold;
+  color: #9FA5A9;
+  background: #FFFFFF;
+  border: 2px solid #9FA5A9;;
+  display: inline-block;
+  padding: 3px 5px;
+}
+
+.chip-round-bordered:not(:last-child) {
+  margin: 0 10px 0 0;
+}
+
 @media only screen and (min-width: 992px) {
   .chip-wrapper {
     margin: 0 0 0 30px;

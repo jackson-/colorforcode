@@ -26,7 +26,7 @@ const NavBar = props => (
       <Navbar.Toggle />
     </Navbar.Header>
     <Navbar.Collapse>
-      <Nav>
+      <Nav className='nav-links'>
         <LinkContainer eventKey={1} to='/' isActive={props.onlyOneActiveMatch}>
           <NavItem>Home</NavItem>
         </LinkContainer>
@@ -69,7 +69,7 @@ const NavBar = props => (
             )
         }
       </Nav>
-      <Nav pullRight style={{display: props.showPostJob(props.user)}}>
+      <Nav className='nav-button-container' pullRight style={{display: props.showPostJob(props.user)}}>
         <LinkContainer to='/dashboard/post-new-job'>
           <NavItem hidden={props.showPostJob}>
             <span className='btn-oval'>Post a job</span>

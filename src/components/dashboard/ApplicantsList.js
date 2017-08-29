@@ -1,10 +1,24 @@
 import React, { Component } from 'react'
-import { Table, Row, Button, Glyphicon, Accordion, Panel } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
+import { Table, Row, Accordion, Panel } from 'react-bootstrap'
 import PropTypes from 'prop-types'
+import IconBar from '../utilities/icons/IconBar'
+import TwitterIcon from '../utilities/icons/TwitterIcon'
+import LinkIcon from '../utilities/icons/LinkIcon'
+import GithubIcon from '../utilities/icons/GithubIcon'
+import LinkedInIcon from '../utilities/icons/LinkedInIcon'
 import './ManageJobs.css'
 
-export default class ManageJobs extends Component {
+export default class Applicants extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      activeKey: 1
+    }
+  }
+
+  handleSelect = activeKey => event => {
+    this.setState({activeKey})
+  }
 
   mostRecentDate = job => {
     const {created_at, updated_at} = job
@@ -15,56 +29,80 @@ export default class ManageJobs extends Component {
     }
   }
 
-  handleDuplicate = job => event => {
-    event.preventDefault()
-    job.skills = job.skills.map(skill => skill.id)
-    delete job.id
-    delete job.created_at
-    delete job.updated_at
-    job.status = 'open'
-    this.props.duplicateJob({job, skills: job.skills}, this.props.history)
-  }
-
-  handleClose = id => () => {
-    this.props.closeJob(id, this.props.history)
+  sortByDate = list => {
+    return list.sort((a, b) => {
+      return Date.parse(a.created_at) - Date.parse(b.created_at)
+    })
   }
 
   render () {
     const {jobs} = this.props
-    console.log("JOBS", jobs)
+    if (jobs) this.sortByDate(jobs)
     return (
-      <Row className='ManageJobs'>
-        <h1 className='ManageJobs-header'>MANAGE JOBS</h1>
-        <Accordion>
-            {jobs.map((job, i) => (
-                <Panel header={job.title} eventKey={i}>
-                  <Table responsive>
-                    <thead>
-                      Applicants:
-                    </thead>
-                    <tbody>
-                      {job.applicants.map((app, j) =>
-                        <tr>
-                          <td><a href={"/users/" + app.id}>{app.first_name} {app.last_name}</a></td>
-                          <td>{app.location}</td>
-                          <td><a href={app.github} target="_blank">Github</a></td>
-                          <td><a href={app.linkedin} target="_blank">LinkedIn</a></td>
-                          <td><a href={app.twitter} target="_blank">Twitter</a></td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </Table>
-                </Panel>
-            ))}
+      <Row className='Applicants'>
+        <h1 className='Applicants-header'>YOUR APPLICANTS</h1>
+        <Accordion defaultActiveKey={1} activeKey={this.state.activeKey}>
+          {
+            jobs.filter(job => !!job.applicants).map((job, i) => (
+              <Panel
+                key={i}
+                header={job.title}
+                eventKey={i + 1}
+                className='Applicants__panel'
+                onClick={this.handleSelect(i + 1)}
+              >
+                <Table responsive className='Applicants__table'>
+                  <thead>
+                    <tr>
+                      <td>APPLICANTS</td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {
+                      this.sortByDate(job.applicants).map((app, i) => {
+                        const links = [
+                          {type: 'github', label: 'Github Profile', component: <GithubIcon />},
+                          {type: 'linkedin', label: 'LinkedIn Profile', component: <LinkedInIcon />},
+                          {type: 'twitter', label: 'Twitter Profile', component: <TwitterIcon />},
+                          {type: 'personal_site', label: 'Personal Site', component: <LinkIcon />}
+                        ]
+                        let icons = []
+                        links.forEach(link => {
+                          if (app[link.type]) {
+                            icons.push({
+                              text: link.label,
+                              component: link.component,
+                              url: app[link.type]
+                            })
+                          }
+                        })
+                        return (
+                          <tr key={`${job.id}${i}${app.id}`}>
+                            <td>
+                              <a href={`/users/${app.id}`}>{app.first_name} {app.last_name}</a>
+                            </td>
+                            <td>
+                              {new Date(app.created_at).toLocaleDateString()}
+                            </td>
+                            <td>{app.location}</td>
+                            <td>
+                              <IconBar icons={icons} color='green' />
+                            </td>
+                          </tr>
+                        )
+                      })
+                    }
+                  </tbody>
+                </Table>
+              </Panel>
+            ))
+          }
         </Accordion>
       </Row>
     )
   }
 }
 
-ManageJobs.propTypes = {
-  closeJob: PropTypes.func.isRequired,
-  duplicateJob: PropTypes.func.isRequired,
-  jobs: PropTypes.array.isRequired,
-  history: PropTypes.object
+Applicants.propTypes = {
+  jobs: PropTypes.array.isRequired
 }

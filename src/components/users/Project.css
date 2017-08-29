@@ -1,0 +1,59 @@
+.ProjectModal .container__flex {
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.ProjectModal .icons {
+  margin: 0;
+}
+
+.ProjectModal .icon {
+  margin-bottom: 0;
+}
+
+.ProjectModal .modal-header .close {
+  padding: 0 0 0 15px;
+}
+
+.Project__column {
+  padding: 0;
+}
+
+.Project__image--container {
+  width: 100%;
+  height: 40vh;
+  padding: 0;
+}
+
+.Project__image {
+  object-fit: cover;
+  object-position: center;
+  height: inherit;
+  width: 100%;
+  transition: all .35s ease-in-out;
+  margin: 0;
+}
+
+.Project__detail-panel-group {
+  margin: 0;
+}
+
+.Project__detail-panel-group .panel {
+  margin: 0 !important;
+  border-radius: 0;
+}
+
+.Project__detail-panel .panel-heading {
+  cursor: pointer;
+}
+
+.Project__panel-content {
+  font-size: .7em;
+}
+
+@media only screen and (min-width: 768px) {
+  .ProjectModal .icons {
+    padding-left: 25px;
+    margin-top: -25px
+  }
+}

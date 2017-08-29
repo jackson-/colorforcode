@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import { Row, Col, Button, FormGroup, Image,
          FormControl, ControlLabel, Glyphicon } from 'react-bootstrap'
 import { uploadingAvatar } from '../../reducers/actions/users'
+import { uploadingScreenshot } from '../../reducers/actions/projects'
 import blankAvatar from './blank-avatar.png'
 
 class ImageUploader extends Component {
@@ -13,21 +14,22 @@ class ImageUploader extends Component {
     this.state = {
       data_uri: null,
       processing: false,
-      changeAvatar: false
+      changeImg: false,
+      filename: 'No file selected'
     }
   }
 
-  handleChangeAvatar = event => {
+  handleChangeImg = event => {
     event.preventDefault()
-    this.setState({changeAvatar: true})
+    this.setState({changeImg: true})
   }
 
-  cancelChgAvatar = event => {
+  cancelChgImg = event => {
     event.preventDefault()
     this.setState({
       data_uri: null,
       processing: false,
-      changeAvatar: false
+      changeImg: false
     })
   }
 
@@ -49,34 +51,46 @@ class ImageUploader extends Component {
 
   handleSubmit = event => {
     event.preventDefault()
-    this.props.uploadAvatar(this.props.user, this.state.file)
+    if (this.props.type === 'Avatar') {
+      this.props.uploadAvatar(this.props.user, this.state.file)
+    } else {
+      this.props.uploadScreenshot(this.props.project, this.state.file)
+    }
+
     this.setState({
       uploaded_uri: this.state.data_uri,
-      changeAvatar: false
+      changeImg: false
     })
   }
 
   render () {
-    const {user} = this.props
-    const {changeAvatar} = this.state
+    const {user, type, label, buttonText, project} = this.props
+    const {changeImg} = this.state
+    let src = ''
+    if (type === 'Avatar') {
+      src = user ? user.image_url : ''
+    } else {
+      src = project ? project.screenshot : ''
+    }
+    if (!src) src = blankAvatar
     return (
       <Row>
         <Col>
           <Image
             className='user-avatar'
-            circle
+            circle={type === 'Avatar'}
             responsive
-            src={user.image_url ? user.image_url : blankAvatar}
-            alt={`${user.first_name}'s' avatar`}
+            src={src}
+            alt={`uploaded image`}
           />
         </Col>
         <Col xs={12} sm={12} md={12} lg={12}>
           {
-            changeAvatar
+            changeImg
             ? (
               <form onSubmit={this.handleSubmit} encType='multipart/form-data'>
-                <FormGroup controlId='profile-pic'>
-                  <ControlLabel srOnly>Profile picture</ControlLabel>
+                <FormGroup controlId='image'>
+                  <ControlLabel srOnly>{label}</ControlLabel>
                   <FormControl type='file' onChange={this.handleFile} />
                 </FormGroup>
                 <Button
@@ -90,15 +104,15 @@ class ImageUploader extends Component {
                 <Button
                   className='avatar-btn'
                   bsSize='xs'
-                  onClick={this.cancelChgAvatar}
+                  onClick={this.cancelChgImg}
                 >
                   Cancel
                 </Button>
               </form>
             )
             : (
-              <Button className='avatar-btn' bsSize='xs' onClick={this.handleChangeAvatar}>
-                <Glyphicon glyph='camera' /> Change Avatar
+              <Button className='avatar-btn' bsSize='xs' onClick={this.handleChangeImg}>
+                <Glyphicon glyph='camera' /> {buttonText}
               </Button>
             )
           }
@@ -109,12 +123,18 @@ class ImageUploader extends Component {
 }
 
 ImageUploader.propTypes = {
+  type: PropTypes.string, // Capitalized e.g., Avatar, Screenshot
   user: PropTypes.object,
-  uploadAvatar: PropTypes.func.isRequired
+  project: PropTypes.object,
+  label: PropTypes.string, // Profile Picture, Project Screenshot, etc
+  buttonText: PropTypes.string, // Change Avatar, Upload Screenshot, etc
+  uploadAvatar: PropTypes.func,
+  uploadScreenshot: PropTypes.func
 }
 
 const mapDispatchToProps = dispatch => ({
-  uploadAvatar: (user, file) => dispatch(uploadingAvatar(user, file))
+  uploadAvatar: (user, file) => dispatch(uploadingAvatar(user, file)),
+  uploadScreenshot: (project, file) => dispatch(uploadingScreenshot(project, file))
 })
 
 export default connect(null, mapDispatchToProps)(ImageUploader)

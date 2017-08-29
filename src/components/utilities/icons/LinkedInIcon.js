@@ -1,7 +1,7 @@
 import React from 'react'
 
 const LinkedIn = () => (
-  <svg className='linkedin' x='0px' y='0px' width='34.882px' height='32px' viewBox='-5.441 -3.95 34.882 48' enableBackground='new -5.441 -3.95 34.882 48'>
+  <svg className='linkedin' x='0px' y='0px' width='35px' height='35px' viewBox='-5.441 -3.95 34.882 48' enableBackground='new -5.441 -3.95 34.882 48'>
     <g>
       <g>
         <path d='M2.597,27.898h-6.37c-0.455,0-0.758-0.303-0.758-0.758V6.514c0-0.455,0.303-0.758,0.758-0.758h6.521
