@@ -8,13 +8,16 @@ const About = props => (
     <Col xs={12} sm={12} md={12} lg={12}>
       <Row>
         <Col className='About__hero' xs={12} sm={12} md={12} lg={12}>
-          <h1 className='About__hero-heading'>
-            VAR HIREBLACK = DIVERSITY + TALENT
-          </h1>
-          <hr className='About__hero-separator' />
-          <p className='About__hero-text'>
-            {`What happens when premium opportunities meet premium Black technology professionals? No need to wonder. It's HireBlack. The different perspectives and experience our job seekers provide are changing the industry for the better.`}
-          </p>
+          <div className='hero-overlay' />
+          <div className='About__hero-header'>
+            <h1 className='About__hero-heading'>
+              VAR HIREBLACK = DIVERSITY + TALENT
+            </h1>
+            <hr className='About__hero-separator' />
+            <p className='About__hero-text'>
+              {`What happens when premium opportunities meet premium Black technology professionals? No need to wonder. It's HireBlack. The different perspectives and experience our job seekers provide are changing the industry for the better.`}
+            </p>
+          </div>
         </Col>
       </Row>
       <Row className='About__section bg-primary'>

@@ -6,7 +6,7 @@
 
 /* HEADER */
 .About__hero {
-  background-image: url('../../img/about-hero.jpg');
+  background-image: url('../../img/women-whiteboard__xs.jpg');
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -17,11 +17,19 @@
   text-align: center;
 }
 
-.About__hero-content {
-  padding: 100px 15px 100px;
-  position: relative;
-
+.hero-overlay {
+  height: 100vh;
   width: 100%;
+  background: black;
+  opacity: .5;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.About__hero-header {
+  z-index: 5;
+  position: relative;
 }
 
 .About__hero-heading {
@@ -102,6 +110,18 @@
 }
 
 @media (min-width: 768px) {
+  .About__hero {
+    background-image: url('../../img/women-whiteboard__lg-optimized.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: white;
+    height: 100vh;
+    width: 100%;
+    margin: 0;
+    text-align: center;
+  }
+
   .About__hero-heading {
     padding-top: 13%;
     font-size: 2.5em;

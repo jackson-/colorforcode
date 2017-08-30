@@ -139,11 +139,11 @@ class App extends Component {
                 : <Redirect to='/dashboard/saved-jobs' />
             }} />
             <Route exact path='/dashboard/:action' component={() => {
-              // if (!user) return <Redirect to='/login' />
+              if (!user) return <Redirect to='/login' />
               return <Dashboard location={location} />
             }} />
             <Route exact path='/dashboard/:action/:id' component={() => {
-              // if (!user) return <Redirect to='/login' />
+              if (!user) return <Redirect to='/login' />
               return <Dashboard location={location} />
             }} />
           </Grid>
