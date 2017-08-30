@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
 
 const NavCollapse = props => {
-  const {user, menu, style, state, collapse, display} = props
+  const {user, menu, style, state, collapse} = props
   return (
     <Nav
       className='Dashboard-menu-collapse'

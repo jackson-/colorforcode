@@ -1,5 +1,25 @@
 @import url(../../fonts.css);
 
+.form-fields-container--left,
+.form-fields-container--right {
+  padding: 0;
+}
+
+.btn-login-reg {
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+  border: none;
+  padding: 11px;
+  width: 100%;
+}
+
+.form-control-feedback {
+  padding-top: 10px;
+}
+
+.help-block {
+  font-size: .6em;
+}
+
 .RegisterForm, .LoginForm {
   padding: 70px 0 25px 0;
   background: #12CD6A;
@@ -104,6 +124,11 @@
   height: 200px;
   width: 100% !important;
   border: 2px solid #C2C2C2;
+  box-shadow: none;
+}
+
+.RegisterForm .form-group textarea {
+  border-color: #FFFFFF;
 }
 
 .form-group textarea:focus {
@@ -139,14 +164,40 @@
 }
 
 @media only screen
-and (max-width: 767px) {
-  .form-group textarea {
-    width: 80vw;
+and (min-width: 767px) {
+  .LoginForm .form-container {
+    padding-top: 10%;
+  }
+
+  .form-container{
+    margin: 0 auto;
+    max-width: max-content;
+  }
+
+  .form-fields-container--left {
+    padding-right: 15px;
+  }
+
+  .form-fields-container--right {
+    padding-left: 15px;
+  }
+
+  .btn-login-reg {
+    margin-top: 3px;
+    padding: 11px;
+  }
+
+  .employer .btn-login-reg {
+    margin-top: 33px;
   }
 }
 
 @media only screen
 and (max-width: 767px) {
+  .form-group textarea {
+    width: 80vw;
+  }
+
   .EditProfile,
   .PostJobForm,
   .UpdateJobForm {

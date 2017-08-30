@@ -10,7 +10,6 @@ import JobList from './JobList.js'
 import './Home.css'
 
 class JobBoard extends Component {
-
   constructor (props) {
     super(props)
     this.state = {
@@ -23,8 +22,8 @@ class JobBoard extends Component {
       employment_types: new Set([]),
       filtered: false,
       coords: '',
-      page_num:1,
-      from:0,
+      page_num: 1,
+      from: 0
     }
   }
 
@@ -34,13 +33,13 @@ class JobBoard extends Component {
 
   handleLocation = zip_code => {
     axios.get(`http://maps.googleapis.com/maps/api/geocode/json?address=${zip_code}`)
-    .then(res => res.data)
-    .then(json => {
-      const {location} = json.results[0].geometry
-      const coords = `${location.lat},${location.lng}`
-      this.setState({coords, zip_code})
-    })
-    .catch(err => console.error(err.stack))
+      .then(res => res.data)
+      .then(json => {
+        const {location} = json.results[0].geometry
+        const coords = `${location.lat},${location.lng}`
+        this.setState({coords, zip_code})
+      })
+      .catch(err => console.error(err.stack))
   }
 
   handleChange = type => event => {
@@ -144,37 +143,40 @@ class JobBoard extends Component {
     return body
   }
 
-  handlePagination(jobs, sign){
+  handlePagination = (jobs, sign) => {
     let page_num = 1
     let from = 0
-    const next_page= eval(`${this.state.page_num} ${sign} 1`)
-    if(sign){
-      const nextPageHasItems = (!(this.props.jobs.length < 10) || sign === "-" )
-      if(next_page > 0 && nextPageHasItems){
+    const next_page = sign === 'plus'
+      ? this.state.page_num + 1
+      : this.state.page_num - 1
+    if (sign) {
+      const nextPageHasItems = (!(this.props.jobs.length < 10) || sign === 'minus')
+      if (next_page > 0 && nextPageHasItems) {
         page_num = next_page
-        from = eval(`${this.state.from} ${sign} 10`)
-      } else{
+        from = sign === 'plus'
+          ? this.state.from + 10
+          : this.state.from - 10
+      } else {
         return null
       }
     }
     return {page_num, from}
   }
 
-  advancedFilterJobs = event = (sign) => {
+  advancedFilterJobs = sign => event => {
     event.preventDefault()
-    const coords = this.props.user.coords
-      ? this.props.user.coords
-      : this.state.coords
+    const coords = this.state.coords
+      ? this.state.coords
+      : this.props.user.coords || ''
     const {page_num, from} = this.handlePagination(this.props.jobs, sign)
-    if(!page_num){
+    if (!page_num) {
       return
     }
-    this.setState(
-      { filtered: true,
-        page_num,
-        from},
-      () => this.props.advancedFilterJobs(this.buildBody, coords, from)
-    )
+    this.setState({
+      from,
+      filtered: true,
+      page_num
+    }, this.props.advancedFilterJobs(this.buildBody, coords, from))
   }
 
   filterJobs = event => {
@@ -205,7 +207,7 @@ class JobBoard extends Component {
         <div className='container__flex'>
           <Col className='SearchAdvanced__container' xs={12} sm={3} md={3} lg={3}>
             <SearchAdvanced
-              filterJobs={this.advancedFilterJobs}
+              filterJobs={this.advancedFilterJobs()}
               handleChange={this.handleChange}
               toggleCheckbox={this.toggleJobTypes}
               clearFilter={this.clearFilter}
@@ -217,22 +219,25 @@ class JobBoard extends Component {
             />
           </Col>
           <Col xs={12} sm={9} md={9} lg={9}>
-            {this.props.loading
-              ? <p>Loading Job Listings...</p>
-              : <JobList filtered={this.state.filtered} jobs={jobs} />
+            <Row>
+              <Col className='paginate-container' xs={12} sm={12} md={12} lg={12}>
+                <Button className='btn-paginate' onClick={this.advancedFilterJobs('plus')}>
+                  Back
+                </Button>
+                <span>
+                  {this.state.page_num}
+                </span>
+                <Button className='btn-paginate' onClick={this.advancedFilterJobs('minus')}>
+                  Next
+                </Button>
+              </Col>
+            </Row>
+            {
+              this.props.loading
+                ? <p>Loading Job Listings...</p>
+                : <JobList filtered={this.state.filtered} jobs={jobs} />
             }
           </Col>
-          <div>
-            <Button onClick={() => this.advancedFilterJobs("-")}>
-              Back
-            </Button>
-            <span>
-              {this.state.page_num}
-            </span>
-            <Button onClick={() => this.advancedFilterJobs("+")}>
-              Next
-            </Button>
-          </div>
         </div>
       </Row>
     )
@@ -243,7 +248,7 @@ const mapStateToProps = state => ({
   user: state.users.currentUser,
   jobs: state.jobs.all,
   skills: state.skills.all,
-  loading: state.loading,
+  loading: state.loading
 })
 
 const mapDispatchToProps = dispatch => ({
