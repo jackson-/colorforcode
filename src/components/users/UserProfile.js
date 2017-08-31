@@ -45,8 +45,6 @@ class UserProfile extends Component {
     this.setState({showModal: false})
   }
 
-  handle
-
   render () {
     const user = this.props.user ? this.props.user._source : null
     const links = [

@@ -1,116 +1,125 @@
 import React from 'react'
 import { Route } from 'react-router-dom'
+import { Row, Col } from 'react-bootstrap'
 import './About.css'
-import headerLogo from 'APP/src/img/header.jpg'
 
 const About = props => (
   <Route path='/about' render={() => (
-    <div className='about About'>
-
-    <header id='about-header'>
-        <div className="about header-content">
-            <div className="about header-content-inner">
-                <h1 id="homeHeading">var HireBlack = Diversity + Talent</h1>
-                <hr />
-                <p>What happens when premium opportunities meet premium Black technology professionals?
-                No need to wonder. It's HireBlack. The different perspectives and experience our job seekers
-                provide are changing the industry for the better.</p>
+    <Row className='About'>
+      <Col xs={12} sm={12} md={12} lg={12}>
+        <Row className='About__hero'>
+          <div className='About__hero-content'>
+            <h1 className='About__hero-heading'>
+              VAR HIREBLACK = DIVERSITY + TALENT
+            </h1>
+            <hr className='About__hero-separator' />
+            <p className='About__hero-text'>
+              {`What happens when premium opportunities meet premium Black technology professionals? No need to wonder. It's HireBlack. The different perspectives and experience our job seekers provide are changing the industry for the better.`}
+            </p>
+          </div>
+        </Row>
+        <Row className='About__section bg-primary'>
+          <Col
+            className='text-center'
+            xs={12} sm={12}
+            md={8} mdOffset={2}
+            lg={8} lgOffset={2}
+          >
+            <h2 className='section-heading'>
+              {`Employers, we've got what you need!`}
+            </h2>
+            <hr className='About__separator-white' />
+            <p className='About__text text-faded'>
+              {`Diversity empowers innovation. Innovation is what companies look for in the talent they hire. HireBlack provides a platform for hiring employers and Black engineers and designers seeking opportunities to meet and fill the gap of racial inequality in the current tech landscape.`}
+            </p>
+          </Col>
+        </Row>
+        <Row className='About__section'>
+          <Col className='text-center' xs={12} sm={12} md={12} lg={12}>
+            <h2 className='section-heading'>
+              At Your Service
+            </h2>
+            <hr className='About__separator' />
+          </Col>
+          <Col className='text-center' xs={12} sm={6} md={3} lg={3}>
+            <div className='service-box'>
+              <i className='fa fa-4x fa-diamond text-primary sr-icons' />
+              <h3>Quality Jobs</h3>
+              <p className='About__text text-muted'>
+                All of our employers are vetted
+              </p>
             </div>
-        </div>
-    </header>
-
-    <section className="about bg-primary" id="employers">
-        <div className="about container">
-            <div className="about row">
-                <div className="about col-lg-8 col-lg-offset-2 text-center">
-                    <h2 className="about section-heading">Employers, we've got what you need!</h2>
-                    <hr className="about light" />
-                    <p className="about text-faded">Diversity empowers innovation. Innovation is what companies look for in the talent they hire.
-                      HireBlack provides a platform for employers and Black engineers seeking work to meet
-                      and fill the gap of racial inequality in the current tech workforce.</p>
-                </div>
+          </Col>
+          <Col className='text-center' xs={12} sm={6} md={3} lg={3}>
+            <div className='service-box'>
+              <i className='fa fa-4x fa-paper-plane text-primary sr-icons' />
+              <h3>Easy to Apply</h3>
+              <p className='About__text text-muted'>
+                One click apply method makes job seeking super simple!
+              </p>
             </div>
-        </div>
-    </section>
-
-    <section id="about">
-        <div className="about container">
-            <div className="about row">
-                <div className="about col-lg-12 text-center">
-                    <h2 className="about section-heading">At Your Service</h2>
-                    <hr className="about primary" />
-                </div>
+          </Col>
+          <Col className='text-center' xs={12} sm={6} md={3} lg={3}>
+            <div className='service-box'>
+              <i className='fa fa-4x fa-newspaper-o text-primary sr-icons' />
+              <h3>Up to Date Skills</h3>
+              <p className='About__text text-muted'>
+                Job seekers can show prowess with skill tags and project links.
+              </p>
             </div>
-        </div>
-        <div className="about container">
-            <div className="about row">
-                <div className="about col-lg-3 col-md-6 text-center">
-                    <div className="about service-box">
-                        <i className="about fa fa-4x fa-diamond text-primary sr-icons"></i>
-                        <h3>Quality Jobs</h3>
-                        <p className="about text-muted">All of our employers are vetted</p>
-                    </div>
-                </div>
-                <div className="about col-lg-3 col-md-6 text-center">
-                    <div className="about service-box">
-                        <i className="about fa fa-4x fa-paper-plane text-primary sr-icons"></i>
-                        <h3>Easy to Apply</h3>
-                        <p className="about text-muted">One click apply method makes job seeking super simple!</p>
-                    </div>
-                </div>
-                <div className="about col-lg-3 col-md-6 text-center">
-                    <div className="about service-box">
-                        <i className="about fa fa-4x fa-newspaper-o text-primary sr-icons"></i>
-                        <h3>Up to Date Skills</h3>
-                        <p className="about text-muted">Job seekers can show prowess with skill tags and project links.</p>
-                    </div>
-                </div>
-                <div className="about col-lg-3 col-md-6 text-center">
-                    <div className="about service-box">
-                        <i className="about fa fa-4x fa-heart text-primary sr-icons"></i>
-                        <h3>Made with Love</h3>
-                        <p className="about text-muted">All the founders are Black engineers!</p>
-                    </div>
-                </div>
+          </Col>
+          <Col className='text-center' xs={12} sm={6} md={3} lg={3}>
+            <div className='service-box'>
+              <i className='fa fa-4x fa-heart text-primary sr-icons' />
+              <h3>Made with Love</h3>
+              <p className='About__text text-muted'>
+                All the founders are Black engineers!
+              </p>
             </div>
-        </div>
-    </section>
-
-    <section className="about bg-primary" id="job_seekers">
-        <div className="about container">
-            <div className="about row">
-                <div className="about col-lg-8 col-lg-offset-2 text-center">
-                    <h2 className="about section-heading">Job seekers, look no further!</h2>
-                    <hr className="about light" />
-                    <p className="about text-faded">It feels good to know that an employer is looking for someone
-                       like you when you walk into an interview. HireBlack is a platform that provides
-                       just that. Quality Black software engineers are a highly sought out resource in
-                       the technology industry. Due to an inability to find these outstanding people
-                       companies have struggled in their search. Now that’s all changing. We’ve got HireBlack
-                        for that. We bring the opportunities right to the people who need them. You!</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="contact">
-        <div className="about container">
-            <div className="about row">
-                <div className="about col-lg-8 col-lg-offset-2 text-center">
-                    <h2 className="about section-heading">Let's Get In Touch!</h2>
-                    <hr className="about primary" />
-                    <p>Ready to find your next employee with us? That's great! Give us a call or send us an email and we will get back to you as soon as possible!</p>
-                </div>
-                <div className="about col-lg-12 text-center">
-                    <i className="about fa fa-envelope-o fa-3x sr-contact"></i>
-                    <p><a href="mailto:info@hireblack.com">info@hireblack.io</a></p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    </div>
+          </Col>
+        </Row>
+        <Row className='About__section bg-primary'>
+          <Col className='text-center'
+            xs={12} sm={12}
+            md={8} mdOffset={2}
+            lg={8} lgOffset={2}
+          >
+            <h2 className='section-heading'>
+              Job seekers, look no further!
+            </h2>
+            <hr className='About__separator-white' />
+            <p className='About__text text-faded'>
+              {`It feels good to know that an employer is looking for someone like you when you walk into an interview. HireBlack is a platform that provides just that. We connect talented black designers and engineers with innovative companies that don't just talk about the value of diversity—they cultivate it.`}
+            </p>
+          </Col>
+        </Row>
+        <Row className='About__section'>
+          <Col
+            className='text-center'
+            xs={12} sm={12}
+            md={8} mdOffset={2}
+            lg={8} lgOffset={2}
+          >
+            <h2 className='section-heading'>
+              {`Let's Get In Touch!`}
+            </h2>
+            <hr className='About__separator' />
+            <p className='About__text'>
+              Ready to find your next employee with us? Give us a call or send us an email and we will get back to you as soon as possible!
+            </p>
+          </Col>
+          <Col className='text-center' xs={12} sm={12} md={12} lg={12}>
+            <i className='fa fa-envelope-o fa-3x sr-contact' />
+            <a href='mailto:info@hireblack.com'>
+              <p className='About__text text-primary'>
+                info@hireblack.io
+              </p>
+            </a>
+          </Col>
+        </Row>
+      </Col>
+    </Row>
   )} />
 )
-// #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+
 export default About
