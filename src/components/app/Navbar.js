@@ -68,12 +68,14 @@ const NavBar = props => (
             )
         }
       </Nav>
-      <Nav className='nav-button-container' pullRight style={{display: props.showPostJob(props.user)}}>
-        <LinkContainer to='/dashboard/post-new-job'>
-          <NavItem hidden={!props.user || props.location.pathname.includes('dashboard')}>
-            <span className='btn-oval'>Post a job</span>
-          </NavItem>
-        </LinkContainer>
+      <Nav
+        className='nav-button-container'
+        pullRight
+        style={{display: props.showPostJob(props.user)}}
+      >
+        <NavItem hidden={!props.user} onClick={() => props.history.push('/dashboard/post-new-job')}>
+          <span className='btn-oval'>Post a job</span>
+        </NavItem>
       </Nav>
     </Navbar.Collapse>
   </Navbar>

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Grid } from 'react-bootstrap'
 import { connect } from 'react-redux'
-import { BrowserRouter as Router, Route, withRouter, Redirect, Switch } from 'react-router-dom'
+import { BrowserRouter as Router, Route, withRouter, Redirect } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 import {
@@ -143,19 +143,18 @@ class App extends Component {
       deleteProject,
       getProject,
       skills,
-      location
+      history
     } = this.props
-
     return (
       <Router>
         <div>
           <MainNav
+            history={history}
             user={this.props.user}
             logOut={this.logOut}
             toggleDashMenu={this.toggleDashMenu}
             onlyOneActiveMatch={this.onlyOneActiveMatch}
             showPostJob={this.showPostJob}
-            location={location}
           />
           <NavCollapse
             collapse={this.toggleDashMenu}
@@ -163,7 +162,7 @@ class App extends Component {
             state={this.state}
             user={user}
             menu={dashMobileMenu}
-            location={location}
+            history={history}
           />
           {
             alert &&
@@ -176,7 +175,6 @@ class App extends Component {
             />
           }
           <Grid fluid className='App'>
-            <Switch>
               {/* PUBLIC ROUTES */}
               <Route exact strict path='/' component={() => (
                 <Home
@@ -221,7 +219,7 @@ class App extends Component {
               <Route
                 exact
                 path='/dashboard/:action'
-                component={({match, history}) => {
+                component={({match, history, location}) => {
                   if (!user) return <Redirect to='/login' />
                   return (
                     <Dashboard
@@ -250,7 +248,7 @@ class App extends Component {
               <Route
                 exact
                 path='/dashboard/:action/:id'
-                component={({match, history}) => {
+                component={({match, history, location}) => {
                   if (!user) return <Redirect to='/login' />
                   return (
                     <Dashboard
@@ -276,7 +274,6 @@ class App extends Component {
                   )
                 }}
               />
-            </Switch>
           </Grid>
         </div>
       </Router>
