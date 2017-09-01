@@ -1,21 +1,44 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { withRouter } from 'react-router-dom'
 import JobInfoDisplay from './JobInfoDisplay'
 import JobUpdateDisplay from './JobUpdateDisplay'
-import { applyingToJob, gettingJobById, updatingJob, deletingJob, savingJob, unsavingJob } from 'APP/src/reducers/actions/jobs'
 import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
 
 class JobDetailPage extends Component {
-
   componentDidMount () {
-    const {id} = this.props.match.params
-    // Do not change != to !==. This is intentional!!!!
-    if (!this.props.job || (this.props.job.id != id)) this.props.getJob(id)
+    console.log('CDM -')
+    const {job, fetchingJob, match, getJob} = this.props
+    const {id} = match.params
+    if ((!job && !fetchingJob) || (job && (job.id !== Number(id)) && !fetchingJob)) getJob(id)
+  }
+
+  componentWillMount () {
+    console.log('CWM - ')
+  }
+
+  componentWillUnMount () {
+    console.log('CWUM')
+  }
+
+  componentWillReceiveProps (nextProps) {
+    console.log('CWRP')
   }
 
   render () {
-    const {user, job, skills, history, updateJob, deleteJob, saveJob, unsaveJob} = this.props
+    const {
+      user,
+      job,
+      skills,
+      match,
+      history,
+      applyToJob,
+      updateJob,
+      deleteJob,
+      saveJob,
+      unsaveJob
+    } = this.props
+
     let jobComponent = ''
     if (job) {
       if (user && user.is_employer && (user.employer.id === job.employer.id)) {
@@ -32,11 +55,12 @@ class JobDetailPage extends Component {
       } else {
         jobComponent = (
           <JobInfoDisplay
+            job={job}
             user={user}
             skills={skills}
-            job={job}
+            match={match}
             history={history}
-            applyToJob={this.props.sendApplication}
+            applyToJob={applyToJob}
             saveJob={saveJob}
             unsaveJob={unsaveJob}
           />
@@ -44,7 +68,7 @@ class JobDetailPage extends Component {
       }
     }
     return (
-      <div className='JobDetailPage'>
+      <div className='JobDetailPage fadeIn animated'>
         <ScrollToTopOnMount />
         {jobComponent}
       </div>
@@ -52,19 +76,26 @@ class JobDetailPage extends Component {
   }
 }
 
+JobDetailPage.propTypes = {
+  location: PropTypes.object,
+  match: PropTypes.object,
+  history: PropTypes.object,
+  user: PropTypes.any,
+  job: PropTypes.object,
+  fetchingJob: PropTypes.bool,
+  applyToJob: PropTypes.func,
+  unsaveJob: PropTypes.func,
+  updateJob: PropTypes.func,
+  deleteJob: PropTypes.func,
+  saveJob: PropTypes.func,
+  getJob: PropTypes.func,
+  skills: PropTypes.array
+}
+
 const mapStateToProps = state => ({
-  user: state.users.currentUser,
-  skills: state.skills.all,
-  job: state.jobs.currentJob
+  job: state.jobs.currentJob,
+  fetchingJob: state.jobs.fetchingJob,
+  user: state.users.currentUser
 })
 
-const mapDispatchToProps = dispatch => ({
-  getJob: jobId => dispatch(gettingJobById(jobId)),
-  updateJob: (job, history) => dispatch(updatingJob(job, history)),
-  deleteJob: (id, history) => dispatch(deletingJob(id, history)),
-  sendApplication: (user, jobId, history) => dispatch(applyingToJob(user, jobId, history)),
-  saveJob: (userId, savedJobs) => dispatch(savingJob(userId, savedJobs)),
-  unsaveJob: (userId, savedJobs) => dispatch(unsavingJob(userId, savedJobs))
-})
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(JobDetailPage))
+export default connect(mapStateToProps)(JobDetailPage)

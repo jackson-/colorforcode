@@ -1,10 +1,9 @@
 import React from 'react'
-import { Route } from 'react-router-dom'
 import { Row, Col } from 'react-bootstrap'
 import './About.css'
 
 const About = props => (
-  <Row className='About'>
+  <Row className='About fadeIn animated'>
     <Col xs={12} sm={12} md={12} lg={12}>
       <Row>
         <Col className='About__hero' xs={12} sm={12} md={12} lg={12}>

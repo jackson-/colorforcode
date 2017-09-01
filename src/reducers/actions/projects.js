@@ -4,12 +4,12 @@ import { RECEIVE_ALL_PROJECTS, RECEIVE_PROJECT, RECEIVE_USER_PROJECTS } from '..
 import { createNewProject, requestAllProjects, requestUserProjects,
          requestFilteredProjects, requestProject, updateProject,
          beginUploading, doneUploading } from './loading'
-import { gettingAllSkills } from './skills'
 import { receiveAlert } from './alert'
 
 /* --------- PURE ACTION CREATORS --------- */
 
-export const receiveProject = project => ({
+export const receiveProject = (project, skills) => ({
+  skills,
   project,
   type: RECEIVE_PROJECT
 })
@@ -30,76 +30,76 @@ export const receiveUserProjects = projects => ({
 export const gettingAllProjects = () => dispatch => {
   dispatch(requestAllProjects())
   axios.get('/api/projects')
-  .then(res => res.data)
-  .then(projects => dispatch(receiveAllProjects(projects)))
-  .catch(err => console.error(`Mang, I couldn't find the projects! ${err.stack}`))
+    .then(res => res.data)
+    .then(projects => dispatch(receiveAllProjects(projects)))
+    .catch(err => console.error(`Mang, I couldn't find the projects! ${err.stack}`))
 }
 
 export const gettingUserProjects = (user) => dispatch => {
   dispatch(requestUserProjects())
   axios.get(`/api/projects/employer/${user.id}`)
-  .then(res => res.data)
-  .then(projects => dispatch(receiveUserProjects(projects)))
-  .catch(err => console.error(`Mang, I couldn't find the projects! ${err.stack}`))
+    .then(res => res.data)
+    .then(projects => dispatch(receiveUserProjects(projects)))
+    .catch(err => console.error(`Mang, I couldn't find the projects! ${err.stack}`))
 }
 
 export const filteringProjects = query => dispatch => {
   dispatch(requestFilteredProjects())
   axios.post('/api/projects/search', {query})
-  .then(res => res.data)
-  .then(projects => dispatch(receiveAllProjects(projects)))
-  .catch(err => console.error(`Mang, I couldn't filter the  projects! ${err.stack}`))
+    .then(res => res.data)
+    .then(projects => dispatch(receiveAllProjects(projects)))
+    .catch(err => console.error(`Mang, I couldn't filter the  projects! ${err.stack}`))
 }
 
-export const gettingProjectById = id => dispatch => {
-  dispatch(requestProject())
-  axios.get(`/api/projects/${id}`)
-  .then(res => res.data)
-  .then(project => {
-    dispatch(receiveProject(project))
-    dispatch(gettingAllSkills())
-  })
-  .catch(err => console.error(`Mang I couldn't find the project! ${err.stack}`))
-}
+export const gettingProjectById = (id) =>
+  dispatch => {
+    dispatch(requestProject())
+    axios.get(`/api/projects/${id}`)
+      .then(res => res.data)
+      .then(res => {
+        const {skills, project} = res
+        dispatch(receiveProject(project, skills))
+      })
+      .catch(err => console.error(`Mang I couldn't find the project! ${err.stack}`))
+  }
 
 export const creatingNewProject = (projectPost) => dispatch => {
   // set loading state to true to trigger UI changes
   dispatch(createNewProject())
   // create the new project
   axios.post('/api/projects', projectPost)
-  .then(res => res.data)
+    .then(res => res.data)
   // if the project is successfully created, we receive the update to date
   // projects list by regrabbing the user (projects are eager loaded)
-  .then(() => {
-    dispatch(whoami())
-    dispatch(receiveAlert({
-      type: 'confirmation',
-      style: 'success',
-      title: 'Success!',
-      body: 'New project successfully added to your profile.',
-      next: '/dashboard/projects'
-    }))
-  })
-  // otherwise we catch the error...
-  .catch(err => console.error(`Sorry, cuz. We couldn't create that new project...${err.stack}`))
+    .then(() => {
+      dispatch(whoami())
+      dispatch(receiveAlert({
+        type: 'confirmation',
+        style: 'success',
+        title: 'Success!',
+        body: 'New project successfully added to your profile.',
+        next: '/dashboard/projects'
+      }))
+    })
+    // otherwise we catch the error...
+    .catch(err => console.error(`Sorry, cuz. We couldn't create that new project...${err.stack}`))
 }
 
 export const updatingProject = (postData) => dispatch => {
-  console.log('EDITING PROJECT', postData.project)
   dispatch(updateProject())
   axios.put(`/api/projects/${postData.project.id}`, postData)
-  .then(project => {
-    dispatch(whoami)
-    return dispatch(receiveProject(project))
-  })
-  .then(() => dispatch(receiveAlert({
-    type: 'confirmation',
-    style: 'success',
-    title: 'Success!',
-    body: 'Your project has been successfully updated.',
-    next: '/dashboard/projects'
-  })))
-  .catch(err => console.error(`Sorry, cuz. Couldn't update that project...${err.stack}`))
+    .then(project => {
+      dispatch(whoami)
+      return dispatch(receiveProject(project))
+    })
+    .then(() => dispatch(receiveAlert({
+      type: 'confirmation',
+      style: 'success',
+      title: 'Success!',
+      body: 'Your project has been successfully updated.',
+      next: '/dashboard/projects'
+    })))
+    .catch(err => console.error(`Sorry, cuz. Couldn't update that project...${err.stack}`))
 }
 
 export const uploadingScreenshot = (project, file) => dispatch => {
@@ -111,22 +111,21 @@ export const uploadingScreenshot = (project, file) => dispatch => {
   axios.get(
     `http://localhost:1337/api/projects/screenshots/sign-s3?&file-name=${name}&file-type=${file.type}`
   )
-  .then(res => {
-    console.log('PUTTING SIGNED REQUEST TO AWS', res.data.signedRequest)
-    axios.put(res.data.signedRequest, file, options)
-  })
-  .then(() => dispatch(updatingProject({project})))
-  .then(() => dispatch(doneUploading()))
-  .catch((err) => {
-    console.error(err)
-    dispatch(receiveAlert({
-      type: 'error',
-      style: 'danger',
-      title: 'Uh Oh!',
-      body: 'Sorry, we could not upload that project screenshot. Please try again.',
-      next: null
-    }))
-  })
+    .then(res => {
+      axios.put(res.data.signedRequest, file, options)
+    })
+    .then(() => dispatch(updatingProject({project})))
+    .then(() => dispatch(doneUploading()))
+    .catch((err) => {
+      console.error(err)
+      dispatch(receiveAlert({
+        type: 'error',
+        style: 'danger',
+        title: 'Uh Oh!',
+        body: 'Sorry, we could not upload that project screenshot. Please try again.',
+        next: null
+      }))
+    })
 }
 
 export const deletingProject = (id, history) => dispatch => {

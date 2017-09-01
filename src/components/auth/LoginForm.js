@@ -41,11 +41,11 @@ class LoginForm extends Component {
 
   render () {
     return (
-      <Row className='LoginForm'>
+      <Row className='LoginForm fadeIn animated'>
         <ScrollToTopOnMount />
         <Col xs={12} sm={12} md={12} lg={12}>
           <div className='form-container'>
-            <h1 className='LoginForm-header'>Log In</h1>
+            <h1 className='LoginForm-header'>LOG IN</h1>
             <form className='LoginForm-body' onSubmit={this.handleSubmit}>
               <FormGroup controlId='email'>
                 <ControlLabel>Email</ControlLabel>

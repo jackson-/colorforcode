@@ -50,6 +50,11 @@
   margin: 0 auto 15px;
 }
 
+.UserDetail__header-title,
+.UserDetail__header-location {
+  min-width: 215px;
+}
+
 .header-right {
   height: 100%;
   text-align: center;
@@ -102,7 +107,8 @@
   justify-content: space-between;
   flex-direction: column;
   padding: 0;
-  min-height: 270px;
+  min-height: 300px;
+  min-width: 200px;
   width: 100%;
   background: none;
   border: 1px solid #9FA5A9;
@@ -184,6 +190,7 @@ and (min-width: 768px) {
   .header-right {
     align-items: flex-end;
     height: 160px;
+    text-align: right;
   }
 
   .UserDetail__header-name {
@@ -223,17 +230,28 @@ and (min-width: 992px) {
 
   .header-left {
     margin-left: 30px;
+    text-align: left;
   }
 
   .header-right {
     margin-right: 35px;
   }
 
+  .header-avatar {
+    height: 150px;
+    width: min-content;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-end;
+    padding-left: 15px;
+  }
+
   .UserDetail__header-avatar {
-    width: auto;
-    min-width: 100px;
+    width: 100%;
+    min-width: 130px;
     max-width: 150px;
-    margin: 7% auto 0;
+    margin: 0;
   }
 
   .github,

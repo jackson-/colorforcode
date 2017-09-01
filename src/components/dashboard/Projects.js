@@ -23,7 +23,7 @@ class Projects extends Component {
   render () {
     const projects = this.props.user.projects
     return (
-      <Row className='Projects'>
+      <Row className='Projects fadeIn animated'>
         <h1 className='Projects-header'>PROJECTS</h1>
         <Table responsive>
           <thead>
@@ -60,7 +60,7 @@ class Projects extends Component {
 }
 
 Projects.propTypes = {
-  user: PropTypes.object,
+  user: PropTypes.any,
   updateUser: PropTypes.func,
   applyToJob: PropTypes.func,
   saveJob: PropTypes.func,

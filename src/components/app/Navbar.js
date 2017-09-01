@@ -1,6 +1,5 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { withRouter } from 'react-router-dom'
 import { LinkContainer } from 'react-router-bootstrap'
 import { Navbar, NavbarBrand, Nav, Glyphicon,
          Col, NavItem, NavDropdown, MenuItem } from 'react-bootstrap'
@@ -48,7 +47,7 @@ const NavBar = props => (
                   >
                     <MenuItem>Dashboard</MenuItem>
                   </LinkContainer>
-                  <LinkContainer to='#' eventKey={3.1} onClick={props.logOut(props.history)}>
+                  <LinkContainer to='#' eventKey={3.1} onClick={props.logOut()}>
                     <MenuItem >Logout</MenuItem>
                   </LinkContainer>
                 </NavDropdown>
@@ -71,7 +70,7 @@ const NavBar = props => (
       </Nav>
       <Nav className='nav-button-container' pullRight style={{display: props.showPostJob(props.user)}}>
         <LinkContainer to='/dashboard/post-new-job'>
-          <NavItem hidden={props.showPostJob}>
+          <NavItem hidden={!props.user || props.location.pathname.includes('dashboard')}>
             <span className='btn-oval'>Post a job</span>
           </NavItem>
         </LinkContainer>
@@ -81,7 +80,7 @@ const NavBar = props => (
 )
 
 NavBar.propTypes = {
-  user: PropTypes.object,
+  user: PropTypes.any,
   logOut: PropTypes.func.isRequired,
   history: PropTypes.object,
   toggleDashMenu: PropTypes.func.isRequired,
@@ -89,4 +88,4 @@ NavBar.propTypes = {
   onlyOneActiveMatch: PropTypes.func.isRequired
 }
 
-export default withRouter(NavBar)
+export default NavBar

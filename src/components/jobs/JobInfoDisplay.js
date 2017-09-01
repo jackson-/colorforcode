@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { Row, Col, Button, FormControl, ControlLabel } from 'react-bootstrap'
-import { withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import './JobDetail.css'
 
@@ -54,7 +53,6 @@ class JobInfoDisplay extends Component {
     // below we're fixing the unnecessary padding when this component
     // is rendered by the applicant dashboard
     let paddingTop = match.path === '/jobs/:id' ? '60px' : '0'
-
     return (
       <Row className='JobInfo Dashboard__content--white' style={{paddingTop}}>
         <Col xs={12} sm={12} md={12} lg={12}>
@@ -140,7 +138,7 @@ class JobInfoDisplay extends Component {
 }
 
 JobInfoDisplay.propTypes = {
-  user: PropTypes.object,
+  user: PropTypes.any,
   history: PropTypes.object,
   match: PropTypes.object,
   job: PropTypes.object,
@@ -149,4 +147,4 @@ JobInfoDisplay.propTypes = {
   applyToJob: PropTypes.func
 }
 
-export default withRouter(JobInfoDisplay)
+export default JobInfoDisplay

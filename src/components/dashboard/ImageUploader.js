@@ -124,7 +124,7 @@ class ImageUploader extends Component {
 
 ImageUploader.propTypes = {
   type: PropTypes.string, // Capitalized e.g., Avatar, Screenshot
-  user: PropTypes.object,
+  user: PropTypes.any,
   project: PropTypes.object,
   label: PropTypes.string, // Profile Picture, Project Screenshot, etc
   buttonText: PropTypes.string, // Change Avatar, Upload Screenshot, etc

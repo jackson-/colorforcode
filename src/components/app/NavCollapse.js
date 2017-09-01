@@ -51,7 +51,7 @@ const NavCollapse = props => {
 NavCollapse.propTypes = {
   display: PropTypes.string,
   menu: PropTypes.object,
-  user: PropTypes.object,
+  user: PropTypes.any,
   style: PropTypes.object,
   state: PropTypes.object,
   collapse: PropTypes.func

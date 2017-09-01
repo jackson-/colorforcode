@@ -1,8 +1,24 @@
 import React from 'react'
 import { Col, FormGroup, ControlLabel, FormControl, Checkbox, HelpBlock, Button } from 'react-bootstrap'
 const ApplicantRegisterFields = props => (
-  <div>
+  <div className='applicant fadeIn animated'>
     <Col className='form-fields-container--left' xs={12} sm={6} md={6} lg={6}>
+      <FormGroup controlId='first_name'>
+        <ControlLabel>First Name</ControlLabel>
+        <FormControl
+          required
+          value={props.state.first_name}
+          onChange={props.handleChange('first_name')}
+        />
+      </FormGroup>
+      <FormGroup controlId='last_name'>
+        <ControlLabel>Last Name</ControlLabel>
+        <FormControl
+          required
+          value={props.state.last_name}
+          onChange={props.handleChange('last_name')}
+        />
+      </FormGroup>
       <FormGroup controlId='email'>
         <ControlLabel>Email</ControlLabel>
         <FormControl
@@ -32,22 +48,6 @@ const ApplicantRegisterFields = props => (
         <FormControl.Feedback />
         {props.validate() === 'error' ? <HelpBlock>Passwords do not match</HelpBlock> : null}
       </FormGroup>
-      <FormGroup controlId='first_name'>
-        <ControlLabel>First Name</ControlLabel>
-        <FormControl
-          required
-          value={props.state.first_name}
-          onChange={props.handleChange('first_name')}
-        />
-      </FormGroup>
-      <FormGroup controlId='last_name'>
-        <ControlLabel>Last Name</ControlLabel>
-        <FormControl
-          required
-          value={props.state.last_name}
-          onChange={props.handleChange('last_name')}
-        />
-      </FormGroup>
       <FormGroup controlId='title'>
         <ControlLabel>Role You're Seeking</ControlLabel>
         <FormControl
@@ -75,6 +75,9 @@ const ApplicantRegisterFields = props => (
         </Checkbox>
         <Checkbox defaultChecked={props.isChecked('Internship')} value='Internship'>
           Internship
+        </Checkbox>
+        <Checkbox defaultChecked={props.isChecked('Remote')} value='Remote'>
+          Remote
         </Checkbox>
       </FormGroup>
       {/* with zip_code we auto find user's city, state and country along with their coords */}
@@ -153,7 +156,7 @@ const ApplicantRegisterFields = props => (
         type='submit'
         className='btn-login-reg'
       >
-        Create Account
+        {props.buttonText}
       </Button>
     </Col>
   </div>
