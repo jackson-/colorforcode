@@ -15,35 +15,55 @@ const esClient = new elasticsearch.Client({
 module.exports = require('express').Router()
 
   .get('/', (req, res, next) => {
-    let body = {
-      query: {match_all: {}},
-      from: 0,
-      size:10
-    }
-    esClient.search({body, index: 'data', type: 'job'})
-    .then(results => {
-      return res.status(200).json({total:results.hits.total, hits:results.hits.hits})
+    Job.findAll().then(jobs => {
+      return res.status(200).json({hits:jobs, total:jobs.length})
     })
-    .catch(next)
   })
 
   // search bar
   .post('/search', (req, res, next) => {
-    const query = req.body.query
-      ? {multi_match: {query: req.body.query, fields: ['_all']}}
-      : {match_all: {}}
-
-    esClient.search({
-      index: 'data',
-      type: 'job',
-      body: {
-        query,
-        from:req.body.from ? req.body.from : 0,
-        size:10
-      }
-    })
-    .then(results => res.status(200).json({total:results.hits.total, hits:results.hits.hits}))
-    .catch(next)
+    // const query = req.body.query
+    //   ? {multi_match: {query: req.body.query, fields: ['_all']}}
+    //   : {match_all: {}}
+    //
+    // esClient.search({
+    //   index: 'data',
+    //   type: 'job',
+    //   body: {
+    //     query,
+    //     from:req.body.from ? req.body.from : 0,
+    //     size:10
+    //   }
+    // })
+    const {query, from} = req.body
+    const size = 10
+    const options = {
+        model: db.Job,
+        // include: [db.Skill],
+        hasJoin:true,
+    }
+    // db.Model.$validateIncludedElements(options)
+    const db_query = "SELECT * "+
+      "FROM (SELECT job.*, job.id as id, " +
+        // `ST_Distance(job.the_geom, ST_MakePoint(${body.coords})::geography) as distance, ` +
+         "job.title as title, " +
+         "job.description as description, " +
+         "(SELECT array_agg(skill.title) FROM skill LEFT JOIN jobskill ON jobskill.skill_id=skill.id WHERE jobskill.job_id=job.id) AS skills, " +
+         "setweight(to_tsvector(job.title), 'A') || " +
+         "setweight(to_tsvector(job.description), 'B') || " +
+         "setweight(to_tsvector('simple', skill.title), 'A') || " +
+         "setweight(to_tsvector('simple', coalesce(string_agg(skill.title, ' '))), 'B') as document " +
+      "FROM job " +
+      "JOIN jobskill ON jobskill.job_id = job.id " +
+      "INNER JOIN skill ON skill.id = jobskill.skill_id " +
+      "GROUP BY job.id, skill.id) p_search " +
+      `WHERE p_search.document @@ to_tsquery('english', '${query}') ` +
+      `ORDER BY ts_rank(p_search.document, to_tsquery('english', '${query}')) DESC;`
+    db.query( db_query,
+      options).then((result) =>{
+      console.log("RES", result)
+      return res.status(200).json({hits:result, total:result.length})
+    }).catch(next);
   })
 
   // advanced search
@@ -52,16 +72,17 @@ module.exports = require('express').Router()
     const offset = body.from
     const limit = body.size
     const tsquery = body.query
-    var query = tsquery.indexOf(' ') == -1 ? "to_tsquery('english','" + tsquery + "')" : "plainto_tsquery('english','" + tsquery + "')";
-    db.query("SELECT *, ST_Distance(the_geom, ST_MakePoint(40.6655101,-73.8918897)::geography) AS Distance, ts_rank_cd(vector," + query + ",1)" +
-    " AS rank FROM job WHERE vector @@ " + query +
-    " ORDER BY rank DESC, id DESC" +
-    `OFFSET ${offset}` +
-    `LIMIT ${limit}`,
-    { model: db.Post }).then((result) =>{
-      console.log("REUSLT", result)
-      return res.status(200).json({result:result[0]})
-    });
+    console.log(body)
+    // var query = tsquery.indexOf(' ') == -1 ? "to_tsquery('english','" + tsquery + "')" : "plainto_tsquery('english','" + tsquery + "')";
+    // db.query("SELECT *, ST_Distance(the_geom, ST_MakePoint(40.6655101,-73.8918897)::geography) AS Distance, ts_rank_cd(vector," + query + ",1)" +
+    // " AS rank FROM job WHERE vector @@ " + query +
+    // " ORDER BY rank DESC, id DESC" +
+    // `OFFSET ${offset}` +
+    // `LIMIT ${limit}`,
+    // { model: db.Post }).then((result) =>{
+    //   console.log("REUSLT", result)
+    //   return res.status(200).json({result:result[0]})
+    // });
   })
 
   .post('/search/experiment', (req, res, next) => {

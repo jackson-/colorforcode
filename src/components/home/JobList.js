@@ -6,9 +6,9 @@ import './JobCard.css'
 
 const JobList = props => (
   <div className='JobList'>
+    {console.log("PROOPS", props)}
     {props.filtered && <h2>Search Results</h2>}
-    {props.jobs && props.jobs.map((data, i) => {
-      const job = data._source
+    {props.jobs && props.jobs.map((job, i) => {
       return (
         <LinkContainer className='JobCard' key={i} to={`/jobs/${job.id}`}>
           <Row>
