@@ -3,6 +3,7 @@ import { gettingUserById } from 'APP/src/reducers/actions/users'
 import { Row, Col, Image, Glyphicon } from 'react-bootstrap'
 import blankAvatar from 'APP/src/components/dashboard/blank-avatar.png'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import IconBar from '../utilities/icons/IconBar'
 import TwitterIcon from '../utilities/icons/TwitterIcon'
@@ -15,7 +16,6 @@ import Project from './Project'
 import './UserProfile.css'
 
 class UserProfile extends Component {
-
   constructor (props) {
     super(props)
     this.state = {
@@ -25,9 +25,30 @@ class UserProfile extends Component {
     }
   }
 
+  componentDidMount () {
+    const {user, fetchingUser, match} = this.props
+    const {id} = match.params
+    console.log('CDM - USER', user, 'FETCHING USER: ', fetchingUser)
+  }
+
+  componentWillReceiveProps () {
+    const {user, fetchingUser, match} = this.props
+    const {id} = match.params
+    console.log('CWRP - USER', user, 'FETCHING USER: ', fetchingUser)
+    if (fetchingUser) console.log(`CWRP - FETCHING USER ${id}`)
+  }
+
   componentWillMount () {
-    const {id} = this.props.match.params
-    if (!this.props.user) this.props.getUser(id)
+    const {user, fetchingUser, match, getUser} = this.props
+    const {id} = match.params
+    console.log('CWM - USER', user, 'FETCHING USER: ', fetchingUser)
+    if (!fetchingUser) {
+      if (!user || user.id !== Number(id)) {
+        getUser(id)
+        console.log(`CWM - HAD USER ${user.id} FETCHING USER ${id}`)
+      }
+    }
+    if (fetchingUser) console.log(`CWM - FETCHING USER ${id}, ${fetchingUser}`)
   }
 
   handleOnLoad = () => {
@@ -46,7 +67,7 @@ class UserProfile extends Component {
   }
 
   render () {
-    const user = this.props.user ? this.props.user._source : null
+    let {match, user} = this.props
     const links = [
       {type: 'github', label: 'Github Profile', component: <GithubIcon />},
       {type: 'linkedin', label: 'LinkedIn Profile', component: <LinkedInIcon />},
@@ -66,23 +87,27 @@ class UserProfile extends Component {
       })
     }
     const {opacity, showModal, currentProject} = this.state
-
+    // below we're fixing the unnecessary padding when this component
+    // is rendered by the applicant dashboard
+    let paddingTop = match.path === '/users/:id' ? '60px' : '0'
     return (
-      <Row className='UserDetail'>
+      <Row className='UserDetail fadeIn animated' style={{paddingTop}}>
         {
           user &&
           <Col xs={12} sm={12} md={12} lg={12}>
             <Row className='UserDetail__header'>
               <Col xs={12} sm={12} md={2} lg={2}>
-                <Image
-                  className='UserDetail__header-avatar'
-                  circle
-                  style={{opacity}}
-                  responsive
-                  onLoad={this.handleOnLoad}
-                  src={user.image_url ? user.image_url : blankAvatar}
-                  alt={`${user.first_name}'s avatar`}
-                />
+                <div className='header-avatar'>
+                  <Image
+                    className='UserDetail__header-avatar'
+                    circle
+                    style={{opacity}}
+                    responsive
+                    onLoad={this.handleOnLoad}
+                    src={user.image_url ? user.image_url : blankAvatar}
+                    alt={`${user.first_name}'s avatar`}
+                  />
+                </div>
               </Col>
               <Col className='header-left-container' xs={12} sm={8} md={7} lg={7}>
                 <div className='header-left'>
@@ -154,15 +179,29 @@ class UserProfile extends Component {
                 <Col className='UserDetail__body-section' xs={12} sm={3} md={4} lg={4}>
                   <div className='summary'>
                     <h2 className='UserDetail__body-header text-white'>Bio</h2>
-                    <p className='summary-text'>
-                      Expand on your tagline with a summary of your education or self-taught journey and experience.
-                    </p>
-                    <p className='summary-text'>
-                      What are your specialities? What are you most interested in working on? What are you learning now?
-                    </p>
-                    <p className='summary-text'>
-                      Give the employer a glimpse of who you are, both as a tech professional and as a human who cares about more than technology.
-                    </p>
+                    {
+                      user.summary
+                        ? user.summary
+                        : (
+                          <div>
+                            <p className='summary-text'>
+                              Expand on your tagline with a summary of your education or self-taught journey and experience.
+                            </p>
+                            <p className='summary-text'>
+                              What are your specialities? What are you most interested in working on? What are you learning now?
+                            </p>
+                            <p className='summary-text'>
+                              Give the employer a glimpse of who you are, both as a tech professional and as a human who cares about more than technology.
+                            </p>
+                          </div>
+                        )
+                    }
+                    {
+                      user.resume_url &&
+                      <a href={user.resume_url} alt={`${user.first_name}'s' resume`}>
+                        {`View ${user.first_name}'s Resume`}
+                      </a>
+                    }
                   </div>
                 </Col>
               </div>
@@ -178,16 +217,18 @@ UserProfile.propTypes = {
   history: PropTypes.object,
   match: PropTypes.object,
   getUser: PropTypes.func,
-  user: PropTypes.object,
-  padding: PropTypes.string
+  user: PropTypes.any,
+  padding: PropTypes.string,
+  fetchingUser: PropTypes.bool
 }
 
 const mapStateToProps = state => ({
-  user: state.users.selected
+  user: state.users.selected,
+  fetchingUser: state.users.fetchingUser
 })
 
 const mapDispatchToProps = dispatch => ({
   getUser: id => dispatch(gettingUserById(id))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserProfile)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(UserProfile))

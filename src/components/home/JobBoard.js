@@ -1,16 +1,15 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
 import { Row, Col, Button } from 'react-bootstrap'
+import { connect } from 'react-redux'
 import axios from 'axios'
-import { gettingAllJobs, filteringJobs, buildBodyThenSearch } from 'APP/src/reducers/actions/jobs'
-import { gettingAllSkills } from 'APP/src/reducers/actions/skills'
+import PropTypes from 'prop-types'
 import SearchBar from '../utilities/SearchBar'
 import SearchAdvanced from '../utilities/SearchAdvanced'
 import JobList from './JobList.js'
+import LoadingSpinner from '../utilities/LoadingSpinner'
 import './Home.css'
 
 class JobBoard extends Component {
-
   constructor (props) {
     super(props)
     this.state = {
@@ -23,24 +22,51 @@ class JobBoard extends Component {
       employment_types: new Set([]),
       filtered: false,
       coords: '',
-      page_num:1,
-      from:0,
+      page_num: 1,
+      from: 0,
+      loading: true
     }
   }
 
   componentDidMount () {
-    this.props.getJobs()
+    const {jobs} = this.props
+    console.log(`CDM - JOBS: ${jobs ? jobs.length : 0}`)
+    if (jobs) {
+      this.setState({loading: false})
+    }
+  }
+
+  componentWillMount () {
+    const {jobs, fetching, getJobs} = this.props
+    console.log(`CWM - JOBS: ${jobs ? jobs.length : 0}`)
+    if (!jobs && !fetching) getJobs()
+    if (jobs) {
+      this.setState({loading: false})
+    }
+  }
+
+  componentWillReceiveProps (nextProps) {
+    const {jobs, fetching, getJobs} = this.props
+    console.log(`CWRP - JOBS HAD: ${jobs ? jobs.length : 0}, GETTING: ${nextProps.jobs ? nextProps.jobs.length : 0}, FETCHING: ${fetching}`)
+    if (!jobs && !fetching) getJobs()
+    if (nextProps.jobs) {
+      this.setState({loading: false})
+    }
+  }
+
+  componentWillUnMount () {
+    console.log(`CWUM - UNMOUNTING!`)
   }
 
   handleLocation = zip_code => {
     axios.get(`http://maps.googleapis.com/maps/api/geocode/json?address=${zip_code}`)
-    .then(res => res.data)
-    .then(json => {
-      const {location} = json.results[0].geometry
-      const coords = `${location.lat},${location.lng}`
-      this.setState({coords, zip_code})
-    })
-    .catch(err => console.error(err.stack))
+      .then(res => res.data)
+      .then(json => {
+        const {location} = json.results[0].geometry
+        const coords = `${location.lat},${location.lng}`
+        this.setState({coords, zip_code})
+      })
+      .catch(err => console.error(err.stack))
   }
 
   handleChange = type => event => {
@@ -93,7 +119,8 @@ class JobBoard extends Component {
         distance: '',
         sortBy: '',
         employment_types: new Set([]),
-        filtered: false
+        filtered: false,
+        loading: true
       })
       this.filterJobs()
     } else {
@@ -102,7 +129,7 @@ class JobBoard extends Component {
     }
   }
 
-  buildBody = (coords,from) => {
+  buildBody = (coords, from) => {
     const {terms, distance, employment_types, sortBy} = this.state
     const body = {}
     // let must = {};
@@ -148,43 +175,48 @@ class JobBoard extends Component {
     return body
   }
 
-  handlePagination(jobs, sign){
+  handlePagination = (jobs, sign) => {
     let page_num = 1
     let from = 0
-    const next_page= eval(`${this.state.page_num} ${sign} 1`)
-    if(sign){
-      const nextPageHasItems = (!(this.props.jobs.length < 10) || sign === "-" )
-      if(next_page > 0 && nextPageHasItems){
+    const next_page = sign === 'plus'
+      ? this.state.page_num + 1
+      : this.state.page_num - 1
+    if (sign) {
+      const nextPageHasItems = (!(this.props.jobs.length < 10) || sign === 'minus')
+      if (next_page > 0 && nextPageHasItems) {
         page_num = next_page
-        from = eval(`${this.state.from} ${sign} 10`)
-      } else{
+        from = sign === 'plus'
+          ? this.state.from + 10
+          : this.state.from - 10
+      } else {
         return null
       }
     }
     return {page_num, from}
   }
 
-  advancedFilterJobs = event = (sign) => {
+  advancedFilterJobs = sign => event => {
     event.preventDefault()
-    const coords = this.props.user.coords
-      ? this.props.user.coords
-      : this.state.coords
+    const coords = this.state.coords
+      ? this.state.coords
+      : this.props.user.coords || ''
     const {page_num, from} = this.handlePagination(this.props.jobs, sign)
-    if(!page_num){
+    if (!page_num) {
       return
     }
-    this.setState(
-      { filtered: true,
-        page_num,
-        from},
-      () => this.props.advancedFilterJobs(this.buildBody, coords, from)
-    )
+    this.setState({
+      from,
+      filtered: true,
+      page_num,
+      loading: true
+    }, this.props.advancedFilterJobs(this.buildBody, coords, from))
   }
 
   filterJobs = event => {
     // this is an event handler but we also use this in clearFilter & clearChip,
     // in which case there's no event object to call preventDefault on
     if (event) event.preventDefault()
+    this.setState({loading: true})
     const {query} = this.state
     this.props.filterJobs(query)
     // ^ when query === '', all job listings are shown
@@ -194,7 +226,9 @@ class JobBoard extends Component {
   }
 
   render () {
-    let jobs = this.props.jobs || []
+    const {jobs, fetching} = this.props
+    const {loading} = this.state
+    console.log('RENDERING, LOADING:', loading, 'FETCHING: ', fetching)
     return (
       <Row className='JobBoard'>
         <SearchBar
@@ -209,7 +243,7 @@ class JobBoard extends Component {
         <div className='container__flex'>
           <Col className='SearchAdvanced__container' xs={12} sm={3} md={3} lg={3}>
             <SearchAdvanced
-              filterJobs={this.advancedFilterJobs}
+              filterJobs={this.advancedFilterJobs()}
               handleChange={this.handleChange}
               toggleCheckbox={this.toggleJobTypes}
               clearFilter={this.clearFilter}
@@ -222,21 +256,22 @@ class JobBoard extends Component {
           </Col>
           <Col xs={12} sm={9} md={9} lg={9}>
             <Row>
-              <Col className="paginate"  xs={12} sm={12} md={12} lg={12}>
-                <Button onClick={() => this.advancedFilterJobs("-")}>
-                Back
+              <Col className='paginate-container' xs={12} sm={12} md={12} lg={12}>
+                <Button className='btn-paginate' onClick={this.advancedFilterJobs('plus')}>
+                  Back
                 </Button>
-                <p className="page-number">
-                {this.state.page_num}
-                </p>
-                <Button onClick={() => this.advancedFilterJobs("+")}>
-                Next
+                <span>
+                  {this.state.page_num}
+                </span>
+                <Button className='btn-paginate' onClick={this.advancedFilterJobs('minus')}>
+                  Next
                 </Button>
               </Col>
             </Row>
-            {this.props.loading
-              ? <p>Loading Job Listings...</p>
-              : <JobList filtered={this.state.filtered} jobs={jobs} />
+            {
+              loading
+                ? <LoadingSpinner top={'40vh'} />
+                : <JobList filtered={this.state.filtered} jobs={jobs || []} />
             }
           </Col>
         </div>
@@ -245,20 +280,19 @@ class JobBoard extends Component {
   }
 }
 
+JobBoard.propTypes = {
+  jobs: PropTypes.arrayOf(PropTypes.object),
+  user: PropTypes.any,
+  getJobs: PropTypes.func,
+  filterJobs: PropTypes.func,
+  advancedFilterJobs: PropTypes.func,
+  fetching: PropTypes.bool
+}
+
 const mapStateToProps = state => ({
-  user: state.users.currentUser,
   jobs: state.jobs.all,
-  skills: state.skills.all,
-  loading: state.loading,
+  user: state.users.currentUser,
+  fetching: state.jobs.fetching
 })
 
-const mapDispatchToProps = dispatch => ({
-  getJobs: () => dispatch(gettingAllJobs()),
-  getSkills: () => dispatch(gettingAllSkills()),
-  filterJobs: query => dispatch(filteringJobs(query)),
-  advancedFilterJobs: (bodyBuilder, coords, from) => {
-    dispatch(buildBodyThenSearch(bodyBuilder, coords, from))
-  }
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(JobBoard)
+export default connect(mapStateToProps)(JobBoard)

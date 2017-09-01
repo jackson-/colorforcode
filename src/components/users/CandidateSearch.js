@@ -1,17 +1,15 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
 import { Row, Col, Button } from 'react-bootstrap'
-import { gettingAllUsers, filteringUsers, buildBodyThenSearch } from 'APP/src/reducers/actions/users'
-import { grabbingCoords } from 'APP/src/reducers/actions/jobs'
-import { gettingAllSkills } from 'APP/src/reducers/actions/skills'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 import SearchBar from '../utilities/SearchBar'
+import LoadingSpinner from '../utilities/LoadingSpinner'
 import CandidateSearchAdvanced from '../utilities/CandidateSearchAdvanced'
 import CandidateList from './CandidateList.js'
 import axios from 'axios'
-// import './Home.css'
+import '../home/Home.css'
 
 class CandidateSearch extends Component {
-
   constructor (props) {
     super(props)
     this.state = {
@@ -22,31 +20,60 @@ class CandidateSearch extends Component {
       filtered: false,
       distance: '',
       sortBy: '',
-      page_num:1,
-      from:0,
+      page_num: 1,
+      from: 0,
+      loading: true
     }
   }
 
   componentDidMount () {
-    this.props.getUsers()
-    if (!this.props.user || !this.props.user.coords) {
-      grabbingCoords()
-      .then(coords => this.setState({coords}))
-      .catch(err => console.error(err))
+    const {users} = this.props
+    console.log(`CDM - USERS: ${users ? users.length : 0}`)
+    // if (!users && !loading) {
+    //   console.log('GETTING USERS')
+    //   getUsers()
+    // }
+    // if (users) {
+    //   this.setState({loading: false})
+    // }
+  }
+
+  componentWillMount () {
+    const {users, fetching, getUsers} = this.props
+    console.log(`CWM - USERS: ${users ? users.length : 0}`)
+    if (!users && !fetching) {
+      console.log('GETTING USERS, FETCHING: ', fetching)
+      getUsers()
     }
+    if (users) {
+      this.setState({loading: false})
+    }
+  }
+
+  componentWillReceiveProps (nextProps) {
+    const {users, getUsers} = this.props
+    console.log(`CWRP - USERS HAD: ${users ? users.length : 0}, GETTING: ${nextProps.users ? nextProps.users.length : 0}`)
+    if (!users) getUsers()
+    if (nextProps.users) {
+      this.setState({loading: false})
+    }
+  }
+
+  componentWillUnMount () {
+    console.log(`CWUM - UNMOUNTING!`)
   }
 
   handleLocation(zip_code) {
     axios.get(`http://maps.googleapis.com/maps/api/geocode/json?address=${zip_code}`)
-    .then(res => res.data)
-    .then(json => {
-      const city = json.results[0].address_components[1].long_name
-      const state = json.results[0].address_components[2].short_name
-      const location = `${city}, ${state}`
-      const coords = `${json.results[0].geometry.location.lat},${json.results[0].geometry.location.lng}`
-      this.setState({coords, zip_code, location})
-    })
-    .catch(err => console.error(err.stack))
+      .then(res => res.data)
+      .then(json => {
+        const city = json.results[0].address_components[1].long_name
+        const state = json.results[0].address_components[2].short_name
+        const location = `${city}, ${state}`
+        const coords = `${json.results[0].geometry.location.lat},${json.results[0].geometry.location.lng}`
+        this.setState({coords, zip_code, location})
+      })
+      .catch(err => console.error(err.stack))
   }
 
   handleChange = type => event => {
@@ -86,7 +113,7 @@ class CandidateSearch extends Component {
     const query = terms.join(' ')
     this.setState(
       {terms, query, filtered: query.length > 0},
-      this.filterJobs
+      this.filterUsers
       // ^second param of setState (optional) is callback to execute after setting state
     )
   }
@@ -98,11 +125,31 @@ class CandidateSearch extends Component {
         query: '',
         filtered: false
       })
-      this.filterJobs()
+      this.filterUsers()
     } else {
       // just clear the search bar, nbd
       this.setState({query: ''})
     }
+  }
+
+  handlePagination = (users, sign) => {
+    let page_num = 1
+    let from = 0
+    const next_page = sign === 'plus'
+      ? this.state.page_num + 1
+      : this.state.page_num - 1
+    if (sign) {
+      const nextPageHasItems = (!(this.props.users.length < 10) || sign === 'minus')
+      if (next_page > 0 && nextPageHasItems) {
+        page_num = next_page
+        from = sign === 'plus'
+          ? this.state.from + 10
+          : this.state.from - 10
+      } else {
+        return null
+      }
+    }
+    return {page_num, from}
   }
 
   filterUsers = event => {
@@ -161,48 +208,31 @@ class CandidateSearch extends Component {
         }
       }]
     }
-    console.log('ADV SEARCH BODY: ', body)
-    body.from = from
     return body
   }
 
-  handlePagination(users, sign){
-    let page_num = 1
-    let from = 0
-    const next_page= eval(`${this.state.page_num} ${sign} 1`)
-    if(sign){
-      const nextPageHasItems = (!(this.props.users.length < 10) || sign === "-" )
-      if(next_page > 0 && nextPageHasItems){
-        page_num = next_page
-        from = eval(`${this.state.from} ${sign} 10`)
-      } else{
-        return {page_num:null, from}
-      }
-    }
-    return {page_num, from}
-  }
-
-  advancedFilterUsers = event = (sign) => {
+  advancedFilterUsers = sign => event => {
     event.preventDefault()
-    const coords = this.props.user.coords
-      ? this.props.user.coords
-      : this.state.coords
-      const {page_num, from} = this.handlePagination(this.props.users, sign)
-      if(!page_num){
-        return
-      }
-      this.setState(
-        { filtered: true,
-          page_num,
-          from},
-        () => this.props.advancedFilterUsers(this.buildBody, coords, from)
-      )
+    const coords = this.state.coords
+      ? this.state.coords
+      : this.props.user.coords || ''
+    const {page_num, from} = this.handlePagination(this.props.users, sign)
+    if (!page_num) {
+      return
+    }
+    this.setState({
+      from,
+      filtered: true,
+      page_num,
+      loading: true
+    }, this.props.advancedFilterUsers(this.buildBody, coords, from))
   }
 
   render () {
-    let users = this.props.users || []
+    const {users} = this.props
+    console.log('RENDERING, LOADING: ', this.props.loading)
     return (
-      <Row className='JobBoard'>
+      <Row className='CandidateSearch'>
         <SearchBar
           type='project'
           inline
@@ -215,7 +245,7 @@ class CandidateSearch extends Component {
         <div className='container__flex'>
           <Col className='SearchAdvanced__container' xs={12} sm={3} md={3} lg={3}>
             <CandidateSearchAdvanced
-              advancedFilterUsers={this.advancedFilterUsers}
+              advancedFilterUsers={this.advancedFilterUsers()}
               handleChange={this.handleChange}
               clearFilter={this.clearFilter}
               clearChip={this.clearChip}
@@ -227,29 +257,31 @@ class CandidateSearch extends Component {
           </Col>
           <Col xs={12} sm={9} md={9} lg={9}>
             <Row>
-              <Col className="paginate"  xs={12} sm={12} md={12} lg={12}>
-                <Button onClick={() => this.advancedFilterUsers("-")}>
-                Back
+              <Col className='paginate-container' xs={12} sm={12} md={12} lg={12}>
+                <Button className='btn-paginate' onClick={this.advancedFilterUsers('plus')}>
+                  Back
                 </Button>
-                <p className="page-number">
-                {this.state.page_num}
-                </p>
-                <Button onClick={() => this.advancedFilterUsers("+")}>
-                Next
+                <span>
+                  {this.state.page_num}
+                </span>
+                <Button className='btn-paginate' onClick={this.advancedFilterUsers('minus')}>
+                  Next
                 </Button>
               </Col>
             </Row>
             {
               this.state.loading
-                ? <p>Loading Candidates...</p>
-                : <CandidateList
+                ? <LoadingSpinner top={'20vh'} />
+                : (
+                  <CandidateList
                     filtered={this.state.filtered}
-                    users={users}
+                    users={users || []}
                     query={this.state.query}
                     clearFilter={this.clearFilter}
                     clearChip={this.clearChip}
                     terms={this.state.terms}
                   />
+                )
             }
           </Col>
         </div>
@@ -258,20 +290,18 @@ class CandidateSearch extends Component {
   }
 }
 
+CandidateSearch.propTypes = {
+  users: PropTypes.arrayOf(PropTypes.object),
+  user: PropTypes.any,
+  getUsers: PropTypes.func,
+  filterUsers: PropTypes.func,
+  advancedFilterUsers: PropTypes.func
+}
+
 const mapStateToProps = state => ({
   users: state.users.all,
   user: state.users.currentUser,
-  skills: state.skills.all,
-  loading: state.loading
+  fetching: state.users.fetching
 })
 
-const mapDispatchToProps = dispatch => ({
-  getUsers: post => dispatch(gettingAllUsers()),
-  getSkills: post => dispatch(gettingAllSkills()),
-  filterUsers: query => dispatch(filteringUsers(query)),
-  advancedFilterUsers: (bodyBuilderFunc, coords, from) => {
-    return dispatch(buildBodyThenSearch(bodyBuilderFunc, coords, from))
-  }
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(CandidateSearch)
+export default connect(mapStateToProps)(CandidateSearch)

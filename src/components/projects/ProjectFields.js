@@ -15,15 +15,18 @@ class ProjectFields extends Component {
       handleChange,
       selectSkill,
       state,
-      skills } = this.props
+      skills,
+      project,
+      formatSkills
+    } = this.props
 
     return (
-      <form className='PostJobForm-body' onSubmit={handleSubmit}>
+      <form className='PostJobForm-body fadeIn animated' onSubmit={handleSubmit}>
         <FormGroup controlId='title'>
           <ControlLabel>Project Title</ControlLabel>
           <FormControl
             type='text'
-            value={state.title}
+            value={project ? project.title : state.title}
             onChange={handleChange('title')}
           />
         </FormGroup>
@@ -41,7 +44,7 @@ class ProjectFields extends Component {
           ref='project-edit-create'
           options={skills}
           onChange={data => selectSkill(data)}
-          value={state.selectValue}
+          value={project ? formatSkills(project.skills) : state.selectValue}
         />
         <HelpBlock style={{fontSize: 'x-small'}}>
           type then and hit 'Enter' to create a new skill, or click to select from existing skills
@@ -50,7 +53,7 @@ class ProjectFields extends Component {
           <ControlLabel>Github Repo Link</ControlLabel>
           <FormControl
             type='url'
-            value={state.repo}
+            value={project ? project.repo : state.repo}
             onChange={handleChange('repo')}
           />
         </FormGroup>
@@ -58,7 +61,7 @@ class ProjectFields extends Component {
           <ControlLabel>Other External Link</ControlLabel>
           <FormControl
             type='url'
-            value={state.site}
+            value={project ? project.site : state.site}
             onChange={handleChange('site')}
           />
         </FormGroup>
@@ -67,7 +70,7 @@ class ProjectFields extends Component {
           <FormControl
             type='text'
             componentClass='textarea'
-            value={state.problem}
+            value={project ? project.problem : state.problem}
             onChange={handleChange('problem')}
             placeholder={`What problem were you exploring, analyzing, and/or solving with this project? What made you interested in this problem?`}
           />
@@ -77,7 +80,7 @@ class ProjectFields extends Component {
           <FormControl
             type='text'
             componentClass='textarea'
-            value={state.approach}
+            value={project ? project.approach : state.approach}
             onChange={handleChange('approach')}
             placeholder={`Describe the process you undertook in building this project.`}
           />
@@ -87,7 +90,7 @@ class ProjectFields extends Component {
           <FormControl
             type='text'
             componentClass='textarea'
-            value={state.challenges}
+            value={project ? project.challenges : state.challenges}
             onChange={handleChange('challenges')}
             placeholder={`Discuss trade-offs you had to make, things you got stuck on (and how you went about figuring things out), etc`}
           />
@@ -97,7 +100,7 @@ class ProjectFields extends Component {
           <FormControl
             type='text'
             componentClass='textarea'
-            value={state.outcome}
+            value={project ? project.outcome : state.outcome}
             onChange={handleChange('outcome')}
             placeholder={`Briefly sum up any findings, conclusions, takeaways, things you'd change were you to continue on with the project, or "Ahaa!" moments, etc.`}
           />
@@ -111,10 +114,12 @@ class ProjectFields extends Component {
 ProjectFields.propTypes = {
   handleSubmit: PropTypes.func,
   handleChange: PropTypes.func,
+  formatSkills: PropTypes.func,
   selectSkill: PropTypes.func,
   arrowRenderer: PropTypes.func,
   skills: PropTypes.arrayOf(PropTypes.object),
-  state: PropTypes.object
+  state: PropTypes.object,
+  project: PropTypes.object
 }
 
 export default ProjectFields

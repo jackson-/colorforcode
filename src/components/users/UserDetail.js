@@ -8,7 +8,7 @@ import PropTypes from 'prop-types'
 class UserDetailPage extends Component {
   componentWillMount() {
     const {id} = this.props.match.params
-    this.props.getUser(id)
+    if () this.props.getUser(id)
   }
 
   render() {
@@ -17,7 +17,7 @@ class UserDetailPage extends Component {
     const user = this.props.user ? this.props.user._source : null
     let paddingTop = match.path === '/users/:id' ? '60px' : '0'
     return (
-      <Row className='JobInfo Dashboard__content--white' style={{paddingTop}}>
+      <Row className='JobInfo Dashboard__content--white fadeIn animated' style={{paddingTop}}>
         {user &&
         <Col xs={12} sm={12} md={12} lg={12}>
           <Row className='JobInfo--header'>
@@ -71,9 +71,11 @@ class UserDetailPage extends Component {
                     </section>
                   </Col>
                   <Col className='JobInfo--sidebar' xs={12} sm={5} md={4} lg={4}>
-                    {user.resume_url &&
+                    {
+                      user.resume_url &&
                       <a href={user.resume_url} alt={`${user.first_name}'s' resume`}>
-                      {user.first_name}'s Resume</a>
+                        {`${user.first_name}'s Resume`}
+                      </a>
                     }
                     <Button
                       className='btn-oval btn-oval__black'
@@ -108,10 +110,6 @@ class UserDetailPage extends Component {
     )
   }
 }
-
-// {skills && skills.map((skill, i) => (
-//   <span key={i} className='skill-chip'>{skill}</span>
-// ))}
 
 UserDetailPage.propTypes = {
   history: PropTypes.object.isRequired

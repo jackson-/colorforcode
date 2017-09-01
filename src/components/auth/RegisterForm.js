@@ -1,24 +1,27 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Row, Col, FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap'
+import { Row, Col, FormGroup, ControlLabel, FormControl } from 'react-bootstrap'
 import axios from 'axios'
 import { creatingNewUser } from 'APP/src/reducers/actions/users'
 import EmployerFields from './EmployerRegisterFields'
 import ApplicantFields from './ApplicantRegisterFields'
 import { withRouter } from 'react-router-dom'
 import './Form.css'
-import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
 
 class RegisterForm extends Component {
   constructor (props) {
     super(props)
     this.state = {
+      showEmployer: false,
+      showApplicant: false,
       email: '',
       password: '',
       passwordConfirm: '',
       company_name: '',
       company_role: '',
-      story: '',
+      summary: '',
+      headline: '',
+      title: '',
       first_name: '',
       last_name: '',
       zip_code: '',
@@ -36,21 +39,21 @@ class RegisterForm extends Component {
 
   handleLocation = zip_code => {
     axios.get(`http://maps.googleapis.com/maps/api/geocode/json?address=${zip_code}`)
-    .then(res => res.data)
-    .then(json => {
-      const address = json.results[0].address_components.filter(c => (
-        c.types.includes('locality') ||
-        c.types.includes('administrative_area_level_1') ||
-        c.types.includes('country')
-      ))
-      const city = address[0].long_name
-      const state = address[1].short_name
-      const country = address[2].long_name
-      const location = country === 'United States' ? `${city}, ${state}` : `${city}, ${state} ${country}`
-      const coords = `${json.results[0].geometry.location.lat},${json.results[0].geometry.location.lng}`
-      this.setState({coords, zip_code, location})
-    })
-    .catch(err => console.error(err.stack))
+      .then(res => res.data)
+      .then(json => {
+        const address = json.results[0].address_components.filter(c => (
+          c.types.includes('locality') ||
+          c.types.includes('administrative_area_level_1') ||
+          c.types.includes('country')
+        ))
+        const city = address[0].long_name
+        const state = address[1].short_name
+        const country = address[2].long_name
+        const location = country === 'United States' ? `${city}, ${state}` : `${city}, ${state} ${country}`
+        const coords = `${json.results[0].geometry.location.lat},${json.results[0].geometry.location.lng}`
+        this.setState({coords, zip_code, location})
+      })
+      .catch(err => console.error(err.stack))
   }
 
   isChecked = type => {
@@ -87,6 +90,9 @@ class RegisterForm extends Component {
       company_role: '',
       first_name: '',
       last_name: '',
+      summary: '',
+      headline: '',
+      title: '',
       zip_code: '',
       location: '',
       image_url: '',
@@ -175,38 +181,46 @@ class RegisterForm extends Component {
 
   render () {
     return (
-      <Row className='RegisterForm'>
-        <ScrollToTopOnMount />
-        <Col xs={12} sm={6} md={6} lg={6}>
-          <h1 className='RegisterForm-header'>Register</h1>
-          <form className='RegisterForm-body' onSubmit={this.handleSubmit}>
-            <FormGroup controlId='is_employer' onChange={this.toggleAccountType}>
-              <ControlLabel>What type of account would you like to create?</ControlLabel>
-              <FormControl componentClass='select'>
-                <option>select an account type</option>
-                <option value='employer'>Employer</option>
-                <option value='applicant'>Applicant</option>
-              </FormControl>
-            </FormGroup>
-            {
-              this.state.showEmployer &&
-              <EmployerFields
-                state={this.state}
-                handleChange={this.handleChange}
-                validate={this.getValidationState}
-              />
-            }
-            {
-              this.state.showApplicant &&
-              <ApplicantFields
-                state={this.state}
-                handleChange={this.handleChange}
-                validate={this.getValidationState}
-                isChecked={this.isChecked}
-              />
-            }
-            <Button disabled={this.isInvalid()} className='primary' type='submit'>Create Account</Button>
-          </form>
+      <Row className='RegisterForm fadeIn animated'>
+        <Col xs={12} sm={12} md={12} lg={12}>
+          <div className='form-container'>
+            <form className='RegisterForm-body' onSubmit={this.handleSubmit}>
+              <div className='RegisterForm-header'>
+                <h1 className='RegisterForm-heading'>Register</h1>
+                <FormGroup controlId='is_employer' onChange={this.toggleAccountType}>
+                  <ControlLabel>What type of account would you like to create?</ControlLabel>
+                  <FormControl componentClass='select'>
+                    <option>select an account type</option>
+                    <option value='employer'>Employer</option>
+                    <option value='applicant'>Applicant</option>
+                  </FormControl>
+                </FormGroup>
+              </div>
+              <Row>
+                {
+                  this.state.showEmployer &&
+                  <EmployerFields
+                    state={this.state}
+                    handleChange={this.handleChange}
+                    validate={this.getValidationState}
+                    isInvalid={this.isInvalid()}
+                    buttonText={'Create Account'}
+                  />
+                }
+                {
+                  this.state.showApplicant &&
+                  <ApplicantFields
+                    state={this.state}
+                    handleChange={this.handleChange}
+                    validate={this.getValidationState}
+                    isChecked={this.isChecked}
+                    isInvalid={this.isInvalid()}
+                    buttonText={'Create Account'}
+                  />
+                }
+              </Row>
+            </form>
+          </div>
         </Col>
       </Row>
     )

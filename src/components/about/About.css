@@ -2,33 +2,39 @@
   font-family: Merriweather, 'Helvetica Neue', Arial, sans-serif;
   padding-top: 63px;
   text-align: center;
-  overflow: hidden;
-  background-image: url('../../img/about-hero.jpg');
-  background-position: fixed;
-  background-repeat: no-repeat;
-  background-size: contain;
 }
 
 /* HEADER */
 .About__hero {
+  background-image: url('../../img/women-whiteboard__xs.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
   color: white;
   height: 100vh;
-  width: calc(100vw - 20px);
+  width: 100%;
   margin: 0;
-  padding: -15px;
+  text-align: center;
 }
 
-.About__hero-content {
-  padding: 100px 15px 100px;
-  position: relative;
-  text-align: center;
+.hero-overlay {
+  height: 100vh;
   width: 100%;
+  background: black;
+  opacity: .5;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.About__hero-header {
+  z-index: 5;
+  position: relative;
 }
 
 .About__hero-heading {
   font-size: 30px;
   font-weight: 700;
-  text-align: center;
 }
 
 .About__hero-separator {
@@ -104,14 +110,20 @@
 }
 
 @media (min-width: 768px) {
-
-  .About__hero-content {
-    margin-left: auto;
-    margin-right: auto;
-    padding: 13% 40px 0;
+  .About__hero {
+    background-image: url('../../img/women-whiteboard__lg-optimized.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: white;
+    height: 100vh;
+    width: 100%;
+    margin: 0;
+    text-align: center;
   }
 
   .About__hero-heading {
+    padding-top: 13%;
     font-size: 2.5em;
   }
 

@@ -1,28 +1,33 @@
-import { RECEIVE_JOBS, RECEIVE_JOB, RECEIVE_USER_JOBS, RECEIVE_APPLIED_JOBS } from './constants'
+import { RECEIVE_JOBS, RECEIVE_JOB, REQUEST_ALL_JOBS, REQUEST_JOB,
+         REQUEST_FILTERED_JOBS } from './constants'
 
 const initialState = {
   all: null,
-  currentJob: null,
-  user_jobs: null,
-  applied_jobs: null,
-  total:null,
+  currentJob: null
 }
 
 const jobsReducer = (state = initialState, action) => {
   switch (action.type) {
     case RECEIVE_JOB: return {
-      currentJob: action.job
+      currentJob: action.job,
+      all: state.all ? [...state.all] : null
     }
     case RECEIVE_JOBS: return {
-      all: action.jobs.hits,
-      total:action.jobs.total
+      fetching: false,
+      all: action.jobs.hits
     }
-    case RECEIVE_USER_JOBS: return {
-      user_jobs: action.jobs
+    case REQUEST_JOB: return {
+      fetchingJob: true,
+      all: state.all ? [...state.all] : null
     }
-    case RECEIVE_APPLIED_JOBS: return {
-      user_jobs: action.jobs
+    case REQUEST_ALL_JOBS: return {
+      fetching: true
     }
+
+    case REQUEST_FILTERED_JOBS: return {
+      fetching: true
+    }
+
     default: return state
   }
 }

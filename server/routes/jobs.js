@@ -15,8 +15,12 @@ const esClient = new elasticsearch.Client({
 module.exports = require('express').Router()
 
   .get('/', (req, res, next) => {
-    Job.findAll().then(jobs => {
-      return res.status(200).json({hits:jobs, total:jobs.length})
+    let jobs = []
+    Job.findAll({include:Skill}).then(result => {
+      jobs = result
+      Skill.findAll().then(skills => {
+        return res.status(200).json({hits:jobs, total:jobs.length, skills})
+      })
     })
   })
 
@@ -133,38 +137,44 @@ module.exports = require('express').Router()
     // });
     let newJobId = null
     Job.create(job)
-    .then(createdJob => {
-      newJobId = createdJob.id
-      return createdJob.addSkills(skills)
-    })
-    .then(jobskill => {
-      return Job.findOne({
-        where: {
-          id: jobskill[0][0].get().job_id
-        },
-        include: [Skill, Employer]
+      .then(createdJob => {
+        newJobId = createdJob.id
+        return createdJob.addSkills(skills)
       })
-    })
-    .then(job => esClient.create({
-      index: 'data',
-      type: 'job',
-      id: `${job.id}`,
-      body: job.get()
-    }))
-    .then(() => res.json(newJobId))
-    .catch(next)
+      .then(jobskill => {
+        return Job.findOne({
+          where: {
+            id: jobskill[0][0].get().job_id
+          },
+          include: [Skill, Employer]
+        })
+      })
+      .then(job => esClient.create({
+        index: 'data',
+        type: 'job',
+        id: `${job.id}`,
+        body: job.get()
+      }))
+      .then(() => res.json(newJobId))
+      .catch(next)
   })
 
   .get('/:id',
-    (req, res, next) =>
+    (req, res, next) => {
+      let job
       Job.findOne({
         where: {
           id: req.params.id
         },
         include: [Employer, Skill]
       })
-      .then(job => res.json(job))
-      .catch(next))
+        .then(foundJob => {
+          job = foundJob
+          return Skill.findAll()
+        })
+        .then(skills => res.json({job, skills}))
+        .catch(next)
+    })
 
   .put('/:id',
     (req, res, next) => {

@@ -130,38 +130,44 @@ module.exports = require('express').Router()
   })
 
   .get('/:id',
-    (req, res, next) =>
+    (req, res, next) => {
+      let project
       Project.findOne({
         where: {
           id: req.params.id
         },
         include: [User, Skill]
       })
-      .then(project => res.json(project))
-      .catch(next))
+        .then(foundProject => {
+          project = foundProject
+          return Skill.findAll()
+        })
+        .then(skills => res.json({skills, project}))
+        .catch(next)
+    })
 
   .put('/:id',
     (req, res, next) => {
       const {project, skills} = req.body
       Project.findById(req.params.id)
-      .then(foundProject => foundProject.update(project))
-      .then(updatedProject => {
-        if (skills) return updatedProject.setSkills(skills)
-        else return updatedProject
-      })
-      .then(editedProject => {
-        return User.findById(project.user_id, {
-          include: [{model: Project, include: [Skill]}]
+        .then(foundProject => foundProject.update(project))
+        .then(updatedProject => {
+          if (skills) return updatedProject.setSkills(skills)
+          else return updatedProject
         })
-      })
-      .then(foundUser => esClient.update({
-        index: 'data',
-        type: 'user',
-        id: foundUser.id,
-        body: {doc: foundUser.get()}
-      }))
-      .then(() => res.sendStatus(200))
-      .catch(next)
+        .then(editedProject => {
+          return User.findById(project.user_id, {
+            include: [{model: Project, include: [Skill]}]
+          })
+        })
+        .then(foundUser => esClient.update({
+          index: 'data',
+          type: 'user',
+          id: foundUser.id,
+          body: {doc: foundUser.get()}
+        }))
+        .then(() => res.sendStatus(200))
+        .catch(next)
     })
 
   .delete('/:id',

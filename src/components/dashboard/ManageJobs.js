@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Table, Row, Button, Glyphicon, Accordion, Panel } from 'react-bootstrap'
+import { Table, Row, Button, Glyphicon } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import './ManageJobs.css'
@@ -32,8 +32,8 @@ export default class ManageJobs extends Component {
     const {jobs} = this.props
     return (
       <Row className='ManageJobs'>
-        <h1 className='ManageJobs-header'>MANAGE JOBS</h1>
-        <Table responsive>
+        <h1 className='ManageJobs-header fadeIn animated'>MANAGE JOBS</h1>
+        <Table responsive className='fadeIn animated'>
           <thead>
             <tr>
               <td>JOB TITLE</td>
@@ -50,31 +50,35 @@ export default class ManageJobs extends Component {
                   {
                     job.status === 'closed'
                       ? job.title
-                      : <Link to={`/dashboard/jobs/${job.id}`}>{job.title}</Link>
+                      : (
+                        <Link to={`/dashboard/jobs/${job.id}`}>
+                          {job.title}
+                        </Link>
+                      )
                   }
                 </td>
                 <td>
                   {
                     job.status === 'open'
-                    ? (
-                      <Button
-                        onClick={this.handleClose(job.id)}
-                        bsSize='xsmall'
-                        bsStyle='danger'
-                      >
-                        <Glyphicon glyph='trash' /> close
-                      </Button>
-                    )
+                      ? (
+                        <Button
+                          onClick={this.handleClose(job.id)}
+                          bsSize='xsmall'
+                          bsStyle='danger'
+                        >
+                          <Glyphicon glyph='trash' /> close
+                        </Button>
+                      )
 
-                    : (
-                      <Button
-                        onClick={this.handleDuplicate(job)}
-                        bsSize='xsmall'
-                        bsStyle='primary'
-                      >
-                        <Glyphicon glyph='retweet' /> duplicate
-                      </Button>
-                    )
+                      : (
+                        <Button
+                          onClick={this.handleDuplicate(job)}
+                          bsSize='xsmall'
+                          bsStyle='primary'
+                        >
+                          <Glyphicon glyph='retweet' /> duplicate
+                        </Button>
+                      )
                   }
                 </td>
                 <td>{job.status}</td>

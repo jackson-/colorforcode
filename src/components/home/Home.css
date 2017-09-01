@@ -15,10 +15,9 @@
   height: calc(100vh - 60px);
   margin: 0;
   border-radius: 0px !important;
-  background: url("../../img/hero.jpg") no-repeat;
+  background: url("../../img/women-pairing__xs.jpg") no-repeat;
   background-size: cover;
-  background-position: top;
-  background-attachment: fixed;
+  background-position: center;
 }
 
 .parallax-content {
@@ -36,7 +35,8 @@
   font-size: 58px;
 }
 
-.JobBoard {
+.JobBoard,
+.CandidateSearch {
   z-index: 2;
   padding: 0;
 }
@@ -49,10 +49,26 @@
   padding-bottom: 25px;
 }
 
+.paginate-container {
+  padding: 25px 0 0;
+}
+
+.btn-paginate {
+  margin: 0 25px;
+  max-width: 60px;
+}
+
 @media only screen
-and (max-width: 500px) {
+and (min-width: 767px) {
   .Home-hero {
+    padding: 0 !important;
+    width: 100%;
+    height: calc(100vh - 60px);
+    margin: 0;
+    border-radius: 0px !important;
+    background: url("../../img/women-pairing__lg-optimized.jpg") no-repeat;
     background-position: right;
+    background-attachment: fixed;
   }
 }
 

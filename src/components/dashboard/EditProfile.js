@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Row, Col, Button } from 'react-bootstrap'
+import { Row, Col } from 'react-bootstrap'
 import PropTypes from 'prop-types'
 import axios from 'axios'
 import EmployerFields from '../auth/EmployerRegisterFields'
@@ -10,7 +10,6 @@ import './Dashboard.css'
 import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
 
 class EditProfile extends Component {
-
   constructor (props) {
     super(props)
     this.state = {
@@ -174,6 +173,8 @@ class EditProfile extends Component {
           state={this.state}
           handleChange={this.handleChange}
           validate={this.getValidationState}
+          isInvalid={this.isInvalid()}
+          buttonText={'Update Profile'}
         />
       )
     } else if (user && !user.is_employer) {
@@ -183,14 +184,16 @@ class EditProfile extends Component {
           handleChange={this.handleChange}
           validate={this.getValidationState}
           isChecked={this.isChecked}
+          isInvalid={this.isInvalid()}
+          buttonText={'Update Profile'}
         />
       )
     }
 
     return (
-      <Row className='EditProfile'>
+      <Row className='EditProfile fadeIn animated'>
         <ScrollToTopOnMount />
-        <Col xs={12} sm={6} md={6} lg={6}>
+        <Col xs={12} sm={12} md={12} lg={12}>
           <h1 className='EditProfile-header'>Edit Profile</h1>
           {
             !user.is_employer &&
@@ -205,9 +208,6 @@ class EditProfile extends Component {
             {user.resume_url &&
               <a href={user.resume_url}><p>Current Resume</p></a>
             }
-            <Button disabled={this.isInvalid()} className='primary' type='submit'>
-              Update Profile
-            </Button>
           </form>
         </Col>
       </Row>
@@ -216,7 +216,7 @@ class EditProfile extends Component {
 }
 
 EditProfile.propTypes = {
-  user: PropTypes.object,
+  user: PropTypes.any,
   updateUser: PropTypes.func,
   uploadResume: PropTypes.func
 }
