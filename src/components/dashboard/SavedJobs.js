@@ -31,9 +31,9 @@ class SavedJobs extends Component {
     const jobs = this.props.user.savedJobs
     return (
       <Row className='SavedJobs'>
-        <h1 className='SavedJobs-header'>SAVED JOBS</h1>
+        <h1 className='SavedJobs-header fadeIn animated'>SAVED JOBS</h1>
         <ScrollToTopOnMount />
-        <Table responsive>
+        <Table className='fadeIn animated' responsive>
           <thead>
             <tr>
               <td>JOB TITLE</td>
@@ -87,7 +87,7 @@ class SavedJobs extends Component {
 }
 
 SavedJobs.propTypes = {
-  user: PropTypes.object,
+  user: PropTypes.any,
   updateUser: PropTypes.func,
   applyToJob: PropTypes.func,
   saveJob: PropTypes.func,

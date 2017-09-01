@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Table, Row, Accordion, Panel } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import IconBar from '../utilities/icons/IconBar'
 import TwitterIcon from '../utilities/icons/TwitterIcon'
@@ -40,8 +41,14 @@ export default class Applicants extends Component {
     if (jobs) this.sortByDate(jobs)
     return (
       <Row className='Applicants'>
-        <h1 className='Applicants-header'>YOUR APPLICANTS</h1>
-        <Accordion defaultActiveKey={1} activeKey={this.state.activeKey}>
+        <h1 className='Applicants-header fadeIn animated'>
+          YOUR APPLICANTS
+        </h1>
+        <Accordion
+          className='fadeIn animated'
+          defaultActiveKey={1}
+          activeKey={this.state.activeKey}
+        >
           {
             jobs.filter(job => !!job.applicants).map((job, i) => (
               <Panel
@@ -79,7 +86,7 @@ export default class Applicants extends Component {
                         return (
                           <tr key={`${job.id}${i}${app.id}`}>
                             <td>
-                              <a href={`/users/${app.id}`}>{app.first_name} {app.last_name}</a>
+                              <Link to={`/dashboard/users/${app.id}`}>{app.first_name} {app.last_name}</Link>
                             </td>
                             <td>
                               {new Date(app.created_at).toLocaleDateString()}

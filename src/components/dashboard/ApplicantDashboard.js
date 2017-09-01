@@ -26,7 +26,10 @@ const ApplicantDashboard = ({
   uploadResume,
   deleteProject,
   unsaveJob,
-  applyToJob
+  applyToJob,
+  getJob,
+  saveJob,
+  match
 }) => {
   return (
     <Router>
@@ -81,21 +84,44 @@ const ApplicantDashboard = ({
               <Projects deleteProject={deleteProject} user={user} />
             )} />
             <Route exact path='/dashboard/add-project' component={ProjectCreate} />
-            <Route exact path='/dashboard/edit-project/:id' component={({match, history}) => (
-              <EditProject
-                history={history}
+            <Route exact path='/dashboard/edit-project/:id' component={({match, history}) => {
+              return (
+                <EditProject
+                  history={history}
+                  skills={skills}
+                  getProject={getProject}
+                  updateProject={updateProject}
+                  deleteProject={deleteProject}
+                />
+              )
+            }} />
+            <Route exact path='/dashboard/edit-profile' component={() => (
+              <EditProfile user={user} updateUser={updateUser} uploadResume={uploadResume} />
+            )} />
+            <Route exact path='/dashboard/saved-jobs/:id' component={({match, history}) => (
+              <JobDetailPage
+                user={user}
                 skills={skills}
-                project={project}
-                getProject={getProject}
-                updateProject={updateProject}
-                deleteProject={deleteProject}
+                getJob={getJob}
+                applyToJob={applyToJob}
+                saveJob={saveJob}
+                unsaveJob={unsaveJob}
+                match={match}
+                history={history}
               />
             )} />
-            <Route exact path='/dashboard/edit-profile' component={() => (
-              <EditProfile user={user} updateUser={updateUser} uploadResume={uploadResume}/>
+            <Route exact path='/dashboard/jobs/:id' component={({match, history}) => (
+              <JobDetailPage
+                user={user}
+                skills={skills}
+                getJob={getJob}
+                applyToJob={applyToJob}
+                saveJob={saveJob}
+                unsaveJob={unsaveJob}
+                match={match}
+                history={history}
+              />
             )} />
-            <Route exact path='/dashboard/saved-jobs/:id' component={JobDetailPage} />
-            <Route exact path='/dashboard/jobs/:id' component={JobDetailPage} />
           </Col>
         </div>
       </Row>
@@ -104,17 +130,21 @@ const ApplicantDashboard = ({
 }
 
 ApplicantDashboard.propTypes = {
+  job: PropTypes.object,
   jobs: PropTypes.array,
-  user: PropTypes.object,
+  user: PropTypes.any,
   skills: PropTypes.array,
+  getJob: PropTypes.func.isRequired,
   updateProject: PropTypes.func.isRequired,
   deleteProject: PropTypes.func.isRequired,
   getProject: PropTypes.func.isRequired,
   updateUser: PropTypes.func.isRequired,
   uploadResume: PropTypes.func.isRequired,
   applyToJob: PropTypes.func.isRequired,
+  saveJob: PropTypes.func.isRequired,
   unsaveJob: PropTypes.func.isRequired,
-  project: PropTypes.object
+  project: PropTypes.object,
+  match: PropTypes.object
 }
 
 export default withRouter(ApplicantDashboard)

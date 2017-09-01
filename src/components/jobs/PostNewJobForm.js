@@ -45,26 +45,27 @@ class PostJobForm extends Component {
   }
 
   componentDidMount () {
-    this.props.getSkills()
+    const {skills} = this.props
+    if (!skills) this.props.getSkills()
   }
 
   handleLocation = zip_code => {
     axios.get(`http://maps.googleapis.com/maps/api/geocode/json?address=${zip_code}`)
-    .then(res => res.data)
-    .then(json => {
-      const address = json.results[0].address_components.filter(c => (
-        c.types.includes('locality') ||
-        c.types.includes('administrative_area_level_1') ||
-        c.types.includes('country')
-      ))
-      const city = address[0].long_name
-      const state = address[1].short_name
-      const country = address[2].long_name
-      const location = country === 'United States' ? `${city}, ${state}` : `${city}, ${state} ${country}`
-      const coords = `${json.results[0].geometry.location.lat},${json.results[0].geometry.location.lng}`
-      this.setState({coords, zip_code, location})
-    })
-    .catch(err => console.error(err.stack))
+      .then(res => res.data)
+      .then(json => {
+        const address = json.results[0].address_components.filter(c => (
+          c.types.includes('locality') ||
+          c.types.includes('administrative_area_level_1') ||
+          c.types.includes('country')
+        ))
+        const city = address[0].long_name
+        const state = address[1].short_name
+        const country = address[2].long_name
+        const location = country === 'United States' ? `${city}, ${state}` : `${city}, ${state} ${country}`
+        const coords = `${json.results[0].geometry.location.lat},${json.results[0].geometry.location.lng}`
+        this.setState({coords, zip_code, location})
+      })
+      .catch(err => console.error(err.stack))
   }
 
   handleChange = type => event => {
@@ -142,7 +143,7 @@ class PostJobForm extends Component {
   render () {
     let skills = this.props.skills.map(s => ({label: s.title, value: s.id}))
     return (
-      <Row className='PostJobForm'>
+      <Row className='PostJobForm fadeIn animated'>
         <Col xs={12} sm={6} md={6} lg={6}>
           <h1 className='PostJobForm-header'>POST NEW JOB</h1>
           <form className='PostJobForm-body' onSubmit={this.handleSubmit}>
@@ -271,7 +272,7 @@ const mapDispatchToProps = dispatch => ({
 })
 
 PostJobForm.propTypes = {
-  user: PropTypes.object.isRequired,
+  user: PropTypes.any.isRequired,
   skills: PropTypes.array.isRequired,
   getSkills: PropTypes.func.isRequired,
   createJobPost: PropTypes.func.isRequired,

@@ -1,4 +1,4 @@
-import { RECEIVE_ALL_PROJECTS, RECEIVE_PROJECT, AUTHENTICATED } from './constants'
+import { RECEIVE_ALL_PROJECTS, RECEIVE_PROJECT } from './constants'
 
 const initialState = {
   all: [],
@@ -7,10 +7,6 @@ const initialState = {
 
 const projectsReducer = (state = initialState, action) => {
   switch (action.type) {
-    case AUTHENTICATED: return {
-      all: action.user.projects,
-      currentProject: null
-    }
     case RECEIVE_PROJECT: return {
       all: [...state.all] || [],
       currentProject: action.project

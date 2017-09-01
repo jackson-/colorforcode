@@ -2,7 +2,7 @@ import React from 'react'
 import { Col, FormGroup, ControlLabel, FormControl, HelpBlock, Button } from 'react-bootstrap'
 
 const EmployerRegisterFields = props => (
-  <div className='employer'>
+  <div className='employer fadeIn animated'>
     <Col className='form-fields-container--left' xs={12} sm={6} md={6} lg={6}>
       <FormGroup controlId='first_name'>
         <ControlLabel>First Name</ControlLabel>
@@ -100,7 +100,7 @@ const EmployerRegisterFields = props => (
         type='submit'
         className='btn-login-reg'
       >
-        Create Account
+        {props.buttonText}
       </Button>
     </Col>
   </div>

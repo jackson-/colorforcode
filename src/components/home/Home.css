@@ -35,7 +35,8 @@
   font-size: 58px;
 }
 
-.JobBoard {
+.JobBoard,
+.CandidateSearch {
   z-index: 2;
   padding: 0;
 }

@@ -9,7 +9,9 @@ import 'react-select/dist/react-select.css'
 import 'react-virtualized/styles.css'
 import 'react-virtualized-select/styles.css'
 import '../auth/Form.css'
+import { receiveProject } from '../../reducers/actions/projects'
 import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
+import LoadingSpinner from '../utilities/LoadingSpinner'
 
 function arrowRenderer () {
   return (
@@ -18,26 +20,36 @@ function arrowRenderer () {
 }
 
 class EditProjectForm extends Component {
-
   constructor (props) {
     super(props)
     this.state = {
-      title: this.props.project ? this.props.project.title : '',
-      screenshot: this.props.project ? this.props.project.screenshot : '',
-      site: this.props.project ? this.props.project.site : '',
-      repo: this.props.project ? this.props.project.repo : '',
-      problem: this.props.project ? this.props.project.problem : '',
-      approach: this.props.project ? this.props.project.approach : '',
-      challenges: this.props.project ? this.props.project.challenges : '',
-      outcome: this.props.project ? this.props.project.outcome : '',
-      selectValue: this.props.project ? this.formatSkills(this.props.project.skills) : [],
-      selectedSkills: []
+      title: '',
+      site: '',
+      repo: '',
+      problem: '',
+      approach: '',
+      challenges: '',
+      outcome: '',
+      selectValue: [],
+      selectedSkills: [],
+      loading: true
     }
   }
 
   componentDidMount () {
-    const {id} = this.props.match.params
-    if (!this.props.project || this.props.project.id != id) this.props.getProject(id)
+    const {match, getProject, project} = this.props
+    const {id} = match.params
+    if (!project || project.id !== Number(id)) {
+      getProject(id)
+    }
+  }
+
+  componentWillMount () {
+    const {match, project} = this.props
+    const {id} = match.params
+    if (project && project.id === Number(id)) {
+      this.setState({loading: false})
+    }
   }
 
   handleChange = type => event => {
@@ -95,38 +107,45 @@ class EditProjectForm extends Component {
   }
 
   render () {
-    let skills = this.props.skills ? this.formatSkills(this.props.skills) : []
-    const {project} = this.props
-    return (
-      <Row className='PostJobForm'>
-        <ScrollToTopOnMount />
-        <Col xs={12} sm={6} md={6} lg={6}>
-          <h1 className='PostJobForm-header'>EDIT PROJECT</h1>
-          <ProjectFields
-            handleSubmit={this.handleSubmit}
-            handleChange={this.handleChange}
-            selectSkill={this._selectSkill}
-            arrowRenderer={arrowRenderer}
-            state={this.state}
-            skills={skills}
-          />
-          <div style={{background: '#323638', padding: '10px'}}>
-            <ImageUploader
+    let {project, skills} = this.props
+    skills = skills ? this.formatSkills(skills) : []
+    const {loading} = this.state
+    return loading
+      ? <LoadingSpinner />
+      : (
+        <Row className='EditProfile'>
+          <ScrollToTopOnMount />
+          <Col xs={12} sm={6} md={6} lg={6}>
+            <h1 className='EditProfile-header fadeIn animated'>
+              EDIT PROJECT
+            </h1>
+            <ProjectFields
+              handleSubmit={this.handleSubmit}
+              handleChange={this.handleChange}
+              selectSkill={this._selectSkill}
+              arrowRenderer={arrowRenderer}
+              state={this.state}
+              skills={skills}
               project={project}
-              label='Project Screenshot'
-              buttonText='Upload Screenshot'
-              type='Screenshot'
+              formatSkills={this.formatSkills}
             />
-          </div>
-          <Button
-            className='btn-oval btn-oval__black btn-oval__danger'
-            onClick={this.handleDelete}
-          >
-            DELETE PROJECT
-          </Button>
-        </Col>
-      </Row>
-    )
+            <div style={{background: '#323638', padding: '10px'}}>
+              <ImageUploader
+                project={project}
+                label='Project Screenshot'
+                buttonText='Upload Screenshot'
+                type='Screenshot'
+              />
+            </div>
+            <Button
+              className='btn-oval btn-oval__black btn-oval__danger'
+              onClick={this.handleDelete}
+            >
+              DELETE PROJECT
+            </Button>
+          </Col>
+        </Row>
+      )
   }
 }
 
@@ -134,9 +153,9 @@ EditProjectForm.propTypes = {
   alert: PropTypes.object,
   history: PropTypes.object,
   project: PropTypes.object,
-  skills: PropTypes.array,
   match: PropTypes.object,
-  user: PropTypes.object,
+  user: PropTypes.any,
+  skills: PropTypes.arrayOf(PropTypes.object),
   updateProject: PropTypes.func,
   deleteProject: PropTypes.func,
   getProject: PropTypes.func
@@ -147,4 +166,8 @@ const mapStateToProps = state => ({
   project: state.projects.currentProject
 })
 
-export default withRouter(connect(mapStateToProps)(EditProjectForm))
+const mapDispatchToProps = dispatch => ({
+  resetCurrentProject: () => dispatch(receiveProject(null))
+})
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(EditProjectForm))

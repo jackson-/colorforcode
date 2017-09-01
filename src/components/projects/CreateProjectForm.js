@@ -36,7 +36,7 @@ class CreateProjectForm extends Component {
   }
 
   componentDidMount () {
-    this.props.getSkills()
+    if (!this.props.skills) this.props.getSkills()
   }
 
   handleChange = type => event => {
@@ -97,7 +97,7 @@ class CreateProjectForm extends Component {
       skills.push({label: s.title, value: s.id})
     })
     return (
-      <Row className='PostJobForm'>
+      <Row className='PostJobForm fadeIn animated'>
         <ScrollToTopOnMount />
         <Col xs={12} sm={6} md={6} lg={6}>
           <h1 className='PostJobForm-header'>Add New Project</h1>
@@ -119,7 +119,7 @@ CreateProjectForm.propTypes = {
   getSkills: PropTypes.func,
   createProject: PropTypes.func,
   history: PropTypes.object,
-  user: PropTypes.object,
+  user: PropTypes.any,
   skills: PropTypes.arrayOf(PropTypes.object)
 }
 

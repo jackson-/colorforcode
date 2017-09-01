@@ -17,13 +17,17 @@ module.exports = require('express').Router()
     let body = {
       query: {match_all: {}},
       from: 0,
-      size:10
+      size: 10
     }
+    let jobs
     esClient.search({body, index: 'data', type: 'job'})
-    .then(results => {
-      return res.status(200).json({total:results.hits.total, hits:results.hits.hits})
-    })
-    .catch(next)
+      .then(results => {
+        const {total, hits} = results.hits
+        jobs = {total, hits}
+        return Skill.findAll()
+      })
+      .then(skills => res.status(200).send({jobs, skills}))
+      .catch(next)
   })
 
   // search bar
@@ -71,38 +75,44 @@ module.exports = require('express').Router()
     // });
     let newJobId = null
     Job.create(job)
-    .then(createdJob => {
-      newJobId = createdJob.id
-      return createdJob.addSkills(skills)
-    })
-    .then(jobskill => {
-      return Job.findOne({
-        where: {
-          id: jobskill[0][0].get().job_id
-        },
-        include: [Skill, Employer]
+      .then(createdJob => {
+        newJobId = createdJob.id
+        return createdJob.addSkills(skills)
       })
-    })
-    .then(job => esClient.create({
-      index: 'data',
-      type: 'job',
-      id: `${job.id}`,
-      body: job.get()
-    }))
-    .then(() => res.json(newJobId))
-    .catch(next)
+      .then(jobskill => {
+        return Job.findOne({
+          where: {
+            id: jobskill[0][0].get().job_id
+          },
+          include: [Skill, Employer]
+        })
+      })
+      .then(job => esClient.create({
+        index: 'data',
+        type: 'job',
+        id: `${job.id}`,
+        body: job.get()
+      }))
+      .then(() => res.json(newJobId))
+      .catch(next)
   })
 
   .get('/:id',
-    (req, res, next) =>
+    (req, res, next) => {
+      let job
       Job.findOne({
         where: {
           id: req.params.id
         },
         include: [Employer, Skill]
       })
-      .then(job => res.json(job))
-      .catch(next))
+        .then(foundJob => {
+          job = foundJob
+          return Skill.findAll()
+        })
+        .then(skills => res.json({job, skills}))
+        .catch(next)
+    })
 
   .put('/:id',
     (req, res, next) => {
