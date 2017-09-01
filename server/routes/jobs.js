@@ -26,19 +26,8 @@ module.exports = require('express').Router()
 
   // search bar
   .post('/search', (req, res, next) => {
-    // const query = req.body.query
-    //   ? {multi_match: {query: req.body.query, fields: ['_all']}}
-    //   : {match_all: {}}
-    //
-    // esClient.search({
-    //   index: 'data',
-    //   type: 'job',
-    //   body: {
-    //     query,
-    //     from:req.body.from ? req.body.from : 0,
-    //     size:10
-    //   }
-    // })
+    console.log("GETTING HERE")
+    let jobs = []
     const {query, from} = req.body
     const size = 10
     const options = {
@@ -47,12 +36,10 @@ module.exports = require('express').Router()
         hasJoin:true,
     }
     // db.Model.$validateIncludedElements(options)
-    const db_query = "SELECT * "+
-      "FROM (SELECT job.*, job.id as id, " +
+    const db_query = "SELECT DISTINCT ON(id) id, * "+
+      "FROM (SELECT job.*, " +
         // `ST_Distance(job.the_geom, ST_MakePoint(${body.coords})::geography) as distance, ` +
-         "job.title as title, " +
-         "job.description as description, " +
-         "(SELECT array_agg(skill.title) FROM skill LEFT JOIN jobskill ON jobskill.skill_id=skill.id WHERE jobskill.job_id=job.id) AS skills, " +
+         "(SELECT array_agg(row_to_json(skill.*)) FROM skill LEFT JOIN jobskill ON jobskill.skill_id=skill.id WHERE jobskill.job_id=job.id) AS skills, " +
          "setweight(to_tsvector(job.title), 'A') || " +
          "setweight(to_tsvector(job.description), 'B') || " +
          "setweight(to_tsvector('simple', skill.title), 'A') || " +
@@ -62,11 +49,13 @@ module.exports = require('express').Router()
       "INNER JOIN skill ON skill.id = jobskill.skill_id " +
       "GROUP BY job.id, skill.id) p_search " +
       `WHERE p_search.document @@ to_tsquery('english', '${query}') ` +
-      `ORDER BY ts_rank(p_search.document, to_tsquery('english', '${query}')) DESC;`
+      `ORDER BY id ASC, ts_rank(p_search.document, to_tsquery('english', '${query}')) DESC;`
     db.query( db_query,
       options).then((result) =>{
-      console.log("RES", result)
-      return res.status(200).json({hits:result, total:result.length})
+      jobs = result
+      Skill.findAll().then(skills => {
+        return res.status(200).json({hits:jobs, total:jobs.length, skills})
+      })
     }).catch(next);
   })
 
