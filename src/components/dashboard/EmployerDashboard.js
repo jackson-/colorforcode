@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Switch, withRouter } from 'react-router-dom'
 import { LinkContainer } from 'react-router-bootstrap'
 import { Nav, NavItem, Row, Col, Glyphicon } from 'react-bootstrap'
 import './Dashboard.css'
@@ -27,20 +27,22 @@ class EmployerDashboard extends Component {
   render () {
     const {
       user,
-      job,
-      skills,
+      handleNewSkills,
       updateUser,
       location,
       getJob,
       updateJob,
       deleteJob,
       closeJob,
-      duplicateJob
+      duplicateJob,
+      receiveAlert,
+      receiveNext
     } = this.props
     const firstName = user ? user.first_name : ''
     const jobs = user && user.is_employer && [...user.employer.listings]
+    console.log('EMPLOYER DASH LOCATION: ', location)
     return (
-      <Router location={location}>
+      <Router>
         <Row className='Dashboard'>
           <div className='container__flex'>
             <Col xsHidden sm={3} md={3} lg={3} className='Dashboard__sidebar'>
@@ -72,19 +74,28 @@ class EmployerDashboard extends Component {
                 )} />
                 <Route exact path='/dashboard/jobs/:id' component={({match, history}) => (
                   <JobDetailPage
-                    job={job}
                     user={user}
-                    skills={skills}
                     getJob={getJob}
                     updateJob={updateJob}
                     deleteJob={deleteJob}
                     match={match}
                     history={history}
+                    handleNewSkills={handleNewSkills}
                   />
                 )} />
-                <Route exact path='/dashboard/post-new-job' component={() => (
-                  <PostAJob location={location} />
-                )} />
+                <Route path='/dashboard/post-new-job' component={({match, history}) => {
+                  if (!user) {
+                    receiveNext('/dashboard/post-new-job')
+                    return receiveAlert({
+                      type: 'error',
+                      style: 'warning',
+                      title: 'Not signed in!',
+                      body: 'Welcome! Please log in or register, and we\'ll  post a new job.',
+                      next: ''
+                    })
+                  }
+                  return <PostAJob handleNewSkills={handleNewSkills} />
+                }} />
                 <Route exact path='/dashboard/applicants' component={() => (
                   <ApplicantsList
                     location={location}
@@ -98,9 +109,6 @@ class EmployerDashboard extends Component {
                     duplicateJob={duplicateJob}
                     jobs={jobs}
                   />
-                )} />
-                <Route exact path='/dashboard/edit-profile' component={() => (
-                  <EditProfile user={user} updateUser={updateUser} location={location} />
                 )} />
                 <Route exact path='/dashboard/users/:id' component={() => (
                   <UserProfile />
@@ -116,6 +124,7 @@ class EmployerDashboard extends Component {
 
 EmployerDashboard.propTypes = {
   skills: PropTypes.array,
+  handleNewSkills: PropTypes.func,
   user: PropTypes.any,
   job: PropTypes.object,
   jobs: PropTypes.array,
@@ -125,7 +134,9 @@ EmployerDashboard.propTypes = {
   deleteJob: PropTypes.func.isRequired,
   closeJob: PropTypes.func.isRequired,
   duplicateJob: PropTypes.func.isRequired,
-  updateUser: PropTypes.func.isRequired
+  updateUser: PropTypes.func.isRequired,
+  receiveAlert: PropTypes.func,
+  receiveNext: PropTypes.func
 }
 
-export default EmployerDashboard
+export default withRouter(EmployerDashboard)

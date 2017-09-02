@@ -39,9 +39,9 @@ class CandidateSearch extends Component {
   }
 
   componentWillMount () {
-    const {users, fetching, getUsers} = this.props
+    const {users, fetching, authenticating, getUsers} = this.props
     console.log(`CWM - USERS: ${users ? users.length : 0}`)
-    if (!users && !fetching) {
+    if (!authenticating && !users && !fetching) {
       console.log('GETTING USERS, FETCHING: ', fetching)
       getUsers()
     }
@@ -51,9 +51,11 @@ class CandidateSearch extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    const {users, getUsers} = this.props
+    const {users, getUsers, fetching, authenticating} = this.props
     console.log(`CWRP - USERS HAD: ${users ? users.length : 0}, GETTING: ${nextProps.users ? nextProps.users.length : 0}`)
-    if (!users) getUsers()
+    if (!authenticating) {
+      if (!users && !fetching) getUsers()
+    }
     if (nextProps.users) {
       this.setState({loading: false})
     }
@@ -215,7 +217,7 @@ class CandidateSearch extends Component {
     event.preventDefault()
     const coords = this.state.coords
       ? this.state.coords
-      : this.props.user.coords || ''
+      : this.props.coords
     const {page_num, from} = this.handlePagination(this.props.users, sign)
     if (!page_num) {
       return
@@ -230,7 +232,7 @@ class CandidateSearch extends Component {
 
   render () {
     const {users} = this.props
-    console.log('RENDERING, LOADING: ', this.props.loading)
+    console.log('RENDERING CANDIDATE SEARCH')
     return (
       <Row className='CandidateSearch'>
         <SearchBar
@@ -292,7 +294,7 @@ class CandidateSearch extends Component {
 
 CandidateSearch.propTypes = {
   users: PropTypes.arrayOf(PropTypes.object),
-  user: PropTypes.any,
+  coords: PropTypes.string,
   getUsers: PropTypes.func,
   filterUsers: PropTypes.func,
   advancedFilterUsers: PropTypes.func
@@ -300,7 +302,7 @@ CandidateSearch.propTypes = {
 
 const mapStateToProps = state => ({
   users: state.users.all,
-  user: state.users.currentUser,
+  authenticating: state.users.authenticating,
   fetching: state.users.fetching
 })
 

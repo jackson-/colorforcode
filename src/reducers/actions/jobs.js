@@ -1,30 +1,54 @@
 import axios from 'axios'
-import { RECEIVE_JOBS, RECEIVE_JOB, APPLIED_TO_JOB } from '../constants'
 import {
-  createNewJob,
-  requestAllJobs,
-  requestFilteredJobs,
-  requestJob,
-  applyToJob
-} from './loading'
+  RECEIVE_JOBS, RECEIVE_JOB, CREATE_JOB, UPDATE_JOB,
+  DELETE_JOB, REQUEST_JOB, REQUEST_ALL_JOBS,
+  REQUEST_FILTERED_JOBS, APPLY_TO_JOB, APPLIED_TO_JOB } from '../constants'
 import { whoami } from './users'
 import { receiveAlert } from './alert'
 
 /* --------- PURE ACTION CREATORS --------- */
+
+export const requestAllJobs = () => ({
+  type: REQUEST_ALL_JOBS
+})
+
+export const requestFilteredJobs = () => ({
+  type: REQUEST_FILTERED_JOBS
+})
+
+export const receiveJobs = (jobs, skills) => ({
+  jobs,
+  skills,
+  type: RECEIVE_JOBS
+})
+
+export const requestJob = () => ({
+  type: REQUEST_JOB
+})
+
 export const receiveJob = (job, skills) => ({
   job,
   skills,
   type: RECEIVE_JOB
 })
-export const receiveJobs = (jobs, skills) => ({
-  jobs,
-  skills,
-  loading: false,
-  type: RECEIVE_JOBS
+
+export const createNewJob = () => ({
+  type: CREATE_JOB
+})
+
+export const updateJob = () => ({
+  type: UPDATE_JOB
+})
+
+export const deleteJob = () => ({
+  type: DELETE_JOB
+})
+
+export const applyToJob = () => ({
+  type: APPLY_TO_JOB
 })
 
 export const appliedToJob = () => ({
-  loading: false,
   type: APPLIED_TO_JOB
 })
 

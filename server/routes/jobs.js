@@ -80,9 +80,10 @@ module.exports = require('express').Router()
         return createdJob.addSkills(skills)
       })
       .then(jobskill => {
+        console.log('CREATED JOB - ', jobskill)
         return Job.findOne({
           where: {
-            id: jobskill[0][0].get().job_id
+            id: newJobId
           },
           include: [Skill, Employer]
         })

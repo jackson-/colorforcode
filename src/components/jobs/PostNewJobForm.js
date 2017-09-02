@@ -1,21 +1,16 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
-import { Row, Col, FormGroup, ControlLabel, FormControl, Button, Checkbox } from 'react-bootstrap'
+import { Row, Col, FormGroup, ControlLabel, FormControl, Button, Checkbox, HelpBlock } from 'react-bootstrap'
 import axios from 'axios'
 import { creatingNewJob } from 'APP/src/reducers/actions/jobs'
-import { gettingAllSkills } from 'APP/src/reducers/actions/skills'
-import CreditCardFormControls from './CreditCard'
-import VirtualizedSelect from 'react-virtualized-select'
+import CreditCardFields from './CreditCard'
+import SkillTypeaheadSelect from '../utilities/SkillTypeaheadSelect'
 import PropTypes from 'prop-types'
 import 'react-select/dist/react-select.css'
 import 'react-virtualized/styles.css'
 import 'react-virtualized-select/styles.css'
 import '../auth/Form.css'
-
-function arrowRenderer () {
-  return <span />
-}
 
 class PostJobForm extends Component {
   constructor (props) {
@@ -44,11 +39,6 @@ class PostJobForm extends Component {
     }
   }
 
-  componentDidMount () {
-    const {skills} = this.props
-    if (!skills) this.props.getSkills()
-  }
-
   handleLocation = zip_code => {
     axios.get(`http://maps.googleapis.com/maps/api/geocode/json?address=${zip_code}`)
       .then(res => res.data)
@@ -69,7 +59,9 @@ class PostJobForm extends Component {
   }
 
   handleChange = type => event => {
-    const { value } = event.target
+    let value = Array.isArray(event)
+      ? event
+      : event.target.value
     if (type === 'zip_code' && value.toString().length === 5) {
       /* first we finish updating the state of the input, then we use the zip to find the rest of the location data by passing the callback to setState (an optional 2nd param) */
       this.setState({[type]: value}, this.handleLocation(value))
@@ -80,6 +72,8 @@ class PostJobForm extends Component {
       const employment_types = new Set([...this.state.employment_types])
       /* ^Using a Set instead of an array because we need the data values to be unique */
       this.setState({employment_types})
+    } else if (type === 'skills') {
+      this.props.handleNewSkills(value)
     } else {
       this.setState({[type]: value})
     }
@@ -112,36 +106,18 @@ class PostJobForm extends Component {
 
   handleSubmit = event => {
     event.preventDefault()
+    const {createJobPost, selected, history, user} = this.props
     const job = {...this.state}
-    job.employer_id = this.props.user.employer.id
+    job.employer_id = user.employer.id
+    // change employment_types from Set to Array
     job.employment_types = [...this.state.employment_types]
-    const skills = job.selectValue.map(skill => skill.value)
-    delete job.selectValue
-    // const token = this.refs.card.state.token
+    let skills = selected
+    skills = skills.map(s => s.id)
     this.clearForm()
-    this.props.createJobPost({job, skills}, this.props.history)
-  }
-
-  _selectSkill = data => {
-    let skill_ids = data.split(',')
-    let new_skills = []
-    if (skill_ids[0] !== '') {
-      skill_ids.forEach((id) => {
-        this.props.skills.forEach((s) => {
-          if (s.id === parseInt(id, 10)) {
-            new_skills.push({label: s.title, value: s.id})
-          }
-        })
-      })
-    }
-    this.setState({
-      selectValue: [...new_skills],
-      selected_skills: skill_ids
-    })
+    createJobPost({job, skills}, history)
   }
 
   render () {
-    let skills = this.props.skills.map(s => ({label: s.title, value: s.id}))
     return (
       <Row className='PostJobForm fadeIn animated'>
         <Col xs={12} sm={6} md={6} lg={6}>
@@ -156,21 +132,12 @@ class PostJobForm extends Component {
               />
             </FormGroup>
             <ControlLabel>
-              Required Skills (type below and hit 'Enter' to select and 'Backspace to deselect')
+              Key Skills
             </ControlLabel>
-            <VirtualizedSelect
-              arrowRenderer={arrowRenderer}
-              clearable
-              searchable
-              simpleValue
-              labelKey='label'
-              valueKey='value'
-              ref='job_search'
-              multi
-              options={skills}
-              onChange={(data) => this._selectSkill(data)}
-              value={this.state.selectValue}
-            />
+            <SkillTypeaheadSelect handleChange={this.handleChange} />
+            <HelpBlock>
+              Type and use arrows to select skill, then hit 'Enter' to add selected skill.
+            </HelpBlock>
             <FormGroup controlId='description'>
               <ControlLabel>Job Description and Requirements</ControlLabel>
               <FormControl
@@ -252,7 +219,7 @@ class PostJobForm extends Component {
                 <option value='100%'>100%</option>
               </FormControl>
             </FormGroup>
-            <CreditCardFormControls ref='card' />
+            <CreditCardFields ref='card' />
             <Button className='primary' type='submit'>Post Job</Button>
           </form>
         </Col>
@@ -263,20 +230,21 @@ class PostJobForm extends Component {
 
 const mapStateToProps = state => ({
   user: state.users.currentUser,
-  skills: state.skills.all
+  selected: state.skills.selected
 })
 
 const mapDispatchToProps = dispatch => ({
-  createJobPost: (post, history) => dispatch(creatingNewJob(post, history)),
-  getSkills: post => dispatch(gettingAllSkills())
+  createJobPost: (post, history) => dispatch(creatingNewJob(post, history))
 })
 
 PostJobForm.propTypes = {
-  user: PropTypes.any.isRequired,
-  skills: PropTypes.array.isRequired,
-  getSkills: PropTypes.func.isRequired,
-  createJobPost: PropTypes.func.isRequired,
-  history: PropTypes.object.isRequired
+  history: PropTypes.object,
+  match: PropTypes.object,
+  user: PropTypes.any,
+  selected: PropTypes.arrayOf(PropTypes.object),
+  createJobPost: PropTypes.func,
+  handleNewSkills: PropTypes.func
+  // ^creates new skills if user made any custom ones (class method of App.js)
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(PostJobForm))

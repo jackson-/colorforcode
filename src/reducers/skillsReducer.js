@@ -1,30 +1,39 @@
-import { RECEIVE_SKILLS, RECEIVE_PROJECT, RECEIVE_JOB, RECEIVE_JOBS } from './constants'
+import {
+  RECEIVE_SKILLS, RECEIVE_PROJECT, RECEIVE_JOB,
+  RECEIVE_JOBS, REQUEST_ALL_SKILLS, RECEIVE_SELECTED_SKILLS } from './constants'
 
 const initialState = {
-  all: [],
-  selected: []
+  all: null,
+  selected: null
 }
 
 const skillsReducer = (state = initialState, action) => {
   switch (action.type) {
-    case RECEIVE_SKILLS: return {
-      all: action.skills,
-      currentSkill: {...state.currentSkill} || null
+    case REQUEST_ALL_SKILLS: return {
+      fetching: true,
+      all: null,
+      selected: state.selected || null
     }
-
+    case RECEIVE_SKILLS: return {
+      fetching: false,
+      all: action.skills,
+      selected: state.selected || null
+    }
+    case RECEIVE_SELECTED_SKILLS: return {
+      all: [...state.all],
+      selected: action.selected
+    }
     case RECEIVE_PROJECT: return {
       all: action.skills,
-      currentSkill: {...state.currentSkill} || null
+      selected: [...action.project.skills] || null
     }
-
     case RECEIVE_JOB: return {
       all: action.skills,
-      currentSkill: {...state.currentSkill} || null
+      selected: [...action.job.skills] || null
     }
-
     case RECEIVE_JOBS: return {
       all: action.skills,
-      currentSkill: {...state.currentSkill} || null
+      selected: null
     }
 
     default: return state

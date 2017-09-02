@@ -32,7 +32,7 @@ class Home extends Component {
           user && user.is_employer
             ? (
               <CandidateSearch
-                user={user}
+                coords={user ? user.coords : ''}
                 getUsers={getUsers}
                 filterUsers={filterUsers}
                 advancedFilterUsers={advancedFilterUsers}
@@ -40,7 +40,7 @@ class Home extends Component {
             )
             : (
               <JobBoard
-                user={user}
+                coords={user ? user.coords : ''}
                 getJobs={getJobs}
                 filterJobs={filterJobs}
                 advancedFilterJobs={advancedFilterJobs}

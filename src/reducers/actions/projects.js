@@ -1,67 +1,46 @@
 import axios from 'axios'
-import { whoami } from './users'
-import { RECEIVE_ALL_PROJECTS, RECEIVE_PROJECT, RECEIVE_USER_PROJECTS } from '../constants'
-import { createNewProject, requestAllProjects, requestUserProjects,
-         requestFilteredProjects, requestProject, updateProject,
-         beginUploading, doneUploading } from './loading'
+import {
+  RECEIVE_PROJECT, REQUEST_PROJECT,
+  CREATE_PROJECT, UPDATE_PROJECT, DELETE_PROJECT } from '../constants'
+import { beginUploading, doneUploading, whoami } from './users'
 import { receiveAlert } from './alert'
 
 /* --------- PURE ACTION CREATORS --------- */
+
+export const requestProject = () => ({
+  type: REQUEST_PROJECT
+})
 
 export const receiveProject = (project, skills) => ({
   skills,
   project,
   type: RECEIVE_PROJECT
 })
-export const receiveAllProjects = projects => ({
-  projects,
-  loading: false,
-  type: RECEIVE_ALL_PROJECTS
+
+export const createNewProject = () => ({
+  type: CREATE_PROJECT
 })
 
-export const receiveUserProjects = projects => ({
-  projects,
-  loading: false,
-  type: RECEIVE_USER_PROJECTS
+export const updateProject = () => ({
+  type: UPDATE_PROJECT
+})
+
+export const deleteProject = () => ({
+  type: DELETE_PROJECT
 })
 
 /* --------- ASYNC ACTION CREATORS (THUNKS) --------- */
 
-export const gettingAllProjects = () => dispatch => {
-  dispatch(requestAllProjects())
-  axios.get('/api/projects')
+export const gettingProjectById = (id) => dispatch => {
+  dispatch(requestProject())
+  axios.get(`/api/projects/${id}`)
     .then(res => res.data)
-    .then(projects => dispatch(receiveAllProjects(projects)))
-    .catch(err => console.error(`Mang, I couldn't find the projects! ${err.stack}`))
+    .then(res => {
+      const {skills, project} = res
+      dispatch(receiveProject(project, skills))
+    })
+    .catch(err => console.error(`Mang I couldn't find the project! ${err.stack}`))
 }
-
-export const gettingUserProjects = (user) => dispatch => {
-  dispatch(requestUserProjects())
-  axios.get(`/api/projects/employer/${user.id}`)
-    .then(res => res.data)
-    .then(projects => dispatch(receiveUserProjects(projects)))
-    .catch(err => console.error(`Mang, I couldn't find the projects! ${err.stack}`))
-}
-
-export const filteringProjects = query => dispatch => {
-  dispatch(requestFilteredProjects())
-  axios.post('/api/projects/search', {query})
-    .then(res => res.data)
-    .then(projects => dispatch(receiveAllProjects(projects)))
-    .catch(err => console.error(`Mang, I couldn't filter the  projects! ${err.stack}`))
-}
-
-export const gettingProjectById = (id) =>
-  dispatch => {
-    dispatch(requestProject())
-    axios.get(`/api/projects/${id}`)
-      .then(res => res.data)
-      .then(res => {
-        const {skills, project} = res
-        dispatch(receiveProject(project, skills))
-      })
-      .catch(err => console.error(`Mang I couldn't find the project! ${err.stack}`))
-  }
 
 export const creatingNewProject = (projectPost) => dispatch => {
   // set loading state to true to trigger UI changes
@@ -82,7 +61,16 @@ export const creatingNewProject = (projectPost) => dispatch => {
       }))
     })
     // otherwise we catch the error...
-    .catch(err => console.error(`Sorry, cuz. We couldn't create that new project...${err.stack}`))
+    .catch(err => {
+      dispatch(receiveAlert({
+        type: 'error',
+        style: 'danger',
+        title: 'Uh oh!',
+        body: 'Unable to create new project, please double check form fields and try again.',
+        next: null
+      }))
+      console.error(`Sorry, cuz. We couldn't create that new project...${err.stack}`)
+    })
 }
 
 export const updatingProject = (postData) => dispatch => {
@@ -99,7 +87,16 @@ export const updatingProject = (postData) => dispatch => {
       body: 'Your project has been successfully updated.',
       next: '/dashboard/projects'
     })))
-    .catch(err => console.error(`Sorry, cuz. Couldn't update that project...${err.stack}`))
+    .catch(err => {
+      dispatch(receiveAlert({
+        type: 'error',
+        style: 'danger',
+        title: 'Uh oh!',
+        body: 'We couldn\'t update your project, please double check form fields and try again.',
+        next: null
+      }))
+      console.error(`Sorry, cuz. Couldn't update that project...${err.stack}`)
+    })
 }
 
 export const uploadingScreenshot = (project, file) => dispatch => {
@@ -129,16 +126,26 @@ export const uploadingScreenshot = (project, file) => dispatch => {
 }
 
 export const deletingProject = (id, history) => dispatch => {
+  dispatch(deleteProject())
   axios.delete(`/api/projects/${id}`)
-  .then(() => {
-    dispatch(whoami())
-    dispatch(receiveAlert({
-      type: 'confirmation',
-      style: 'success',
-      title: 'Success!',
-      body: 'Your project has been successfully deleted.',
-      next: '/dashboard/projects'
-    }))
-  })
-  .catch(err => console.error(`Sorry, cuz. Couldn't delete that project...${err.stack}`))
+    .then(() => {
+      dispatch(whoami())
+      dispatch(receiveAlert({
+        type: 'confirmation',
+        style: 'success',
+        title: 'Success!',
+        body: 'Your project has been successfully deleted.',
+        next: '/dashboard/projects'
+      }))
+    })
+    .catch(err => {
+      dispatch(receiveAlert({
+        type: 'error',
+        style: 'danger',
+        title: 'Uh oh!',
+        body: 'We couldn\'t delete that project, please double check form fields and try again.',
+        next: ''
+      }))
+      console.error(`Sorry, cuz. Couldn't delete that project...${err.stack}`)
+    })
 }

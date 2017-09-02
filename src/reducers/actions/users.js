@@ -1,25 +1,60 @@
 import axios from 'axios'
-import { RECEIVE_USERS, AUTHENTICATED, RECEIVE_USER } from '../constants'
-import { createNewUser, requestAllUsers, beginUploading,
-         doneUploading, requestUser, requestFilteredUsers } from './loading'
+import {
+  RECEIVE_USERS, AUTHENTICATED, RECEIVE_USER,
+  AUTHENTICATING, CREATE_USER, UPDATE_USER,
+  DELETE_USER, REQUEST_ALL_USERS, BEGIN_UPLOADING,
+  DONE_UPLOADING, REQUEST_USER, REQUEST_FILTERED_USERS } from '../constants'
 /* --------- PURE ACTION CREATORS --------- */
 
 export const receiveAllUsers = users => ({
   users,
-  loading: false,
   type: RECEIVE_USERS
 })
 
 export const receiveUser = user => ({
   selected: user,
-  loading: false,
   type: RECEIVE_USER
 })
 
 export const authenticated = user => ({
   user,
-  loading: false,
   type: AUTHENTICATED
+})
+
+export const authenticating = () => ({
+  type: AUTHENTICATING
+})
+
+export const beginUploading = () => ({
+  type: BEGIN_UPLOADING
+})
+
+export const doneUploading = () => ({
+  type: DONE_UPLOADING
+})
+
+export const requestFilteredUsers = () => ({
+  type: REQUEST_FILTERED_USERS
+})
+
+export const requestUser = () => ({
+  type: REQUEST_USER
+})
+
+export const createNewUser = () => ({
+  type: CREATE_USER
+})
+
+export const updateUser = () => ({
+  type: UPDATE_USER
+})
+
+export const deleteUser = () => ({
+  type: DELETE_USER
+})
+
+export const requestAllUsers = () => ({
+  type: REQUEST_ALL_USERS
 })
 
 /* --------- ASYNC ACTION CREATORS (THUNKS) --------- */
@@ -66,6 +101,7 @@ export const buildBodyThenSearchUsers = (bodyBuilderFunc, coords) => {
 }
 
 export const whoami = (history) => dispatch => {
+  dispatch(authenticating())
   axios.get('/api/auth/whoami')
     .then(response => {
       const user = response.data

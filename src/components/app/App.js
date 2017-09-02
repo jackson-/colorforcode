@@ -10,8 +10,7 @@ import {
   logout,
   gettingAllUsers,
   filteringUsers,
-  buildBodyThenSearchUsers
-} from '../../reducers/actions/users'
+  buildBodyThenSearchUsers } from '../../reducers/actions/users'
 
 import {
   applyingToJob,
@@ -23,17 +22,20 @@ import {
   creatingNewJob,
   gettingAllJobs,
   filteringJobs,
-  buildBodyThenSearchJobs
-} from '../../reducers/actions/jobs'
+  buildBodyThenSearchJobs } from '../../reducers/actions/jobs'
 
-import { gettingAllSkills } from '../../reducers/actions/skills'
+import {
+  gettingAllSkills,
+  creatingNewSkills,
+  receiveSelectedSkills } from '../../reducers/actions/skills'
 
 import {
   gettingProjectById,
   updatingProject,
   receiveProject,
-  deletingProject
-} from 'APP/src/reducers/actions/projects'
+  deletingProject } from '../../reducers/actions/projects'
+import { receiveDashLocation, receiveNextRoute } from '../../reducers/routeReducer'
+import { receiveAlert } from '../../reducers/actions/alert'
 
 import MainNav from './Navbar'
 import Home from '../home/Home'
@@ -58,6 +60,10 @@ class App extends Component {
       marginBottom: '0',
       display: 'none'
     }
+  }
+
+  componentWillReceiveProps (nextProps) {
+    console.log('APP RECEIVEING PROPS: ', nextProps)
   }
 
   toggleDashMenu = event => {
@@ -95,6 +101,39 @@ class App extends Component {
     this.props.logOut(history)
   }
 
+  handleNewSkills = selected => {
+    const {createNewSkills, receiveSelectedSkills} = this.props
+    // first we check for new skills and filter them out into a separate list
+    let selectedSkillsNew = selected.filter(skill => skill.customOption === true)
+    // then we filter existing skills into a separate list
+    const selectedSkillsExisting = selected.filter(skill => !skill.customOption)
+    // if the user made any new skills, we format them for Sequelize, dispatch an action to create them, then return
+    if (selectedSkillsNew.length) {
+      selectedSkillsNew = selectedSkillsNew.map(skill => {
+        return {title: skill.title, template: false}
+      })
+      createNewSkills(selectedSkillsNew)
+    }
+    receiveSelectedSkills([...selectedSkillsNew, ...selectedSkillsExisting])
+  }
+
+  handleClickPostJob = () => {
+    const {user, receiveNext, receiveAlert, history} = this.props
+    if (!user) {
+      receiveNext('/dashboard/post-new-job')
+      receiveAlert({
+        type: 'error',
+        style: 'warning',
+        title: 'Not signed in!',
+        body: 'Welcome! Log in or register for an employer account, then we\'ll send you to your dashboard to post a new job.',
+        next: '',
+        footer: true
+      })
+    } else {
+      history.push('/dashboard/post-new-job')
+    }
+  }
+
   render () {
     const dashMenuStyle = {
       padding: this.state.padding,
@@ -117,12 +156,9 @@ class App extends Component {
         {to: '/dashboard/projects', glyph: 'briefcase', text: 'Projects'}
       ]
     }
-
     const {
       alert,
       user,
-      job,
-      fetchingJob,
       updateJob,
       deleteJob,
       getJob,
@@ -142,14 +178,22 @@ class App extends Component {
       uploadResume,
       deleteProject,
       getProject,
-      skills,
-      history
+      history,
+      receiveLocation,
+      receiveNext,
+      receiveAlert,
+      next
     } = this.props
+
+    let dashHistory = {}
+    console.log('APP LOCATION: ', this.props.location)
     return (
       <Router>
         <div>
           <MainNav
-            history={history}
+            receiveLocation={receiveLocation}
+            handleClickPostJob={this.handleClickPostJob}
+            history={dashHistory}
             user={this.props.user}
             logOut={this.logOut}
             toggleDashMenu={this.toggleDashMenu}
@@ -172,108 +216,112 @@ class App extends Component {
               body={alert.body}
               show={this.props.alert !== null}
               next={alert.next}
+              footer={alert.footer ? alert.footer : false}
             />
           }
           <Grid fluid className='App'>
-              {/* PUBLIC ROUTES */}
-              <Route exact strict path='/' component={() => (
-                <Home
-                  user={user}
-                  getJobs={getJobs}
-                  filterJobs={filterJobs}
-                  advancedFilterJobs={advancedFilterJobs}
-                  getUsers={getUsers}
-                  filterUsers={filterUsers}
-                  advancedFilterUsers={advancedFilterUsers}
-                />
-              )} />
-              <Route exact path='/about' component={About} />
-              <Route exact path='/jobs/:id' component={({match, history}) => (
-                <JobDetailPage
-                  skills={skills}
-                  getJob={getJob}
-                  updateJob={updateJob}
-                  deleteJob={deleteJob}
-                  applyToJob={applyToJob}
-                  saveJob={saveJob}
-                  match={match}
-                  history={history}
-                />
-              )} />
-              <Route exact path='/register' component={() => {
-                if (!user) return <RegisterForm />
-                return <Redirect to='/dashboard' />
-              }} />
-              <Route exact path='/login' component={() => {
-                if (!user) return <LoginForm />
-                return <Redirect to='/dashboard' />
-              }} />
-              <Route exact path='/users/:id' component={UserProfile} />
+            {/* PUBLIC ROUTES */}
+            <Route exact strict path='/' component={() => (
+              <Home
+                user={user}
+                getJobs={getJobs}
+                filterJobs={filterJobs}
+                advancedFilterJobs={advancedFilterJobs}
+                getUsers={getUsers}
+                filterUsers={filterUsers}
+                advancedFilterUsers={advancedFilterUsers}
+              />
+            )} />
+            <Route exact path='/about' component={About} />
+            <Route exact path='/jobs/:id' component={({match, history}) => (
+              <JobDetailPage
+                getJob={getJob}
+                updateJob={updateJob}
+                deleteJob={deleteJob}
+                applyToJob={applyToJob}
+                saveJob={saveJob}
+                unsaveJob={unsaveJob}
+                match={match}
+                history={history}
+              />
+            )} />
+            <Route exact path='/register' component={RegisterForm} />
+            <Route exact path='/login' component={LoginForm} />
+            <Route exact path='/users/:id' component={UserProfile} />
 
-              {/* PRIVATE ROUTES */}
-              <Route exact path='/dashboard' component={() => {
-                return user && user.is_employer
-                  ? <Redirect to='/dashboard/manage-jobs' />
-                  : <Redirect to='/dashboard/saved-jobs' />
-              }} />
-              <Route
-                exact
-                path='/dashboard/:action'
-                component={({match, history, location}) => {
-                  if (!user) return <Redirect to='/login' />
-                  return (
-                    <Dashboard
-                      getJob={getJob}
-                      updateJob={updateJob}
-                      deleteJob={deleteJob}
-                      applyToJob={applyToJob}
-                      saveJob={saveJob}
-                      unsaveJob={unsaveJob}
-                      closeJob={closeJob}
-                      duplicateJob={duplicateJob}
-                      getProject={getProject}
-                      updateProject={updateProject}
-                      deleteProject={deleteProject}
-                      history={history}
-                      location={location}
-                      match={match}
-                      skills={skills}
-                      user={user}
-                      updateUser={updateUser}
-                      uploadResume={uploadResume}
-                    />
-                  )
-                }}
-              />
-              <Route
-                exact
-                path='/dashboard/:action/:id'
-                component={({match, history, location}) => {
-                  if (!user) return <Redirect to='/login' />
-                  return (
-                    <Dashboard
-                      getJob={getJob}
-                      updateJob={updateJob}
-                      deleteJob={deleteJob}
-                      applyToJob={applyToJob}
-                      saveJob={saveJob}
-                      unsaveJob={unsaveJob}
-                      closeJob={closeJob}
-                      duplicateJob={duplicateJob}
-                      getProject={getProject}
-                      updateProject={updateProject}
-                      deleteProject={deleteProject}
-                      history={history}
-                      location={location}
-                      match={match}
-                      skills={skills}
-                      user={user}
-                      updateUser={updateUser}
-                      uploadResume={uploadResume}
-                    />
-                  )
-                }}
-              />
+            {/* PRIVATE ROUTES */}
+            <Route exact path='/dashboard' component={() => {
+              return user && user.is_employer
+                ? <Redirect to='/dashboard/manage-jobs' />
+                : <Redirect to='/dashboard/saved-jobs' />
+            }} />
+            <Route
+              exact
+              path='/dashboard/:action'
+              component={({match, history, location}) => {
+                dashHistory = history
+                /* if (!user) return <Redirect to='/login' /> */
+                return (
+                  <Dashboard
+                    getJob={getJob}
+                    updateJob={updateJob}
+                    deleteJob={deleteJob}
+                    applyToJob={applyToJob}
+                    saveJob={saveJob}
+                    unsaveJob={unsaveJob}
+                    closeJob={closeJob}
+                    duplicateJob={duplicateJob}
+                    getProject={getProject}
+                    updateProject={updateProject}
+                    deleteProject={deleteProject}
+                    history={history}
+                    location={location}
+                    match={match}
+                    handleNewSkills={this.handleNewSkills}
+                    user={user}
+                    updateUser={updateUser}
+                    uploadResume={uploadResume}
+                    next={next}
+                    alert={alert}
+                    receiveAlert={receiveAlert}
+                    receiveNext={receiveNext}
+                  />
+                )
+              }}
+            />
+            <Route
+              exact
+              path='/dashboard/:action/:id'
+              component={({match, history, location}) => {
+                /* if (!user) return <Redirect to='/login' /> */
+                return (
+                  <Dashboard
+                    getJob={getJob}
+                    updateJob={updateJob}
+                    deleteJob={deleteJob}
+                    applyToJob={applyToJob}
+                    saveJob={saveJob}
+                    unsaveJob={unsaveJob}
+                    closeJob={closeJob}
+                    duplicateJob={duplicateJob}
+                    getProject={getProject}
+                    updateProject={updateProject}
+                    deleteProject={deleteProject}
+                    history={history}
+                    location={location}
+                    match={match}
+                    handleNewSkills={this.handleNewSkills}
+                    user={user}
+                    updateUser={updateUser}
+                    uploadResume={uploadResume}
+                    next={next}
+                    alert={alert}
+                    receiveAlert={receiveAlert}
+                    receiveNext={receiveNext}
+                  />
+                )
+              }}
+            />
           </Grid>
         </div>
       </Router>
@@ -284,17 +332,15 @@ class App extends Component {
 App.propTypes = {
   user: PropTypes.any,
   alert: PropTypes.object,
-  logOut: PropTypes.func.isRequired,
+  next: PropTypes.string,
   location: PropTypes.object,
   match: PropTypes.object,
   history: PropTypes.object,
   project: PropTypes.object,
-  job: PropTypes.object,
   fetchingJob: PropTypes.bool,
-  jobs: PropTypes.arrayOf(PropTypes.object),
+  logOut: PropTypes.func.isRequired,
   filterJobs: PropTypes.func,
   advancedFilterJobs: PropTypes.func,
-  users: PropTypes.arrayOf(PropTypes.object),
   getUsers: PropTypes.func,
   filterUsers: PropTypes.func,
   advancedFilterUsers: PropTypes.func,
@@ -312,20 +358,18 @@ App.propTypes = {
   deleteProject: PropTypes.func.isRequired,
   getProject: PropTypes.func.isRequired,
   getJobs: PropTypes.func.isRequired,
-  loading: PropTypes.bool.isRequired,
-  skills: PropTypes.array
+  createNewSkills: PropTypes.func,
+  receiveSelectedSkills: PropTypes.func,
+  receiveLocation: PropTypes.func,
+  receiveNext: PropTypes.func,
+  receiveAlert: PropTypes.func
 }
 
 const mapStateToProps = state => ({
   user: state.users.currentUser,
-  // users: state.users.all,
   alert: state.alert,
-  project: state.projects.currentProject,
-  loading: state.loading,
-  skills: state.skills.all,
-  // jobs: state.jobs.all,
-  job: state.jobs.currentJob,
-  fetchingJob: state.jobs.fetchingJob
+  next: state.location.nextRoute,
+  dashLocation: state.location.dashLocation
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -338,6 +382,8 @@ const mapDispatchToProps = dispatch => ({
   saveJob: (userId, savedJobs) => dispatch(savingJob(userId, savedJobs)),
   getJobs: () => dispatch(gettingAllJobs()),
   getSkills: () => dispatch(gettingAllSkills()),
+  createNewSkills: skills => dispatch(creatingNewSkills(skills)),
+  receiveSelectedSkills: skills => dispatch(receiveSelectedSkills(skills)),
   filterJobs: query => dispatch(filteringJobs(query)),
   advancedFilterJobs: (bodyBuilder, coords, from) => {
     dispatch(buildBodyThenSearchJobs(bodyBuilder, coords, from))
@@ -354,7 +400,10 @@ const mapDispatchToProps = dispatch => ({
   getProject: (id) => dispatch(gettingProjectById(id)),
   updateProject: (project, history) => dispatch(updatingProject(project, history)),
   deleteProject: (projectId, history) => dispatch(deletingProject(projectId, history)),
-  receiveProject: (project) => dispatch(receiveProject(project))
+  receiveProject: (project) => dispatch(receiveProject(project)),
+  receiveLocation: location => event => dispatch(receiveDashLocation(location)),
+  receiveNext: route => event => dispatch(receiveNextRoute(route)),
+  receiveAlert: alert => dispatch(receiveAlert(alert))
 })
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App))

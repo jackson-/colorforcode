@@ -37,17 +37,27 @@ class EditProjectForm extends Component {
   }
 
   componentDidMount () {
-    const {match, getProject, project} = this.props
+    const {match, getProject, project, fetchingProject} = this.props
     const {id} = match.params
-    if (!project || project.id !== Number(id)) {
-      getProject(id)
+    console.log('CDM - FETCHING: ', fetchingProject)
+    if (!fetchingProject) {
+      if (!project || project.id !== Number(id)) {
+        console.log('CDM - FETCHING PROJECT: ', Number(id))
+        getProject(id)
+      }
     }
   }
 
   componentWillMount () {
-    const {match, project} = this.props
+    const {fetchingProject} = this.props
+    console.log('CWM - FETCHING: ', fetchingProject)
+  }
+
+  componentWillReceiveProps (nextProps) {
+    const {match} = this.props
     const {id} = match.params
-    if (project && project.id === Number(id)) {
+    if (nextProps.project && nextProps.project.id === Number(id)) {
+      console.log('CWRP - DONE FETCHING, SETTING LOADING TO FALSE')
       this.setState({loading: false})
     }
   }
@@ -107,8 +117,7 @@ class EditProjectForm extends Component {
   }
 
   render () {
-    let {project, skills} = this.props
-    skills = skills ? this.formatSkills(skills) : []
+    let {project, selected} = this.props
     const {loading} = this.state
     return loading
       ? <LoadingSpinner />
@@ -125,7 +134,7 @@ class EditProjectForm extends Component {
               selectSkill={this._selectSkill}
               arrowRenderer={arrowRenderer}
               state={this.state}
-              skills={skills}
+              skills={selected}
               project={project}
               formatSkills={this.formatSkills}
             />
@@ -155,15 +164,18 @@ EditProjectForm.propTypes = {
   project: PropTypes.object,
   match: PropTypes.object,
   user: PropTypes.any,
-  skills: PropTypes.arrayOf(PropTypes.object),
+  selected: PropTypes.arrayOf(PropTypes.object),
   updateProject: PropTypes.func,
   deleteProject: PropTypes.func,
-  getProject: PropTypes.func
+  getProject: PropTypes.func,
+  fetchingProject: PropTypes.bool
 }
 
 const mapStateToProps = state => ({
   alert: state.alert,
-  project: state.projects.currentProject
+  project: state.projects.currentProject,
+  selected: state.skills.selected,
+  fetchingProject: state.projects.fetchingProject
 })
 
 const mapDispatchToProps = dispatch => ({

@@ -27,7 +27,6 @@ class UserProfile extends Component {
 
   componentDidMount () {
     const {user, fetchingUser, match} = this.props
-    const {id} = match.params
     console.log('CDM - USER', user, 'FETCHING USER: ', fetchingUser)
   }
 
@@ -45,7 +44,7 @@ class UserProfile extends Component {
     if (!fetchingUser) {
       if (!user || user.id !== Number(id)) {
         getUser(id)
-        console.log(`CWM - HAD USER ${user.id} FETCHING USER ${id}`)
+        console.log(`CWM - HAD USER ${user ? user.id : null} FETCHING USER ${id}`)
       }
     }
     if (fetchingUser) console.log(`CWM - FETCHING USER ${id}, ${fetchingUser}`)
@@ -125,7 +124,7 @@ class UserProfile extends Component {
                     {user.title}
                   </p>
                   <p className='UserDetail__header-location'>
-                    <Glyphicon glyph='globe' /> {`${user.location}`}
+                    <Glyphicon glyph='map-marker' /> {`${user.location}`}
                   </p>
                   <IconBar icons={icons} color='white' />
                 </div>
