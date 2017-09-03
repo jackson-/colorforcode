@@ -2,42 +2,42 @@ import {
   RECEIVE_USERS, REQUEST_ALL_USERS, RECEIVE_USER, REQUEST_USER, REQUEST_FILTERED_USERS } from './constants'
 
 const initialState = {
+  fetchingSelected: false,
   selected: null,
-  fetching: false, // all
-  fetchingUser: false,
-  authenticating: false
+  fetchingAll: false,
+  all: null
 }
 
 const usersReducer = (state = initialState, action) => {
   switch (action.type) {
     case REQUEST_ALL_USERS: return {
-      fetchingUser: false,
-      fetching: true,
-      all: state.all ? [...state.all] : null,
-      selected: state.selected ? {...state.selected} : null
+      fetchingSelected: false,
+      selected: null,
+      fetchingAll: true,
+      all: state.all ? [...state.all] : null
     }
     case REQUEST_FILTERED_USERS: return {
-      fetchingUser: false,
-      fetching: true,
-      all: state.all ? [...state.all] : null,
-      selected: state.selected ? {...state.selected} : null
+      fetchingSelected: false,
+      selected: null,
+      fetchingAll: true,
+      all: state.all ? [...state.all] : null
     }
     case RECEIVE_USERS: return {
-      fetching: false,
-      fetchingUser: false,
-      all: action.users,
-      selected: state.selected ? {...state.selected} : null
+      fetchingSelected: false,
+      selected: null,
+      fetchingAll: false,
+      all: action.users
     }
     case REQUEST_USER: return {
-      fetchingUser: true,
-      fetching: false,
-      all: state.all ? [...state.all] : null,
-      selected: null
+      fetchingSelected: true,
+      selected: null,
+      fetchingAll: false,
+      all: state.all ? [...state.all] : null
     }
     case RECEIVE_USER: return {
-      fetching: false,
-      fetchingUser: false,
+      fetchingSelected: false,
       selected: action.selected,
+      fetchingAll: false,
       all: state.all ? [...state.all] : null
     }
 

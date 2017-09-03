@@ -223,7 +223,7 @@ UserProfile.propTypes = {
 
 const mapStateToProps = state => ({
   user: state.users.selected,
-  fetchingUser: state.users.fetchingUser
+  fetchingSelected: state.users.fetchingSelected
 })
 
 const mapDispatchToProps = dispatch => ({

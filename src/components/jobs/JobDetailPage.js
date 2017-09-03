@@ -12,9 +12,9 @@ class JobDetailPage extends Component {
 
   componentWillMount () {
     console.log('CWM - ')
-    const {job, fetchingJob, match, getJob} = this.props
+    const {job, fetching, match, getJob} = this.props
     const {id} = match.params
-    if ((!job && !fetchingJob) || (job && (job.id !== Number(id)) && !fetchingJob)) getJob(id)
+    if ((!job && !fetching) || (job && (job.id !== Number(id)) && !fetching)) getJob(id)
   }
 
   componentWillUnMount () {
@@ -44,7 +44,7 @@ class JobDetailPage extends Component {
 
     let jobComponent = ''
     if (job) {
-      if (user && user.is_employer && (user.employer.id === job.employer.id)) {
+      if (user && user.is_employer && user.employer.id === job.employer.id) {
         jobComponent = (
           <JobUpdateDisplay
             user={user}
@@ -88,7 +88,7 @@ JobDetailPage.propTypes = {
   history: PropTypes.object,
   user: PropTypes.any,
   job: PropTypes.object,
-  fetchingJob: PropTypes.bool,
+  fetching: PropTypes.bool,
   applyToJob: PropTypes.func,
   unsaveJob: PropTypes.func,
   updateJob: PropTypes.func,
@@ -103,9 +103,9 @@ JobDetailPage.propTypes = {
 }
 
 const mapStateToProps = state => ({
-  job: state.jobs.currentJob,
+  job: state.jobs.selected,
   selected: state.skills.selected,
-  fetchingJob: state.jobs.fetchingJob,
+  fetching: state.jobs.fetchingSelected,
   user: state.auth.currentUser
 })
 

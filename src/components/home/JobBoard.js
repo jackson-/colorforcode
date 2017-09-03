@@ -51,7 +51,7 @@ class JobBoard extends Component {
     const {jobs, fetching, authenticating, getJobs} = this.props
     console.log(`CWRP - JOBS HAD: ${jobs ? jobs.length : 0}, GETTING: ${nextProps.jobs ? nextProps.jobs.length : 0}, FETCHING: ${fetching}`)
     if (!authenticating) {
-      if (!jobs && !fetching && (nextProps.user === null)) {
+      if (!nextProps.jobs && !nextProps.fetching) {
         console.log(`CWRP - FETCHING JOBS`)
         getJobs()
       }
@@ -229,9 +229,8 @@ class JobBoard extends Component {
   }
 
   render () {
-    const {jobs, fetching} = this.props
+    const {jobs} = this.props
     const {loading} = this.state
-    console.log('RENDERING - FETCHING: ', fetching)
     return (
       <Row className='JobBoard'>
         <SearchBar
@@ -295,7 +294,7 @@ JobBoard.propTypes = {
 
 const mapStateToProps = state => ({
   jobs: state.jobs.all,
-  fetching: state.jobs.fetching,
+  fetching: state.jobs.fetchingAll,
   authenticating: state.auth.authenticating
 })
 

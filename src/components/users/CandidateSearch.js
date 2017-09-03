@@ -29,7 +29,6 @@ class CandidateSearch extends Component {
   componentDidMount () {
     const {users} = this.props
     console.log(`CDM - USERS: ${users ? users.length : 0}`)
-
   }
 
   componentWillMount () {
@@ -37,7 +36,7 @@ class CandidateSearch extends Component {
     console.log(`CWM - USERS: ${users ? users.length : 0}`)
     if (!authenticating) {
       if (!users && !fetching) {
-        console.log('GETTING USERS, FETCHING: ', fetching)
+        console.log('CWM - FETCHING USERS')
         getUsers()
       }
       if (users) {
@@ -47,10 +46,10 @@ class CandidateSearch extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    const {users, getUsers, fetching, authenticating} = this.props
+    const {users, getUsers, authenticating} = this.props
     console.log(`CWRP - USERS HAD: ${users ? users.length : 0}, GETTING: ${nextProps.users ? nextProps.users.length : 0}`)
     if (!authenticating) {
-      if (!users && !fetching) {
+      if (!nextProps.users && !nextProps.fetching) {
         console.log(`CWRP - FETCHING USERS`)
         getUsers()
       }
@@ -58,10 +57,6 @@ class CandidateSearch extends Component {
         this.setState({loading: false})
       }
     }
-  }
-
-  componentWillUnMount () {
-    console.log(`CWUM - UNMOUNTING!`)
   }
 
   handleLocation(zip_code) {
@@ -231,7 +226,6 @@ class CandidateSearch extends Component {
 
   render () {
     const {users} = this.props
-    console.log('RENDERING CANDIDATE SEARCH')
     return (
       <Row className='CandidateSearch'>
         <SearchBar
@@ -304,7 +298,7 @@ CandidateSearch.propTypes = {
 const mapStateToProps = state => ({
   users: state.users.all,
   authenticating: state.auth.authenticating,
-  fetching: state.users.fetching
+  fetching: state.users.fetchingAll
 })
 
 export default connect(mapStateToProps)(CandidateSearch)

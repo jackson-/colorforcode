@@ -182,8 +182,6 @@ class App extends Component {
       authenticating
     } = this.props
 
-    let dashHistory = {}
-    console.log('APP LOCATION: ', this.props.location)
     return (
       <Router>
         {
@@ -194,7 +192,6 @@ class App extends Component {
                 <MainNav
                   receiveLocation={receiveLocation}
                   handleClickPostJob={this.handleClickPostJob}
-                  history={dashHistory}
                   user={this.props.user}
                   logOut={this.logOut}
                   toggleDashMenu={this.toggleDashMenu}
@@ -226,7 +223,7 @@ class App extends Component {
                   <Route exact strict path='/' component={() => (
                     <Home
                       coords={user ? user.coords : ''}
-                      isEmployer={(user && user.is_employer) ? true: false}
+                      isEmployer={(user ? user.is_employer : false)}
                       getJobs={getJobs}
                       filterJobs={filterJobs}
                       advancedFilterJobs={advancedFilterJobs}
@@ -264,8 +261,6 @@ class App extends Component {
                     exact
                     path='/dashboard/:action'
                     component={({match, history, location}) => {
-                      dashHistory = history
-                      /* if (!user) return <Redirect to='/login' /> */
                       return (
                         <Dashboard
                           getJob={getJob}
@@ -297,7 +292,6 @@ class App extends Component {
                     exact
                     path='/dashboard/:action/:id'
                     component={({match, history, location}) => {
-                      /* if (!user) return <Redirect to='/login' /> */
                       return (
                         <Dashboard
                           getJob={getJob}
@@ -335,6 +329,7 @@ class App extends Component {
 }
 
 App.propTypes = {
+  authenticating: PropTypes.bool,
   user: PropTypes.any,
   alert: PropTypes.object,
   next: PropTypes.string,
@@ -342,7 +337,6 @@ App.propTypes = {
   match: PropTypes.object,
   history: PropTypes.object,
   project: PropTypes.object,
-  fetchingJob: PropTypes.bool,
   logOut: PropTypes.func.isRequired,
   filterJobs: PropTypes.func,
   advancedFilterJobs: PropTypes.func,

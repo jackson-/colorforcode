@@ -80,7 +80,6 @@
 .PostJobForm .form-group input,
 .UpdateJobForm .form-group input {
   box-shadow: none;
-  border-radius: 0;
   border-bottom: 2px solid #C2C2C2;
 }
 
