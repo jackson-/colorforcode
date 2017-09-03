@@ -12,6 +12,8 @@ const esClient = new elasticsearch.Client({
   log: 'error'
 })
 
+const Promise = require('bluebird')
+
 module.exports = require('express').Router()
 
   .get('/', (req, res, next) => {
@@ -114,7 +116,6 @@ module.exports = require('express').Router()
 
   .post('/', (req, res, next) => {
     const {jobs, skills} = req.body
-    console.log("JOBS", jobs, "SKILLS", skills)
     let amount = 0;
     if(jobs.length >= 5){
       amount = jobs.length * 225 * 100
@@ -136,19 +137,21 @@ module.exports = require('express').Router()
     }, function(err, charge) {
       return {err, charge}
     });
+    jobs.forEach(jobs, function(job) {
+      return Job.create(job);
+    })
 
-    Job.bulkCreate(jobs)
-    .then(createdJobs => {
-      const updatePromises = createdJobs.map((job, i)  => {
-        console.log("JOB", job, "ITEREATOR", i)
-        return job.addSkills(skills[i]);
-      });
-      return db.Sequelize.Promise.all(updatePromises)
-    })
-    .then(updatedJobs => {
-      return res.status(200).json({message: "Jobs successfully created"})
-    })
-    .catch(next)
+    // Job.bulkCreate(jobs)
+    // .then(createdJobs => {
+    //   return Promise.map(createdJobs, (job, i)  => {
+    //     console.log("JOB", job)
+    //     return job.addSkills(skills[i]);
+    //   })
+    // })
+    // .then(updatedJobs => {
+    // })
+    // .catch(next)
+
 
   })
 
