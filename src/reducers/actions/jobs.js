@@ -3,7 +3,7 @@ import {
   RECEIVE_JOBS, RECEIVE_JOB, CREATE_JOB, UPDATE_JOB,
   DELETE_JOB, REQUEST_JOB, REQUEST_ALL_JOBS,
   REQUEST_FILTERED_JOBS, APPLY_TO_JOB, APPLIED_TO_JOB } from '../constants'
-import { whoami } from './users'
+import { whoami } from './auth'
 import { receiveAlert } from './alert'
 
 /* --------- PURE ACTION CREATORS --------- */

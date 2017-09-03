@@ -106,7 +106,7 @@ const mapStateToProps = state => ({
   job: state.jobs.currentJob,
   selected: state.skills.selected,
   fetchingJob: state.jobs.fetchingJob,
-  user: state.users.currentUser
+  user: state.auth.currentUser
 })
 
 export default connect(mapStateToProps)(JobDetailPage)

@@ -37,7 +37,6 @@ class JobBoard extends Component {
     const {jobs, fetching, authenticating, getJobs} = this.props
     console.log(`CWM - JOBS: ${jobs ? jobs.length : 0}`)
     if (!authenticating) {
-      console.log('AUTHENTICATING', authenticating)
       if (!jobs && !fetching) {
         console.log(`CWM - FETCHING JOBS`)
         getJobs()
@@ -56,7 +55,7 @@ class JobBoard extends Component {
         console.log(`CWRP - FETCHING JOBS`)
         getJobs()
       }
-      if (nextProps.jobs && !authenticating) {
+      if (nextProps.jobs) {
         this.setState({loading: false})
       }
     }
@@ -297,7 +296,7 @@ JobBoard.propTypes = {
 const mapStateToProps = state => ({
   jobs: state.jobs.all,
   fetching: state.jobs.fetching,
-  authenticating: state.users.authenticating
+  authenticating: state.auth.authenticating
 })
 
 export default connect(mapStateToProps)(JobBoard)

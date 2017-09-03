@@ -6,17 +6,22 @@ import JobBoard from './JobBoard'
 import CandidateSearch from '../users/CandidateSearch'
 
 class Home extends Component {
+  componentWillReceiveProps (nextProps) {
+    console.log(`CWRP: ${nextProps.users ? nextProps.users.length : 0}`)
+  }
+
   render () {
     const {
-      user,
       getJobs,
       filterJobs,
       advancedFilterJobs,
       getUsers,
       filterUsers,
-      advancedFilterUsers
+      advancedFilterUsers,
+      coords,
+      isEmployer
     } = this.props
-
+    console.log('RE-RENDERING HOME')
     return (
       <div className='Home fadeIn animated'>
         <header className='Home-header'>
@@ -29,10 +34,10 @@ class Home extends Component {
           </Row>
         </header>
         {
-          user && user.is_employer
+          isEmployer
             ? (
               <CandidateSearch
-                coords={user ? user.coords : ''}
+                coords={coords}
                 getUsers={getUsers}
                 filterUsers={filterUsers}
                 advancedFilterUsers={advancedFilterUsers}
@@ -40,7 +45,7 @@ class Home extends Component {
             )
             : (
               <JobBoard
-                coords={user ? user.coords : ''}
+                coords={coords}
                 getJobs={getJobs}
                 filterJobs={filterJobs}
                 advancedFilterJobs={advancedFilterJobs}
@@ -52,10 +57,8 @@ class Home extends Component {
   }
 }
 Home.propTypes = {
-  user: PropTypes.any,
-  skills: PropTypes.arrayOf(PropTypes.object),
-  users: PropTypes.arrayOf(PropTypes.object),
-  jobs: PropTypes.arrayOf(PropTypes.object),
+  coords: PropTypes.string,
+  isEmployer: PropTypes.bool,
   getUsers: PropTypes.func,
   getJobs: PropTypes.func,
   filterJobs: PropTypes.func,

@@ -29,24 +29,20 @@ class CandidateSearch extends Component {
   componentDidMount () {
     const {users} = this.props
     console.log(`CDM - USERS: ${users ? users.length : 0}`)
-    // if (!users && !loading) {
-    //   console.log('GETTING USERS')
-    //   getUsers()
-    // }
-    // if (users) {
-    //   this.setState({loading: false})
-    // }
+
   }
 
   componentWillMount () {
     const {users, fetching, authenticating, getUsers} = this.props
     console.log(`CWM - USERS: ${users ? users.length : 0}`)
-    if (!authenticating && !users && !fetching) {
-      console.log('GETTING USERS, FETCHING: ', fetching)
-      getUsers()
-    }
-    if (users) {
-      this.setState({loading: false})
+    if (!authenticating) {
+      if (!users && !fetching) {
+        console.log('GETTING USERS, FETCHING: ', fetching)
+        getUsers()
+      }
+      if (users) {
+        this.setState({loading: false})
+      }
     }
   }
 
@@ -54,10 +50,13 @@ class CandidateSearch extends Component {
     const {users, getUsers, fetching, authenticating} = this.props
     console.log(`CWRP - USERS HAD: ${users ? users.length : 0}, GETTING: ${nextProps.users ? nextProps.users.length : 0}`)
     if (!authenticating) {
-      if (!users && !fetching) getUsers()
-    }
-    if (nextProps.users) {
-      this.setState({loading: false})
+      if (!users && !fetching) {
+        console.log(`CWRP - FETCHING USERS`)
+        getUsers()
+      }
+      if (nextProps.users) {
+        this.setState({loading: false})
+      }
     }
   }
 
@@ -297,12 +296,14 @@ CandidateSearch.propTypes = {
   coords: PropTypes.string,
   getUsers: PropTypes.func,
   filterUsers: PropTypes.func,
-  advancedFilterUsers: PropTypes.func
+  advancedFilterUsers: PropTypes.func,
+  fetching: PropTypes.bool,
+  authenticating: PropTypes.bool
 }
 
 const mapStateToProps = state => ({
   users: state.users.all,
-  authenticating: state.users.authenticating,
+  authenticating: state.auth.authenticating,
   fetching: state.users.fetching
 })
 

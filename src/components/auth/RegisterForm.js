@@ -229,7 +229,7 @@ class RegisterForm extends Component {
 }
 
 const mapStateToProps = state => ({
-  user: state.users.currentUser,
+  user: state.auth.currentUser,
   next: state.location.nextRoute
 })
 

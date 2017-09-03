@@ -4,10 +4,10 @@ import { connect } from 'react-redux'
 import { BrowserRouter as Router, Route, withRouter, Redirect } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
+import { logout } from '../../reducers/actions/auth'
 import {
   updatingUser,
   uploadingResume,
-  logout,
   gettingAllUsers,
   filteringUsers,
   buildBodyThenSearchUsers } from '../../reducers/actions/users'
@@ -47,6 +47,7 @@ import JobDetailPage from '../jobs/JobDetailPage'
 import Dashboard from '../dashboard/Dashboard'
 import AlertModal from '../utilities/AlertModal'
 import NavCollapse from './NavCollapse'
+import LoadingSpinner from '../utilities/LoadingSpinner'
 import './App.css'
 
 class App extends Component {
@@ -60,10 +61,6 @@ class App extends Component {
       marginBottom: '0',
       display: 'none'
     }
-  }
-
-  componentWillReceiveProps (nextProps) {
-    console.log('APP RECEIVEING PROPS: ', nextProps)
   }
 
   toggleDashMenu = event => {
@@ -182,150 +179,156 @@ class App extends Component {
       receiveLocation,
       receiveNext,
       receiveAlert,
-      next
+      authenticating
     } = this.props
 
     let dashHistory = {}
     console.log('APP LOCATION: ', this.props.location)
     return (
       <Router>
-        <div>
-          <MainNav
-            receiveLocation={receiveLocation}
-            handleClickPostJob={this.handleClickPostJob}
-            history={dashHistory}
-            user={this.props.user}
-            logOut={this.logOut}
-            toggleDashMenu={this.toggleDashMenu}
-            onlyOneActiveMatch={this.onlyOneActiveMatch}
-            showPostJob={this.showPostJob}
-          />
-          <NavCollapse
-            collapse={this.toggleDashMenu}
-            style={dashMenuStyle}
-            state={this.state}
-            user={user}
-            menu={dashMobileMenu}
-            history={history}
-          />
-          {
-            alert &&
-            <AlertModal
-              style={alert.style}
-              title={alert.title}
-              body={alert.body}
-              show={this.props.alert !== null}
-              next={alert.next}
-              footer={alert.footer ? alert.footer : false}
-            />
-          }
-          <Grid fluid className='App'>
-            {/* PUBLIC ROUTES */}
-            <Route exact strict path='/' component={() => (
-              <Home
-                user={user}
-                getJobs={getJobs}
-                filterJobs={filterJobs}
-                advancedFilterJobs={advancedFilterJobs}
-                getUsers={getUsers}
-                filterUsers={filterUsers}
-                advancedFilterUsers={advancedFilterUsers}
-              />
-            )} />
-            <Route exact path='/about' component={About} />
-            <Route exact path='/jobs/:id' component={({match, history}) => (
-              <JobDetailPage
-                getJob={getJob}
-                updateJob={updateJob}
-                deleteJob={deleteJob}
-                applyToJob={applyToJob}
-                saveJob={saveJob}
-                unsaveJob={unsaveJob}
-                match={match}
-                history={history}
-                receiveAlert={receiveAlert}
-                receiveNext={receiveNext}
-              />
-            )} />
-            <Route exact path='/register' component={RegisterForm} />
-            <Route exact path='/login' component={LoginForm} />
-            <Route exact path='/users/:id' component={UserProfile} />
+        {
+          authenticating
+            ? <LoadingSpinner />
+            : (
+              <div>
+                <MainNav
+                  receiveLocation={receiveLocation}
+                  handleClickPostJob={this.handleClickPostJob}
+                  history={dashHistory}
+                  user={this.props.user}
+                  logOut={this.logOut}
+                  toggleDashMenu={this.toggleDashMenu}
+                  onlyOneActiveMatch={this.onlyOneActiveMatch}
+                  showPostJob={this.showPostJob}
+                />
+                <NavCollapse
+                  collapse={this.toggleDashMenu}
+                  style={dashMenuStyle}
+                  state={this.state}
+                  user={user}
+                  menu={dashMobileMenu}
+                  history={history}
+                />
+                {
+                  alert &&
+                  <AlertModal
+                    style={alert.style}
+                    title={alert.title}
+                    body={alert.body}
+                    show={this.props.alert !== null}
+                    next={alert.next}
+                    footer={alert.footer ? alert.footer : false}
+                  />
+                }
+                <Grid fluid className='App'>
+                  {/* PUBLIC ROUTES */}
 
-            {/* PRIVATE ROUTES */}
-            <Route exact path='/dashboard' component={() => {
-              return user && user.is_employer
-                ? <Redirect to='/dashboard/manage-jobs' />
-                : <Redirect to='/dashboard/saved-jobs' />
-            }} />
-            <Route
-              exact
-              path='/dashboard/:action'
-              component={({match, history, location}) => {
-                dashHistory = history
-                /* if (!user) return <Redirect to='/login' /> */
-                return (
-                  <Dashboard
-                    getJob={getJob}
-                    updateJob={updateJob}
-                    deleteJob={deleteJob}
-                    applyToJob={applyToJob}
-                    saveJob={saveJob}
-                    unsaveJob={unsaveJob}
-                    closeJob={closeJob}
-                    duplicateJob={duplicateJob}
-                    getProject={getProject}
-                    updateProject={updateProject}
-                    deleteProject={deleteProject}
-                    history={history}
-                    location={location}
-                    match={match}
-                    handleNewSkills={this.handleNewSkills}
-                    user={user}
-                    updateUser={updateUser}
-                    uploadResume={uploadResume}
-                    next={next}
-                    alert={alert}
-                    receiveAlert={receiveAlert}
-                    receiveNext={receiveNext}
+                  <Route exact strict path='/' component={() => (
+                    <Home
+                      coords={user ? user.coords : ''}
+                      isEmployer={(user && user.is_employer) ? true: false}
+                      getJobs={getJobs}
+                      filterJobs={filterJobs}
+                      advancedFilterJobs={advancedFilterJobs}
+                      getUsers={getUsers}
+                      filterUsers={filterUsers}
+                      advancedFilterUsers={advancedFilterUsers}
+                    />
+                  )} />
+                  <Route exact path='/about' component={About} />
+                  <Route exact path='/jobs/:id' component={({match, history}) => (
+                    <JobDetailPage
+                      getJob={getJob}
+                      updateJob={updateJob}
+                      deleteJob={deleteJob}
+                      applyToJob={applyToJob}
+                      saveJob={saveJob}
+                      unsaveJob={unsaveJob}
+                      match={match}
+                      history={history}
+                      receiveAlert={receiveAlert}
+                      receiveNext={receiveNext}
+                    />
+                  )} />
+                  <Route exact path='/register' component={RegisterForm} />
+                  <Route exact path='/login' component={LoginForm} />
+                  <Route exact path='/users/:id' component={UserProfile} />
+
+                  {/* PRIVATE ROUTES */}
+                  <Route exact path='/dashboard' component={() => {
+                    return user && user.is_employer
+                      ? <Redirect to='/dashboard/manage-jobs' />
+                      : <Redirect to='/dashboard/saved-jobs' />
+                  }} />
+                  <Route
+                    exact
+                    path='/dashboard/:action'
+                    component={({match, history, location}) => {
+                      dashHistory = history
+                      /* if (!user) return <Redirect to='/login' /> */
+                      return (
+                        <Dashboard
+                          getJob={getJob}
+                          updateJob={updateJob}
+                          deleteJob={deleteJob}
+                          applyToJob={applyToJob}
+                          saveJob={saveJob}
+                          unsaveJob={unsaveJob}
+                          closeJob={closeJob}
+                          duplicateJob={duplicateJob}
+                          getProject={getProject}
+                          updateProject={updateProject}
+                          deleteProject={deleteProject}
+                          history={history}
+                          location={location}
+                          match={match}
+                          handleNewSkills={this.handleNewSkills}
+                          user={user}
+                          updateUser={updateUser}
+                          uploadResume={uploadResume}
+                          alert={alert}
+                          receiveAlert={receiveAlert}
+                          receiveNext={receiveNext}
+                        />
+                      )
+                    }}
                   />
-                )
-              }}
-            />
-            <Route
-              exact
-              path='/dashboard/:action/:id'
-              component={({match, history, location}) => {
-                /* if (!user) return <Redirect to='/login' /> */
-                return (
-                  <Dashboard
-                    getJob={getJob}
-                    updateJob={updateJob}
-                    deleteJob={deleteJob}
-                    applyToJob={applyToJob}
-                    saveJob={saveJob}
-                    unsaveJob={unsaveJob}
-                    closeJob={closeJob}
-                    duplicateJob={duplicateJob}
-                    getProject={getProject}
-                    updateProject={updateProject}
-                    deleteProject={deleteProject}
-                    history={history}
-                    location={location}
-                    match={match}
-                    handleNewSkills={this.handleNewSkills}
-                    user={user}
-                    updateUser={updateUser}
-                    uploadResume={uploadResume}
-                    next={next}
-                    alert={alert}
-                    receiveAlert={receiveAlert}
-                    receiveNext={receiveNext}
+                  <Route
+                    exact
+                    path='/dashboard/:action/:id'
+                    component={({match, history, location}) => {
+                      /* if (!user) return <Redirect to='/login' /> */
+                      return (
+                        <Dashboard
+                          getJob={getJob}
+                          updateJob={updateJob}
+                          deleteJob={deleteJob}
+                          applyToJob={applyToJob}
+                          saveJob={saveJob}
+                          unsaveJob={unsaveJob}
+                          closeJob={closeJob}
+                          duplicateJob={duplicateJob}
+                          getProject={getProject}
+                          updateProject={updateProject}
+                          deleteProject={deleteProject}
+                          history={history}
+                          location={location}
+                          match={match}
+                          handleNewSkills={this.handleNewSkills}
+                          user={user}
+                          updateUser={updateUser}
+                          uploadResume={uploadResume}
+                          alert={alert}
+                          receiveAlert={receiveAlert}
+                          receiveNext={receiveNext}
+                        />
+                      )
+                    }}
                   />
-                )
-              }}
-            />
-          </Grid>
-        </div>
+                </Grid>
+              </div>
+            )
+        }
       </Router>
     )
   }
@@ -368,10 +371,10 @@ App.propTypes = {
 }
 
 const mapStateToProps = state => ({
-  user: state.users.currentUser,
+  user: state.auth.currentUser,
   alert: state.alert,
-  next: state.location.nextRoute,
-  dashLocation: state.location.dashLocation
+  dashLocation: state.location.dashLocation,
+  authenticating: state.auth.authenticating
 })
 
 const mapDispatchToProps = dispatch => ({

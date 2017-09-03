@@ -2,7 +2,7 @@ import { createStore, applyMiddleware } from 'redux'
 import rootReducer from './reducers'
 import { createLogger } from 'redux-logger'
 import thunkMiddleware from 'redux-thunk'
-import { whoami } from './reducers/actions/users'
+import { whoami } from './reducers/actions/auth'
 
 const store = createStore(
   rootReducer,

@@ -124,7 +124,7 @@ CreateProjectForm.propTypes = {
 }
 
 const mapStateToProps = state => ({
-  user: state.users.currentUser,
+  user: state.auth.currentUser,
   skills: state.skills.all
 })
 

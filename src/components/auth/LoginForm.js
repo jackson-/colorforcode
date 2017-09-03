@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { Row, Col, FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap'
-import { login } from 'APP/src/reducers/actions/users'
+import { login } from 'APP/src/reducers/actions/auth'
 import './Form.css'
 import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
 
@@ -81,7 +81,7 @@ class LoginForm extends Component {
 }
 
 const mapStateToProps = state => ({
-  user: state.users.currentUser,
+  user: state.auth.currentUser,
   next: state.location.nextRoute
 })
 
