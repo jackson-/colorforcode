@@ -4,7 +4,9 @@ import { FormGroup, FormControl, ControlLabel,
          Checkbox, Radio, Button, Glyphicon, Row, Col } from 'react-bootstrap'
 import './SearchAdvanced.css'
 
-const SearchAdvanced = props => (
+const SearchAdvanced = props => {
+  console.log("PROPS", props.terms)
+  return (
   <form className='SearchAdvanced' onSubmit={props.filterJobs}>
     <h3 className='SearchAdvanced__header'>Advanced Search</h3>
     {props.filtered &&
@@ -114,7 +116,7 @@ const SearchAdvanced = props => (
       </Col>
     </Row>
   </form>
-)
+)}
 
 SearchAdvanced.propTypes = {
   toggleCheckbox: PropTypes.func.isRequired,

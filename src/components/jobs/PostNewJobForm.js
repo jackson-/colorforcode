@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { Row, Col, FormGroup, ControlLabel, FormControl, Button, Checkbox } from 'react-bootstrap'
 import axios from 'axios'
-import { creatingNewJob } from 'APP/src/reducers/actions/jobs'
+import { creatingNewJobs } from 'APP/src/reducers/actions/jobs'
 import { gettingAllSkills } from 'APP/src/reducers/actions/skills'
 import CreditCardFormControls from './CreditCard'
 import VirtualizedSelect from 'react-virtualized-select'
@@ -40,13 +40,15 @@ class PostJobForm extends Component {
       cvc: null,
       token: null,
       status: 'open',
-      app_method: 'email'
+      app_method: 'email',
+      jobs:[],
+      skills:[]
     }
   }
 
   componentDidMount () {
     const {skills} = this.props
-    if (!skills) this.props.getSkills()
+    if (!skills || skills.length === 0) this.props.getSkills()
   }
 
   handleLocation = zip_code => {
@@ -112,14 +114,28 @@ class PostJobForm extends Component {
 
   handleSubmit = event => {
     event.preventDefault()
-    const job = {...this.state}
+    let {jobs, skills, ...job} = this.state
     job.employer_id = this.props.user.employer.id
     job.employment_types = [...this.state.employment_types]
-    const skills = job.selectValue.map(skill => skill.value)
+    const selected_skills = job.selectValue.map(skill => skill.value)
     delete job.selectValue
-    // const token = this.refs.card.state.token
     this.clearForm()
-    this.props.createJobPost({job, skills}, this.props.history)
+    jobs.push(job)
+    skills.push(selected_skills)
+    this.props.createJobPosts({jobs, skills}, this.props.history)
+  }
+
+  addJob = event => {
+    event.preventDefault()
+    let {jobs, skills, ...job} = this.state
+    job.employer_id = this.props.user.employer.id
+    job.employment_types = [...this.state.employment_types]
+    const selected_skills = job.selectValue.map(skill => skill.value)
+    delete job.selectValue
+    this.clearForm()
+    jobs.push(job)
+    skills.push(selected_skills)
+    this.setState({jobs, skills})
   }
 
   _selectSkill = data => {
@@ -253,7 +269,8 @@ class PostJobForm extends Component {
               </FormControl>
             </FormGroup>
             <CreditCardFormControls ref='card' />
-            <Button className='primary' type='submit'>Post Job</Button>
+            <Button className='primary' type='submit'>Add Job & Checkout</Button>
+            <Button className='primary' onClick={this.addJob}>Add Another</Button>
           </form>
         </Col>
       </Row>
@@ -267,7 +284,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  createJobPost: (post, history) => dispatch(creatingNewJob(post, history)),
+  createJobPosts: (data, history) => dispatch(creatingNewJobs(data, history)),
   getSkills: post => dispatch(gettingAllSkills())
 })
 
@@ -275,7 +292,7 @@ PostJobForm.propTypes = {
   user: PropTypes.any.isRequired,
   skills: PropTypes.array.isRequired,
   getSkills: PropTypes.func.isRequired,
-  createJobPost: PropTypes.func.isRequired,
+  createJobPosts: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired
 }
 

@@ -7,22 +7,9 @@ import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
 
 class JobDetailPage extends Component {
   componentDidMount () {
-    console.log('CDM -')
     const {job, fetchingJob, match, getJob} = this.props
     const {id} = match.params
     if ((!job && !fetchingJob) || (job && (job.id !== Number(id)) && !fetchingJob)) getJob(id)
-  }
-
-  componentWillMount () {
-    console.log('CWM - ')
-  }
-
-  componentWillUnMount () {
-    console.log('CWUM')
-  }
-
-  componentWillReceiveProps (nextProps) {
-    console.log('CWRP')
   }
 
   render () {

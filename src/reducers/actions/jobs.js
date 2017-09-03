@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { RECEIVE_JOBS, RECEIVE_JOB, APPLIED_TO_JOB } from '../constants'
 import {
-  createNewJob,
+  createNewJobs,
   requestAllJobs,
   requestFilteredJobs,
   requestJob,
@@ -34,11 +34,9 @@ export const gettingAllJobs = () => dispatch => {
   dispatch(requestAllJobs())
   axios.get('/api/jobs')
     .then(res => res.data)
-    .then(jobs => {
-      // const {jobs, skills} = res
-      console.log("JOBS", jobs)
-      // dispatch(receiveJobs(jobs, skills))
-      dispatch(receiveJobs(jobs))
+    .then(data => {
+      const {hits, total, skills} = data
+      return dispatch(receiveJobs({hits, total}, skills))
     })
     .catch(err => console.error(`Mang, I couldn't find the jobs! ${err.stack}`))
 }
@@ -47,7 +45,10 @@ export const filteringJobs = query => dispatch => {
   dispatch(requestFilteredJobs())
   axios.post('/api/jobs/search', {query})
     .then(res => res.data)
-    .then(jobs => dispatch(receiveJobs(jobs)))
+    .then(data => {
+      const {hits, total, skills} = data
+      return dispatch(receiveJobs({hits, total}, skills))
+    })
     .catch(err => console.error(`Mang, I couldn't filter the jobs! ${err.stack}`))
 }
 
@@ -119,11 +120,11 @@ export const gettingJobById = job_id => dispatch => {
     .catch(err => console.error(`Mang I couldn't find the job! ${err.stack}`))
 }
 
-export const creatingNewJob = (jobPost, history) => dispatch => {
+export const creatingNewJobs = (data, history) => dispatch => {
   // set loading state to true to trigger UI changes
-  dispatch(createNewJob())
+  dispatch(createNewJobs())
   // create the new job
-  axios.post('/api/jobs', jobPost)
+  axios.post('/api/jobs', data)
     .then(res => res.data)
     // if the job is successfully created, we fetch the updated jobs list
     .then(newJobId => {
@@ -132,7 +133,7 @@ export const creatingNewJob = (jobPost, history) => dispatch => {
         type: 'confirmation',
         style: 'success',
         title: 'Success!',
-        body: 'Job successfully posted.',
+        body: 'Jobs successfully posted.',
         next: '/dashboard/manage-jobs'
       }))
     })

@@ -1,4 +1,4 @@
-import { CREATE_JOB, UPDATE_JOB, DELETE_JOB, REQUEST_JOB,
+import { CREATE_JOBS, UPDATE_JOB, DELETE_JOB, REQUEST_JOB,
          REQUEST_ALL_JOBS, CREATE_USER, UPDATE_USER,
          DELETE_USER, REQUEST_ALL_USERS, REQUEST_ALL_SKILLS,
          REQUEST_USER_JOBS, REQUEST_APPLIED_JOBS, APPLY_TO_JOB,
@@ -19,8 +19,8 @@ export const doneUploading = () => ({
   loading: false
 })
 
-export const createNewJob = () => ({
-  type: CREATE_JOB,
+export const createNewJobs = () => ({
+  type: CREATE_JOBS,
   loading: true
 })
 

@@ -29,8 +29,8 @@ class JobBoard extends Component {
   }
 
   componentDidMount () {
+    console.log("TERMS", this.state.terms)
     const {jobs} = this.props
-    console.log(`CDM - JOBS: ${jobs ? jobs.length : 0}`)
     if (jobs) {
       this.setState({loading: false})
     }
@@ -38,7 +38,6 @@ class JobBoard extends Component {
 
   componentWillMount () {
     const {jobs, fetching, getJobs} = this.props
-    console.log(`CWM - JOBS: ${jobs ? jobs.length : 0}`)
     if (!jobs && !fetching) getJobs()
     if (jobs) {
       this.setState({loading: false})
@@ -47,15 +46,10 @@ class JobBoard extends Component {
 
   componentWillReceiveProps (nextProps) {
     const {jobs, fetching, getJobs} = this.props
-    console.log(`CWRP - JOBS HAD: ${jobs ? jobs.length : 0}, GETTING: ${nextProps.jobs ? nextProps.jobs.length : 0}, FETCHING: ${fetching}`)
     if (!jobs && !fetching) getJobs()
     if (nextProps.jobs) {
       this.setState({loading: false})
     }
-  }
-
-  componentWillUnMount () {
-    console.log(`CWUM - UNMOUNTING!`)
   }
 
   handleLocation = zip_code => {
@@ -176,6 +170,7 @@ class JobBoard extends Component {
   }
 
   handlePagination = (jobs, sign) => {
+    debugger
     let page_num = 1
     let from = 0
     const next_page = sign === 'plus'
@@ -220,15 +215,15 @@ class JobBoard extends Component {
     const {query} = this.state
     this.props.filterJobs(query)
     // ^ when query === '', all job listings are shown
+    debugger
     if (query) this.setState({filtered: true, terms: [...this.state.pendingTerms]})
     // we only show the search results header if this.state.filtered === true
-    this.clearFilter()
+    // this.clearFilter()
   }
 
   render () {
     const {jobs, fetching} = this.props
     const {loading} = this.state
-    console.log('RENDERING, LOADING:', loading, 'FETCHING: ', fetching)
     return (
       <Row className='JobBoard'>
         <SearchBar

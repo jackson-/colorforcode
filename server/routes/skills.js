@@ -12,15 +12,6 @@ module.exports = require('express').Router()
   .post('/', (req, res, next) => {
     const user = req.body.user
     const skill = req.body.skill
-    // const token = req.body.token
-    // stripe.charges.create({
-    //   amount: 2,
-    //   currency: "usd",
-    //   source: token, // obtained with Stripe.js
-    //   description: "Charge for skill stuff"
-    // }, function(err, charge) {
-    //   console.log("ERR", err, "CAHRGE", charge)
-    // });
     Skill.create(skill)
     .then(createdSkill => {
     })

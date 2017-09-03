@@ -28,7 +28,6 @@ class CandidateSearch extends Component {
 
   componentDidMount () {
     const {users} = this.props
-    console.log(`CDM - USERS: ${users ? users.length : 0}`)
     // if (!users && !loading) {
     //   console.log('GETTING USERS')
     //   getUsers()
@@ -40,9 +39,7 @@ class CandidateSearch extends Component {
 
   componentWillMount () {
     const {users, fetching, getUsers} = this.props
-    console.log(`CWM - USERS: ${users ? users.length : 0}`)
     if (!users && !fetching) {
-      console.log('GETTING USERS, FETCHING: ', fetching)
       getUsers()
     }
     if (users) {
@@ -52,15 +49,10 @@ class CandidateSearch extends Component {
 
   componentWillReceiveProps (nextProps) {
     const {users, getUsers} = this.props
-    console.log(`CWRP - USERS HAD: ${users ? users.length : 0}, GETTING: ${nextProps.users ? nextProps.users.length : 0}`)
     if (!users) getUsers()
     if (nextProps.users) {
       this.setState({loading: false})
     }
-  }
-
-  componentWillUnMount () {
-    console.log(`CWUM - UNMOUNTING!`)
   }
 
   handleLocation(zip_code) {
@@ -230,7 +222,6 @@ class CandidateSearch extends Component {
 
   render () {
     const {users} = this.props
-    console.log('RENDERING, LOADING: ', this.props.loading)
     return (
       <Row className='CandidateSearch'>
         <SearchBar

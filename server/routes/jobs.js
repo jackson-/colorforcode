@@ -1,8 +1,8 @@
-const stripe = require('stripe')('API_SECRET')
+// const stripe = require('stripe')('API_SECRET')
 const nodemailer = require('nodemailer')
-// var stripe = require("stripe")(
-//   "sk_test_BQokikJOvBiI2HlWgH4olfQ2"
-// );
+var stripe = require("stripe")(
+  "sk_test_BQokikJOvBiI2HlWgH4olfQ2"
+);
 const Sequelize = require('sequelize')
 const db = require('APP/db')
 const {Job, Employer, Skill, User} = db
@@ -26,7 +26,6 @@ module.exports = require('express').Router()
 
   // search bar
   .post('/search', (req, res, next) => {
-    console.log("GETTING HERE")
     let jobs = []
     const {query, from} = req.body
     const size = 10
@@ -36,6 +35,7 @@ module.exports = require('express').Router()
         hasJoin:true,
     }
     // db.Model.$validateIncludedElements(options)
+    let q = query.split(' ').join(' & ')
     const db_query = "SELECT DISTINCT ON(id) id, * "+
       "FROM (SELECT job.*, " +
         // `ST_Distance(job.the_geom, ST_MakePoint(${body.coords})::geography) as distance, ` +
@@ -48,13 +48,13 @@ module.exports = require('express').Router()
       "JOIN jobskill ON jobskill.job_id = job.id " +
       "INNER JOIN skill ON skill.id = jobskill.skill_id " +
       "GROUP BY job.id, skill.id) p_search " +
-      `WHERE p_search.document @@ to_tsquery('english', '${query}') ` +
-      `ORDER BY id ASC, ts_rank(p_search.document, to_tsquery('english', '${query}')) DESC;`
+      "WHERE " +
+      `p_search.document @@ to_tsquery('english', '${q}') ` +
+      `ORDER BY id ASC, ts_rank(p_search.document, to_tsquery('english', '${q}')) DESC;`
     db.query( db_query,
       options).then((result) =>{
-      jobs = result
-      Skill.findAll().then(skills => {
-        return res.status(200).json({hits:jobs, total:jobs.length, skills})
+      return Skill.findAll().then(skills => {
+        return res.status(200).json({hits:result, total:result.length, skills})
       })
     }).catch(next);
   })
@@ -65,7 +65,6 @@ module.exports = require('express').Router()
     const offset = body.from
     const limit = body.size
     const tsquery = body.query
-    console.log(body)
     // var query = tsquery.indexOf(' ') == -1 ? "to_tsquery('english','" + tsquery + "')" : "plainto_tsquery('english','" + tsquery + "')";
     // db.query("SELECT *, ST_Distance(the_geom, ST_MakePoint(40.6655101,-73.8918897)::geography) AS Distance, ts_rank_cd(vector," + query + ",1)" +
     // " AS rank FROM job WHERE vector @@ " + query +
@@ -114,38 +113,43 @@ module.exports = require('express').Router()
   })
 
   .post('/', (req, res, next) => {
-    const {skills, job} = req.body
-    // const  token = req.body.token
-    // stripe.charges.create({
-    //   amount: 2,
-    //   currency: "usd",
-    //   source: token, // obtained with Stripe.js
-    //   description: "Charge for job stuff"
-    // }, function(err, charge) {
-    //   console.log("ERR", err, "CHARGE", charge)
-    // });
-    let newJobId = null
-    Job.create(job)
-      .then(createdJob => {
-        newJobId = createdJob.id
-        return createdJob.addSkills(skills)
-      })
-      .then(jobskill => {
-        return Job.findOne({
-          where: {
-            id: jobskill[0][0].get().job_id
-          },
-          include: [Skill, Employer]
-        })
-      })
-      .then(job => esClient.create({
-        index: 'data',
-        type: 'job',
-        id: `${job.id}`,
-        body: job.get()
-      }))
-      .then(() => res.json(newJobId))
-      .catch(next)
+    const {jobs, skills} = req.body
+    console.log("JOBS", jobs, "SKILLS", skills)
+    let amount = 0;
+    if(jobs.length >= 5){
+      amount = jobs.length * 225 * 100
+    } else if(jobs.length >= 2 && jobs.length <= 4){
+      amount = jobs.length * 270 * 100
+    }else if(jobs.length === 1) {
+      amount = 30000
+    } else{
+      return res.status(400).json({message: 'No jobs found'})
+    }
+
+    const token = req.body.token
+    stripe.charges.create({
+      amount,
+      currency: "usd",
+      // source: token, // obtained with Stripe.js
+      source:'tok_visa',
+      description: "Charge for job stuff"
+    }, function(err, charge) {
+      return {err, charge}
+    });
+
+    Job.bulkCreate(jobs)
+    .then(createdJobs => {
+      const updatePromises = createdJobs.map((job, i)  => {
+        console.log("JOB", job, "ITEREATOR", i)
+        return job.addSkills(skills[i]);
+      });
+      return db.Sequelize.Promise.all(updatePromises)
+    })
+    .then(updatedJobs => {
+      return res.status(200).json({message: "Jobs successfully created"})
+    })
+    .catch(next)
+
   })
 
   .get('/:id',

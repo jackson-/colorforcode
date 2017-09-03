@@ -28,27 +28,21 @@ class UserProfile extends Component {
   componentDidMount () {
     const {user, fetchingUser, match} = this.props
     const {id} = match.params
-    console.log('CDM - USER', user, 'FETCHING USER: ', fetchingUser)
   }
 
   componentWillReceiveProps () {
     const {user, fetchingUser, match} = this.props
     const {id} = match.params
-    console.log('CWRP - USER', user, 'FETCHING USER: ', fetchingUser)
-    if (fetchingUser) console.log(`CWRP - FETCHING USER ${id}`)
   }
 
   componentWillMount () {
     const {user, fetchingUser, match, getUser} = this.props
     const {id} = match.params
-    console.log('CWM - USER', user, 'FETCHING USER: ', fetchingUser)
     if (!fetchingUser) {
       if (!user || user.id !== Number(id)) {
         getUser(id)
-        console.log(`CWM - HAD USER ${user.id} FETCHING USER ${id}`)
       }
     }
-    if (fetchingUser) console.log(`CWM - FETCHING USER ${id}, ${fetchingUser}`)
   }
 
   handleOnLoad = () => {
