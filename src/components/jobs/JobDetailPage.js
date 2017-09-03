@@ -37,7 +37,9 @@ class JobDetailPage extends Component {
       deleteJob,
       saveJob,
       unsaveJob,
-      handleNewSkills
+      handleNewSkills,
+      receiveAlert,
+      receiveNext
     } = this.props
 
     let jobComponent = ''
@@ -65,6 +67,8 @@ class JobDetailPage extends Component {
             applyToJob={applyToJob}
             saveJob={saveJob}
             unsaveJob={unsaveJob}
+            receiveAlert={receiveAlert}
+            receiveNext={receiveNext}
           />
         )
       }
@@ -92,8 +96,10 @@ JobDetailPage.propTypes = {
   saveJob: PropTypes.func,
   getJob: PropTypes.func,
   selected: PropTypes.arrayOf(PropTypes.object), // selected skills
-  handleNewSkills: PropTypes.func
+  handleNewSkills: PropTypes.func,
   // ^creates new skills if user made any custom ones (class method of App.js)
+  receiveNext: PropTypes.func,
+  receiveAlert: PropTypes.func
 }
 
 const mapStateToProps = state => ({

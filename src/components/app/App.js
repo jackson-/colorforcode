@@ -117,7 +117,7 @@ class App extends Component {
     receiveSelectedSkills([...selectedSkillsNew, ...selectedSkillsExisting])
   }
 
-  handleClickPostJob = () => {
+  handleClickPostJob = event => {
     const {user, receiveNext, receiveAlert, history} = this.props
     if (!user) {
       receiveNext('/dashboard/post-new-job')
@@ -243,6 +243,8 @@ class App extends Component {
                 unsaveJob={unsaveJob}
                 match={match}
                 history={history}
+                receiveAlert={receiveAlert}
+                receiveNext={receiveNext}
               />
             )} />
             <Route exact path='/register' component={RegisterForm} />
@@ -402,7 +404,7 @@ const mapDispatchToProps = dispatch => ({
   deleteProject: (projectId, history) => dispatch(deletingProject(projectId, history)),
   receiveProject: (project) => dispatch(receiveProject(project)),
   receiveLocation: location => event => dispatch(receiveDashLocation(location)),
-  receiveNext: route => event => dispatch(receiveNextRoute(route)),
+  receiveNext: route => dispatch(receiveNextRoute(route)),
   receiveAlert: alert => dispatch(receiveAlert(alert))
 })
 

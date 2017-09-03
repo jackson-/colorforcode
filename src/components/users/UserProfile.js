@@ -26,7 +26,7 @@ class UserProfile extends Component {
   }
 
   componentDidMount () {
-    const {user, fetchingUser, match} = this.props
+    const {user, fetchingUser} = this.props
     console.log('CDM - USER', user, 'FETCHING USER: ', fetchingUser)
   }
 
@@ -197,7 +197,7 @@ class UserProfile extends Component {
                     }
                     {
                       user.resume_url &&
-                      <a href={user.resume_url} alt={`${user.first_name}'s' resume`}>
+                      <a href={user.resume_url} target='_blank' alt={`${user.first_name}'s' resume`}>
                         {`View ${user.first_name}'s Resume`}
                       </a>
                     }

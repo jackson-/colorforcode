@@ -203,6 +203,12 @@ class EditProfile extends Component {
               user={this.props.user}
             />
           }
+          {
+            !user.is_employer &&
+            <a href={user.resume_url} target='_blank'>
+              <p>{`Resume currently on file: ${user.resume_url.substring(43)}`}</p>
+            </a>
+          }
           <form className='EditProfile-body' onSubmit={this.handleSubmit}>
             {fields}
             {user.resume_url &&
