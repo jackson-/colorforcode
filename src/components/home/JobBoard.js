@@ -31,24 +31,35 @@ class JobBoard extends Component {
   componentDidMount () {
     console.log("TERMS", this.state.terms)
     const {jobs} = this.props
-    if (jobs) {
-      this.setState({loading: false})
-    }
+    console.log(`CDM - JOBS: ${jobs ? jobs.length : 0}`)
   }
 
   componentWillMount () {
-    const {jobs, fetching, getJobs} = this.props
-    if (!jobs && !fetching) getJobs()
-    if (jobs) {
-      this.setState({loading: false})
+    const {jobs, fetching, authenticating, getJobs} = this.props
+    console.log(`CWM - JOBS: ${jobs ? jobs.length : 0}`)
+    if (!authenticating) {
+      console.log('AUTHENTICATING', authenticating)
+      if (!jobs && !fetching) {
+        console.log(`CWM - FETCHING JOBS`)
+        getJobs()
+      }
+      if (jobs) {
+        this.setState({loading: false})
+      }
     }
   }
 
   componentWillReceiveProps (nextProps) {
-    const {jobs, fetching, getJobs} = this.props
-    if (!jobs && !fetching) getJobs()
-    if (nextProps.jobs) {
-      this.setState({loading: false})
+    const {jobs, fetching, authenticating, getJobs} = this.props
+    console.log(`CWRP - JOBS HAD: ${jobs ? jobs.length : 0}, GETTING: ${nextProps.jobs ? nextProps.jobs.length : 0}, FETCHING: ${fetching}`)
+    if (!authenticating) {
+      if (!jobs && !fetching && (nextProps.user === null)) {
+        console.log(`CWRP - FETCHING JOBS`)
+        getJobs()
+      }
+      if (nextProps.jobs && !authenticating) {
+        this.setState({loading: false})
+      }
     }
   }
 
@@ -194,7 +205,7 @@ class JobBoard extends Component {
     event.preventDefault()
     const coords = this.state.coords
       ? this.state.coords
-      : this.props.user.coords || ''
+      : this.props.coords
     const {page_num, from} = this.handlePagination(this.props.jobs, sign)
     if (!page_num) {
       return
@@ -224,6 +235,7 @@ class JobBoard extends Component {
   render () {
     const {jobs, fetching} = this.props
     const {loading} = this.state
+    console.log('RENDERING - FETCHING: ', fetching)
     return (
       <Row className='JobBoard'>
         <SearchBar
@@ -277,17 +289,18 @@ class JobBoard extends Component {
 
 JobBoard.propTypes = {
   jobs: PropTypes.arrayOf(PropTypes.object),
-  user: PropTypes.any,
   getJobs: PropTypes.func,
   filterJobs: PropTypes.func,
   advancedFilterJobs: PropTypes.func,
-  fetching: PropTypes.bool
+  fetching: PropTypes.bool,
+  coords: PropTypes.string,
+  authenticating: PropTypes.bool
 }
 
 const mapStateToProps = state => ({
   jobs: state.jobs.all,
-  user: state.users.currentUser,
-  fetching: state.jobs.fetching
+  fetching: state.jobs.fetching,
+  authenticating: state.users.authenticating
 })
 
 export default connect(mapStateToProps)(JobBoard)

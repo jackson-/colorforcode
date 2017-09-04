@@ -1,21 +1,18 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
-import { Row, Col, FormGroup, ControlLabel, FormControl, Button, Checkbox } from 'react-bootstrap'
+import { Row, Col, FormGroup, ControlLabel, FormControl, Button, Checkbox, HelpBlock } from 'react-bootstrap'
 import axios from 'axios'
 import { creatingNewJobs } from 'APP/src/reducers/actions/jobs'
 import { gettingAllSkills } from 'APP/src/reducers/actions/skills'
 import CreditCardFormControls from './CreditCard'
 import VirtualizedSelect from 'react-virtualized-select'
+import SkillTypeaheadSelect from 'APP/src/components/utilities/SkillTypeaheadSelect'
 import PropTypes from 'prop-types'
 import 'react-select/dist/react-select.css'
 import 'react-virtualized/styles.css'
 import 'react-virtualized-select/styles.css'
 import '../auth/Form.css'
-
-function arrowRenderer () {
-  return <span />
-}
 
 class PostJobForm extends Component {
   constructor (props) {
@@ -71,7 +68,9 @@ class PostJobForm extends Component {
   }
 
   handleChange = type => event => {
-    const { value } = event.target
+    let value = Array.isArray(event)
+      ? event
+      : event.target.value
     if (type === 'zip_code' && value.toString().length === 5) {
       /* first we finish updating the state of the input, then we use the zip to find the rest of the location data by passing the callback to setState (an optional 2nd param) */
       this.setState({[type]: value}, this.handleLocation(value))
@@ -82,6 +81,8 @@ class PostJobForm extends Component {
       const employment_types = new Set([...this.state.employment_types])
       /* ^Using a Set instead of an array because we need the data values to be unique */
       this.setState({employment_types})
+    } else if (type === 'skills') {
+      this.props.handleNewSkills(value)
     } else {
       this.setState({[type]: value})
     }
@@ -157,7 +158,6 @@ class PostJobForm extends Component {
   }
 
   render () {
-    let skills = this.props.skills.map(s => ({label: s.title, value: s.id}))
     return (
       <Row className='PostJobForm fadeIn animated'>
         <Col xs={12} sm={6} md={6} lg={6}>
@@ -172,21 +172,12 @@ class PostJobForm extends Component {
               />
             </FormGroup>
             <ControlLabel>
-              Required Skills (type below and hit 'Enter' to select and 'Backspace to deselect')
+              Key Skills
             </ControlLabel>
-            <VirtualizedSelect
-              arrowRenderer={arrowRenderer}
-              clearable
-              searchable
-              simpleValue
-              labelKey='label'
-              valueKey='value'
-              ref='job_search'
-              multi
-              options={skills}
-              onChange={(data) => this._selectSkill(data)}
-              value={this.state.selectValue}
-            />
+            <SkillTypeaheadSelect handleChange={this.handleChange} />
+            <HelpBlock>
+              Type and use arrows to select skill, then hit 'Enter' to add selected skill.
+            </HelpBlock>
             <FormGroup controlId='description'>
               <ControlLabel>Job Description and Requirements</ControlLabel>
               <FormControl
@@ -280,7 +271,7 @@ class PostJobForm extends Component {
 
 const mapStateToProps = state => ({
   user: state.users.currentUser,
-  skills: state.skills.all
+  selected: state.skills.selected
 })
 
 const mapDispatchToProps = dispatch => ({

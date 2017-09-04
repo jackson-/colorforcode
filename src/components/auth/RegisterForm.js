@@ -173,10 +173,11 @@ class RegisterForm extends Component {
   handleSubmit = event => {
     event.preventDefault()
     const newUser = {...this.state}
+    const {history, next} = this.props
     // turn the set into an array (postgres rejects sets)
     newUser.employment_types = [...newUser.employment_types]
     this.clearForm()
-    this.props.createUser(newUser)
+    this.props.createUser(newUser, history, next)
   }
 
   render () {
@@ -228,7 +229,8 @@ class RegisterForm extends Component {
 }
 
 const mapStateToProps = state => ({
-  user: state.users.currentUser
+  user: state.users.currentUser,
+  next: state.location.nextRoute
 })
 
 const mapDispatchToProps = dispatch => ({

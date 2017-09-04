@@ -17,15 +17,39 @@ class JobInfoDisplay extends Component {
   }
 
   applyToJob = () => {
-    const {user, job, applyToJob, history} = this.props
-    applyToJob(user, job.id, history)
+    const {user, job, receiveAlert, receiveNext, applyToJob, history} = this.props
+    if (!user) {
+      receiveNext(`/jobs/${job.id}`)
+      receiveAlert({
+        type: 'error',
+        style: 'warning',
+        title: 'Not signed in!',
+        body: 'Welcome! Log in or register for an account, then we\'ll send you back to apply to this job.',
+        next: '',
+        footer: true
+      })
+    } else {
+      applyToJob(user, job.id, history)
+    }
   }
 
   saveJob = () => {
-    const {user, job, saveJob} = this.props
-    let savedJobsArr = user.savedJobs.map(j => j.id)
-    savedJobsArr.push(job.id)
-    saveJob({userId: user.id, savedJobsArr})
+    const {user, job, saveJob, receiveAlert, receiveNext} = this.props
+    if (!user) {
+      receiveNext(`/jobs/${job.id}`)
+      receiveAlert({
+        type: 'error',
+        style: 'warning',
+        title: 'Not signed in!',
+        body: 'Welcome! Log in or register for an account, then we\'ll send you back to save this job.',
+        next: '',
+        footer: true
+      })
+    } else {
+      let savedJobsArr = user.savedJobs.map(j => j.id)
+      savedJobsArr.push(job.id)
+      saveJob({userId: user.id, savedJobsArr})
+    }
   }
 
   unsaveJob = () => {
@@ -144,7 +168,9 @@ JobInfoDisplay.propTypes = {
   job: PropTypes.object,
   saveJob: PropTypes.func,
   unsaveJob: PropTypes.func,
-  applyToJob: PropTypes.func
+  applyToJob: PropTypes.func,
+  receiveNext: PropTypes.func,
+  receiveAlert: PropTypes.func
 }
 
 export default JobInfoDisplay

@@ -137,8 +137,10 @@ module.exports = require('express').Router()
     }, function(err, charge) {
       return {err, charge}
     });
-    jobs.forEach(jobs, function(job) {
-      return Job.create(job);
+    Promise.map(jobs, (job) => {
+      return Job.create(job)
+    }).then((results) => {
+      console.log("RESULTS", results)
     })
 
     // Job.bulkCreate(jobs)

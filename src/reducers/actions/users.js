@@ -1,28 +1,119 @@
 import axios from 'axios'
-import { RECEIVE_USERS, AUTHENTICATED, RECEIVE_USER } from '../constants'
-import { createNewUser, requestAllUsers, beginUploading,
-         doneUploading, requestUser, requestFilteredUsers } from './loading'
+import {
+  RECEIVE_USERS, AUTHENTICATED, RECEIVE_USER,
+  AUTHENTICATING, CREATE_USER, UPDATE_USER,
+  DELETE_USER, REQUEST_ALL_USERS, BEGIN_UPLOADING,
+  DONE_UPLOADING, REQUEST_USER, REQUEST_FILTERED_USERS } from '../constants'
+import { receiveNextRoute } from '../routeReducer'
 /* --------- PURE ACTION CREATORS --------- */
 
 export const receiveAllUsers = users => ({
   users,
-  loading: false,
   type: RECEIVE_USERS
 })
 
 export const receiveUser = user => ({
   selected: user,
-  loading: false,
   type: RECEIVE_USER
 })
 
 export const authenticated = user => ({
   user,
-  loading: false,
   type: AUTHENTICATED
 })
 
+export const authenticating = () => ({
+  type: AUTHENTICATING
+})
+
+export const beginUploading = () => ({
+  type: BEGIN_UPLOADING
+})
+
+export const doneUploading = () => ({
+  type: DONE_UPLOADING
+})
+
+export const requestFilteredUsers = () => ({
+  type: REQUEST_FILTERED_USERS
+})
+
+export const requestUser = () => ({
+  type: REQUEST_USER
+})
+
+export const createNewUser = () => ({
+  type: CREATE_USER
+})
+
+export const updateUser = () => ({
+  type: UPDATE_USER
+})
+
+export const deleteUser = () => ({
+  type: DELETE_USER
+})
+
+export const requestAllUsers = () => ({
+  type: REQUEST_ALL_USERS
+})
+
 /* --------- ASYNC ACTION CREATORS (THUNKS) --------- */
+
+export const whoami = (history, next) => dispatch => {
+  dispatch(authenticating())
+  axios.get('/api/auth/whoami')
+    .then(response => {
+      const user = response.data
+      dispatch(authenticated(user))
+      if (history) {
+        console.log('NEXT', next)
+        if (next) {
+          history.push(next)
+          receiveNextRoute('')
+        } else {
+          history.push(
+            user.is_employer
+              ? '/dashboard/manage-jobs'
+              : '/dashboard/saved-jobs'
+          )
+        }
+      }
+    })
+    .catch(err => {
+      console.error(err.stack)
+      dispatch(authenticated(null))
+    })
+}
+
+export const login = (email, password, history, next) => dispatch => {
+  axios.post('/api/auth/login/local', {email, password})
+    .then(() => dispatch(whoami(history, next)))
+    .catch(() => dispatch(whoami()))
+}
+
+export const logout = () => dispatch => {
+  axios.post('/api/auth/logout')
+    .then(() => {
+      dispatch(whoami())
+    })
+    .catch(() => dispatch(whoami()))
+}
+
+export const creatingNewUser = (user, history, next) => dispatch => {
+  // set loading state to true to trigger UI changes
+  dispatch(createNewUser())
+  // create the new user
+  axios.post('/api/users', user)
+    .then(res => res.data)
+    // if the user is successfully created, we receive the updated users list
+    .then(newUser => {
+      dispatch(login(newUser.email, newUser.password, history, next))
+      dispatch(whoami())
+    })
+    // otherwise we catch the error...
+    .catch(err => console.error(`Sorry, cuz. We couldn't create that user...${err.stack}`))
+}
 
 export const gettingAllUsers = () => dispatch => {
   dispatch(requestAllUsers())
@@ -63,54 +154,6 @@ export const buildBodyThenSearchUsers = (bodyBuilderFunc, coords) => {
     const body = bodyBuilderFunc(coords)
     dispatch(advancedFilteringUsers(body))
   }
-}
-
-export const whoami = (history) => dispatch => {
-  axios.get('/api/auth/whoami')
-    .then(response => {
-      const user = response.data
-      dispatch(authenticated(user))
-      if (history) {
-        history.push(
-          user.is_employer
-            ? '/dashboard/manage-jobs'
-            : '/dashboard/saved-jobs'
-        )
-      }
-    })
-    .catch(err => {
-      console.error(err.stack)
-      dispatch(authenticated(null))
-    })
-}
-
-export const login = (email, password, history) => dispatch => {
-  axios.post('/api/auth/login/local', {email, password})
-    .then(() => dispatch(whoami(history)))
-    .catch(() => dispatch(whoami()))
-}
-
-export const logout = () => dispatch => {
-  axios.post('/api/auth/logout')
-    .then(() => {
-      dispatch(whoami())
-    })
-    .catch(() => dispatch(whoami()))
-}
-
-export const creatingNewUser = (user) => dispatch => {
-  // set loading state to true to trigger UI changes
-  dispatch(createNewUser())
-  // create the new user
-  axios.post('/api/users', user)
-    .then(res => res.data)
-    // if the user is successfully created, we receive the updated users list
-    .then(newUser => {
-      dispatch(login(newUser.email, newUser.password))
-      dispatch(whoami())
-    })
-    // otherwise we catch the error...
-    .catch(err => console.error(`Sorry, cuz. We couldn't create that user...${err.stack}`))
 }
 
 export const creatingNewEmployer = employer => dispatch => {

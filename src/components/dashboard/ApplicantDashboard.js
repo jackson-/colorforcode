@@ -17,6 +17,7 @@ import ImageUploader from './ImageUploader'
 
 const ApplicantDashboard = ({
   skills,
+  handleNewSkills,
   jobs,
   user,
   project,
@@ -89,6 +90,7 @@ const ApplicantDashboard = ({
                 <EditProject
                   history={history}
                   skills={skills}
+                  handleNewSkills={handleNewSkills}
                   getProject={getProject}
                   updateProject={updateProject}
                   deleteProject={deleteProject}
@@ -101,7 +103,6 @@ const ApplicantDashboard = ({
             <Route exact path='/dashboard/saved-jobs/:id' component={({match, history}) => (
               <JobDetailPage
                 user={user}
-                skills={skills}
                 getJob={getJob}
                 applyToJob={applyToJob}
                 saveJob={saveJob}
@@ -113,7 +114,6 @@ const ApplicantDashboard = ({
             <Route exact path='/dashboard/jobs/:id' component={({match, history}) => (
               <JobDetailPage
                 user={user}
-                skills={skills}
                 getJob={getJob}
                 applyToJob={applyToJob}
                 saveJob={saveJob}
@@ -131,9 +131,10 @@ const ApplicantDashboard = ({
 
 ApplicantDashboard.propTypes = {
   job: PropTypes.object,
-  jobs: PropTypes.array,
+  jobs: PropTypes.arrayOf(PropTypes.object),
   user: PropTypes.any,
-  skills: PropTypes.array,
+  skills: PropTypes.arrayOf(PropTypes.object),
+  handleNewSkills: PropTypes.func,
   getJob: PropTypes.func.isRequired,
   updateProject: PropTypes.func.isRequired,
   deleteProject: PropTypes.func.isRequired,

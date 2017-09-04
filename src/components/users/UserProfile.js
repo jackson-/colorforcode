@@ -119,7 +119,7 @@ class UserProfile extends Component {
                     {user.title}
                   </p>
                   <p className='UserDetail__header-location'>
-                    <Glyphicon glyph='globe' /> {`${user.location}`}
+                    <Glyphicon glyph='map-marker' /> {`${user.location}`}
                   </p>
                   <IconBar icons={icons} color='white' />
                 </div>
@@ -192,7 +192,7 @@ class UserProfile extends Component {
                     }
                     {
                       user.resume_url &&
-                      <a href={user.resume_url} alt={`${user.first_name}'s' resume`}>
+                      <a href={user.resume_url} target='_blank' alt={`${user.first_name}'s' resume`}>
                         {`View ${user.first_name}'s Resume`}
                       </a>
                     }

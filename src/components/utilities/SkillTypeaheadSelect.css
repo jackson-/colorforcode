@@ -1,0 +1,40 @@
+.rbt {
+  height: auto;
+  display: inline-flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.rbt-input {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.rbt-input-main {
+  margin: 5px;
+  display: inline-flex;
+  align-self: center;
+}
+
+.rbt-token {
+  width: fit-content;
+  background: #12CD6A;
+  border-radius: 3px;
+  margin: 5px;
+  padding: 3px 5px;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+}
+
+.rbt-token-close-button {
+  margin: 0 5px 0 10px;
+  font-size: 16px;
+}
+
+.rbt-menu {
+  width: 100% !important;
+  max-height: 150px !important;
+  text-align: left;
+}

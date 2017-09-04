@@ -35,8 +35,9 @@ class LoginForm extends Component {
   handleSubmit = event => {
     event.preventDefault()
     const { email, password } = this.state
+    const {history, next} = this.props
     this.clearForm()
-    this.props.loginUser(email, password, this.props.history)
+    this.props.loginUser(email, password, history, next)
   }
 
   render () {
@@ -80,13 +81,12 @@ class LoginForm extends Component {
 }
 
 const mapStateToProps = state => ({
-  user: state.users.currentUser
+  user: state.users.currentUser,
+  next: state.location.nextRoute
 })
 
 const mapDispatchToProps = dispatch => ({
-  loginUser: (email, password, history) => dispatch(login(email, password, history))
+  loginUser: (email, password, history, next) => dispatch(login(email, password, history, next))
 })
 
-const LoginFormContainer = connect(mapStateToProps, mapDispatchToProps)(LoginForm)
-
-export default withRouter(LoginFormContainer)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(LoginForm))
