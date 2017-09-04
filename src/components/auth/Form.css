@@ -10,13 +10,13 @@
   border: none;
   padding: 11px;
   width: 100%;
+  transition: all 0.2s ease-in-out;
 }
 
 .EditProfile .btn-login-reg:hover {
   background: #12CD6A;
   color: #FFFFFF;
   box-shadow: none;
-  transition: all 0.2s ease-in-out;
   transition-duration: 0.2s;
 }
 

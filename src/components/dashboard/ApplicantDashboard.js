@@ -69,7 +69,7 @@ const ApplicantDashboard = ({
           </Col>
           <Col xs={12} sm={9} md={9} lg={9} className='Dashboard__content'>
             <Route exact path='/dashboard/applications' component={({history}) => (
-              <Applications user={user} />
+              <Applications user={user} animated={user !== null} />
             )} />
             <Route exact path='/dashboard/saved-jobs' component={({history}) => (
               <SavedJobs
@@ -79,6 +79,7 @@ const ApplicantDashboard = ({
                 history={history}
                 unsaveJob={unsaveJob}
                 applyToJob={applyToJob}
+                animated={user !== null}
               />
             )} />
             <Route exact path='/dashboard/projects' component={() => (

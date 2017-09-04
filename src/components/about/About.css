@@ -1,6 +1,5 @@
 .About {
   font-family: Merriweather, 'Helvetica Neue', Arial, sans-serif;
-  padding-top: 63px;
   text-align: center;
 }
 
@@ -33,6 +32,7 @@
 }
 
 .About__hero-heading {
+  padding-top: 10%;
   font-size: 30px;
   font-weight: 700;
 }

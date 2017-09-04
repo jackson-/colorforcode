@@ -68,7 +68,7 @@ const NavBar = props => {
                     >
                       <MenuItem>Dashboard</MenuItem>
                     </LinkContainer>
-                    <LinkContainer to='#' eventKey={3.1} onClick={props.logOut()}>
+                    <LinkContainer to='#' eventKey={3.1} onSelect={props.logOut}>
                       <MenuItem >Logout</MenuItem>
                     </LinkContainer>
                   </NavDropdown>

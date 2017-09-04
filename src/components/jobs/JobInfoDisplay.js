@@ -23,7 +23,7 @@ class JobInfoDisplay extends Component {
       receiveAlert({
         type: 'error',
         style: 'warning',
-        title: 'Not signed in!',
+        title: 'Not signed in',
         body: 'Welcome! Log in or register for an account, then we\'ll send you back to apply to this job.',
         next: '',
         footer: true
@@ -40,7 +40,7 @@ class JobInfoDisplay extends Component {
       receiveAlert({
         type: 'error',
         style: 'warning',
-        title: 'Not signed in!',
+        title: 'Not signed in',
         body: 'Welcome! Log in or register for an account, then we\'ll send you back to save this job.',
         next: '',
         footer: true

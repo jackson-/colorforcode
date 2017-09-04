@@ -58,21 +58,23 @@ class App extends Component {
       opacity: '0',
       height: '0',
       padding: '0',
-      marginBottom: '0',
-      display: 'none'
+      transform: 'translateY(-300px)',
+      closing: false
     }
   }
 
   toggleDashMenu = event => {
-    let height = this.props.user.is_employer ? '215px' : '300px'
     if (event) event.preventDefault()
+    const height = this.props.user.is_employer ? '215px' : '300px'
     this.setState({
-      showDashMenu: true,
-      height: this.state.height === height ? '0' : height,
+      showDashMenu: !this.state.showDashMenu,
+      // height: this.state.height === height ? '0' : height,
       padding: this.state.padding === '75px 0 10px 0' ? '0' : '75px 0 10px 0',
-      marginBottom: this.state.marginBottom === '-60px' ? '0' : '-60px',
+      // marginBottom: this.state.marginBottom === '-60px' ? '0' : '-60px',
       opacity: this.state.opacity === '1' ? '0' : '1',
-      display: this.state.display === 'block' ? 'none' : 'block'
+      // display: this.state.display === 'block' ? 'none' : 'block'
+      transform: this.state.transform === 'translateY(-300px)' ? 'translateY(0)' : 'translateY(-300px)',
+      closing: this.state.showDashMenu
     })
   }
 
@@ -121,7 +123,7 @@ class App extends Component {
       receiveAlert({
         type: 'error',
         style: 'warning',
-        title: 'Not signed in!',
+        title: 'Not signed in',
         body: 'Welcome! Log in or register for an employer account, then we\'ll send you to your dashboard to post a new job.',
         next: '',
         footer: true
@@ -132,27 +134,6 @@ class App extends Component {
   }
 
   render () {
-    const dashMenuStyle = {
-      padding: this.state.padding,
-      height: this.state.height,
-      marginBottom: this.state.marginBottom,
-      opacity: this.state.opacity
-    }
-
-    const dashMobileMenu = {
-      employer: [
-        {to: '/dashboard/post-new-job', glyph: 'plus-sign', text: 'Post New Job'},
-        {to: '/dashboard/manage-jobs', glyph: 'list-alt', text: 'Manage Jobs'},
-        {to: '/dashboard/edit-profile', glyph: 'user', text: 'Edit Profile'}
-      ],
-      applicant: [
-        {to: '/dashboard/applications', glyph: 'list-alt', text: 'Applications'},
-        {to: '/dashboard/edit-profile', glyph: 'user', text: 'Edit Profile'},
-        {to: '/dashboard/saved-jobs', glyph: 'heart', text: 'Saved Jobs'},
-        {to: '/dashboard/add-project', glyph: 'plus-sign', text: 'Add Project'},
-        {to: '/dashboard/projects', glyph: 'briefcase', text: 'Projects'}
-      ]
-    }
     const {
       alert,
       user,
@@ -175,13 +156,12 @@ class App extends Component {
       uploadResume,
       deleteProject,
       getProject,
-      history,
       receiveLocation,
       receiveNext,
       receiveAlert,
       authenticating
     } = this.props
-
+    let animated = !this.state.showDashMenu && !this.state.closing
     return (
       <Router>
         {
@@ -200,11 +180,15 @@ class App extends Component {
                 />
                 <NavCollapse
                   collapse={this.toggleDashMenu}
-                  style={dashMenuStyle}
                   state={this.state}
-                  user={user}
-                  menu={dashMobileMenu}
-                  history={history}
+                  isEmployer={(user ? user.is_employer : false)}
+                />
+                <div
+                  className='padding-fix'
+                  style={{
+                    height: this.state.showDashMenu ? '0' : '60px',
+                    background: '#404648'
+                  }}
                 />
                 {
                   alert &&
@@ -222,6 +206,8 @@ class App extends Component {
 
                   <Route exact strict path='/' component={() => (
                     <Home
+                      animated={animated}
+                      showDashMenu={this.state.showDashMenu}
                       coords={user ? user.coords : ''}
                       isEmployer={(user ? user.is_employer : false)}
                       getJobs={getJobs}
@@ -232,7 +218,9 @@ class App extends Component {
                       advancedFilterUsers={advancedFilterUsers}
                     />
                   )} />
-                  <Route exact path='/about' component={About} />
+                  <Route exact path='/about' component={() => (
+                    <About animated={animated} />
+                  )} />
                   <Route exact path='/jobs/:id' component={({match, history}) => (
                     <JobDetailPage
                       getJob={getJob}
@@ -245,11 +233,14 @@ class App extends Component {
                       history={history}
                       receiveAlert={receiveAlert}
                       receiveNext={receiveNext}
+                      animated={animated}
                     />
                   )} />
                   <Route exact path='/register' component={RegisterForm} />
                   <Route exact path='/login' component={LoginForm} />
-                  <Route exact path='/users/:id' component={UserProfile} />
+                  <Route exact path='/users/:id' component={() => (
+                    <UserProfile animated={animated} />
+                  )} />
 
                   {/* PRIVATE ROUTES */}
                   <Route exact path='/dashboard' component={() => {
@@ -284,6 +275,7 @@ class App extends Component {
                           alert={alert}
                           receiveAlert={receiveAlert}
                           receiveNext={receiveNext}
+                          animated={animated}
                         />
                       )
                     }}
@@ -315,6 +307,7 @@ class App extends Component {
                           alert={alert}
                           receiveAlert={receiveAlert}
                           receiveNext={receiveNext}
+                          showDashMenu={this.state.showDashMenu}
                         />
                       )
                     }}

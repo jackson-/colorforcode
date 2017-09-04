@@ -58,8 +58,6 @@
   border: solid 2px #12CD6A;
   color: #FFFFFF;
   box-shadow: none;
-  transition: all 0.1s ease-in-out;
-  transition-duration: 0.2s;
 }
 
 .SearchAdvanced__button,
@@ -67,6 +65,8 @@
   border: 2px solid #FFFFFF;
   width: 100%;
   margin-bottom: 5px;
+  transition: all 0.1s ease-in-out;
+  transition-duration: 0.2s;
 }
 
 .SearchAdvanced__zipcode input,

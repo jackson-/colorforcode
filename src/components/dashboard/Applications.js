@@ -5,7 +5,6 @@ import PropTypes from 'prop-types'
 import './ManageJobs.css'
 
 class Applications extends Component {
-
   humanReadableDate = (dateString) => {
     return new Date(dateString).toLocaleDateString()
   }

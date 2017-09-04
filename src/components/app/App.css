@@ -43,10 +43,6 @@
   text-transform: uppercase;
 }
 
-.navbar-right {
-  margin-right: 0;
-}
-
 .navbar-default .navbar-nav>li>a {
   color: #333333;
   margin-top: 6px;
@@ -121,6 +117,10 @@
   position: relative;
 }
 
+.Dashboard-menu-collapse .nav>li>a {
+  transition: all .5s ease-in-out .5s
+}
+
 .dropdown-menu {
   text-align: center;
   min-width: 0;
@@ -152,6 +152,10 @@ and (min-width: 768px) {
     left: 100px;
   }
 
+  .navbar-right {
+    margin-right: 0;
+  }
+
   .nav-button-container {
     position: absolute;
     right: 30px;
@@ -166,12 +170,14 @@ and (min-width: 768px) {
   border: solid 2px #12CD6A;
   border-radius: 25px;
   width: 100%;
+  transition: all 0.2s ease-in-out;
 }
 
 .btn-oval__black {
   background: #000000;
   border-color: #000000;
   color: #FFFFFF;
+  transition: all 0.2s ease-in-out;
 }
 
 .btn-oval:hover,

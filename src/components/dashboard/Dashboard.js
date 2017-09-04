@@ -22,15 +22,14 @@ class Dashboard extends Component {
       deleteProject,
       getProject,
       project,
-      skills,
       handleNewSkills,
-      location,
       receiveNext,
-      receiveAlert
+      receiveAlert,
+      animated
     } = this.props
-
+    const anim = animated ? 'animated' : ''
     return (
-      <div className='fadeIn animated'>
+      <div className={`fadeIn ${anim}`}>
         {
           user &&
           <div>
@@ -40,7 +39,6 @@ class Dashboard extends Component {
                   <EmployerDashboard
                     user={user}
                     jobs={user.employer.listings}
-                    skills={skills}
                     handleNewSkills={handleNewSkills}
                     updateUser={updateUser}
                     closeJob={closeJob}
@@ -50,13 +48,13 @@ class Dashboard extends Component {
                     getJob={getJob}
                     receiveAlert={receiveAlert}
                     receiveNext={receiveNext}
+                    animated={animated}
                   />
                 )
 
                 : (
                   <ApplicantDashboard
                     project={project}
-                    skills={skills}
                     handleNewSkills={handleNewSkills}
                     user={user}
                     updateUser={updateUser}
@@ -70,6 +68,7 @@ class Dashboard extends Component {
                     applyToJob={applyToJob}
                     receiveAlert={receiveAlert}
                     receiveNext={receiveNext}
+                    animated={animated}
                   />
                 )
             }
@@ -82,7 +81,7 @@ class Dashboard extends Component {
 }
 
 Dashboard.propTypes = {
-  fetchingCurrentUser: PropTypes.bool,
+  animated: PropTypes.bool,
   location: PropTypes.object,
   match: PropTypes.object,
   user: PropTypes.any,
