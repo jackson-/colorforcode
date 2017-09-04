@@ -40,17 +40,42 @@ module.exports = require('express').Router()
     .catch(next)
   )
   .post('/search', (req, res, next) => {
-    const query = req.body.query
-      ? {multi_match: {query: req.body.query, fields: ['projects.skills.title', 'projects.description']}}
-      : {match_all: {}}
+    //
+    // SELECT DISTINCT ON(id) id, * FROM (
+    //   SELECT *,
+    //   (SELECT array_agg(row_to_json(project.*)) FROM project WHERE project.job_id=job.id) AS projects,
+    //    setweight(to_tsvector(user.title), 'A') || setweight(to_tsvector(user.summary), 'B') || setweight(to_tsvector('simple', coalesce(string_agg(project.title, ' '))), 'B') as document
+    //  FROM "user" GROUP BY user.id) p_search WHERE p_search.document @@ to_tsquery('english', ' & react') ORDER BY id ASC, ts_rank(p_search.document, to_tsquery('english', ' & react')) DESC;
 
-    esClient.search({
-      index: 'data',
-      type: 'user',
-      body: {query}
-    })
-    .then(results => res.status(200).json(results.hits.hits))
-    .catch(next)
+    const {query} = req.body
+    const options = {
+        model: db.User,
+        hasJoin:true,
+    }
+    "(SELECT array_agg(row_to_json(skill.*)) FROM skill LEFT JOIN ProjectSkill ON ProjectSkill.skill_id=skill.id WHERE ProjectSkill.project_id=project.id) AS skills, "
+    let q = 'data'
+    const db_query = "SELECT DISTINCT ON(id) id, * "+
+      'FROM (SELECT "user".*, ' +
+        // `ST_Distance(job.the_geom, ST_MakePoint(${body.coords})::geography) as distance, ` +
+         `(SELECT json_agg(json_build_object('title', project.title, 'skills', (SELECT array_agg(row_to_json(skill.*)) FROM skill LEFT JOIN "ProjectSkill" ON "ProjectSkill".skill_id=skill.id WHERE "ProjectSkill".project_id=project.id))) FROM project WHERE project.user_id="user".id) AS projects, ` +
+         'to_tsvector("user".title) || ' +
+         'to_tsvector("user".summary) || ' +
+         "to_tsvector(project.title) as document " +
+        //  'to_tsvector("simple", coalesce(string_agg(project.title, " "))) as document ' +
+      'FROM "user" ' +
+      'JOIN project ON project.user_id = "user".id ' +
+      'INNER JOIN "ProjectSkill" ON "ProjectSkill".project_id = project.id ' +
+      'INNER JOIN skill ON skill.id = "ProjectSkill".project_id ' +
+      'GROUP BY "user".id, project.id, skill.id) p_search ' +
+      "WHERE " +
+      `p_search.document @@ to_tsquery('english', '${q}') ` +
+      `ORDER BY id ASC, ts_rank(p_search.document, to_tsquery('english', '${q}')) DESC;`
+      console.log("QUERY ", db_query)
+    db.query( db_query,
+      options).then((result) =>{
+        console.log("RESULT", result)
+        return res.status(200).json(result)
+    }).catch(next);
   })
 
   .post('/search/advanced', (req, res, next) => {

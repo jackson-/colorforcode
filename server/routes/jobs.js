@@ -28,15 +28,12 @@ module.exports = require('express').Router()
 
   // search bar
   .post('/search', (req, res, next) => {
-    let jobs = []
-    const {query, from} = req.body
-    const size = 10
+    const {query} = req.body
     const options = {
         model: db.Job,
-        // include: [db.Skill],
         hasJoin:true,
     }
-    // db.Model.$validateIncludedElements(options)
+
     let q = query.split(' ').join(' & ')
     const db_query = "SELECT DISTINCT ON(id) id, * "+
       "FROM (SELECT job.*, " +
