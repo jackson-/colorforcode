@@ -140,7 +140,12 @@ module.exports = require('express').Router()
     Promise.map(jobs, (job) => {
       return Job.create(job)
     }).then((results) => {
-      console.log("RESULTS", results)
+      return Promise.map(results, (created, i) => {
+        console.log("I", i, "CREATED", created)
+        created.addSkills(skills[i])
+      })
+    }).then((results) => {
+      res.status(200).json({message:"Jobs succesfully created!"})
     })
 
     // Job.bulkCreate(jobs)
