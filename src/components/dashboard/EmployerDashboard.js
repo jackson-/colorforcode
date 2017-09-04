@@ -40,7 +40,6 @@ class EmployerDashboard extends Component {
     } = this.props
     const firstName = user ? user.first_name : ''
     const jobs = user && user.is_employer && [...user.employer.listings]
-    console.log('EMPLOYER DASH LOCATION: ', location)
     return (
       <Router>
         <Row className='Dashboard'>

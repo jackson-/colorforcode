@@ -28,17 +28,10 @@ class JobBoard extends Component {
     }
   }
 
-  componentDidMount () {
-    const {jobs} = this.props
-    console.log(`CDM - JOBS: ${jobs ? jobs.length : 0}`)
-  }
-
   componentWillMount () {
     const {jobs, fetching, authenticating, getJobs} = this.props
-    console.log(`CWM - JOBS: ${jobs ? jobs.length : 0}`)
     if (!authenticating) {
       if (!jobs && !fetching) {
-        console.log(`CWM - FETCHING JOBS`)
         getJobs()
       }
       if (jobs) {
@@ -48,21 +41,15 @@ class JobBoard extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    const {jobs, fetching, authenticating, getJobs} = this.props
-    console.log(`CWRP - JOBS HAD: ${jobs ? jobs.length : 0}, GETTING: ${nextProps.jobs ? nextProps.jobs.length : 0}, FETCHING: ${fetching}`)
+    const {authenticating, getJobs} = this.props
     if (!authenticating) {
       if (!nextProps.jobs && !nextProps.fetching) {
-        console.log(`CWRP - FETCHING JOBS`)
         getJobs()
       }
       if (nextProps.jobs) {
         this.setState({loading: false})
       }
     }
-  }
-
-  componentWillUnMount () {
-    console.log(`CWUM - UNMOUNTING!`)
   }
 
   handleLocation = zip_code => {

@@ -26,17 +26,10 @@ class CandidateSearch extends Component {
     }
   }
 
-  componentDidMount () {
-    const {users} = this.props
-    console.log(`CDM - USERS: ${users ? users.length : 0}`)
-  }
-
   componentWillMount () {
     const {users, fetching, authenticating, getUsers} = this.props
-    console.log(`CWM - USERS: ${users ? users.length : 0}`)
     if (!authenticating) {
       if (!users && !fetching) {
-        console.log('CWM - FETCHING USERS')
         getUsers()
       }
       if (users) {
@@ -46,11 +39,9 @@ class CandidateSearch extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    const {users, getUsers, authenticating} = this.props
-    console.log(`CWRP - USERS HAD: ${users ? users.length : 0}, GETTING: ${nextProps.users ? nextProps.users.length : 0}`)
+    const {getUsers, authenticating} = this.props
     if (!authenticating) {
       if (!nextProps.users && !nextProps.fetching) {
-        console.log(`CWRP - FETCHING USERS`)
         getUsers()
       }
       if (nextProps.users) {

@@ -28,7 +28,7 @@ class Dashboard extends Component {
       receiveNext,
       receiveAlert
     } = this.props
-    console.log('DASHBOARD LOCATION: ', location)
+
     return (
       <div className='fadeIn animated'>
         {
