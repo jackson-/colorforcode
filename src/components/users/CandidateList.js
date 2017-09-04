@@ -12,8 +12,7 @@ const CandidateList = props => {
         </Row>
       </div>
     }
-    {props.users && props.users.map((data, i) => {
-      const user = data._source
+    {props.users && props.users.map((user, i) => {
       let skills = new Set([])
       user.projects.forEach(p => {
         p.skills.forEach(s => {

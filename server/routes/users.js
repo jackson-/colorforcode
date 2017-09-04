@@ -13,13 +13,10 @@ tinify.key = "lm8HbN3+BXgdBe9KvYLG3+KkS7SISwCHXcbW1ybx";
 module.exports = require('express').Router()
 
   .get('/', (req, res, next) => {
-    let body = {
-      query: {match_all: {}},
-      from: 0
-    }
-    esClient.search({body, index: 'data', type: 'user'})
-    .then(results => {
-      return res.status(200).json(results.hits.hits)
+    User.findAll({include: [
+      {model: Project, include: [Skill]},
+    ], limit:10}).then(result => {
+        return res.status(200).json(result)
     })
     .catch(next)
   })

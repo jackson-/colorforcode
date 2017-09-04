@@ -177,11 +177,11 @@ class JobBoard extends Component {
     body.distance = distance
     body.employment_types = employment_types
     body.from = from
+    debugger
     return body
   }
 
   handlePagination = (jobs, sign) => {
-    debugger
     let page_num = 1
     let from = 0
     const next_page = sign === 'plus'
@@ -226,7 +226,6 @@ class JobBoard extends Component {
     const {query} = this.state
     this.props.filterJobs(query)
     // ^ when query === '', all job listings are shown
-    debugger
     if (query) this.setState({filtered: true, terms: [...this.state.pendingTerms]})
     // we only show the search results header if this.state.filtered === true
     // this.clearFilter()
@@ -264,13 +263,13 @@ class JobBoard extends Component {
           <Col xs={12} sm={9} md={9} lg={9}>
             <Row>
               <Col className='paginate-container' xs={12} sm={12} md={12} lg={12}>
-                <Button className='btn-paginate' onClick={this.advancedFilterJobs('plus')}>
+                <Button className='btn-paginate' onClick={this.advancedFilterJobs('minus')}>
                   Back
                 </Button>
                 <span>
                   {this.state.page_num}
                 </span>
-                <Button className='btn-paginate' onClick={this.advancedFilterJobs('minus')}>
+                <Button className='btn-paginate' onClick={this.advancedFilterJobs('plus')}>
                   Next
                 </Button>
               </Col>
