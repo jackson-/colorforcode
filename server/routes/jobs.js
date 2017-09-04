@@ -60,15 +60,18 @@ module.exports = require('express').Router()
 
   // advanced search
   .post('/search/advanced', (req, res, next) => {
-    const {coords, terms} = req.body
-    console.log("BODY", req.body.employment_types)
+    // Account for coords
+    const {coords, terms, employment_types, sortBy} = req.body
+    console.log("BODY", employment_types)
     if(terms.length === 0){
-      // Job.find({
-      //   where: {
-      //     id: req.params.id
-      //   },
-      //   include: [Employer, Skill]
-      // })
+      // find only employment types and distance
+      Job.find({
+        where: {
+          employment_types,
+
+        },
+        include: [Employer, Skill]
+      })
     }
     const q = terms.join(' & ')
     const options = {
@@ -77,7 +80,7 @@ module.exports = require('express').Router()
         hasJoin:true,
     }
     // db.Model.$validateIncludedElements(options)
-
+    console.log("Q", q, "COORDS", coords)
     const db_query = "SELECT DISTINCT ON(id) id, * "+
       "FROM (SELECT job.*, " +
         `ST_Distance(job.the_geom, ST_MakePoint(${coords})::geography) as distance, ` +
@@ -101,7 +104,9 @@ module.exports = require('express').Router()
   })
 
   .post('/', (req, res, next) => {
+    // Extract out payment route
     const {jobs, skills} = req.body
+    console.log("JOBS", jobs, "SKILLS", skills)
     let amount = 0;
     if(jobs.length >= 5){
       amount = jobs.length * 225 * 100
@@ -112,7 +117,7 @@ module.exports = require('express').Router()
     } else{
       return res.status(400).json({message: 'No jobs found'})
     }
-
+    console.log("AMOUNT", amount)
     const token = req.body.token
     stripe.charges.create({
       amount,
@@ -121,30 +126,20 @@ module.exports = require('express').Router()
       source:'tok_visa',
       description: "Charge for job stuff"
     }, function(err, charge) {
-      return {err, charge}
-    });
-    Promise.map(jobs, (job) => {
-      return Job.create(job)
-    }).then((results) => {
-      return Promise.map(results, (created, i) => {
-        console.log("I", i, "CREATED", created)
-        created.addSkills(skills[i])
+      console.log( "ERR", err, "CHARGE", charge )
+    }).then(() => {
+      return Promise.map(jobs, (job, i) => {
+        return Job.create(job)
+        .then((created) => {
+          console.log("CREATE", created, "I", typeof skills[i])
+          return created.addSkills(skills[i])
+        })
       })
-    }).then((results) => {
+    })
+    .then(() => {
       res.status(200).json({message:"Jobs succesfully created!"})
     })
-
-    // Job.bulkCreate(jobs)
-    // .then(createdJobs => {
-    //   return Promise.map(createdJobs, (job, i)  => {
-    //     console.log("JOB", job)
-    //     return job.addSkills(skills[i]);
-    //   })
-    // })
-    // .then(updatedJobs => {
-    // })
-    // .catch(next)
-
+    .catch(err => next(err))
 
   })
 

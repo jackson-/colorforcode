@@ -77,6 +77,7 @@ export const filteringJobs = query => dispatch => {
 }
 
 export const advancedFilteringJobs = body => dispatch => {
+  debugger
   axios.post('/api/jobs/search/advanced', body)
     .then(res => res.data)
     .then(jobs => dispatch(receiveJobs(jobs)))
@@ -148,6 +149,7 @@ export const creatingNewJobs = (data, history) => dispatch => {
   // set loading state to true to trigger UI changes
   dispatch(createNewJobs())
   // create the new job
+  debugger
   axios.post('/api/jobs', data)
     .then(res => res.data)
     // if the job is successfully created, we fetch the updated jobs list

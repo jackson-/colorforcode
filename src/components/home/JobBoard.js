@@ -67,6 +67,7 @@ class JobBoard extends Component {
     axios.get(`http://maps.googleapis.com/maps/api/geocode/json?address=${zip_code}`)
       .then(res => res.data)
       .then(json => {
+        debugger
         const {location} = json.results[0].geometry
         const coords = `${location.lat},${location.lng}`
         this.setState({coords, zip_code})
@@ -173,11 +174,12 @@ class JobBoard extends Component {
     //     }
     //   })
     // }
+    body.coords = coords
     body.terms = terms
     body.distance = distance
-    body.employment_types = employment_types
+    body.employment_types = [...employment_types]
     body.from = from
-    debugger
+    body.sortBy = sortBy
     return body
   }
 

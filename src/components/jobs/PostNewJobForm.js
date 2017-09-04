@@ -4,9 +4,8 @@ import { withRouter } from 'react-router-dom'
 import { Row, Col, FormGroup, ControlLabel, FormControl, Button, Checkbox, HelpBlock } from 'react-bootstrap'
 import axios from 'axios'
 import { creatingNewJobs } from 'APP/src/reducers/actions/jobs'
-import { gettingAllSkills } from 'APP/src/reducers/actions/skills'
+import { gettingAllSkills, receiveSelectedSkills } from 'APP/src/reducers/actions/skills'
 import CreditCardFormControls from './CreditCard'
-import VirtualizedSelect from 'react-virtualized-select'
 import SkillTypeaheadSelect from 'APP/src/components/utilities/SkillTypeaheadSelect'
 import PropTypes from 'prop-types'
 import 'react-select/dist/react-select.css'
@@ -59,7 +58,7 @@ class PostJobForm extends Component {
         ))
         const city = address[0].long_name
         const state = address[1].short_name
-        const country = address[2].long_name
+        const country = address[2].long_name ? address[2].long_name : ''
         const location = country === 'United States' ? `${city}, ${state}` : `${city}, ${state} ${country}`
         const coords = `${json.results[0].geometry.location.lat},${json.results[0].geometry.location.lng}`
         this.setState({coords, zip_code, location})
@@ -118,11 +117,10 @@ class PostJobForm extends Component {
     let {jobs, skills, ...job} = this.state
     job.employer_id = this.props.user.employer.id
     job.employment_types = [...this.state.employment_types]
-    const selected_skills = job.selectValue.map(skill => skill.value)
-    delete job.selectValue
     this.clearForm()
     jobs.push(job)
-    skills.push(selected_skills)
+    skills.push(this.props.selected.map((s) => s.id))
+    this.props.receiveSelectedSkills([])
     this.props.createJobPosts({jobs, skills}, this.props.history)
   }
 
@@ -131,11 +129,10 @@ class PostJobForm extends Component {
     let {jobs, skills, ...job} = this.state
     job.employer_id = this.props.user.employer.id
     job.employment_types = [...this.state.employment_types]
-    const selected_skills = job.selectValue.map(skill => skill.value)
-    delete job.selectValue
     this.clearForm()
     jobs.push(job)
-    skills.push(selected_skills)
+    skills.push(this.props.selected.map((s) => s.id))
+    this.props.receiveSelectedSkills([])
     this.setState({jobs, skills})
   }
 
@@ -276,7 +273,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   createJobPosts: (data, history) => dispatch(creatingNewJobs(data, history)),
-  getSkills: post => dispatch(gettingAllSkills())
+  getSkills: post => dispatch(gettingAllSkills()),
+  receiveSelectedSkills: skills => dispatch(receiveSelectedSkills(skills)),
 })
 
 PostJobForm.propTypes = {
