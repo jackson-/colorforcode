@@ -1,11 +1,11 @@
 import React from 'react'
 import { Row, Col } from 'react-bootstrap'
 import './About.css'
+import PropTypes from 'prop-types'
 
 const About = ({animated}) => {
-  const anim = animated ? 'animated' : ''
   return (
-    <Row className={`About fadeIn ${anim}`}>
+    <Row className={`About fadeIn ${animated}`}>
       <Col xs={12} sm={12} md={12} lg={12}>
         <Row>
           <Col className='About__hero' xs={12} sm={12} md={12} lg={12}>
@@ -123,6 +123,10 @@ const About = ({animated}) => {
       </Col>
     </Row>
   )
+}
+
+About.propTypes = {
+  animated: PropTypes.string
 }
 
 export default About

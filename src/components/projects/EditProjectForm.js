@@ -39,25 +39,17 @@ class EditProjectForm extends Component {
   componentDidMount () {
     const {match, getProject, project, fetchingProject} = this.props
     const {id} = match.params
-    console.log('CDM - FETCHING: ', fetchingProject)
     if (!fetchingProject) {
       if (!project || project.id !== Number(id)) {
-        console.log('CDM - FETCHING PROJECT: ', Number(id))
         getProject(id)
       }
     }
-  }
-
-  componentWillMount () {
-    const {fetchingProject} = this.props
-    console.log('CWM - FETCHING: ', fetchingProject)
   }
 
   componentWillReceiveProps (nextProps) {
     const {match} = this.props
     const {id} = match.params
     if (nextProps.project && nextProps.project.id === Number(id)) {
-      console.log('CWRP - DONE FETCHING, SETTING LOADING TO FALSE')
       this.setState({loading: false})
     }
   }
@@ -117,7 +109,7 @@ class EditProjectForm extends Component {
   }
 
   render () {
-    let {project, selected} = this.props
+    let {project, selected, animated} = this.props
     const {loading} = this.state
     return loading
       ? <LoadingSpinner />
@@ -125,7 +117,7 @@ class EditProjectForm extends Component {
         <Row className='EditProfile'>
           <ScrollToTopOnMount />
           <Col xs={12} sm={6} md={6} lg={6}>
-            <h1 className='EditProfile-header fadeIn animated'>
+            <h1 className={`EditProfile-header fadeIn ${animated}`}>
               EDIT PROJECT
             </h1>
             <ProjectFields
@@ -168,7 +160,8 @@ EditProjectForm.propTypes = {
   updateProject: PropTypes.func,
   deleteProject: PropTypes.func,
   getProject: PropTypes.func,
-  fetchingProject: PropTypes.bool
+  fetchingProject: PropTypes.bool,
+  animated: PropTypes.string
 }
 
 const mapStateToProps = state => ({
@@ -178,8 +171,4 @@ const mapStateToProps = state => ({
   fetchingProject: state.projects.fetchingProject
 })
 
-const mapDispatchToProps = dispatch => ({
-  resetCurrentProject: () => dispatch(receiveProject(null))
-})
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(EditProjectForm))
+export default withRouter(connect(mapStateToProps)(EditProjectForm))

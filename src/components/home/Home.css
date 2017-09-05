@@ -5,11 +5,10 @@
 }
 
 .Home-header {
-  /*padding-top: 60px;*/
   transition: all 5s ease-in 1s;
   z-index: -4;
   background: #404648;
-  margin: 0 -15px 0;
+  margin: 0;
 }
 
 .Home-hero {

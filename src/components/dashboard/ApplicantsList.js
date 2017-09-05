@@ -37,11 +37,11 @@ export default class Applicants extends Component {
   }
 
   render () {
-    const {jobs} = this.props
+    const {jobs, animated} = this.props
     if (jobs) this.sortByDate(jobs)
     return (
       <Row className='Applicants'>
-        <h1 className='Applicants-header fadeIn animated'>
+        <h1 className={`Applicants-header fadeIn ${animated}`}>
           YOUR APPLICANTS
         </h1>
         <Accordion
@@ -111,5 +111,6 @@ export default class Applicants extends Component {
 }
 
 Applicants.propTypes = {
-  jobs: PropTypes.array.isRequired
+  jobs: PropTypes.array.isRequired,
+  animated: PropTypes.string
 }

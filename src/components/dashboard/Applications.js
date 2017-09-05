@@ -10,9 +10,10 @@ class Applications extends Component {
   }
 
   render () {
-    const applications = this.props.user.applications
+    const {user, animated} = this.props
+    const applications = user.applications
     return (
-      <Row className='Applications fadeIn animated'>
+      <Row className={`Applications fadeIn ${animated}`}>
         <h1 className='Applications-header fadeIn animated'>
           APPLICATION HISTORY
         </h1>
@@ -46,7 +47,8 @@ class Applications extends Component {
 }
 
 Applications.propTypes = {
-  user: PropTypes.any
+  user: PropTypes.any,
+  animated: PropTypes.string
 }
 
 export default Applications

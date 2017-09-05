@@ -4,7 +4,6 @@ import PropTypes from 'prop-types'
 import './JobDetail.css'
 
 class JobInfoDisplay extends Component {
-
   constructor (props) {
     super(props)
     this.state = {

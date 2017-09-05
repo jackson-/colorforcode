@@ -26,28 +26,28 @@ class UserProfile extends Component {
   }
 
   componentDidMount () {
-    const {user, fetchingUser} = this.props
-    console.log('CDM - USER', user, 'FETCHING USER: ', fetchingUser)
+    const {user, fetching} = this.props
+    console.log('CDM - USER', user, 'FETCHING USER: ', fetching)
   }
 
   componentWillReceiveProps () {
-    const {user, fetchingUser, match} = this.props
+    const {user, fetching, match} = this.props
     const {id} = match.params
-    console.log('CWRP - USER', user, 'FETCHING USER: ', fetchingUser)
-    if (fetchingUser) console.log(`CWRP - FETCHING USER ${id}`)
+    console.log('CWRP - USER', user, 'FETCHING USER: ', fetching)
+    if (fetching) console.log(`CWRP - FETCHING USER ${id}`)
   }
 
   componentWillMount () {
-    const {user, fetchingUser, match, getUser} = this.props
+    const {user, fetching, match, getUser} = this.props
     const {id} = match.params
-    console.log('CWM - USER', user, 'FETCHING USER: ', fetchingUser)
-    if (!fetchingUser) {
+    console.log('CWM - USER', user, 'FETCHING USER: ', fetching)
+    if (!fetching) {
       if (!user || user.id !== Number(id)) {
         getUser(id)
         console.log(`CWM - HAD USER ${user ? user.id : null} FETCHING USER ${id}`)
       }
     }
-    if (fetchingUser) console.log(`CWM - FETCHING USER ${id}, ${fetchingUser}`)
+    if (fetching) console.log(`CWM - FETCHING USER ${id}, ${fetching}`)
   }
 
   handleOnLoad = () => {
@@ -66,7 +66,7 @@ class UserProfile extends Component {
   }
 
   render () {
-    let {match, user} = this.props
+    let {match, user, animated} = this.props
     const links = [
       {type: 'github', label: 'Github Profile', component: <GithubIcon />},
       {type: 'linkedin', label: 'LinkedIn Profile', component: <LinkedInIcon />},
@@ -90,7 +90,7 @@ class UserProfile extends Component {
     // is rendered by the applicant dashboard
     let paddingTop = match.path === '/users/:id' ? '60px' : '0'
     return (
-      <Row className='UserDetail fadeIn animated' style={{paddingTop}}>
+      <Row className={`UserDetail fadeIn ${animated}`} style={{paddingTop}}>
         {
           user &&
           <Col xs={12} sm={12} md={12} lg={12}>
@@ -218,12 +218,13 @@ UserProfile.propTypes = {
   getUser: PropTypes.func,
   user: PropTypes.any,
   padding: PropTypes.string,
-  fetchingUser: PropTypes.bool
+  fetching: PropTypes.bool,
+  animated: PropTypes.string
 }
 
 const mapStateToProps = state => ({
   user: state.users.selected,
-  fetchingSelected: state.users.fetchingSelected
+  fetching: state.users.fetchingSelected
 })
 
 const mapDispatchToProps = dispatch => ({

@@ -29,10 +29,12 @@ export default class ManageJobs extends Component {
   }
 
   render () {
-    const {jobs} = this.props
+    const {jobs, animated} = this.props
     return (
       <Row className='ManageJobs'>
-        <h1 className='ManageJobs-header fadeIn animated'>MANAGE JOBS</h1>
+        <h1 className={`ManageJobs-header fadeIn ${animated}`}>
+          MANAGE JOBS
+        </h1>
         <Table responsive className='fadeIn animated'>
           <thead>
             <tr>
@@ -97,5 +99,6 @@ ManageJobs.propTypes = {
   closeJob: PropTypes.func.isRequired,
   duplicateJob: PropTypes.func.isRequired,
   jobs: PropTypes.array.isRequired,
-  history: PropTypes.object
+  history: PropTypes.object,
+  animated: PropTypes.string
 }

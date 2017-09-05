@@ -161,7 +161,8 @@ class App extends Component {
       receiveAlert,
       authenticating
     } = this.props
-    let animated = !this.state.showDashMenu && !this.state.closing
+    const animated = !this.state.showDashMenu && !this.state.closing
+    const anim = animated ? 'animated' : ''
     return (
       <Router>
         {
@@ -206,7 +207,7 @@ class App extends Component {
 
                   <Route exact strict path='/' component={() => (
                     <Home
-                      animated={animated}
+                      animated={anim}
                       showDashMenu={this.state.showDashMenu}
                       coords={user ? user.coords : ''}
                       isEmployer={(user ? user.is_employer : false)}
@@ -219,7 +220,7 @@ class App extends Component {
                     />
                   )} />
                   <Route exact path='/about' component={() => (
-                    <About animated={animated} />
+                    <About animated={anim} />
                   )} />
                   <Route exact path='/jobs/:id' component={({match, history}) => (
                     <JobDetailPage
@@ -233,13 +234,13 @@ class App extends Component {
                       history={history}
                       receiveAlert={receiveAlert}
                       receiveNext={receiveNext}
-                      animated={animated}
+                      animated={anim}
                     />
                   )} />
                   <Route exact path='/register' component={RegisterForm} />
                   <Route exact path='/login' component={LoginForm} />
                   <Route exact path='/users/:id' component={() => (
-                    <UserProfile animated={animated} />
+                    <UserProfile animated={anim} />
                   )} />
 
                   {/* PRIVATE ROUTES */}
@@ -275,7 +276,7 @@ class App extends Component {
                           alert={alert}
                           receiveAlert={receiveAlert}
                           receiveNext={receiveNext}
-                          animated={animated}
+                          animated={anim}
                         />
                       )
                     }}
@@ -307,7 +308,7 @@ class App extends Component {
                           alert={alert}
                           receiveAlert={receiveAlert}
                           receiveNext={receiveNext}
-                          showDashMenu={this.state.showDashMenu}
+                          animated={anim}
                         />
                       )
                     }}

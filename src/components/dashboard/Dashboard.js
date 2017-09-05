@@ -27,9 +27,8 @@ class Dashboard extends Component {
       receiveAlert,
       animated
     } = this.props
-    const anim = animated ? 'animated' : ''
     return (
-      <div className={`fadeIn ${anim}`}>
+      <div className={`fadeIn ${animated}`}>
         {
           user &&
           <div>
@@ -81,7 +80,7 @@ class Dashboard extends Component {
 }
 
 Dashboard.propTypes = {
-  animated: PropTypes.bool,
+  animated: PropTypes.string,
   location: PropTypes.object,
   match: PropTypes.object,
   user: PropTypes.any,

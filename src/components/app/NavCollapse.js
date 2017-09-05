@@ -10,9 +10,6 @@ class NavCollapse extends Component {
     const dashMenuStyle = {
       padding: state.padding,
       height: state.showDashMenu ? (isEmployer ? '215px' : '300px') : '0'
-      // marginBottom: state.marginBottom
-      // opacity: state.opacity,
-      // display: state.display
     }
     const dashMobileMenu = {
       employer: [
@@ -39,7 +36,11 @@ class NavCollapse extends Component {
           isEmployer &&
             dashMobileMenu.employer.map((link, i) => (
               <LinkContainer
-                style={{transform: state.transform}}
+                style={{
+                  transition: 'all .75s cubic-bezier(.17,.67,.83,.67)',
+                  opacity: state.opacity,
+                  transform: state.transform
+                }}
                 to={link.to}
                 className='Dashboard__nav-item'
                 key={i}

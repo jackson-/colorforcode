@@ -118,8 +118,9 @@ class PostJobForm extends Component {
   }
 
   render () {
+    const {animated} = this.props
     return (
-      <Row className='PostJobForm fadeIn animated'>
+      <Row className={`PostJobForm fadeIn ${animated}`}>
         <Col xs={12} sm={6} md={6} lg={6}>
           <h1 className='PostJobForm-header'>POST NEW JOB</h1>
           <form className='PostJobForm-body' onSubmit={this.handleSubmit}>
@@ -243,6 +244,7 @@ PostJobForm.propTypes = {
   user: PropTypes.any,
   selected: PropTypes.arrayOf(PropTypes.object),
   createJobPost: PropTypes.func,
+  animated: PropTypes.string,
   handleNewSkills: PropTypes.func
   // ^creates new skills if user made any custom ones (class method of App.js)
 }

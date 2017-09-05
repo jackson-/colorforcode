@@ -6,23 +6,10 @@ import JobUpdateDisplay from './JobUpdateDisplay'
 import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
 
 class JobDetailPage extends Component {
-  componentDidMount () {
-    console.log('CDM -')
-  }
-
   componentWillMount () {
-    console.log('CWM - ')
     const {job, fetching, match, getJob} = this.props
     const {id} = match.params
     if ((!job && !fetching) || (job && (job.id !== Number(id)) && !fetching)) getJob(id)
-  }
-
-  componentWillUnMount () {
-    console.log('CWUM')
-  }
-
-  componentWillReceiveProps (nextProps) {
-    console.log('CWRP')
   }
 
   render () {
@@ -39,7 +26,8 @@ class JobDetailPage extends Component {
       unsaveJob,
       handleNewSkills,
       receiveAlert,
-      receiveNext
+      receiveNext,
+      animated
     } = this.props
 
     let jobComponent = ''
@@ -74,7 +62,7 @@ class JobDetailPage extends Component {
       }
     }
     return (
-      <div className='JobDetailPage fadeIn animated'>
+      <div className={`JobDetailPage fadeIn ${animated}`}>
         <ScrollToTopOnMount />
         {jobComponent}
       </div>
@@ -99,7 +87,8 @@ JobDetailPage.propTypes = {
   handleNewSkills: PropTypes.func,
   // ^creates new skills if user made any custom ones (class method of App.js)
   receiveNext: PropTypes.func,
-  receiveAlert: PropTypes.func
+  receiveAlert: PropTypes.func,
+  animated: PropTypes.string
 }
 
 const mapStateToProps = state => ({

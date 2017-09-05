@@ -2,7 +2,11 @@
 
 .form-fields-container--left,
 .form-fields-container--right {
-  padding: 15px;
+  padding: 0 15px;
+}
+
+.form-fields-container--right {
+  padding-bottom: 15px;
 }
 
 .btn-login-reg {
@@ -29,7 +33,7 @@
 }
 
 .RegisterForm, .LoginForm {
-  padding: 70px 0 25px 0;
+  padding: 25px 0 25px 0;
   background: #12CD6A;
   min-height: 100vh;
   color: #FFFFFF;

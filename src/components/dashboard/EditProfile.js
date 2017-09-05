@@ -165,7 +165,7 @@ class EditProfile extends Component {
   }
 
   render () {
-    const {user} = this.props
+    const {user, animated} = this.props
     let fields = ''
     if (user && user.is_employer) {
       fields = (
@@ -191,7 +191,7 @@ class EditProfile extends Component {
     }
 
     return (
-      <Row className='EditProfile fadeIn animated'>
+      <Row className={`EditProfile fadeIn ${animated}`}>
         <ScrollToTopOnMount />
         <Col xs={12} sm={12} md={12} lg={12}>
           <h1 className='EditProfile-header'>Edit Profile</h1>
@@ -224,7 +224,8 @@ class EditProfile extends Component {
 EditProfile.propTypes = {
   user: PropTypes.any,
   updateUser: PropTypes.func,
-  uploadResume: PropTypes.func
+  uploadResume: PropTypes.func,
+  animated: PropTypes.string
 }
 
 export default EditProfile
