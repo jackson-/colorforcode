@@ -29,7 +29,9 @@ module.exports = db => db.define('job', {
     hooks:{
       afterSave: models => models.JobMaterializedView.refresh(),
       afterValidate: function (job, options) {
-         job.the_geom = db.fn('ST_SetSRID', db.fn('ST_MakePoint', job.coords.split(',')[0], job.coords.split(',')[0]), '4326');
+          if(job.coords){
+            job.the_geom = db.fn('ST_SetSRID', db.fn('ST_MakePoint', job.coords.split(',')[0], job.coords.split(',')[0]), '4326');
+          } 
        }
     },
   })

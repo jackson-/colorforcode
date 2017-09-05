@@ -52,7 +52,6 @@ module.exports = require('express').Router()
         model: db.User,
         hasJoin:true,
     }
-    "(SELECT array_agg(row_to_json(skill.*)) FROM skill LEFT JOIN ProjectSkill ON ProjectSkill.skill_id=skill.id WHERE ProjectSkill.project_id=project.id) AS skills, "
     let q = 'data'
     const db_query = "SELECT DISTINCT ON(id) id, * "+
       'FROM (SELECT "user".*, ' +
