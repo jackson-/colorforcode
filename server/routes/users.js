@@ -166,13 +166,13 @@ module.exports = require('express').Router()
   })
 
   .get('/:id', (req, res, next) => {
-    let body = {
-      query: {match: {id: req.params.id}},
-      from: 0
-    }
-    esClient.search({body, index: 'data', type: 'user'})
-    .then(results => {
-      return res.status(200).json(results.hits.hits[0])
+    User.findById(req.params.id, {
+      include: [
+        {model: Project, include: [Skill]},
+      ],
+    })
+    .then((user) => {
+      return res.status(200).json(user)
     })
     .catch(next)
   })

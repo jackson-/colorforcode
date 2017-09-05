@@ -84,6 +84,7 @@ class UserProfile extends Component {
     // below we're fixing the unnecessary padding when this component
     // is rendered by the applicant dashboard
     let paddingTop = match.path === '/users/:id' ? '60px' : '0'
+    console.log("USER", user)
     return (
       <Row className='UserDetail fadeIn animated' style={{paddingTop}}>
         {
