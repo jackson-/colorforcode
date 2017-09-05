@@ -141,7 +141,7 @@
 }
 
 @media (min-width: 992px) {
-  .service-box {
+  .about .service-box {
     margin: 20px auto 0;
   }
 }

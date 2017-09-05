@@ -152,7 +152,7 @@ class CandidateSearch extends Component {
     this.clearFilter()
   }
 
-  buildBody = coords => {
+  buildBody = (coords, from) => {
     const {terms, distance, sortBy} = this.state
     let must = terms.map(term => ({term: {_all: term}}))
     const body = {

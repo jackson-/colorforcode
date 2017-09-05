@@ -9,8 +9,7 @@ const JobList = ({jobs, filtered}) => (
   <div className='JobList'>
     {filtered && <h2>Search Results</h2>}
     {
-      jobs && jobs.map((data, i) => {
-        const job = data._source
+      jobs && jobs.map((job, i) => {
         return (
           <LinkContainer className='JobCard' key={i} to={`/jobs/${job.id}`}>
             <Row>

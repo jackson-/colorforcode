@@ -1,7 +1,7 @@
 import axios from 'axios'
 import {
-  RECEIVE_JOBS, RECEIVE_JOB, CREATE_JOB, UPDATE_JOB,
-  DELETE_JOB, REQUEST_JOB, REQUEST_ALL_JOBS,
+  RECEIVE_JOBS, RECEIVE_JOB, CREATE_JOBS, UPDATE_JOB,
+  DELETE_JOB, REQUEST_JOB, REQUEST_ALL_JOBS, RECEIVE_FILTERED_JOBS,
   REQUEST_FILTERED_JOBS, APPLY_TO_JOB, APPLIED_TO_JOB } from '../constants'
 import { whoami } from './auth'
 import { receiveAlert } from './alert'
@@ -12,14 +12,19 @@ export const requestAllJobs = () => ({
   type: REQUEST_ALL_JOBS
 })
 
-export const requestFilteredJobs = () => ({
-  type: REQUEST_FILTERED_JOBS
-})
-
 export const receiveJobs = (jobs, skills) => ({
   jobs,
   skills,
   type: RECEIVE_JOBS
+})
+
+export const requestFilteredJobs = () => ({
+  type: REQUEST_FILTERED_JOBS
+})
+
+export const receiveFilteredJobs = jobs => ({
+  jobs,
+  type: RECEIVE_FILTERED_JOBS
 })
 
 export const requestJob = () => ({
@@ -32,8 +37,8 @@ export const receiveJob = (job, skills) => ({
   type: RECEIVE_JOB
 })
 
-export const createNewJob = () => ({
-  type: CREATE_JOB
+export const createNewJobs = () => ({
+  type: CREATE_JOBS
 })
 
 export const updateJob = () => ({
@@ -58,9 +63,9 @@ export const gettingAllJobs = () => dispatch => {
   dispatch(requestAllJobs())
   axios.get('/api/jobs')
     .then(res => res.data)
-    .then(res => {
-      const {jobs, skills} = res
-      dispatch(receiveJobs(jobs, skills))
+    .then(data => {
+      const {jobs, skills} = data
+      return dispatch(receiveJobs(jobs, skills))
     })
     .catch(err => console.error(`Mang, I couldn't find the jobs! ${err.stack}`))
 }
@@ -69,14 +74,17 @@ export const filteringJobs = query => dispatch => {
   dispatch(requestFilteredJobs())
   axios.post('/api/jobs/search', {query})
     .then(res => res.data)
-    .then(jobs => dispatch(receiveJobs(jobs)))
+    .then(jobs => dispatch(receiveFilteredJobs(jobs)))
     .catch(err => console.error(`Mang, I couldn't filter the jobs! ${err.stack}`))
 }
 
 export const advancedFilteringJobs = body => dispatch => {
   axios.post('/api/jobs/search/advanced', body)
     .then(res => res.data)
-    .then(jobs => dispatch(receiveJobs(jobs)))
+    .then(jobs => {
+      if (!jobs) dispatch(receiveFilteredJobs([]))
+      else dispatch(receiveFilteredJobs(Array.isArray(jobs) ? jobs : [jobs]))
+    })
     .catch(err => console.error(`Mang, I couldn't advanced filter the jobs! ${err.stack}`))
 }
 
@@ -141,11 +149,12 @@ export const gettingJobById = job_id => dispatch => {
     .catch(err => console.error(`Mang I couldn't find the job! ${err.stack}`))
 }
 
-export const creatingNewJob = (jobPost, history) => dispatch => {
+export const creatingNewJobs = (data, history) => dispatch => {
   // set loading state to true to trigger UI changes
-  dispatch(createNewJob())
+  dispatch(createNewJobs())
   // create the new job
-  axios.post('/api/jobs', jobPost)
+
+  axios.post('/api/jobs', data)
     .then(res => res.data)
     // if the job is successfully created, we fetch the updated jobs list
     .then(newJobId => {
@@ -154,7 +163,7 @@ export const creatingNewJob = (jobPost, history) => dispatch => {
         type: 'confirmation',
         style: 'success',
         title: 'Success!',
-        body: 'Job successfully posted.',
+        body: 'Jobs successfully posted.',
         next: '/dashboard/manage-jobs'
       }))
     })

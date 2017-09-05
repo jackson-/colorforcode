@@ -1,26 +1,52 @@
-
-const Sequelize = require('sequelize')
+const {STRING, TEXT, ARRAY, GEOMETRY, VIRTUAL, BOOLEAN} = require('sequelize')
 
 module.exports = db => db.define('job', {
   title: {
-    type: Sequelize.STRING,
+    type: STRING,
     allowNull: false
   },
   description: {
-    type: Sequelize.TEXT,
+    type: TEXT,
     allowNull: false
   },
-  status: Sequelize.STRING,
-  application_email: Sequelize.STRING,
-  cc_email: Sequelize.STRING,
-  application_url: Sequelize.STRING,
-  coords: Sequelize.STRING,
-  location: Sequelize.STRING,
-  zip_code: Sequelize.STRING,
-  employment_types: Sequelize.ARRAY(Sequelize.STRING),
-  pay_rate: Sequelize.STRING,
-  compensation_type: Sequelize.STRING,
-  travel_requirements: Sequelize.STRING
+  status: STRING,
+  application_email: STRING,
+  cc_email: STRING,
+  application_url: STRING,
+  coords: GEOMETRY('POINT', 4326),
+  location: STRING,
+  zip_code: STRING,
+  employment_types: ARRAY(STRING),
+  pay_rate: STRING,
+  compensation_type: STRING,
+  travel_requirements: STRING,
+  distance: {
+    type: VIRTUAL(BOOLEAN),
+    defaultValue: false,
+    set: (userInputCoords, userInputMaxDistance) => {
+      return db.fn(
+        'ST_DWithin',
+        this.getDataValue('coords'),
+        db.fn(
+          'ST_SetSRID',
+          db.fn(
+            'ST_MakePoint',
+            userInputCoords.lng,
+            userInputCoords.lat
+          ),
+          4326
+        ),
+        0.016 * userInputMaxDistance
+      )
+    }
+  }
+}, {
+  hooks: {
+    afterSave: () => db.models.JobMaterializedView.refresh(),
+    afterCreate: () => db.models.JobMaterializedView.refresh(),
+    afterUpdate: () => db.models.JobMaterializedView.refresh(),
+    afterDelete: () => db.models.JobMaterializedView.refresh()
+  }
 })
 
 // Belongs to Many associations create a join table.
@@ -49,7 +75,7 @@ module.exports.associations = (Job, {User, Employer, Skill, JobSkill, JobApplica
     through: 'JobApplication'
   })
   Job.belongsToMany(Skill, {
-    through: 'JobSkill'
+    through: 'jobskill'
   })
   Job.belongsTo(Employer)
 }

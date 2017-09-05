@@ -3,9 +3,10 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { Row, Col, FormGroup, ControlLabel, FormControl, Button, Checkbox, HelpBlock } from 'react-bootstrap'
 import axios from 'axios'
-import { creatingNewJob } from 'APP/src/reducers/actions/jobs'
-import CreditCardFields from './CreditCard'
-import SkillTypeaheadSelect from '../utilities/SkillTypeaheadSelect'
+import { creatingNewJobs } from 'APP/src/reducers/actions/jobs'
+import { gettingAllSkills, receiveSelectedSkills } from 'APP/src/reducers/actions/skills'
+import CreditCardFormControls from './CreditCard'
+import SkillTypeaheadSelect from 'APP/src/components/utilities/SkillTypeaheadSelect'
 import PropTypes from 'prop-types'
 import 'react-select/dist/react-select.css'
 import 'react-virtualized/styles.css'
@@ -35,24 +36,40 @@ class PostJobForm extends Component {
       cvc: null,
       token: null,
       status: 'open',
-      app_method: 'email'
+      app_method: 'email',
+      jobs:[],
+      skills:[]
     }
+  }
+
+  componentDidMount () {
+    const {skills} = this.props
+    if (!skills || skills.length === 0) this.props.getSkills()
   }
 
   handleLocation = zip_code => {
     axios.get(`http://maps.googleapis.com/maps/api/geocode/json?address=${zip_code}`)
       .then(res => res.data)
       .then(json => {
-        const address = json.results[0].address_components.filter(c => (
-          c.types.includes('locality') ||
-          c.types.includes('administrative_area_level_1') ||
+        const address = json.results[0].address_components
+        const geometry = json.results[0].geometry.location
+        let city = address.filter(c => (
+          c.types.includes('sublocality') || c.types.includes('locality')
+        ))[0].long_name
+        let state = address.filter(c => (
+          c.types.includes('administrative_area_level_1')
+        ))[0].short_name
+        let country = address.filter(c => (
           c.types.includes('country')
-        ))
-        const city = address[0].long_name
-        const state = address[1].short_name
-        const country = address[2].long_name
-        const location = country === 'United States' ? `${city}, ${state}` : `${city}, ${state} ${country}`
-        const coords = `${json.results[0].geometry.location.lat},${json.results[0].geometry.location.lng}`
+        ))[0].long_name
+        const location = country === 'United States'
+          ? `${city}, ${state}`
+          : `${city}, ${state} ${country}`
+        const coords = {
+          type: 'Point',
+          coordinates: [parseFloat(geometry.lat), parseFloat(geometry.lng)],
+          crs: {type: 'name', properties: {name: 'EPSG:4326'}}
+        }
         this.setState({coords, zip_code, location})
       })
       .catch(err => console.error(err.stack))
@@ -106,15 +123,44 @@ class PostJobForm extends Component {
 
   handleSubmit = event => {
     event.preventDefault()
-    const {createJobPost, selected, history, user} = this.props
-    const job = {...this.state}
-    job.employer_id = user.employer.id
-    // change employment_types from Set to Array
+    let {jobs, skills, ...job} = this.state
+    job.employer_id = this.props.user.employer.id
     job.employment_types = [...this.state.employment_types]
-    let skills = selected
-    skills = skills.map(s => s.id)
     this.clearForm()
-    createJobPost({job, skills}, history)
+    jobs.push(job)
+    skills.push(this.props.selected.map((s) => s.id))
+    this.props.receiveSelectedSkills([])
+    this.props.createJobPosts({jobs, skills}, this.props.history)
+  }
+
+  addJob = event => {
+    event.preventDefault()
+    let {jobs, skills, ...job} = this.state
+    job.employer_id = this.props.user.employer.id
+    job.employment_types = [...this.state.employment_types]
+    this.clearForm()
+    jobs.push(job)
+    skills.push(this.props.selected.map((s) => s.id))
+    this.props.receiveSelectedSkills([])
+    this.setState({jobs, skills})
+  }
+
+  _selectSkill = data => {
+    let skill_ids = data.split(',')
+    let new_skills = []
+    if (skill_ids[0] !== '') {
+      skill_ids.forEach((id) => {
+        this.props.skills.forEach((s) => {
+          if (s.id === parseInt(id, 10)) {
+            new_skills.push({label: s.title, value: s.id})
+          }
+        })
+      })
+    }
+    this.setState({
+      selectValue: [...new_skills],
+      selected_skills: skill_ids
+    })
   }
 
   render () {
@@ -187,10 +233,10 @@ class PostJobForm extends Component {
               name='employment_types'
               onChange={this.handleChange('employment_types')}>
               <ControlLabel>Employment Type(s)</ControlLabel>
-              <Checkbox value='Full-time'>Full-time</Checkbox>
-              <Checkbox value='Part-time'>Part-time</Checkbox>
+              <Checkbox value='Fulltime'>Full Time</Checkbox>
+              <Checkbox value='Parttime'>Part Time</Checkbox>
               <Checkbox value='Contract'>Contract</Checkbox>
-              <Checkbox value='Contract to Hire'>Contract to Hire</Checkbox>
+              <Checkbox value='ContractToHire'>Contract to Hire</Checkbox>
               <Checkbox value='Internship'>Internship</Checkbox>
               <Checkbox value='Remote'>Remote</Checkbox>
             </FormGroup>
@@ -220,8 +266,9 @@ class PostJobForm extends Component {
                 <option value='100%'>100%</option>
               </FormControl>
             </FormGroup>
-            <CreditCardFields ref='card' />
-            <Button className='primary' type='submit'>Post Job</Button>
+            <CreditCardFormControls ref='card' />
+            <Button className='primary' type='submit'>Add Job & Checkout</Button>
+            <Button className='primary' onClick={this.addJob}>Add Another</Button>
           </form>
         </Col>
       </Row>
@@ -235,7 +282,9 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  createJobPost: (post, history) => dispatch(creatingNewJob(post, history))
+  createJobPosts: (data, history) => dispatch(creatingNewJobs(data, history)),
+  getSkills: post => dispatch(gettingAllSkills()),
+  receiveSelectedSkills: skills => dispatch(receiveSelectedSkills(skills))
 })
 
 PostJobForm.propTypes = {

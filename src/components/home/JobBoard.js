@@ -29,12 +29,13 @@ class JobBoard extends Component {
   }
 
   componentWillMount () {
-    const {jobs, fetching, authenticating, getJobs} = this.props
+    const {allJobs, fetching, authenticating, getJobs} = this.props
     if (!authenticating) {
-      if (!jobs && !fetching) {
+      if (!allJobs && !fetching) {
+        console.log('CWM - FETCHING JOBS')
         getJobs()
       }
-      if (jobs) {
+      if (allJobs) {
         this.setState({loading: false})
       }
     }
@@ -43,10 +44,11 @@ class JobBoard extends Component {
   componentWillReceiveProps (nextProps) {
     const {authenticating, getJobs} = this.props
     if (!authenticating) {
-      if (!nextProps.jobs && !nextProps.fetching) {
+      if (!nextProps.allJobs && !nextProps.filteredJobs && !nextProps.fetching) {
+        console.log('CWRP - FETCHING JOBS')
         getJobs()
       }
-      if (nextProps.jobs) {
+      if (nextProps.allJobs || nextProps.filteredJobs) {
         this.setState({loading: false})
       }
     }
@@ -56,9 +58,9 @@ class JobBoard extends Component {
     axios.get(`http://maps.googleapis.com/maps/api/geocode/json?address=${zip_code}`)
       .then(res => res.data)
       .then(json => {
-        const {location} = json.results[0].geometry
-        const coords = `${location.lat},${location.lng}`
-        this.setState({coords, zip_code})
+        const geometry = json.results[0].geometry.location
+        const coords = {lat: parseFloat(geometry.lat), lng: parseFloat(geometry.lng)}
+        this.setState({coords})
       })
       .catch(err => console.error(err.stack))
   }
@@ -112,11 +114,12 @@ class JobBoard extends Component {
         terms: [],
         distance: '',
         sortBy: '',
+        zip_code: '',
+        coords: '',
         employment_types: new Set([]),
         filtered: false,
-        loading: true
+        loading: false
       })
-      this.filterJobs()
     } else {
       // just clear the search bar, nbd
       this.setState({query: ''})
@@ -125,62 +128,33 @@ class JobBoard extends Component {
 
   buildBody = (coords, from) => {
     const {terms, distance, employment_types, sortBy} = this.state
-    let must = {};
-    [...employment_types].forEach(type => {
-      must.match = {employment_types: type}
-    })
-    let should = terms.map(term => ({term: {_all: term}}))
-    const body = {
-      query: {
-        bool: {
-          must,
-          should,
-          filter: [
-
-          ]
-        }
-      },
-      sort: [{_score: {order: 'desc'}}]
+    return {
+      terms,
+      coords,
+      distance,
+      employment_types: [...employment_types],
+      sortBy,
+      from
     }
-    if (distance) {
-      body.query.bool.filter.push({
-        geo_distance: {
-          coords,
-          distance: `${distance}mi`
-        }
-      })
-    }
-    if (sortBy === 'date') body.sort.push({updated_at: {order: 'desc'}})
-    if (sortBy === 'distance') {
-      body.sort.push({
-        _geo_distance: {
-          coords,
-          order: 'asc',
-          unit: 'mi',
-          distance_type: 'arc'
-        }
-      })
-    }
-    body.from = from
-    return body
   }
 
-  handlePagination = (jobs, sign) => {
+  handlePagination = (sign) => {
+    const {allJobs, filteredJobs} = this.props
+    const {filtered} = this.state
     let page_num = 1
     let from = 0
     const next_page = sign === 'plus'
-      ? this.state.page_num + 1
-      : this.state.page_num - 1
-    if (sign) {
-      const nextPageHasItems = (!(this.props.jobs.length < 10) || sign === 'minus')
-      if (next_page > 0 && nextPageHasItems) {
-        page_num = next_page
-        from = sign === 'plus'
-          ? this.state.from + 10
-          : this.state.from - 10
-      } else {
-        return null
-      }
+      ? page_num + 1
+      : page_num - 1
+    const jobs = filtered ? filteredJobs : allJobs
+    const nextPageHasItems = (!(jobs.length < 10) || sign === 'minus')
+    if (next_page > 0 && nextPageHasItems) {
+      page_num = next_page
+      from = sign === 'plus'
+        ? from + 10
+        : from - 10
+    } else {
+      return null
     }
     return {page_num, from}
   }
@@ -190,16 +164,26 @@ class JobBoard extends Component {
     const coords = this.state.coords
       ? this.state.coords
       : this.props.coords
-    const {page_num, from} = this.handlePagination(this.props.jobs, sign)
-    if (!page_num) {
-      return
+    // if this method is being called as a result of clicking Next or Back:
+    if (sign) {
+      const {page_num, from} = this.handlePagination(sign)
+      if (!page_num) {
+        return
+      } else {
+        return this.setState({
+          from,
+          filtered: true,
+          page_num,
+          loading: true
+        }, this.props.advancedFilterJobs(this.buildBody, coords, from))
+      }
     }
     this.setState({
-      from,
+      from: this.state.from,
       filtered: true,
-      page_num,
+      page_num: this.state.page_num,
       loading: true
-    }, this.props.advancedFilterJobs(this.buildBody, coords, from))
+    }, this.props.advancedFilterJobs(this.buildBody, coords, this.state.from))
   }
 
   filterJobs = event => {
@@ -208,16 +192,23 @@ class JobBoard extends Component {
     if (event) event.preventDefault()
     this.setState({loading: true})
     const {query} = this.state
-    this.props.filterJobs(query)
     // ^ when query === '', all job listings are shown
-    if (query) this.setState({filtered: true, terms: [...this.state.pendingTerms]})
+    if (query) {
+      this.setState({
+        filtered: true,
+        terms: [...this.state.pendingTerms],
+        loading: true
+      }, this.props.filterJobs(query))
+    }
     // we only show the search results header if this.state.filtered === true
     this.clearFilter()
   }
 
   render () {
-    const {jobs} = this.props
-    const {loading} = this.state
+    const {allJobs, filteredJobs} = this.props
+    const {loading, filtered} = this.state
+    const jobs = filtered ? filteredJobs : allJobs
+    console.log('JOBBOARD STATE: ', this.state)
     return (
       <Row className='JobBoard'>
         <SearchBar
@@ -246,13 +237,13 @@ class JobBoard extends Component {
           <Col xs={12} sm={9} md={9} lg={9}>
             <Row>
               <Col className='paginate-container' xs={12} sm={12} md={12} lg={12}>
-                <Button className='btn-paginate' onClick={this.advancedFilterJobs('plus')}>
+                <Button className='btn-paginate' onClick={this.advancedFilterJobs('minus')}>
                   Back
                 </Button>
                 <span>
                   {this.state.page_num}
                 </span>
-                <Button className='btn-paginate' onClick={this.advancedFilterJobs('minus')}>
+                <Button className='btn-paginate' onClick={this.advancedFilterJobs('plus')}>
                   Next
                 </Button>
               </Col>
@@ -270,7 +261,8 @@ class JobBoard extends Component {
 }
 
 JobBoard.propTypes = {
-  jobs: PropTypes.arrayOf(PropTypes.object),
+  allJobs: PropTypes.arrayOf(PropTypes.object),
+  filteredJobs: PropTypes.arrayOf(PropTypes.object),
   getJobs: PropTypes.func,
   filterJobs: PropTypes.func,
   advancedFilterJobs: PropTypes.func,
@@ -280,7 +272,8 @@ JobBoard.propTypes = {
 }
 
 const mapStateToProps = state => ({
-  jobs: state.jobs.all,
+  allJobs: state.jobs.all,
+  filteredJobs: state.jobs.filtered,
   fetching: state.jobs.fetchingAll,
   authenticating: state.auth.authenticating
 })

@@ -85,3 +85,11 @@ and (min-width: 767px) {
 .candidate {
   padding: 0;
 }
+
+.paginate {
+  padding-top: 30px;
+}
+
+.page-number{
+    display: inline;
+}

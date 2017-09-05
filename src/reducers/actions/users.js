@@ -77,7 +77,8 @@ export const gettingUserById = user_id => dispatch => {
   axios.get(`/api/users/${user_id}`)
     .then(res => res.data)
     .then(user => {
-      dispatch(receiveUser(user._source))
+      
+      dispatch(receiveUser(user))
     })
     .catch(err => console.error(`Mang I couldn't find the user! ${err.stack}`))
 }

@@ -48,8 +48,8 @@
   "dependencies": {
     "aws-sdk": "^2.73.0",
     "axios": "^0.15.2",
-    "bcrypt": "^1.0.2",
-    "bcryptjs": "^2.4.0",
+    "bcrypt": "^1.0.3",
+    "bcryptjs": "^2.4.3",
     "bluebird": "^3.5.0",
     "body-parser": "^1.15.2",
     "chai": "^3.5.0",
@@ -71,6 +71,7 @@
     "passport-local": "^1.0.0",
     "payment": "^1.0.4",
     "pg": "^6.1.0",
+    "pg-search-sequelize": "0.0.10",
     "pretty-error": "^2.0.2",
     "prop-types": "^15.5.10",
     "react": "^15.3.2",
@@ -93,6 +94,7 @@
     "sequelize": "^3.24.6",
     "stripe": "^4.19.0",
     "tinify": "^1.5.0",
+    "umzug": "^2.0.1",
     "underscore": "^1.8.3"
   },
   "devDependencies": {

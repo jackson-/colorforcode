@@ -73,11 +73,11 @@ const ApplicantRegisterFields = ({
         name='employment_types'
         onChange={handleChange('employment_types')}>
         <ControlLabel>Desired Employment Type(s)</ControlLabel>
-        <Checkbox defaultChecked={isChecked('Full-time')} value='Full-time'>
-          Full-time
+        <Checkbox defaultChecked={isChecked('Full Time')} value='Full Time'>
+          Full Time
         </Checkbox>
-        <Checkbox defaultChecked={isChecked('Part-time')} value='Part-time'>
-          Part-time
+        <Checkbox defaultChecked={isChecked('Part Time')} value='Part Time'>
+          Part Time
         </Checkbox>
         <Checkbox defaultChecked={isChecked('Contract')} value='Contract'>
           Contract
