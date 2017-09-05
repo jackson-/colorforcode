@@ -1,7 +1,7 @@
 @import url(../../fonts.css);
 
 .UserDetail {
-  padding-top: 60px;
+
 }
 
 .UserDetail__header {
@@ -82,6 +82,10 @@
 
 .UserDetail__body-section {
   padding: 0;
+}
+
+.section-white {
+  background: #FFFFFF;
 }
 
 .UserDetail__body-header {

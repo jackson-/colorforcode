@@ -175,6 +175,7 @@ class EditProfile extends Component {
           validate={this.getValidationState}
           isInvalid={this.isInvalid()}
           buttonText={'Update Profile'}
+          animated={animated}
         />
       )
     } else if (user && !user.is_employer) {
@@ -186,6 +187,7 @@ class EditProfile extends Component {
           isChecked={this.isChecked}
           isInvalid={this.isInvalid()}
           buttonText={'Update Profile'}
+          animated={animated}
         />
       )
     }

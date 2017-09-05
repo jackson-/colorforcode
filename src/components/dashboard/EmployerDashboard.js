@@ -91,8 +91,9 @@ class EmployerDashboard extends Component {
                 <Route exact path='/dashboard/applicants' component={() => (
                   <ApplicantsList jobs={jobs} animated={animated} />
                 )} />
-                <Route exact path='/dashboard/manage-jobs' component={() => (
+                <Route exact path='/dashboard/manage-jobs' component={({location}) => (
                   <ManageJobs
+                    location={location}
                     closeJob={closeJob}
                     duplicateJob={duplicateJob}
                     jobs={jobs}

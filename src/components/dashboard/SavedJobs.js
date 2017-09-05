@@ -31,11 +31,11 @@ class SavedJobs extends Component {
     const jobs = user.savedJobs
     return (
       <Row className='SavedJobs'>
-        <h1 className={`SavedJobs-header fadeIn ${animated}`}>
+        <h1 className={`SavedJobs-header fadeIn`}>
           SAVED JOBS
         </h1>
         <ScrollToTopOnMount />
-        <Table className='fadeIn animated' responsive>
+        <Table className={`fadeIn ${animated}`} responsive>
           <thead>
             <tr>
               <td>JOB TITLE</td>

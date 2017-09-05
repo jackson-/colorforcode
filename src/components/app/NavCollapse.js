@@ -9,13 +9,14 @@ class NavCollapse extends Component {
     const {state, isEmployer, collapse} = this.props
     const dashMenuStyle = {
       padding: state.padding,
-      height: state.showDashMenu ? (isEmployer ? '215px' : '300px') : '0'
+      height: state.showDashMenu ? (isEmployer ? '260px' : '300px') : '0'
     }
     const dashMobileMenu = {
       employer: [
         {to: '/dashboard/post-new-job', glyph: 'plus-sign', text: 'Post New Job'},
-        {to: '/dashboard/manage-jobs', glyph: 'list-alt', text: 'Manage Jobs'},
-        {to: '/dashboard/edit-profile', glyph: 'user', text: 'Edit Profile'}
+        {to: '/dashboard/manage-jobs', glyph: 'briefcase', text: 'Manage Jobs'},
+        {to: '/dashboard/edit-profile', glyph: 'user', text: 'Edit Profile'},
+        {to: '/dashboard/applicants', glyph: 'list-alt', text: 'Applicants'}
       ],
       applicant: [
         {to: '/dashboard/applications', glyph: 'list-alt', text: 'Applications'},

@@ -35,7 +35,7 @@ export default class ManageJobs extends Component {
         <h1 className={`ManageJobs-header fadeIn ${animated}`}>
           MANAGE JOBS
         </h1>
-        <Table responsive className='fadeIn animated'>
+        <Table responsive className={`fadeIn ${animated}`}>
           <thead>
             <tr>
               <td>JOB TITLE</td>

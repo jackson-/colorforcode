@@ -25,29 +25,12 @@ class UserProfile extends Component {
     }
   }
 
-  componentDidMount () {
-    const {user, fetching} = this.props
-    console.log('CDM - USER', user, 'FETCHING USER: ', fetching)
-  }
-
-  componentWillReceiveProps () {
-    const {user, fetching, match} = this.props
-    const {id} = match.params
-    console.log('CWRP - USER', user, 'FETCHING USER: ', fetching)
-    if (fetching) console.log(`CWRP - FETCHING USER ${id}`)
-  }
-
   componentWillMount () {
     const {user, fetching, match, getUser} = this.props
     const {id} = match.params
-    console.log('CWM - USER', user, 'FETCHING USER: ', fetching)
     if (!fetching) {
-      if (!user || user.id !== Number(id)) {
-        getUser(id)
-        console.log(`CWM - HAD USER ${user ? user.id : null} FETCHING USER ${id}`)
-      }
+      if (!user || user.id !== Number(id)) getUser(id)
     }
-    if (fetching) console.log(`CWM - FETCHING USER ${id}, ${fetching}`)
   }
 
   handleOnLoad = () => {
@@ -66,7 +49,7 @@ class UserProfile extends Component {
   }
 
   render () {
-    let {match, user, animated} = this.props
+    let {user, animated} = this.props
     const links = [
       {type: 'github', label: 'Github Profile', component: <GithubIcon />},
       {type: 'linkedin', label: 'LinkedIn Profile', component: <LinkedInIcon />},
@@ -86,11 +69,8 @@ class UserProfile extends Component {
       })
     }
     const {opacity, showModal, currentProject} = this.state
-    // below we're fixing the unnecessary padding when this component
-    // is rendered by the applicant dashboard
-    let paddingTop = match.path === '/users/:id' ? '60px' : '0'
     return (
-      <Row className={`UserDetail fadeIn ${animated}`} style={{paddingTop}}>
+      <Row className={`UserDetail fadeIn ${animated}`}>
         {
           user &&
           <Col xs={12} sm={12} md={12} lg={12}>
@@ -100,7 +80,7 @@ class UserProfile extends Component {
                   <Image
                     className='UserDetail__header-avatar'
                     circle
-                    style={{opacity}}
+                    style={{opacity: !animated ? '1' : opacity}}
                     responsive
                     onLoad={this.handleOnLoad}
                     src={user.image_url ? user.image_url : blankAvatar}
@@ -132,7 +112,10 @@ class UserProfile extends Component {
             </Row>
             <Row className='UserDetail__body'>
               <div className='container__flex'>
-                <Col className='UserDetail__body-section' xs={12} sm={9} md={8} lg={8}>
+                <Col
+                  className='UserDetail__body-section section-white'
+                  xs={12} sm={9} md={8} lg={8}
+                >
                   <div className='portfolio'>
                     <h2 className='UserDetail__body-header'>
                       Portfolio

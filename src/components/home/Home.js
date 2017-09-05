@@ -54,7 +54,7 @@ const Home = ({
 Home.propTypes = {
   coords: PropTypes.string,
   isEmployer: PropTypes.bool,
-  animated: PropTypes.bool,
+  animated: PropTypes.string,
   getUsers: PropTypes.func,
   getJobs: PropTypes.func,
   filterJobs: PropTypes.func,

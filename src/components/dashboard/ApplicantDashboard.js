@@ -69,11 +69,12 @@ const ApplicantDashboard = ({
             />
           </Col>
           <Col xs={12} sm={9} md={9} lg={9} className='Dashboard__content'>
-            <Route exact path='/dashboard/applications' component={({history}) => (
+            <Route exact path='/dashboard/applications' component={({history, location}) => (
               <Applications user={user} animated={animated} />
             )} />
-            <Route exact path='/dashboard/saved-jobs' component={({history}) => (
+            <Route exact path='/dashboard/saved-jobs' component={({location, history}) => (
               <SavedJobs
+                location={location}
                 jobs={jobs}
                 user={user}
                 updateUser={updateUser}
