@@ -365,7 +365,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  logOut: (history) => dispatch(logout(history)),
+  logOut: () => dispatch(logout()),
   applyToJob: (userId, jobId, history) => dispatch(applyingToJob(userId, jobId, history)),
   unsaveJob: (userId, savedJobs) => dispatch(unsavingJob(userId, savedJobs)),
   getJob: jobId => dispatch(gettingJobById(jobId)),
