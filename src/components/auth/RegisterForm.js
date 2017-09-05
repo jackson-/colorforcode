@@ -181,6 +181,7 @@ class RegisterForm extends Component {
   }
 
   render () {
+    const {animated} = this.props
     return (
       <Row className='RegisterForm fadeIn animated'>
         <Col xs={12} sm={12} md={12} lg={12}>
@@ -206,6 +207,7 @@ class RegisterForm extends Component {
                     validate={this.getValidationState}
                     isInvalid={this.isInvalid()}
                     buttonText={'Create Account'}
+                    animated={animated}
                   />
                 }
                 {
@@ -217,6 +219,7 @@ class RegisterForm extends Component {
                     isChecked={this.isChecked}
                     isInvalid={this.isInvalid()}
                     buttonText={'Create Account'}
+                    animated={animated}
                   />
                 }
               </Row>

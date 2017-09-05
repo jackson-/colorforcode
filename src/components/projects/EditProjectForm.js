@@ -9,7 +9,6 @@ import 'react-select/dist/react-select.css'
 import 'react-virtualized/styles.css'
 import 'react-virtualized-select/styles.css'
 import '../auth/Form.css'
-import { receiveProject } from '../../reducers/actions/projects'
 import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
 import LoadingSpinner from '../utilities/LoadingSpinner'
 

@@ -31,7 +31,7 @@
   bottom: 5px;
   border-radius: 50%;
   border: 3px solid transparent;
-  border-top-color: #099B4E;
+  border-top-color: #01B27A;
   animation: spin 3s linear infinite;
 }
 
@@ -44,7 +44,7 @@
   bottom: 15px;
   border-radius: 50%;
   border: 3px solid transparent;
-  border-top-color: #f9c922;
+  border-top-color: #F9C922;
   animation: spin 1.5s linear infinite;
 }
 

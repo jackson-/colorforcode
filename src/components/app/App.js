@@ -65,15 +65,13 @@ class App extends Component {
 
   toggleDashMenu = event => {
     if (event) event.preventDefault()
-    const height = this.props.user.is_employer ? '215px' : '300px'
     this.setState({
       showDashMenu: !this.state.showDashMenu,
-      // height: this.state.height === height ? '0' : height,
       padding: this.state.padding === '75px 0 10px 0' ? '0' : '75px 0 10px 0',
-      // marginBottom: this.state.marginBottom === '-60px' ? '0' : '-60px',
       opacity: this.state.opacity === '1' ? '0' : '1',
-      // display: this.state.display === 'block' ? 'none' : 'block'
-      transform: this.state.transform === 'translateY(-300px)' ? 'translateY(0)' : 'translateY(-300px)',
+      transform: this.state.transform === 'translateY(-300px)'
+        ? 'translateY(0)'
+        : 'translateY(-300px)',
       closing: this.state.showDashMenu
     })
   }
@@ -106,7 +104,8 @@ class App extends Component {
     let selectedSkillsNew = selected.filter(skill => skill.customOption === true)
     // then we filter existing skills into a separate list
     const selectedSkillsExisting = selected.filter(skill => !skill.customOption)
-    // if the user made any new skills, we format them for Sequelize, dispatch an action to create them, then return
+    // if the user made any new skills, we format them for Sequelize,
+    // dispatch an action to create them, and then update the selected skills list
     if (selectedSkillsNew.length) {
       selectedSkillsNew = selectedSkillsNew.map(skill => {
         return {title: skill.title, template: false}
@@ -237,8 +236,12 @@ class App extends Component {
                       animated={anim}
                     />
                   )} />
-                  <Route exact path='/register' component={RegisterForm} />
-                  <Route exact path='/login' component={LoginForm} />
+                  <Route exact path='/register' component={() => (
+                    <RegisterForm animated={anim} />
+                  )} />
+                  <Route exact path='/login' component={() => (
+                    <LoginForm animated={anim} />
+                  )} />
                   <Route exact path='/users/:id' component={() => (
                     <UserProfile animated={anim} />
                   )} />
