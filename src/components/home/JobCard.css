@@ -9,7 +9,7 @@
 }
 
 .JobCard:hover {
-  border-bottom: 2px solid #12CD6A;
+  border-bottom: 2px solid #01C688;
   cursor: pointer;
 }
 
@@ -43,7 +43,7 @@
 }
 
 .JobCard-type {
-  background: #12CD6A;
+  background: #01C688;
   border-radius: 25px;
   color: #FFFFFF;
   font-size: 11px;

@@ -2,6 +2,7 @@
   background: #FFFFFF;
   margin: 0;
   position: absolute;
+  right: 0;
   width: 100%;
   height: 100%;
   transition: all .35s ease-in-out;
@@ -17,7 +18,7 @@
   margin: -75px 0 0 -75px;
   border-radius: 50%;
   border: 3px solid transparent;
-  border-top-color: #12CD6A;
+  border-top-color: #01C688;
   animation: spin 2s linear infinite;
 }
 

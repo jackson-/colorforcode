@@ -24,7 +24,7 @@
 }
 
 .icon-green path {
-  fill: #12CD6A;
+  fill: #01C688;
 }
 
 .icon-white path {
@@ -53,7 +53,7 @@
 
   .icon-green path {
     fill: transparent;
-    stroke: #12CD6A;
+    stroke: #01C688;
     stroke-width: 1.5px;
   }
 
@@ -69,7 +69,7 @@
   }
 
   .icon-green:hover path {
-    fill: #12CD6A;
+    fill: #01C688;
   }
 
   .icon-white:hover path {

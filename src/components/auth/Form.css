@@ -18,7 +18,7 @@
 }
 
 .EditProfile .btn-login-reg:hover {
-  background: #12CD6A;
+  background: #01C688;
   color: #FFFFFF;
   box-shadow: none;
   transition-duration: 0.2s;
@@ -34,7 +34,7 @@
 
 .RegisterForm, .LoginForm {
   padding: 25px 0 25px 0;
-  background: #12CD6A;
+  background: #01C688;
   min-height: 100vh;
   color: #FFFFFF;
 }
@@ -74,7 +74,7 @@
 .Select--multi .Select-value {
   background: rgba(18,205,106, 0.08) !important;
   border: solid 1px rgba(18,205,106, 0.24) !important;
-  color: #12CD6A !important;
+  color: #01C688 !important;
 }
 
 .form-group input {
@@ -99,7 +99,7 @@
 .PostJobForm .form-group input:focus,
 .UpdateJobForm .form-group input:focus {
   box-shadow: none;
-  border-bottom: 2px solid #12CD6A;
+  border-bottom: 2px solid #01C688;
   transition: border 0.5s ease-in-out;
 }
 
@@ -133,7 +133,7 @@
 .UpdateJobForm .form-group select:focus,
 .Select:focus, .Select-menu-outer:focus, .Select.control:focus {
   box-shadow: none;
-  border: 2px solid #12CD6A;
+  border: 2px solid #01C688;
   transition: border 0.5s ease-in-out;
 }
 
@@ -158,7 +158,7 @@
 
 .form-group textarea:focus {
   box-shadow: none;
-  border: 2px solid #12CD6A;
+  border: 2px solid #01C688;
   transition: border 0.5s ease-in-out;
 }
 

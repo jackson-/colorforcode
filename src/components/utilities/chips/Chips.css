@@ -13,7 +13,7 @@
 .chip-round {
   font-size: 11px;
   font-family: Open Sans Bold;
-  color: #12CD6A;
+  color: #01C688;
   background: #FFFFFF;
   border-radius: 25px;
   display: inline-block;
@@ -27,8 +27,8 @@
 .chip-square {
   background: #FFFFFF;
   border-radius: 3px;
-  border: 2px solid #12CD6A;
-  color: #12CD6A;
+  border: 2px solid #01C688;
+  color: #01C688;
   font-size: 14px;
   font-family: Open Sans Bold;
   padding: 5px 10px;

@@ -17,3 +17,11 @@ body.modal-open {
 a, a:hover, .active {
   text-decoration: none;
 }
+
+a {
+  color: #01C688;
+}
+
+a:hover, .active {
+  color: #01B27A;
+}
