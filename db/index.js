@@ -10,7 +10,7 @@ const url = process.env.DATABASE_URL || `postgres://postgres@localhost:5432/${na
 debug(chalk.yellow(`Opening database connection to ${url}`))
 
 const db = module.exports = new Sequelize(url, {
-  logging: console.log, // require('debug')('sql'),
+  logging: require('debug')('sql'),
   // export DEBUG=sql in the environment to get SQL queries
   define: {
     underscored: true,
