@@ -52,7 +52,7 @@ const Home = ({
 }
 
 Home.propTypes = {
-  coords: PropTypes.string,
+  coords: PropTypes.object,
   isEmployer: PropTypes.bool,
   animated: PropTypes.string,
   getUsers: PropTypes.func,
