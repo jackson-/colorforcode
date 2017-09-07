@@ -58,7 +58,7 @@ class JobInfoDisplay extends Component {
   }
 
   render () {
-    const {job, user, match} = this.props
+    const {job, user} = this.props
     let skills, employer, datePosted, saved, applied
 
     if (job) {

@@ -80,7 +80,7 @@
 .form-group input {
   text-align: left;
   font-family: Open Sans Semibold;
-  font-size: 14px;
+  font-size: 16px;
   color: #333;
   width: 100%;
   height: 42px;
@@ -107,7 +107,7 @@
 .Select, .Select.control {
   text-align: left;
   font-family: Open Sans Semibold;
-  font-size: 14px;
+  font-size: 16px;
   color: #333;
   width: 100%;
   height: 42px;
@@ -144,7 +144,7 @@
 .form-group textarea {
   text-align: left;
   font-family: Open Sans Semibold;
-  font-size: 14px;
+  font-size: 16px;
   color: #333;
   height: 200px;
   width: 100% !important;
@@ -164,7 +164,7 @@
 
 .form-group label, label, .checkbox label {
   font-family: Lato Regular;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: bolder;
   padding: 0;
 }
@@ -177,13 +177,13 @@
 .checkbox input[type=checkbox] {
   width: 20px !important;
   min-width: 0;
-  margin: -10px 0 0 120px;
+  margin: -10px 0 0 150px;
   padding: 5px;
 }
 
 input[type=file] {
   display: flex;
-  font-size: 15px;
+  font-size: 16px;
   padding: 15px 0 25px;
 }
 
