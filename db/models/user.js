@@ -8,7 +8,7 @@ module.exports = db => db.define('user', {
   is_employer: BOOLEAN,
   zip_code: STRING,
   location: STRING,
-  coords: GEOMETRY('POINT', 4326),
+  coords: GEOMETRY('POINT', 32661),
   image_url: STRING,
   resume_url: STRING,
   company_role: STRING,

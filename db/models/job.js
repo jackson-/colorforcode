@@ -13,40 +13,13 @@ module.exports = db => db.define('job', {
   application_email: STRING,
   cc_email: STRING,
   application_url: STRING,
-  coords: GEOMETRY('POINT', 4326),
+  coords: GEOMETRY('POINT', 32661),
   location: STRING,
   zip_code: STRING,
   employment_types: ARRAY(STRING),
   pay_rate: STRING,
   compensation_type: STRING,
-  travel_requirements: STRING,
-  distance: {
-    type: VIRTUAL(BOOLEAN),
-    defaultValue: false,
-    set: (userInputCoords, userInputMaxDistance) => {
-      return db.fn(
-        'ST_DWithin',
-        this.getDataValue('coords'),
-        db.fn(
-          'ST_SetSRID',
-          db.fn(
-            'ST_MakePoint',
-            userInputCoords.lng,
-            userInputCoords.lat
-          ),
-          4326
-        ),
-        0.016 * userInputMaxDistance
-      )
-    }
-  }
-}, {
-  hooks: {
-    afterSave: () => db.models.JobMaterializedView.refresh(),
-    afterCreate: () => db.models.JobMaterializedView.refresh(),
-    afterUpdate: () => db.models.JobMaterializedView.refresh(),
-    afterDelete: () => db.models.JobMaterializedView.refresh()
-  }
+  travel_requirements: STRING
 })
 
 // Belongs to Many associations create a join table.

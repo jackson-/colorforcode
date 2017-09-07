@@ -83,7 +83,7 @@ export default class JobUpdateDisplay extends Component {
         const coords = {
           type: 'Point',
           coordinates: [parseFloat(geometry.lat), parseFloat(geometry.lng)],
-          crs: {type: 'name', properties: {name: 'EPSG:4326'}}
+          crs: {type: 'name', properties: {name: 'EPSG:32661'}}
         }
         this.setState({coords, zip_code, location})
       })

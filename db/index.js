@@ -10,7 +10,7 @@ const url = app.env.DATABASE_URL || `postgres://postgres:blackity@localhost:5432
 debug(chalk.yellow(`Opening database connection to ${url}`))
 
 const db = module.exports = new Sequelize(url, {
-  logging: require('debug')('sql'),
+  logging: console.log, // require('debug')('sql'),
   // export DEBUG=sql in the environment to get SQL queries
   define: {
     underscored: true,

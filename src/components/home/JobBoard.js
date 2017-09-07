@@ -207,8 +207,8 @@ class JobBoard extends Component {
   render () {
     const {allJobs, filteredJobs} = this.props
     const {loading, filtered} = this.state
-    const jobs = filtered ? filteredJobs : allJobs
-    console.log('JOBBOARD STATE: ', this.state)
+    const jobs = !filteredJobs || !filtered ? allJobs : filteredJobs
+    console.log('JOBS: ', jobs)
     return (
       <Row className='JobBoard'>
         <SearchBar

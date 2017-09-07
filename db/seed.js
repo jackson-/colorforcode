@@ -22,22 +22,23 @@ const employers = seed(Employer, {
     company_site: 'https://www.shopify.com'
   }
 })
-
+// *** note that the longitude is first in the coordinates array, as is
+// required by GeoJSON spec (which PostGIS uses)
 const points = {
   bk: {
     type: 'Point',
-    coordinates: [40.6655101, -73.8918897],
-    crs: { type: 'name', properties: { name: 'EPSG:4326' } }
+    coordinates: [-73.8918897, 40.6655101],
+    crs: { type: 'name', properties: { name: 'EPSG:32661' } }
   },
   on: {
     type: 'Point',
-    coordinates: [45.4203521, -75.69314750000001],
-    crs: { type: 'name', properties: { name: 'EPSG:4326' } }
+    coordinates: [-75.69314750000001, 45.4203521],
+    crs: { type: 'name', properties: { name: 'EPSG:32661' } }
   },
   ca: {
     type: 'Point',
-    coordinates: [38.5500434, -121.4599012],
-    crs: { type: 'name', properties: { name: 'EPSG:4326' } }
+    coordinates: [-121.4599012, 38.5500434],
+    crs: { type: 'name', properties: { name: 'EPSG:32661' } }
   }
 }
 
