@@ -1,11 +1,11 @@
 {
   "version": "0.1.0",
   "private": true,
-  "name": "hireblack",
+  "name": "color-for-code",
   "authors": "Devin Jackson & Chloe Rice",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jackson-/hireblack.io.git"
+    "url": "https://github.com/jackson-/colorforcode.git"
   },
   "keywords": [
     "react",
@@ -23,15 +23,16 @@
   },
   "proxy": "http://localhost:1337/",
   "scripts": {
-    "start": "concurrently \"npm run serve-dev\" \"node scripts/start.js\"",
+    "start-dev": "concurrently \"npm run serve\" \"node scripts/start.js\"",
     "build": "node scripts/build.js",
     "test-react": "node scripts/test.js --env=jsdom",
-    "dev": "          node dev",
+    "dev": "node dev",
     "validate": "check-node-version --node '>= 6.10.2'",
     "setup": "./bin/setup",
     "prep": "npm run validate && npm run setup",
     "postinstall": "npm run prep",
-    "serve": "node server/start.js",
+    "build-branch": "bin/build-branch.sh",
+    "start": "node server/start.js",
     "serve-watch": "nodemon server/start.js --watch server --watch db --watch index.js --watch package.json",
     "serve-dev": "cross-env NODE_ENV=development npm run serve-watch",
     "test-node": "mocha --watch-extensions server/**/*.test.js db/**/*.test.js",
@@ -42,9 +43,9 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jackson-/hireblack.io.git/issues"
+    "url": "https://github.com/jackson-/colorforcode.git/issues"
   },
-  "homepage": "https://github.com/jackson-/hireblack.io.git#readme",
+  "homepage": "https://github.com/jackson-/colorforcode.git#readme",
   "dependencies": {
     "aws-sdk": "^2.73.0",
     "axios": "^0.15.2",

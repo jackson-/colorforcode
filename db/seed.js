@@ -13,9 +13,9 @@ const employers = seed(Employer, {
     name: 'Google',
     company_site: 'https://www.google.com'
   },
-  hireblack: {
-    name: 'HireBlack',
-    company_site: 'https://www.hireblack.io'
+  colorforcode: {
+    name: 'Color For Code',
+    company_site: 'https://www.colorforcode.com'
   },
   shopify: {
     name: 'Shopify',
@@ -86,7 +86,7 @@ const users = seed(User,
       zip_code: '95817',
       location: 'Sacramento, CA',
       coords: points.ca,
-      image_url: 'https://s3.amazonaws.com/hireblack/avatars/chloe-avatar.png',
+      image_url: 'https://s3.amazonaws.com/colorforcode/avatars/chloe-avatar.png',
       headline: 'I love code, dogs, and fruit!',
       summary: '',
       title: 'Frontend Sorceress',
@@ -101,7 +101,7 @@ const users = seed(User,
     hb1: {
       first_name: 'Devin',
       last_name: 'Blackson',
-      email: 'devin@hireblack.io',
+      email: 'devin@colorforcode.com',
       password: '123',
       is_employer: true,
       coords: points.bk,
@@ -112,7 +112,7 @@ const users = seed(User,
     hb2: {
       first_name: 'Chloe',
       last_name: 'Ice',
-      email: 'chloe@hireblack.io',
+      email: 'chloe@colorforcode.com',
       password: '123',
       zip_code: '95817',
       location: 'Sacramento, CA',
@@ -167,7 +167,7 @@ const projects = seed(Project,
     c1: {
       user_id: users.chloe.id,
       title: 'Where Can I Eat?: Gluten Free Restaurant Finder',
-      screenshot: 'https://s3.amazonaws.com/hireblack/screenshots/project-3-created-2017-08-28T12:21:24.691Z-by-user-3',
+      screenshot: 'https://s3.amazonaws.com/colorforcode/screenshots/project-3-created-2017-08-28T12:21:24.691Z-by-user-3',
       problem: 'This is a description',
       approach: 'This is how I approached it.',
       challenges: 'This really pissed me off',
@@ -178,7 +178,7 @@ const projects = seed(Project,
     c2: {
       user_id: users.chloe.id,
       title: 'Interactive Guide: Working with an OCD programmer',
-      screenshot: 'https://s3.amazonaws.com/hireblack/screenshots/project-4-created-2017-08-28T12:21:24.691Z-by-user-3',
+      screenshot: 'https://s3.amazonaws.com/colorforcode/screenshots/project-4-created-2017-08-28T12:21:24.691Z-by-user-3',
       problem: 'This is a description',
       approach: 'This is how I approached it.',
       challenges: 'This really pissed me off',
@@ -204,7 +204,7 @@ const jobs = seed(Job,
       // The easiest way to seed associations seems to be to just create rows
       // in the join table.
       full_stack: {
-        'employer_id': employers.hireblack.id,
+        'employer_id': employers.colorforcode.id,
         'title': 'Full Stack Dev',
         'description': 'This is a job for a full stack dev',
         'status': 'open',
@@ -220,7 +220,7 @@ const jobs = seed(Job,
         'travel_requirements': 'None'
       },
       dev_ops: {
-        'employer_id': employers.hireblack.id,
+        'employer_id': employers.colorforcode.id,
         'title': 'DevOps',
         'description': 'This is a job for a devops dude',
         'status': 'open',
@@ -249,7 +249,7 @@ const jobs = seed(Job,
         'pay_rate': '$100',
         'compensation_type': 'Salary',
         'travel_requirements': 'None',
-        'employer_id': employers.hireblack.id
+        'employer_id': employers.colorforcode.id
       },
       ux: {
         'title': 'UX / Visual Designer',
@@ -265,7 +265,7 @@ const jobs = seed(Job,
         'pay_rate': '$30',
         'compensation_type': 'Salary',
         'travel_requirements': 'None',
-        'employer_id': employers.hireblack.id
+        'employer_id': employers.colorforcode.id
       },
       messaging: {
         'title': 'Messaging Engineer',
@@ -281,7 +281,7 @@ const jobs = seed(Job,
         'pay_rate': '$90',
         'compensation_type': 'Salary',
         'travel_requirements': 'None',
-        'employer_id': employers.hireblack.id
+        'employer_id': employers.colorforcode.id
       },
       net_dev: {
         'title': '.Net Developer (Junior)',
@@ -297,7 +297,7 @@ const jobs = seed(Job,
         'pay_rate': '$60',
         'compensation_type': 'Salary',
         'travel_requirements': 'None',
-        'employer_id': employers.hireblack.id
+        'employer_id': employers.colorforcode.id
       },
       merchant: {
         'title': 'Merchant Success Engineer',
@@ -364,7 +364,7 @@ const jobs = seed(Job,
         'employer_id': employers.shopify.id
       },
       full_stack1: {
-        'employer_id': employers.hireblack.id,
+        'employer_id': employers.colorforcode.id,
         'title': 'Senior Full Stack Dev',
         'description': 'This is a job for a full stack dev',
         'status': 'open',
@@ -380,7 +380,7 @@ const jobs = seed(Job,
         'travel_requirements': 'None'
       },
       dev_ops1: {
-        'employer_id': employers.hireblack.id,
+        'employer_id': employers.colorforcode.id,
         'title': 'Senior DevOps Engineer',
         'description': 'This is a job for a devops dude',
         'status': 'open',
@@ -409,7 +409,7 @@ const jobs = seed(Job,
         'pay_rate': '$30',
         'compensation_type': 'Salary',
         'travel_requirements': 'None',
-        'employer_id': employers.hireblack.id
+        'employer_id': employers.colorforcode.id
       },
       ux1: {
         'title': 'Senior UX / Visual Designer',
@@ -425,7 +425,7 @@ const jobs = seed(Job,
         'pay_rate': '$30',
         'compensation_type': 'Salary',
         'travel_requirements': 'None',
-        'employer_id': employers.hireblack.id
+        'employer_id': employers.colorforcode.id
       },
       messaging1: {
         'title': 'Senior Messaging Engineer',
@@ -441,7 +441,7 @@ const jobs = seed(Job,
         'pay_rate': '$30',
         'compensation_type': 'Salary',
         'travel_requirements': 'None',
-        'employer_id': employers.hireblack.id
+        'employer_id': employers.colorforcode.id
       },
       net_dev1: {
         'title': '.Net Developer (Senior)',
@@ -457,7 +457,7 @@ const jobs = seed(Job,
         'pay_rate': '$30',
         'compensation_type': 'Salary',
         'travel_requirements': 'None',
-        'employer_id': employers.hireblack.id
+        'employer_id': employers.colorforcode.id
       },
       merchant1: {
         'title': 'Merchant Success Engineering Lead',
