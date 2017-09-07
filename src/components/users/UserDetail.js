@@ -8,16 +8,15 @@ import PropTypes from 'prop-types'
 class UserDetailPage extends Component {
   componentWillMount() {
     const {id} = this.props.match.params
-    if () this.props.getUser(id)
+    if (!user) this.props.getUser(id)
   }
 
   render() {
     const saved = null
     const {match} = this.props
     const user = this.props.user ? this.props.user._source : null
-    let paddingTop = match.path === '/users/:id' ? '60px' : '0'
     return (
-      <Row className='JobInfo Dashboard__content--white fadeIn animated' style={{paddingTop}}>
+      <Row className='JobInfo Dashboard__content--white fadeIn animated'>
         {user &&
         <Col xs={12} sm={12} md={12} lg={12}>
           <Row className='JobInfo--header'>

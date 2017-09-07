@@ -1,40 +1,27 @@
-
-const Sequelize = require('sequelize')
+const {STRING, TEXT, ARRAY, GEOMETRY, VIRTUAL, BOOLEAN} = require('sequelize')
 
 module.exports = db => db.define('job', {
   title: {
-    type: Sequelize.STRING,
+    type: STRING,
     allowNull: false
   },
   description: {
-    type: Sequelize.TEXT,
+    type: TEXT,
     allowNull: false
   },
-  status: Sequelize.STRING,
-  application_email: Sequelize.STRING,
-  cc_email: Sequelize.STRING,
-  application_url: Sequelize.STRING,
-  coords: Sequelize.STRING,
-  location: Sequelize.STRING,
-  zip_code: Sequelize.STRING,
-  employment_types: Sequelize.ARRAY(Sequelize.STRING),
-  pay_rate: Sequelize.STRING,
-  compensation_type: Sequelize.STRING,
-  travel_requirements: Sequelize.STRING,
-  the_geom: 'geometry(Point,4326)',
-},{ tableName: 'job',
-    customHooks: {
+  status: STRING,
+  application_email: STRING,
+  cc_email: STRING,
+  application_url: STRING,
+  coords: GEOMETRY('POINT', 32661),
+  location: STRING,
+  zip_code: STRING,
+  employment_types: ARRAY(STRING),
+  pay_rate: STRING,
+  compensation_type: STRING,
+  travel_requirements: STRING
+})
 
-    },
-    hooks:{
-      afterSave: models => models.JobMaterializedView.refresh(),
-      afterValidate: function (job, options) {
-          if(job.coords){
-            job.the_geom = db.fn('ST_SetSRID', db.fn('ST_MakePoint', job.coords.split(',')[0], job.coords.split(',')[0]), '4326');
-          } 
-       }
-    },
-  })
 // Belongs to Many associations create a join table.
 
 // In this case we've defined JobApplicant and JobSkillRelationship ourselves in order to add additional

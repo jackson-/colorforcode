@@ -1,6 +1,5 @@
 .About {
   font-family: Merriweather, 'Helvetica Neue', Arial, sans-serif;
-  padding-top: 63px;
   text-align: center;
 }
 
@@ -33,13 +32,14 @@
 }
 
 .About__hero-heading {
+  padding-top: 10%;
   font-size: 30px;
   font-weight: 700;
 }
 
 .About__hero-separator {
   margin: 30px auto;
-  border-color: #12CD6A;
+  border-color: #01C688;
   border-width: 3px;
   max-width: 50px;
 }
@@ -63,7 +63,7 @@
 }
 
 .bg-primary {
-  background: #12CD6A;
+  background: #01C688;
 }
 
 .bg-dark {
@@ -76,7 +76,7 @@
 }
 
 .About__separator {
-  border-color: #12CD6A;
+  border-color: #01C688;
   border-width: 3px;
   max-width: 50px;
 }
@@ -102,7 +102,7 @@
 }
 
 .text-primary {
-  color: #12CD6A;
+  color: #01C688;
 }
 
 .sr-icons {

@@ -9,19 +9,15 @@ module.exports = require('express').Router()
   })
 
   .post('/', (req, res, next) => {
-    const user = req.body.user
-    const skill = req.body.skill
-    Skill.create(skill)
-    .then(createdSkill => {
-    })
-    .then(updatedListings => res.sendStatus(201))
-    .catch(next)
+    const {skills} = req.body
+    Skill.bulkCreate(skills)
+      .then(() => Skill.findAll()) // bulkCreate doesn't return any params
+      .then(skills => res.json(skills))
+      .catch(next)
   })
 
   .get('/:id', (req, res, next) => {
     Skill.findById(req.params.id, { include: [Employer] })
-      .then(skill => {
-        return res.json(skill)
-      })
+      .then(skill => res.json(skill))
       .catch(next)
   })

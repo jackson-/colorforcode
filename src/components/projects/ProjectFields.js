@@ -17,11 +17,12 @@ class ProjectFields extends Component {
       state,
       skills,
       project,
-      formatSkills
+      formatSkills,
+      animated
     } = this.props
 
     return (
-      <form className='PostJobForm-body fadeIn animated' onSubmit={handleSubmit}>
+      <form className={`PostJobForm-body fadeIn ${animated}`} onSubmit={handleSubmit}>
         <FormGroup controlId='title'>
           <ControlLabel>Project Title</ControlLabel>
           <FormControl
@@ -119,7 +120,8 @@ ProjectFields.propTypes = {
   arrowRenderer: PropTypes.func,
   skills: PropTypes.arrayOf(PropTypes.object),
   state: PropTypes.object,
-  project: PropTypes.object
+  project: PropTypes.object,
+  animated: PropTypes.string
 }
 
 export default ProjectFields

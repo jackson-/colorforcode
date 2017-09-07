@@ -25,23 +25,11 @@ class UserProfile extends Component {
     }
   }
 
-  componentDidMount () {
-    const {user, fetchingUser, match} = this.props
-    const {id} = match.params
-  }
-
-  componentWillReceiveProps () {
-    const {user, fetchingUser, match} = this.props
-    const {id} = match.params
-  }
-
   componentWillMount () {
-    const {user, fetchingUser, match, getUser} = this.props
+    const {user, fetching, match, getUser} = this.props
     const {id} = match.params
-    if (!fetchingUser) {
-      if (!user || user.id !== Number(id)) {
-        getUser(id)
-      }
+    if (!fetching) {
+      if (!user || user.id !== Number(id)) getUser(id)
     }
   }
 
@@ -61,7 +49,7 @@ class UserProfile extends Component {
   }
 
   render () {
-    let {match, user} = this.props
+    let {user, animated} = this.props
     const links = [
       {type: 'github', label: 'Github Profile', component: <GithubIcon />},
       {type: 'linkedin', label: 'LinkedIn Profile', component: <LinkedInIcon />},
@@ -81,12 +69,8 @@ class UserProfile extends Component {
       })
     }
     const {opacity, showModal, currentProject} = this.state
-    // below we're fixing the unnecessary padding when this component
-    // is rendered by the applicant dashboard
-    let paddingTop = match.path === '/users/:id' ? '60px' : '0'
-    console.log("USER", user)
     return (
-      <Row className='UserDetail fadeIn animated' style={{paddingTop}}>
+      <Row className={`UserDetail fadeIn ${animated}`}>
         {
           user &&
           <Col xs={12} sm={12} md={12} lg={12}>
@@ -96,7 +80,7 @@ class UserProfile extends Component {
                   <Image
                     className='UserDetail__header-avatar'
                     circle
-                    style={{opacity}}
+                    style={{opacity: !animated ? '1' : opacity}}
                     responsive
                     onLoad={this.handleOnLoad}
                     src={user.image_url ? user.image_url : blankAvatar}
@@ -128,7 +112,10 @@ class UserProfile extends Component {
             </Row>
             <Row className='UserDetail__body'>
               <div className='container__flex'>
-                <Col className='UserDetail__body-section' xs={12} sm={9} md={8} lg={8}>
+                <Col
+                  className='UserDetail__body-section section-white'
+                  xs={12} sm={9} md={8} lg={8}
+                >
                   <div className='portfolio'>
                     <h2 className='UserDetail__body-header'>
                       Portfolio
@@ -214,12 +201,13 @@ UserProfile.propTypes = {
   getUser: PropTypes.func,
   user: PropTypes.any,
   padding: PropTypes.string,
-  fetchingUser: PropTypes.bool
+  fetching: PropTypes.bool,
+  animated: PropTypes.string
 }
 
 const mapStateToProps = state => ({
   user: state.users.selected,
-  fetchingUser: state.users.fetchingUser
+  fetching: state.users.fetchingSelected
 })
 
 const mapDispatchToProps = dispatch => ({

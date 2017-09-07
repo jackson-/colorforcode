@@ -1,10 +1,7 @@
-'use strict'
-
 const app = require('APP')
 const debug = require('debug')(`${app.name}:db`) // DEBUG=your_app_name:db
 const chalk = require('chalk')
 const Sequelize = require('sequelize')
-let SearchModel = require('pg-search-sequelize');
 
 const name = (app.env.DATABASE_NAME || app.name) + (app.isTesting ? '_test' : '')
 
@@ -13,13 +10,16 @@ const url = process.env.DATABASE_URL || `postgres://postgres@localhost:5432/${na
 debug(chalk.yellow(`Opening database connection to ${url}`))
 
 const db = module.exports = new Sequelize(url, {
-  logging: require('debug')('sql'),  // export DEBUG=sql in the environment to
-                                     // get SQL queries
+  logging: console.log, // require('debug')('sql'),
+  // export DEBUG=sql in the environment to get SQL queries
   define: {
-    underscored: true,       // use snake_case rather than camelCase column names.
-                             // these are easier to work with in psql.
-    freezeTableName: true,   // don't change table names from the one specified
-    timestamps: true,        // automatically include timestamp columns
+    underscored: true,
+    // ^ use snake_case rather than camelCase column names.
+    // these are easier to work with in psql.
+    freezeTableName: true,
+    // don't change table names from the one specified
+    timestamps: true
+    // automatically include timestamp columns
   }
 })
 
@@ -58,7 +58,7 @@ Object.assign(db, models,
 db.didSync = db.createAndSync()
 
 // sync the db, creating it if necessary
-function createAndSync(force = app.isTesting, retries = 0, maxRetries = 5) {
+function createAndSync (force = app.isTesting, retries = 0, maxRetries = 5) {
   return db.sync({force})
     .then(() => debug(`Synced models to db ${url}`))
     .catch(fail => {
@@ -77,7 +77,6 @@ function createAndSync(force = app.isTesting, retries = 0, maxRetries = 5) {
       return new Promise(resolve =>
         // 'child_process.exec' docs: https://nodejs.org/api/child_process.html#child_process_child_process_exec_command_options_callback
         require('child_process').exec(`createdb "${name}"`, resolve)
-      ).then(() => createAndSync(true, retries + 1)
-  )
+      ).then(() => createAndSync(true, retries + 1))
     })
 }

@@ -1,6 +1,6 @@
 // bcrypt docs: https://www.npmjs.com/package/bcrypt
 const bcrypt = require('bcryptjs')
-const {STRING, TEXT, VIRTUAL, BOOLEAN, ENUM, ARRAY} = require('sequelize')
+const {STRING, TEXT, VIRTUAL, BOOLEAN, ENUM, ARRAY, GEOMETRY} = require('sequelize')
 
 module.exports = db => db.define('user', {
   first_name: STRING,
@@ -8,7 +8,7 @@ module.exports = db => db.define('user', {
   is_employer: BOOLEAN,
   zip_code: STRING,
   location: STRING,
-  coords: STRING,
+  coords: GEOMETRY('POINT', 32661),
   image_url: STRING,
   resume_url: STRING,
   company_role: STRING,

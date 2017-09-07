@@ -66,28 +66,32 @@ passport.deserializeUser(
               {model: Skill, through: {attributes: []}},
               {model: User, as: 'applicants', through: 'JobApplication'}
             ]
-          }
-        ]},
+          }]
+        },
         {model: Project, include: [Skill]},
         {model: Job, as: 'applications', through: 'JobApplication'},
-        {model: Job, as: 'savedJobs', through: 'User_SavedJobs', include: [
-          {model: User, as: 'applicants', through: 'JobApplication'}
-        ]}
+        {model: Job,
+          as: 'savedJobs',
+          through: 'User_SavedJobs',
+          include: [
+            {model: User, as: 'applicants', through: 'JobApplication'}
+          ]
+        }
       ],
       order: [
         [Employer, {model: Job, as: 'listings'}, 'status', 'DESC'],
         [Employer, {model: Job, as: 'listings'}, 'updated_at', 'DESC']
       ]
     })
-    .then(user => {
-      if (!user) debug('deserialize retrieved null user for id=%d', id)
-      else debug('deserialize did ok user.id=%d', id)
-      return done(null, user)
-    })
-    .catch(err => {
-      debug('deserialize did fail err=%s', err)
-      return done(err)
-    })
+      .then(user => {
+        if (!user) debug('deserialize retrieved null user for id=%d', id)
+        else debug('deserialize did ok user.id=%d', id)
+        return done(null, user)
+      })
+      .catch(err => {
+        debug('deserialize did fail err=%s', err)
+        return done(err)
+      })
   }
 )
 
@@ -143,24 +147,23 @@ passport.use('local-signin',
       ],
       attributes: {include: ['password_digest']}
     })
-    .then(user => {
-      if (!user) {
-        debug('authenticate user(email: "%s") did fail: no such user', email)
-        return done(null, false, { message: 'Login incorrect' })
-      }
-      user.authenticate(password)
-      .then(ok => {
-        if (!ok) {
-          debug('authenticate user(email: "%s") did fail: bad password')
+      .then(user => {
+        if (!user) {
+          debug('authenticate user(email: "%s") did fail: no such user', email)
           return done(null, false, { message: 'Login incorrect' })
         }
-        debug('authenticate user(email: "%s") did ok: user.id=%d', email, user.id)
-        done(null, user)
+        user.authenticate(password)
+          .then(ok => {
+            if (!ok) {
+              debug('authenticate user(email: "%s") did fail: bad password')
+              return done(null, false, { message: 'Login incorrect' })
+            }
+            debug('authenticate user(email: "%s") did ok: user.id=%d', email, user.id)
+            done(null, user)
+          })
       })
-    })
-    .catch(done)
-  }
-))
+      .catch(done)
+  }))
 
 auth.get('/whoami', (req, res) => res.send(req.user))
 

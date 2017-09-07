@@ -1,10 +1,8 @@
 import axios from 'axios'
 import {
-  RECEIVE_USERS, AUTHENTICATED, RECEIVE_USER,
-  AUTHENTICATING, CREATE_USER, UPDATE_USER,
-  DELETE_USER, REQUEST_ALL_USERS, BEGIN_UPLOADING,
+  RECEIVE_USERS, RECEIVE_USER, CREATE_USER, UPDATE_USER, DELETE_USER, REQUEST_ALL_USERS, BEGIN_UPLOADING,
   DONE_UPLOADING, REQUEST_USER, REQUEST_FILTERED_USERS } from '../constants'
-import { receiveNextRoute } from '../routeReducer'
+import { whoami, login } from './auth'
 /* --------- PURE ACTION CREATORS --------- */
 
 export const receiveAllUsers = users => ({
@@ -15,15 +13,6 @@ export const receiveAllUsers = users => ({
 export const receiveUser = user => ({
   selected: user,
   type: RECEIVE_USER
-})
-
-export const authenticated = user => ({
-  user,
-  type: AUTHENTICATED
-})
-
-export const authenticating = () => ({
-  type: AUTHENTICATING
 })
 
 export const beginUploading = () => ({
@@ -60,46 +49,6 @@ export const requestAllUsers = () => ({
 
 /* --------- ASYNC ACTION CREATORS (THUNKS) --------- */
 
-export const whoami = (history, next) => dispatch => {
-  dispatch(authenticating())
-  axios.get('/api/auth/whoami')
-    .then(response => {
-      const user = response.data
-      dispatch(authenticated(user))
-      if (history) {
-        console.log('NEXT', next)
-        if (next) {
-          history.push(next)
-          receiveNextRoute('')
-        } else {
-          history.push(
-            user.is_employer
-              ? '/dashboard/manage-jobs'
-              : '/dashboard/saved-jobs'
-          )
-        }
-      }
-    })
-    .catch(err => {
-      console.error(err.stack)
-      dispatch(authenticated(null))
-    })
-}
-
-export const login = (email, password, history, next) => dispatch => {
-  axios.post('/api/auth/login/local', {email, password})
-    .then(() => dispatch(whoami(history, next)))
-    .catch(() => dispatch(whoami()))
-}
-
-export const logout = () => dispatch => {
-  axios.post('/api/auth/logout')
-    .then(() => {
-      dispatch(whoami())
-    })
-    .catch(() => dispatch(whoami()))
-}
-
 export const creatingNewUser = (user, history, next) => dispatch => {
   // set loading state to true to trigger UI changes
   dispatch(createNewUser())
@@ -128,7 +77,7 @@ export const gettingUserById = user_id => dispatch => {
   axios.get(`/api/users/${user_id}`)
     .then(res => res.data)
     .then(user => {
-      debugger
+      
       dispatch(receiveUser(user))
     })
     .catch(err => console.error(`Mang I couldn't find the user! ${err.stack}`))

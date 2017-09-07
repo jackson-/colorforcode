@@ -41,16 +41,25 @@ class RegisterForm extends Component {
     axios.get(`http://maps.googleapis.com/maps/api/geocode/json?address=${zip_code}`)
       .then(res => res.data)
       .then(json => {
-        const address = json.results[0].address_components.filter(c => (
-          c.types.includes('locality') ||
-          c.types.includes('administrative_area_level_1') ||
+        const address = json.results[0].address_components
+        const geometry = json.results[0].geometry.location
+        let city = address.filter(c => (
+          c.types.includes('sublocality') || c.types.includes('locality')
+        ))[0].long_name
+        let state = address.filter(c => (
+          c.types.includes('administrative_area_level_1')
+        ))[0].short_name
+        let country = address.filter(c => (
           c.types.includes('country')
-        ))
-        const city = address[0].long_name
-        const state = address[1].short_name
-        const country = address[2].long_name
-        const location = country === 'United States' ? `${city}, ${state}` : `${city}, ${state} ${country}`
-        const coords = `${json.results[0].geometry.location.lat},${json.results[0].geometry.location.lng}`
+        ))[0].long_name
+        const location = country === 'United States'
+          ? `${city}, ${state}`
+          : `${city}, ${state} ${country}`
+        const coords = {
+          type: 'Point', // GeoJSON requires longitude to be first!!
+          coordinates: [parseFloat(geometry.lng), parseFloat(geometry.lat)],
+          crs: {type: 'name', properties: {name: 'EPSG:32661'}}
+        }
         this.setState({coords, zip_code, location})
       })
       .catch(err => console.error(err.stack))
@@ -181,6 +190,7 @@ class RegisterForm extends Component {
   }
 
   render () {
+    const {animated} = this.props
     return (
       <Row className='RegisterForm fadeIn animated'>
         <Col xs={12} sm={12} md={12} lg={12}>
@@ -206,6 +216,7 @@ class RegisterForm extends Component {
                     validate={this.getValidationState}
                     isInvalid={this.isInvalid()}
                     buttonText={'Create Account'}
+                    animated={animated}
                   />
                 }
                 {
@@ -217,6 +228,7 @@ class RegisterForm extends Component {
                     isChecked={this.isChecked}
                     isInvalid={this.isInvalid()}
                     buttonText={'Create Account'}
+                    animated={animated}
                   />
                 }
               </Row>
@@ -229,7 +241,7 @@ class RegisterForm extends Component {
 }
 
 const mapStateToProps = state => ({
-  user: state.users.currentUser,
+  user: state.auth.currentUser,
   next: state.location.nextRoute
 })
 

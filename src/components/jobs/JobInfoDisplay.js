@@ -4,7 +4,6 @@ import PropTypes from 'prop-types'
 import './JobDetail.css'
 
 class JobInfoDisplay extends Component {
-
   constructor (props) {
     super(props)
     this.state = {
@@ -23,7 +22,7 @@ class JobInfoDisplay extends Component {
       receiveAlert({
         type: 'error',
         style: 'warning',
-        title: 'Not signed in!',
+        title: 'Not signed in',
         body: 'Welcome! Log in or register for an account, then we\'ll send you back to apply to this job.',
         next: '',
         footer: true
@@ -40,7 +39,7 @@ class JobInfoDisplay extends Component {
       receiveAlert({
         type: 'error',
         style: 'warning',
-        title: 'Not signed in!',
+        title: 'Not signed in',
         body: 'Welcome! Log in or register for an account, then we\'ll send you back to save this job.',
         next: '',
         footer: true
@@ -74,11 +73,8 @@ class JobInfoDisplay extends Component {
       saved = user.savedJobs.filter(j => j.id === job.id).length > 0
       applied = user.applications.filter(a => a.id === job.id).length > 0
     }
-    // below we're fixing the unnecessary padding when this component
-    // is rendered by the applicant dashboard
-    let paddingTop = match.path === '/jobs/:id' ? '60px' : '0'
     return (
-      <Row className='JobInfo Dashboard__content--white' style={{paddingTop}}>
+      <Row className='JobInfo Dashboard__content--white'>
         <Col xs={12} sm={12} md={12} lg={12}>
           <Row className='JobInfo--header'>
             <Col xs={12} sm={12} md={12} lg={12}>

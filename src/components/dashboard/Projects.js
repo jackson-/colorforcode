@@ -21,9 +21,10 @@ class Projects extends Component {
   }
 
   render () {
-    const projects = this.props.user.projects
+    const {user, animated} = this.props
+    const projects = user.projects
     return (
-      <Row className='Projects fadeIn animated'>
+      <Row className={`Projects fadeIn ${animated}`}>
         <h1 className='Projects-header'>PROJECTS</h1>
         <Table responsive>
           <thead>
@@ -66,7 +67,8 @@ Projects.propTypes = {
   saveJob: PropTypes.func,
   unsaveJob: PropTypes.func,
   projects: PropTypes.array,
-  history: PropTypes.object
+  history: PropTypes.object,
+  animated: PropTypes.string
 }
 
 export default withRouter(Projects)

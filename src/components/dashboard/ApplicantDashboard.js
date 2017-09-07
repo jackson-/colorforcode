@@ -30,7 +30,8 @@ const ApplicantDashboard = ({
   applyToJob,
   getJob,
   saveJob,
-  match
+  match,
+  animated
 }) => {
   return (
     <Router>
@@ -68,23 +69,27 @@ const ApplicantDashboard = ({
             />
           </Col>
           <Col xs={12} sm={9} md={9} lg={9} className='Dashboard__content'>
-            <Route exact path='/dashboard/applications' component={({history}) => (
-              <Applications user={user} />
+            <Route exact path='/dashboard/applications' component={({history, location}) => (
+              <Applications user={user} animated={animated} />
             )} />
-            <Route exact path='/dashboard/saved-jobs' component={({history}) => (
+            <Route exact path='/dashboard/saved-jobs' component={({location, history}) => (
               <SavedJobs
+                location={location}
                 jobs={jobs}
                 user={user}
                 updateUser={updateUser}
                 history={history}
                 unsaveJob={unsaveJob}
                 applyToJob={applyToJob}
+                animated={animated}
               />
             )} />
             <Route exact path='/dashboard/projects' component={() => (
-              <Projects deleteProject={deleteProject} user={user} />
+              <Projects deleteProject={deleteProject} user={user} animated={animated} />
             )} />
-            <Route exact path='/dashboard/add-project' component={ProjectCreate} />
+            <Route exact path='/dashboard/add-project' component={() => (
+              <ProjectCreate animated={animated} />
+            )} />
             <Route exact path='/dashboard/edit-project/:id' component={({match, history}) => {
               return (
                 <EditProject
@@ -94,11 +99,17 @@ const ApplicantDashboard = ({
                   getProject={getProject}
                   updateProject={updateProject}
                   deleteProject={deleteProject}
+                  animated={animated}
                 />
               )
             }} />
             <Route exact path='/dashboard/edit-profile' component={() => (
-              <EditProfile user={user} updateUser={updateUser} uploadResume={uploadResume} />
+              <EditProfile
+                user={user}
+                updateUser={updateUser}
+                uploadResume={uploadResume}
+                animated={animated}
+              />
             )} />
             <Route exact path='/dashboard/saved-jobs/:id' component={({match, history}) => (
               <JobDetailPage
@@ -109,6 +120,7 @@ const ApplicantDashboard = ({
                 unsaveJob={unsaveJob}
                 match={match}
                 history={history}
+                animated={animated}
               />
             )} />
             <Route exact path='/dashboard/jobs/:id' component={({match, history}) => (
@@ -120,6 +132,7 @@ const ApplicantDashboard = ({
                 unsaveJob={unsaveJob}
                 match={match}
                 history={history}
+                animated={animated}
               />
             )} />
           </Col>
@@ -145,7 +158,8 @@ ApplicantDashboard.propTypes = {
   saveJob: PropTypes.func.isRequired,
   unsaveJob: PropTypes.func.isRequired,
   project: PropTypes.object,
-  match: PropTypes.object
+  match: PropTypes.object,
+  animated: PropTypes.string
 }
 
 export default withRouter(ApplicantDashboard)

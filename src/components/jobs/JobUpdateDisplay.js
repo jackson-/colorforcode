@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import { Row, Col, FormGroup, ControlLabel,
-         FormControl, Button, Checkbox, HelpBlock } from 'react-bootstrap'
+import {
+  Row, Col, FormGroup, ControlLabel,
+  FormControl, Button, Checkbox, HelpBlock } from 'react-bootstrap'
 import axios from 'axios'
 import PropTypes from 'prop-types'
 // import VirtualizedSelect from 'react-virtualized-select'
@@ -65,16 +66,25 @@ export default class JobUpdateDisplay extends Component {
     axios.get(`http://maps.googleapis.com/maps/api/geocode/json?address=${zip_code}`)
       .then(res => res.data)
       .then(json => {
-        const address = json.results[0].address_components.filter(c => (
-          c.types.includes('locality') ||
-          c.types.includes('administrative_area_level_1') ||
+        const address = json.results[0].address_components
+        const geometry = json.results[0].geometry.location
+        let city = address.filter(c => (
+          c.types.includes('sublocality') || c.types.includes('locality')
+        ))[0].long_name
+        let state = address.filter(c => (
+          c.types.includes('administrative_area_level_1')
+        ))[0].short_name
+        let country = address.filter(c => (
           c.types.includes('country')
-        ))
-        const city = address[0].long_name
-        const state = address[1].short_name
-        const country = address[2].long_name
-        const location = country === 'United States' ? `${city}, ${state}` : `${city}, ${state} ${country}`
-        const coords = `${json.results[0].geometry.location.lat},${json.results[0].geometry.location.lng}`
+        ))[0].long_name
+        const location = country === 'United States'
+          ? `${city}, ${state}`
+          : `${city}, ${state} ${country}`
+        const coords = {
+          type: 'Point',
+          coordinates: [parseFloat(geometry.lat), parseFloat(geometry.lng)],
+          crs: {type: 'name', properties: {name: 'EPSG:32661'}}
+        }
         this.setState({coords, zip_code, location})
       })
       .catch(err => console.error(err.stack))
@@ -215,16 +225,16 @@ export default class JobUpdateDisplay extends Component {
                   name='employment_types'
                   onChange={this.handleChange('employment_types')}>
                   <ControlLabel>EMPLOYMENT TYPE(S)</ControlLabel>
-                  <Checkbox value='Full-time' defaultChecked={this.isChecked('Full-time')}>
-                    Full-time
+                  <Checkbox value='FullTime' defaultChecked={this.isChecked('Full Time')}>
+                    Full Time
                   </Checkbox>
-                  <Checkbox value='Part-time' defaultChecked={this.isChecked('Part-time')}>
-                    Part-time
+                  <Checkbox value='PartTime' defaultChecked={this.isChecked('Part Time')}>
+                    Part Time
                   </Checkbox>
                   <Checkbox value='Contract' defaultChecked={this.isChecked('Contract')}>
                     Contract
                   </Checkbox>
-                  <Checkbox value='Contract to Hire' defaultChecked={this.isChecked('Contract to Hire')}>
+                  <Checkbox value='ContractToHire' defaultChecked={this.isChecked('Contract to Hire')}>
                     Contract to Hire
                   </Checkbox>
                   <Checkbox value='Internship' defaultChecked={this.isChecked('Internship')}>

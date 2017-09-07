@@ -29,18 +29,15 @@ class EmployerDashboard extends Component {
       user,
       handleNewSkills,
       updateUser,
-      location,
       getJob,
       updateJob,
       deleteJob,
       closeJob,
       duplicateJob,
-      receiveAlert,
-      receiveNext
+      animated
     } = this.props
     const firstName = user ? user.first_name : ''
     const jobs = user && user.is_employer && [...user.employer.listings]
-    console.log('EMPLOYER DASH LOCATION: ', location)
     return (
       <Router>
         <Row className='Dashboard'>
@@ -70,7 +67,11 @@ class EmployerDashboard extends Component {
               <ScrollToTopOnMount />
               <Switch>
                 <Route exact path='/dashboard/edit-profile' component={() => (
-                  <EditProfile user={user} updateUser={updateUser} location={location} />
+                  <EditProfile
+                    user={user}
+                    updateUser={updateUser}
+                    animated={animated}
+                  />
                 )} />
                 <Route exact path='/dashboard/jobs/:id' component={({match, history}) => (
                   <JobDetailPage
@@ -81,37 +82,26 @@ class EmployerDashboard extends Component {
                     match={match}
                     history={history}
                     handleNewSkills={handleNewSkills}
+                    animated={animated}
                   />
                 )} />
-                <Route path='/dashboard/post-new-job' component={({match, history}) => {
-                  if (!user) {
-                    receiveNext('/dashboard/post-new-job')
-                    return receiveAlert({
-                      type: 'error',
-                      style: 'warning',
-                      title: 'Not signed in!',
-                      body: 'Welcome! Please log in or register, and we\'ll  post a new job.',
-                      next: ''
-                    })
-                  }
-                  return <PostAJob handleNewSkills={handleNewSkills} />
-                }} />
+                <Route path='/dashboard/post-new-job' component={({match, history}) => (
+                  <PostAJob handleNewSkills={handleNewSkills} animated={animated} />
+                )} />
                 <Route exact path='/dashboard/applicants' component={() => (
-                  <ApplicantsList
-                    location={location}
-                    jobs={jobs}
-                  />
+                  <ApplicantsList jobs={jobs} animated={animated} />
                 )} />
-                <Route exact path='/dashboard/manage-jobs' component={() => (
+                <Route exact path='/dashboard/manage-jobs' component={({location}) => (
                   <ManageJobs
                     location={location}
                     closeJob={closeJob}
                     duplicateJob={duplicateJob}
                     jobs={jobs}
+                    animated={animated}
                   />
                 )} />
                 <Route exact path='/dashboard/users/:id' component={() => (
-                  <UserProfile />
+                  <UserProfile animated={animated} />
                 )} />
               </Switch>
             </Col>
@@ -123,20 +113,16 @@ class EmployerDashboard extends Component {
 }
 
 EmployerDashboard.propTypes = {
-  skills: PropTypes.array,
   handleNewSkills: PropTypes.func,
   user: PropTypes.any,
   job: PropTypes.object,
-  jobs: PropTypes.array,
-  location: PropTypes.object,
   getJob: PropTypes.func.isRequired,
   updateJob: PropTypes.func.isRequired,
   deleteJob: PropTypes.func.isRequired,
   closeJob: PropTypes.func.isRequired,
   duplicateJob: PropTypes.func.isRequired,
   updateUser: PropTypes.func.isRequired,
-  receiveAlert: PropTypes.func,
-  receiveNext: PropTypes.func
+  animated: PropTypes.string
 }
 
 export default withRouter(EmployerDashboard)

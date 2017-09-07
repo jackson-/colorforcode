@@ -26,7 +26,6 @@ const NavBar = props => {
     }
   }
 
-  console.log('NAVBAR LOCATION: ', props.location)
   return (
     <Navbar fixedTop collapseOnSelect>
       <Navbar.Header>

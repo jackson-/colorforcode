@@ -165,7 +165,7 @@ class EditProfile extends Component {
   }
 
   render () {
-    const {user} = this.props
+    const {user, animated} = this.props
     let fields = ''
     if (user && user.is_employer) {
       fields = (
@@ -175,6 +175,7 @@ class EditProfile extends Component {
           validate={this.getValidationState}
           isInvalid={this.isInvalid()}
           buttonText={'Update Profile'}
+          animated={animated}
         />
       )
     } else if (user && !user.is_employer) {
@@ -186,12 +187,13 @@ class EditProfile extends Component {
           isChecked={this.isChecked}
           isInvalid={this.isInvalid()}
           buttonText={'Update Profile'}
+          animated={animated}
         />
       )
     }
 
     return (
-      <Row className='EditProfile fadeIn animated'>
+      <Row className={`EditProfile fadeIn ${animated}`}>
         <ScrollToTopOnMount />
         <Col xs={12} sm={12} md={12} lg={12}>
           <h1 className='EditProfile-header'>Edit Profile</h1>
@@ -204,16 +206,13 @@ class EditProfile extends Component {
             />
           }
           {
-            !user.is_employer &&
+            !user.is_employer && user.resume_url &&
             <a href={user.resume_url} target='_blank'>
               <p>{`Resume currently on file: ${user.resume_url.substring(43)}`}</p>
             </a>
           }
           <form className='EditProfile-body' onSubmit={this.handleSubmit}>
             {fields}
-            {user.resume_url &&
-              <a href={user.resume_url}><p>Current Resume</p></a>
-            }
           </form>
         </Col>
       </Row>
@@ -224,7 +223,8 @@ class EditProfile extends Component {
 EditProfile.propTypes = {
   user: PropTypes.any,
   updateUser: PropTypes.func,
-  uploadResume: PropTypes.func
+  uploadResume: PropTypes.func,
+  animated: PropTypes.string
 }
 
 export default EditProfile

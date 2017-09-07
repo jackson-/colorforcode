@@ -7,37 +7,40 @@ const esClient = new elasticsearch.Client({
   host: '127.0.0.1:9200',
   log: 'error'
 })
-const tinify = require("tinify");
-tinify.key = "lm8HbN3+BXgdBe9KvYLG3+KkS7SISwCHXcbW1ybx";
+const tinify = require('tinify')
+tinify.key = 'lm8HbN3+BXgdBe9KvYLG3+KkS7SISwCHXcbW1ybx'
 
 module.exports = require('express').Router()
 
   .get('/', (req, res, next) => {
-    User.findAll({include: [
-      {model: Project, include: [Skill]},
-    ], limit:10}).then(result => {
-        return res.status(200).json(result)
+    User.findAll({
+      include: [{
+        model: Project,
+        include: [Skill]
+      }],
+      limit: 10
     })
-    .catch(next)
+      .then(result => res.status(200).json(result))
+      .catch(next)
   })
 
   .post('/', (req, res, next) =>
     User.create(req.body)
-    .then(user => {
-      if (user.is_employer) {
-        return Employer.findOrCreate({
-          where: {
-            name: req.body.company_name,
-            company_site: req.body.company_site
-          }
-        })
-        .spread((employer, created) => user.setEmployer(employer.id))
-      } else {
-        res.status(201).json(user)
-      }
-    })
-    .then(user => res.status(201).json(user))
-    .catch(next)
+      .then(user => {
+        if (user.is_employer) {
+          return Employer.findOrCreate({
+            where: {
+              name: req.body.company_name,
+              company_site: req.body.company_site
+            }
+          })
+            .spread((employer, created) => user.setEmployer(employer.id))
+        } else {
+          res.status(201).json(user)
+        }
+      })
+      .then(user => res.status(201).json(user))
+      .catch(next)
   )
   .post('/search', (req, res, next) => {
     //
@@ -49,39 +52,41 @@ module.exports = require('express').Router()
 
     const {query} = req.body
     const options = {
-        model: db.User,
-        hasJoin:true,
+      model: db.User,
+      hasJoin: true
     }
     let q = 'data'
-    const db_query = "SELECT DISTINCT ON(id) id, * "+
+    const db_query = (
+      'SELECT DISTINCT ON(id) id, * ' +
       'FROM (SELECT "user".*, ' +
-        // `ST_Distance(job.the_geom, ST_MakePoint(${body.coords})::geography) as distance, ` +
+      // `ST_Distance(job.the_geom, ST_MakePoint(${body.coords})::geography) as distance, ` +
          `(SELECT json_agg(json_build_object('title', project.title, 'skills', (SELECT array_agg(row_to_json(skill.*)) FROM skill LEFT JOIN "ProjectSkill" ON "ProjectSkill".skill_id=skill.id WHERE "ProjectSkill".project_id=project.id))) FROM project WHERE project.user_id="user".id) AS projects, ` +
          'to_tsvector("user".title) || ' +
          'to_tsvector("user".summary) || ' +
-         "to_tsvector(project.title) as document " +
-        //  'to_tsvector("simple", coalesce(string_agg(project.title, " "))) as document ' +
+         'to_tsvector(project.title) as document ' +
+      // 'to_tsvector("simple", coalesce(string_agg(project.title, " "))) as document ' +
       'FROM "user" ' +
       'JOIN project ON project.user_id = "user".id ' +
       'INNER JOIN "ProjectSkill" ON "ProjectSkill".project_id = project.id ' +
       'INNER JOIN skill ON skill.id = "ProjectSkill".project_id ' +
       'GROUP BY "user".id, project.id, skill.id) p_search ' +
-      "WHERE " +
+      'WHERE ' +
       `p_search.document @@ to_tsquery('english', '${q}') ` +
       `ORDER BY id ASC, ts_rank(p_search.document, to_tsquery('english', '${q}')) DESC;`
-      console.log("QUERY ", db_query)
-    db.query( db_query,
-      options).then((result) =>{
-        console.log("RESULT", result)
+    )
+    console.log('QUERY ', db_query)
+    db.query(db_query, options)
+      .then(result => {
+        console.log('RESULT', result)
         return res.status(200).json(result)
-    }).catch(next);
+      }).catch(next)
   })
 
   .post('/search/advanced', (req, res, next) => {
     const {body} = req
     esClient.search({body, index: 'data', type: 'user'})
-    .then(advancedResults => res.status(200).json(advancedResults.hits.hits))
-    .catch(next)
+      .then(advancedResults => res.status(200).json(advancedResults.hits.hits))
+      .catch(next)
   })
 
   // .get('/avatars/sign-s3', (req, res) => {
@@ -167,44 +172,45 @@ module.exports = require('express').Router()
 
   .get('/:id', (req, res, next) => {
     User.findById(req.params.id, {
-      include: [
-        {model: Project, include: [Skill]},
-      ],
+      include: [{
+        model: Project,
+        include: [Skill]
+      }]
     })
-    .then((user) => {
-      return res.status(200).json(user)
-    })
-    .catch(next)
+      .then((user) => {
+        return res.status(200).json(user)
+      })
+      .catch(next)
   })
 
   .put('/:id', (req, res, next) => {
     const {user, savedJobsArr} = req.body
 
     User.findById(req.params.id)
-    .then(foundUser => {
-      // the same route is used to save jobs for users and to update users,
-      // but these tasks are never simultaneous
-      return savedJobsArr
-        ? foundUser.setSavedJobs(savedJobsArr)
-        : foundUser.update(user)
-    })
-    .then(() => {
-      return User.findById(req.params.id, {
-        include: [{model: Project, include: [Skill]}]
+      .then(foundUser => {
+        // the same route is used to save jobs for users and to update users,
+        // but these tasks are never simultaneous
+        return savedJobsArr
+          ? foundUser.setSavedJobs(savedJobsArr)
+          : foundUser.update(user)
       })
-    })
-    .then(updatedUser => {
-      // employer-users aren't in our ES data layer
-      if (!updatedUser.is_employer) {
-        return esClient.update({
-          index: 'data',
-          type: 'user',
-          id: req.params.id,
-          body: {doc: updatedUser.get()}
+      .then(() => {
+        return User.findById(req.params.id, {
+          include: [{model: Project, include: [Skill]}]
         })
-      }
-      return
-    })
-    .then(() => res.sendStatus(200))
-    .catch(next)
+      })
+      .then(updatedUser => {
+        // employer-users aren't in our ES data layer
+        if (!updatedUser.is_employer) {
+          return esClient.update({
+            index: 'data',
+            type: 'user',
+            id: req.params.id,
+            body: {doc: updatedUser.get()}
+          })
+        }
+        return
+      })
+      .then(() => res.sendStatus(200))
+      .catch(next)
   })

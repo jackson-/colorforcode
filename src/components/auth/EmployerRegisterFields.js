@@ -1,23 +1,33 @@
 import React from 'react'
-import { Col, FormGroup, ControlLabel, FormControl, HelpBlock, Button } from 'react-bootstrap'
+import {
+  Col, FormGroup, ControlLabel,
+  FormControl, HelpBlock, Button } from 'react-bootstrap'
+import PropTypes from 'prop-types'
 
-const EmployerRegisterFields = props => (
-  <div className='employer fadeIn animated'>
+const EmployerRegisterFields = ({
+  animated,
+  state,
+  handleChange,
+  isInvalid,
+  validate,
+  buttonText
+}) => (
+  <div className={`employer fadeIn ${animated}`}>
     <Col className='form-fields-container--left' xs={12} sm={6} md={6} lg={6}>
       <FormGroup controlId='first_name'>
         <ControlLabel>First Name</ControlLabel>
         <FormControl
           required
-          value={props.state.first_name}
-          onChange={props.handleChange('first_name')}
+          value={state.first_name}
+          onChange={handleChange('first_name')}
         />
       </FormGroup>
       <FormGroup controlId='last_name'>
         <ControlLabel>Last Name</ControlLabel>
         <FormControl
           required
-          value={props.state.last_name}
-          onChange={props.handleChange('last_name')}
+          value={state.last_name}
+          onChange={handleChange('last_name')}
         />
       </FormGroup>
       <FormGroup controlId='email'>
@@ -25,30 +35,30 @@ const EmployerRegisterFields = props => (
         <FormControl
           required
           type='email'
-          value={props.state.email}
-          onChange={props.handleChange('email')}
+          value={state.email}
+          onChange={handleChange('email')}
         />
       </FormGroup>
       <FormGroup controlId='password'>
         <ControlLabel>Password</ControlLabel>
         <FormControl
           type='password'
-          value={props.state.password}
-          onChange={props.handleChange('password')}
+          value={state.password}
+          onChange={handleChange('password')}
         />
       </FormGroup>
       <FormGroup
         controlId='passwordConfirm'
-        validationState={props.validate()}
+        validationState={validate()}
       >
         <ControlLabel>Confirm Password</ControlLabel>
         <FormControl
           type='password'
-          value={props.state.passwordConfirm}
-          onChange={props.handleChange('passwordConfirm')}
+          value={state.passwordConfirm}
+          onChange={handleChange('passwordConfirm')}
         />
         <FormControl.Feedback />
-        {props.validate() === 'error' ? <HelpBlock>Passwords do not match</HelpBlock> : null}
+        {validate() === 'error' ? <HelpBlock>Passwords do not match</HelpBlock> : null}
       </FormGroup>
     </Col>
     <Col className='form-fields-container--right' xs={12} sm={6} md={6} lg={6}>
@@ -56,17 +66,17 @@ const EmployerRegisterFields = props => (
         <ControlLabel>Company Name</ControlLabel>
         <FormControl
           required
-          value={props.state.company_name}
-          onChange={props.handleChange('company_name')}
+          value={state.company_name}
+          onChange={handleChange('company_name')}
         />
       </FormGroup>
       <FormGroup controlId='company_role'>
         <ControlLabel>Company Role</ControlLabel>
         <FormControl
           required
-          defaultValue={props.state.company_role}
+          defaultValue={state.company_role}
           componentClass='select'
-          onChange={props.handleChange('company_role')}
+          onChange={handleChange('company_role')}
         >
           <option>select</option>
           <option value='Recruiter'>Recruiter</option>
@@ -80,8 +90,8 @@ const EmployerRegisterFields = props => (
         <ControlLabel>Company Website</ControlLabel>
         <FormControl
           required
-          value={props.state.company_site}
-          onChange={props.handleChange('company_site')}
+          value={state.company_site}
+          onChange={handleChange('company_site')}
         />
       </FormGroup>
       {/* with zip_code we auto find user's city, state and country */}
@@ -90,20 +100,29 @@ const EmployerRegisterFields = props => (
         <FormControl
           required
           type='tel'
-          value={props.state.zip_code}
-          onChange={props.handleChange('zip_code')}
+          value={state.zip_code}
+          onChange={handleChange('zip_code')}
         />
       </FormGroup>
       <Button
-        disabled={props.isInvalid}
+        disabled={isInvalid}
         bsStyle='default'
         type='submit'
         className='btn-login-reg'
       >
-        {props.buttonText}
+        {buttonText}
       </Button>
     </Col>
   </div>
 )
+
+EmployerRegisterFields.propTypes = {
+  animated: PropTypes.string,
+  state: PropTypes.object,
+  handleChange: PropTypes.func,
+  buttonText: PropTypes.string,
+  isInvalid: PropTypes.bool,
+  validate: PropTypes.func
+}
 
 export default EmployerRegisterFields

@@ -6,23 +6,10 @@ import JobUpdateDisplay from './JobUpdateDisplay'
 import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
 
 class JobDetailPage extends Component {
-  componentDidMount () {
-    console.log('CDM -')
-  }
-
   componentWillMount () {
-    console.log('CWM - ')
-    const {job, fetchingJob, match, getJob} = this.props
+    const {job, fetching, match, getJob} = this.props
     const {id} = match.params
-    if ((!job && !fetchingJob) || (job && (job.id !== Number(id)) && !fetchingJob)) getJob(id)
-  }
-
-  componentWillUnMount () {
-    console.log('CWUM')
-  }
-
-  componentWillReceiveProps (nextProps) {
-    console.log('CWRP')
+    if ((!job && !fetching) || (job && (job.id !== Number(id)) && !fetching)) getJob(id)
   }
 
   render () {
@@ -39,12 +26,13 @@ class JobDetailPage extends Component {
       unsaveJob,
       handleNewSkills,
       receiveAlert,
-      receiveNext
+      receiveNext,
+      animated
     } = this.props
 
     let jobComponent = ''
     if (job) {
-      if (user && user.is_employer && (user.employer.id === job.employer.id)) {
+      if (user && user.is_employer && user.employer.id === job.employer.id) {
         jobComponent = (
           <JobUpdateDisplay
             user={user}
@@ -74,7 +62,7 @@ class JobDetailPage extends Component {
       }
     }
     return (
-      <div className='JobDetailPage fadeIn animated'>
+      <div className={`JobDetailPage fadeIn ${animated}`}>
         <ScrollToTopOnMount />
         {jobComponent}
       </div>
@@ -88,7 +76,7 @@ JobDetailPage.propTypes = {
   history: PropTypes.object,
   user: PropTypes.any,
   job: PropTypes.object,
-  fetchingJob: PropTypes.bool,
+  fetching: PropTypes.bool,
   applyToJob: PropTypes.func,
   unsaveJob: PropTypes.func,
   updateJob: PropTypes.func,
@@ -99,14 +87,15 @@ JobDetailPage.propTypes = {
   handleNewSkills: PropTypes.func,
   // ^creates new skills if user made any custom ones (class method of App.js)
   receiveNext: PropTypes.func,
-  receiveAlert: PropTypes.func
+  receiveAlert: PropTypes.func,
+  animated: PropTypes.string
 }
 
 const mapStateToProps = state => ({
-  job: state.jobs.currentJob,
+  job: state.jobs.selected,
   selected: state.skills.selected,
-  fetchingJob: state.jobs.fetchingJob,
-  user: state.users.currentUser
+  fetching: state.jobs.fetchingSelected,
+  user: state.auth.currentUser
 })
 
 export default connect(mapStateToProps)(JobDetailPage)

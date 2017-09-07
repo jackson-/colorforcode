@@ -37,11 +37,11 @@ export default class Applicants extends Component {
   }
 
   render () {
-    const {jobs} = this.props
+    const {jobs, animated} = this.props
     if (jobs) this.sortByDate(jobs)
     return (
       <Row className='Applicants'>
-        <h1 className='Applicants-header fadeIn animated'>
+        <h1 className={`Applicants-header fadeIn ${animated}`}>
           YOUR APPLICANTS
         </h1>
         <Accordion
@@ -50,59 +50,61 @@ export default class Applicants extends Component {
           activeKey={this.state.activeKey}
         >
           {
-            jobs.filter(job => !!job.applicants).map((job, i) => (
-              <Panel
-                key={i}
-                header={job.title}
-                eventKey={i + 1}
-                className='Applicants__panel'
-                onClick={this.handleSelect(i + 1)}
-              >
-                <Table responsive className='Applicants__table'>
-                  <thead>
-                    <tr>
-                      <td>APPLICANTS</td>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {
-                      this.sortByDate(job.applicants).map((app, i) => {
-                        const links = [
-                          {type: 'github', label: 'Github Profile', component: <GithubIcon />},
-                          {type: 'linkedin', label: 'LinkedIn Profile', component: <LinkedInIcon />},
-                          {type: 'twitter', label: 'Twitter Profile', component: <TwitterIcon />},
-                          {type: 'personal_site', label: 'Personal Site', component: <LinkIcon />}
-                        ]
-                        let icons = []
-                        links.forEach(link => {
-                          if (app[link.type]) {
-                            icons.push({
-                              text: link.label,
-                              component: link.component,
-                              url: app[link.type]
-                            })
-                          }
+            jobs.filter(job => (job.applicants.length > 0 && job.status === 'open'))
+              .sort((a, b) => this.mostRecentDate(a) - this.mostRecentDate(b))
+              .map((job, i) => (
+                <Panel
+                  key={i}
+                  header={job.title}
+                  eventKey={i + 1}
+                  className='Applicants__panel'
+                  onClick={this.handleSelect(i + 1)}
+                >
+                  <Table responsive className='Applicants__table'>
+                    <thead>
+                      <tr>
+                        <td>APPLICANTS</td>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {
+                        this.sortByDate(job.applicants).map((app, i) => {
+                          const links = [
+                            {type: 'github', label: 'Github Profile', component: <GithubIcon />},
+                            {type: 'linkedin', label: 'LinkedIn Profile', component: <LinkedInIcon />},
+                            {type: 'twitter', label: 'Twitter Profile', component: <TwitterIcon />},
+                            {type: 'personal_site', label: 'Personal Site', component: <LinkIcon />}
+                          ]
+                          let icons = []
+                          links.forEach(link => {
+                            if (app[link.type]) {
+                              icons.push({
+                                text: link.label,
+                                component: link.component,
+                                url: app[link.type]
+                              })
+                            }
+                          })
+                          return (
+                            <tr key={`${job.id}${i}${app.id}`}>
+                              <td>
+                                <Link to={`/dashboard/users/${app.id}`}>{app.first_name} {app.last_name}</Link>
+                              </td>
+                              <td>
+                                {new Date(app.created_at).toLocaleDateString()}
+                              </td>
+                              <td>{app.location}</td>
+                              <td>
+                                <IconBar icons={icons} color='green' />
+                              </td>
+                            </tr>
+                          )
                         })
-                        return (
-                          <tr key={`${job.id}${i}${app.id}`}>
-                            <td>
-                              <Link to={`/dashboard/users/${app.id}`}>{app.first_name} {app.last_name}</Link>
-                            </td>
-                            <td>
-                              {new Date(app.created_at).toLocaleDateString()}
-                            </td>
-                            <td>{app.location}</td>
-                            <td>
-                              <IconBar icons={icons} color='green' />
-                            </td>
-                          </tr>
-                        )
-                      })
-                    }
-                  </tbody>
-                </Table>
-              </Panel>
-            ))
+                      }
+                    </tbody>
+                  </Table>
+                </Panel>
+              ))
           }
         </Accordion>
       </Row>
@@ -111,5 +113,6 @@ export default class Applicants extends Component {
 }
 
 Applicants.propTypes = {
-  jobs: PropTypes.array.isRequired
+  jobs: PropTypes.array.isRequired,
+  animated: PropTypes.string
 }

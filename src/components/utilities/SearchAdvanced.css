@@ -28,8 +28,8 @@
 .search-chip {
   background: #FFFFFF;
   border-radius: 3px;
-  border: 2px solid #12CD6A;
-  color: #12CD6A;
+  border: 2px solid #01C688;
+  color: #01C688;
   font-size: 14px;
   font-family: Open Sans Bold;
   padding: 5px 10px;
@@ -54,12 +54,10 @@
 }
 
 .SearchAdvanced__button:hover {
-  background: #12CD6A;
-  border: solid 2px #12CD6A;
+  background: #01C688;
+  border: solid 2px #01C688;
   color: #FFFFFF;
   box-shadow: none;
-  transition: all 0.1s ease-in-out;
-  transition-duration: 0.2s;
 }
 
 .SearchAdvanced__button,
@@ -67,6 +65,8 @@
   border: 2px solid #FFFFFF;
   width: 100%;
   margin-bottom: 5px;
+  transition: all 0.1s ease-in-out;
+  transition-duration: 0.2s;
 }
 
 .SearchAdvanced__zipcode input,

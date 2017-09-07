@@ -1,9 +1,9 @@
 import axios from 'axios'
 import {
   RECEIVE_JOBS, RECEIVE_JOB, CREATE_JOBS, UPDATE_JOB,
-  DELETE_JOB, REQUEST_JOB, REQUEST_ALL_JOBS,
+  DELETE_JOB, REQUEST_JOB, REQUEST_ALL_JOBS, RECEIVE_FILTERED_JOBS,
   REQUEST_FILTERED_JOBS, APPLY_TO_JOB, APPLIED_TO_JOB } from '../constants'
-import { whoami } from './users'
+import { whoami } from './auth'
 import { receiveAlert } from './alert'
 
 /* --------- PURE ACTION CREATORS --------- */
@@ -12,14 +12,19 @@ export const requestAllJobs = () => ({
   type: REQUEST_ALL_JOBS
 })
 
-export const requestFilteredJobs = () => ({
-  type: REQUEST_FILTERED_JOBS
-})
-
 export const receiveJobs = (jobs, skills) => ({
   jobs,
   skills,
   type: RECEIVE_JOBS
+})
+
+export const requestFilteredJobs = () => ({
+  type: REQUEST_FILTERED_JOBS
+})
+
+export const receiveFilteredJobs = jobs => ({
+  jobs,
+  type: RECEIVE_FILTERED_JOBS
 })
 
 export const requestJob = () => ({
@@ -59,8 +64,8 @@ export const gettingAllJobs = () => dispatch => {
   axios.get('/api/jobs')
     .then(res => res.data)
     .then(data => {
-      const {hits, total, skills} = data
-      return dispatch(receiveJobs({hits, total}, skills))
+      const {jobs, skills} = data
+      return dispatch(receiveJobs(jobs, skills))
     })
     .catch(err => console.error(`Mang, I couldn't find the jobs! ${err.stack}`))
 }
@@ -69,18 +74,17 @@ export const filteringJobs = query => dispatch => {
   dispatch(requestFilteredJobs())
   axios.post('/api/jobs/search', {query})
     .then(res => res.data)
-    .then(data => {
-      const {hits, total, skills} = data
-      return dispatch(receiveJobs({hits, total}, skills))
-    })
+    .then(jobs => dispatch(receiveFilteredJobs(jobs)))
     .catch(err => console.error(`Mang, I couldn't filter the jobs! ${err.stack}`))
 }
 
 export const advancedFilteringJobs = body => dispatch => {
-  debugger
   axios.post('/api/jobs/search/advanced', body)
     .then(res => res.data)
-    .then(jobs => dispatch(receiveJobs(jobs)))
+    .then(jobs => {
+      if (!jobs) dispatch(receiveFilteredJobs([]))
+      else dispatch(receiveFilteredJobs(Array.isArray(jobs) ? jobs : [jobs]))
+    })
     .catch(err => console.error(`Mang, I couldn't advanced filter the jobs! ${err.stack}`))
 }
 
@@ -149,7 +153,7 @@ export const creatingNewJobs = (data, history) => dispatch => {
   // set loading state to true to trigger UI changes
   dispatch(createNewJobs())
   // create the new job
-  debugger
+
   axios.post('/api/jobs', data)
     .then(res => res.data)
     // if the job is successfully created, we fetch the updated jobs list

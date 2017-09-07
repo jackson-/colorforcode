@@ -1,11 +1,11 @@
 @import url(../../fonts.css);
 
 .UserDetail {
-  padding-top: 60px;
+
 }
 
 .UserDetail__header {
-  background: #12CD6A;
+  background: #01C688;
   min-height: 200px;
   height: auto;
   padding: 25px;
@@ -84,10 +84,14 @@
   padding: 0;
 }
 
+.section-white {
+  background: #FFFFFF;
+}
+
 .UserDetail__body-header {
   margin-top: 0;
   padding-bottom: 15px;
-  color: #12CD6A;
+  color: #01C688;
 }
 
 .portfolio {

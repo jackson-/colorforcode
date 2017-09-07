@@ -65,7 +65,11 @@ class PostJobForm extends Component {
         const location = country === 'United States'
           ? `${city}, ${state}`
           : `${city}, ${state} ${country}`
-        const coords = `${geometry.lat},${geometry.lng}`
+        const coords = {
+          type: 'Point',
+          coordinates: [parseFloat(geometry.lat), parseFloat(geometry.lng)],
+          crs: {type: 'name', properties: {name: 'EPSG:32661'}}
+        }
         this.setState({coords, zip_code, location})
       })
       .catch(err => console.error(err.stack))
@@ -160,8 +164,9 @@ class PostJobForm extends Component {
   }
 
   render () {
+    const {animated} = this.props
     return (
-      <Row className='PostJobForm fadeIn animated'>
+      <Row className={`PostJobForm fadeIn ${animated}`}>
         <Col xs={12} sm={6} md={6} lg={6}>
           <h1 className='PostJobForm-header'>POST NEW JOB</h1>
           <form className='PostJobForm-body' onSubmit={this.handleSubmit}>
@@ -228,10 +233,10 @@ class PostJobForm extends Component {
               name='employment_types'
               onChange={this.handleChange('employment_types')}>
               <ControlLabel>Employment Type(s)</ControlLabel>
-              <Checkbox value='Full-time'>Full-time</Checkbox>
-              <Checkbox value='Part-time'>Part-time</Checkbox>
+              <Checkbox value='Fulltime'>Full Time</Checkbox>
+              <Checkbox value='Parttime'>Part Time</Checkbox>
               <Checkbox value='Contract'>Contract</Checkbox>
-              <Checkbox value='Contract to Hire'>Contract to Hire</Checkbox>
+              <Checkbox value='ContractToHire'>Contract to Hire</Checkbox>
               <Checkbox value='Internship'>Internship</Checkbox>
               <Checkbox value='Remote'>Remote</Checkbox>
             </FormGroup>
@@ -272,22 +277,25 @@ class PostJobForm extends Component {
 }
 
 const mapStateToProps = state => ({
-  user: state.users.currentUser,
+  user: state.auth.currentUser,
   selected: state.skills.selected
 })
 
 const mapDispatchToProps = dispatch => ({
   createJobPosts: (data, history) => dispatch(creatingNewJobs(data, history)),
   getSkills: post => dispatch(gettingAllSkills()),
-  receiveSelectedSkills: skills => dispatch(receiveSelectedSkills(skills)),
+  receiveSelectedSkills: skills => dispatch(receiveSelectedSkills(skills))
 })
 
 PostJobForm.propTypes = {
-  user: PropTypes.any.isRequired,
-  skills: PropTypes.array.isRequired,
-  getSkills: PropTypes.func.isRequired,
-  createJobPosts: PropTypes.func.isRequired,
-  history: PropTypes.object.isRequired
+  history: PropTypes.object,
+  match: PropTypes.object,
+  user: PropTypes.any,
+  selected: PropTypes.arrayOf(PropTypes.object),
+  createJobPost: PropTypes.func,
+  animated: PropTypes.string,
+  handleNewSkills: PropTypes.func
+  // ^creates new skills if user made any custom ones (class method of App.js)
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(PostJobForm))

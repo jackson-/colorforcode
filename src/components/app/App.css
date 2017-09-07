@@ -43,10 +43,6 @@
   text-transform: uppercase;
 }
 
-.navbar-right {
-  margin-right: 0;
-}
-
 .navbar-default .navbar-nav>li>a {
   color: #333333;
   margin-top: 6px;
@@ -63,7 +59,7 @@
 .dropdown-menu>li>a:hover,
 .dropdown-menu>li>:hover,
 .dropdown-menu>li>a:focus {
-  color: #12CD6A;
+  color: #01C688;
   background: none;
   transition: all 0.1s ease-in-out;
   transition-duration: 0.2s;
@@ -121,6 +117,10 @@
   position: relative;
 }
 
+.Dashboard-menu-collapse .nav>li>a {
+  transition: all .5s ease-in-out .5s
+}
+
 .dropdown-menu {
   text-align: center;
   min-width: 0;
@@ -152,6 +152,10 @@ and (min-width: 768px) {
     left: 100px;
   }
 
+  .navbar-right {
+    margin-right: 0;
+  }
+
   .nav-button-container {
     position: absolute;
     right: 30px;
@@ -163,15 +167,17 @@ and (min-width: 768px) {
   padding: 12px 30px;
   font-size: 13px !important;
   font-family: Open Sans Bold;
-  border: solid 2px #12CD6A;
+  border: solid 2px #01C688;
   border-radius: 25px;
   width: 100%;
+  transition: all 0.2s ease-in-out;
 }
 
 .btn-oval__black {
   background: #000000;
   border-color: #000000;
   color: #FFFFFF;
+  transition: all 0.2s ease-in-out;
 }
 
 .btn-oval:hover,
@@ -180,8 +186,8 @@ and (min-width: 768px) {
 .btn-oval.active,
 .btn-oval.active:hover,
 .btn-oval.active:focus {
-  background: #12CD6A;
-  border: solid 2px #12CD6A;
+  background: #01C688;
+  border: solid 2px #01C688;
   color: #FFFFFF;
   box-shadow: none;
   transition: all 0.1s ease-in-out;
@@ -224,8 +230,8 @@ and (min-width: 768px) {
 }
 
 .btn-xs.btn-primary:hover {
-  background: #12CD6A !important;
-  border: solid 2px #12CD6A;
+  background: #01C688 !important;
+  border: solid 2px #01C688;
   color: #FFFFFF;
   transition: all 0.1s ease-in;
   transition-duration: 0.1s;
