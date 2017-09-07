@@ -31,6 +31,7 @@
     "setup": "./bin/setup",
     "prep": "npm run validate && npm run setup",
     "postinstall": "npm run prep",
+    "build-branch": "bin/build-branch.sh",
     "start": "node server/start.js",
     "serve-watch": "nodemon server/start.js --watch server --watch db --watch index.js --watch package.json",
     "serve-dev": "cross-env NODE_ENV=development npm run serve-watch",
