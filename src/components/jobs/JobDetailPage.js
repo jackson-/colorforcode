@@ -6,50 +6,42 @@ import JobUpdateDisplay from './JobUpdateDisplay'
 import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
 
 class JobDetailPage extends Component {
-  componentDidMount () {
-    console.log('CDM -')
-    const {job, fetchingJob, match, getJob} = this.props
-    const {id} = match.params
-    if ((!job && !fetchingJob) || (job && (job.id !== Number(id)) && !fetchingJob)) getJob(id)
-  }
-
   componentWillMount () {
-    console.log('CWM - ')
-  }
-
-  componentWillUnMount () {
-    console.log('CWUM')
-  }
-
-  componentWillReceiveProps (nextProps) {
-    console.log('CWRP')
+    const {job, fetching, match, getJob} = this.props
+    const {id} = match.params
+    if ((!job && !fetching) || (job && (job.id !== Number(id)) && !fetching)) getJob(id)
   }
 
   render () {
     const {
       user,
       job,
-      skills,
+      selected,
       match,
       history,
       applyToJob,
       updateJob,
       deleteJob,
       saveJob,
-      unsaveJob
+      unsaveJob,
+      handleNewSkills,
+      receiveAlert,
+      receiveNext,
+      animated
     } = this.props
 
     let jobComponent = ''
     if (job) {
-      if (user && user.is_employer && (user.employer.id === job.employer.id)) {
+      if (user && user.is_employer && user.employer.id === job.employer.id) {
         jobComponent = (
           <JobUpdateDisplay
             user={user}
-            skills={skills}
+            selected={selected}
             job={job}
             updateJob={updateJob}
             deleteJob={deleteJob}
             history={history}
+            handleNewSkills={handleNewSkills}
           />
         )
       } else {
@@ -57,18 +49,20 @@ class JobDetailPage extends Component {
           <JobInfoDisplay
             job={job}
             user={user}
-            skills={skills}
+            skills={selected}
             match={match}
             history={history}
             applyToJob={applyToJob}
             saveJob={saveJob}
             unsaveJob={unsaveJob}
+            receiveAlert={receiveAlert}
+            receiveNext={receiveNext}
           />
         )
       }
     }
     return (
-      <div className='JobDetailPage fadeIn animated'>
+      <div className={`JobDetailPage fadeIn ${animated}`}>
         <ScrollToTopOnMount />
         {jobComponent}
       </div>
@@ -82,20 +76,26 @@ JobDetailPage.propTypes = {
   history: PropTypes.object,
   user: PropTypes.any,
   job: PropTypes.object,
-  fetchingJob: PropTypes.bool,
+  fetching: PropTypes.bool,
   applyToJob: PropTypes.func,
   unsaveJob: PropTypes.func,
   updateJob: PropTypes.func,
   deleteJob: PropTypes.func,
   saveJob: PropTypes.func,
   getJob: PropTypes.func,
-  skills: PropTypes.array
+  selected: PropTypes.arrayOf(PropTypes.object), // selected skills
+  handleNewSkills: PropTypes.func,
+  // ^creates new skills if user made any custom ones (class method of App.js)
+  receiveNext: PropTypes.func,
+  receiveAlert: PropTypes.func,
+  animated: PropTypes.string
 }
 
 const mapStateToProps = state => ({
-  job: state.jobs.currentJob,
-  fetchingJob: state.jobs.fetchingJob,
-  user: state.users.currentUser
+  job: state.jobs.selected,
+  selected: state.skills.selected,
+  fetching: state.jobs.fetchingSelected,
+  user: state.auth.currentUser
 })
 
 export default connect(mapStateToProps)(JobDetailPage)

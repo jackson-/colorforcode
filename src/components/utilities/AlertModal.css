@@ -1,5 +1,6 @@
 .AlertModal__alert {
   border: none !important;
+  margin-bottom: 0 !important;
 }
 
 .AlertModal__content {
@@ -9,5 +10,61 @@
 .AlertModal__title {
   font-weight: bold;
   font-size: 1.25em;
-  color: #3c763d;
+}
+
+.modal-success {
+  background: #DFF0D8;
+  border-color: #D6E9C6;
+  color: #3C763D;
+}
+
+.btn-modal-success {
+  color: #DFF0D8;
+  background: #3C763D;
+  border: none;
+}
+
+.btn-modal-success:hover {
+  background: #4E994F;
+}
+
+.modal-warning  {
+  background: #FCF8E3;
+  border-color: #FAEBCC;
+  color: #8A6D3B;
+}
+
+.btn-modal-warning {
+  color: #FCF8E3;
+  background: #8A6D3B;
+  border: none;
+}
+
+.btn-modal-warning:hover {
+  color: #FCF8E3;
+  background: #9B8A55;
+}
+
+.modal-danger {
+  background: #F2DEDE;
+  border-color: #EBCCD1;
+  color: #A94442;
+}
+
+.btn-modal-danger {
+  color: #F2DEDE;
+  background: #A94442;
+  border-color: none;
+}
+
+.btn-modal-danger:hover {
+  background: #D8665F;
+  color: #F2DEDE;
+}
+
+@media only screen and (max-width: 500px) {
+  .btn-modal {
+    width: 100%;
+    margin: 10px 0 !important;
+  }
 }

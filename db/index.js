@@ -1,5 +1,3 @@
-'use strict'
-
 const app = require('APP')
 const debug = require('debug')(`${app.name}:db`) // DEBUG=your_app_name:db
 const chalk = require('chalk')
@@ -7,18 +5,21 @@ const Sequelize = require('sequelize')
 
 const name = (app.env.DATABASE_NAME || app.name) + (app.isTesting ? '_test' : '')
 
-const url = app.env.DATABASE_URL || `postgres://postgres@localhost:5432/${name}`
+const url = app.env.DATABASE_URL || `postgres://postgres:blackity@localhost:5432/${name}`
 
 debug(chalk.yellow(`Opening database connection to ${url}`))
 
 const db = module.exports = new Sequelize(url, {
-  logging: require('debug')('sql'),  // export DEBUG=sql in the environment to
-                                     // get SQL queries
+  logging: console.log, // require('debug')('sql'),
+  // export DEBUG=sql in the environment to get SQL queries
   define: {
-    underscored: true,       // use snake_case rather than camelCase column names.
-                             // these are easier to work with in psql.
-    freezeTableName: true,   // don't change table names from the one specified
-    timestamps: true,        // automatically include timestamp columns
+    underscored: true,
+    // ^ use snake_case rather than camelCase column names.
+    // these are easier to work with in psql.
+    freezeTableName: true,
+    // don't change table names from the one specified
+    timestamps: true
+    // automatically include timestamp columns
   }
 })
 
@@ -29,7 +30,25 @@ const db = module.exports = new Sequelize(url, {
 //
 //   const {User, Product} = require('APP/db')
 //
-Object.assign(db, require('./models')(db),
+const models = require('./models')(db)
+
+// Object.keys(models).forEach(key => {
+//   let model = models[key];
+//   if ('referenceModel' in model.options) model.referenceModel = models[model.options.referenceModel];
+//
+//   if ('search' in model.options) new SearchModel(model);
+//   if ('search' in model.options) console.log("OPTIoNS",model, model.options);
+//   if ('customHooks' in model.options && 'afterSave' in model.options.customHooks) {
+//     let callback = () => model.options.customHooks.afterSave(models);
+//     model.afterCreate(callback);
+//     model.afterBulkCreate(callback);
+//     model.afterDestroy(callback);
+//     model.afterBulkDestroy(callback);
+//     model.afterUpdate(callback);
+//     model.afterBulkUpdate(callback);
+//   }
+// });
+Object.assign(db, models,
   // We'll also make createAndSync available. It's sometimes useful in tests.
   {createAndSync})
 
@@ -39,7 +58,7 @@ Object.assign(db, require('./models')(db),
 db.didSync = db.createAndSync()
 
 // sync the db, creating it if necessary
-function createAndSync(force = app.isTesting, retries = 0, maxRetries = 5) {
+function createAndSync (force = app.isTesting, retries = 0, maxRetries = 5) {
   return db.sync({force})
     .then(() => debug(`Synced models to db ${url}`))
     .catch(fail => {

@@ -1,17 +1,15 @@
 import React, { Component } from 'react'
-import { Row, Col, FormGroup, ControlLabel,
-         FormControl, Button, Checkbox } from 'react-bootstrap'
+import {
+  Row, Col, FormGroup, ControlLabel,
+  FormControl, Button, Checkbox, HelpBlock } from 'react-bootstrap'
 import axios from 'axios'
 import PropTypes from 'prop-types'
-import VirtualizedSelect from 'react-virtualized-select'
-import 'react-select/dist/react-select.css'
-import 'react-virtualized/styles.css'
-import 'react-virtualized-select/styles.css'
+// import VirtualizedSelect from 'react-virtualized-select'
+import SkillTypeaheadSelect from '../utilities/SkillTypeaheadSelect'
+// import 'react-select/dist/react-select.css'
+// import 'react-virtualized/styles.css'
+// import 'react-virtualized-select/styles.css'
 import '../auth/Form.css'
-
-function arrowRenderer () {
-  return <span />
-}
 
 export default class JobUpdateDisplay extends Component {
   constructor (props) {
@@ -66,25 +64,36 @@ export default class JobUpdateDisplay extends Component {
 
   handleLocation = zip_code => {
     axios.get(`http://maps.googleapis.com/maps/api/geocode/json?address=${zip_code}`)
-    .then(res => res.data)
-    .then(json => {
-      const address = json.results[0].address_components.filter(c => (
-        c.types.includes('locality') ||
-        c.types.includes('administrative_area_level_1') ||
-        c.types.includes('country')
-      ))
-      const city = address[0].long_name
-      const state = address[1].short_name
-      const country = address[2].long_name
-      const location = country === 'United States' ? `${city}, ${state}` : `${city}, ${state} ${country}`
-      const coords = `${json.results[0].geometry.location.lat},${json.results[0].geometry.location.lng}`
-      this.setState({coords, zip_code, location})
-    })
-    .catch(err => console.error(err.stack))
+      .then(res => res.data)
+      .then(json => {
+        const address = json.results[0].address_components
+        const geometry = json.results[0].geometry.location
+        let city = address.filter(c => (
+          c.types.includes('sublocality') || c.types.includes('locality')
+        ))[0].long_name
+        let state = address.filter(c => (
+          c.types.includes('administrative_area_level_1')
+        ))[0].short_name
+        let country = address.filter(c => (
+          c.types.includes('country')
+        ))[0].long_name
+        const location = country === 'United States'
+          ? `${city}, ${state}`
+          : `${city}, ${state} ${country}`
+        const coords = {
+          type: 'Point',
+          coordinates: [parseFloat(geometry.lat), parseFloat(geometry.lng)],
+          crs: {type: 'name', properties: {name: 'EPSG:32661'}}
+        }
+        this.setState({coords, zip_code, location})
+      })
+      .catch(err => console.error(err.stack))
   }
 
   handleChange = type => event => {
-    const { value } = event.target
+    let value = Array.isArray(event)
+      ? event
+      : event.target.value
     if (type === 'zip_code' && value.toString().length >= 5) {
       /* first we finish updating the state of the input, then we use the zip to find the rest of the location data by passing the callback to setState (an optional 2nd param) */
       this.setState({[type]: value}, this.handleLocation(value))
@@ -95,6 +104,8 @@ export default class JobUpdateDisplay extends Component {
       const employment_types = new Set([...this.state.employment_types])
       /* ^Using a Set instead of an array because we need the data values to be unique */
       this.setState({employment_types})
+    } else if (type === 'skills') {
+      this.props.handleNewSkills(value)
     } else {
       this.setState({[type]: value})
     }
@@ -123,15 +134,15 @@ export default class JobUpdateDisplay extends Component {
   handleSubmit = event => {
     event.preventDefault()
     const job = {...this.state}
+    const {selected, updateJob, history, user} = this.props
     job.id = this.props.job.id
-    job.employer_id = this.props.user.employer.id
+    job.employer_id = user.employer.id
+    // change employment_types from Set to Array
     job.employment_types = [...this.state.employment_types]
     job.status = 'open'
-    const skills = job.selectValue.map(skill => skill.value)
-    delete job.selectValue
-
+    const skills = selected.map(s => s.id)
     this.clearForm()
-    this.props.updateJob({job, skills}, this.props.history)
+    updateJob({job, skills}, history)
   }
 
   isChecked = type => {
@@ -140,7 +151,6 @@ export default class JobUpdateDisplay extends Component {
 
   render () {
     const {job} = this.props
-    let skills = this.props.skills.map(s => ({label: s.title, value: s.id})) || []
 
     return (
       job &&
@@ -159,21 +169,12 @@ export default class JobUpdateDisplay extends Component {
                   />
                 </FormGroup>
                 <ControlLabel>
-                  REQUIRED SKILLS (type below and hit 'Enter' to select and 'Backspace to deselect')
+                  KEY SKILLS
                 </ControlLabel>
-                <VirtualizedSelect
-                  arrowRenderer={arrowRenderer}
-                  clearable
-                  searchable
-                  simpleValue
-                  labelKey='label'
-                  valueKey='value'
-                  ref='job_search'
-                  multi
-                  options={skills}
-                  onChange={(data) => this._selectSkill(data)}
-                  value={this.state.selectValue}
-                />
+                <SkillTypeaheadSelect handleChange={this.handleChange} />
+                <HelpBlock>
+                  Type and use arrows to select skill, then hit 'Enter' to add selected skill.
+                </HelpBlock>
                 <FormGroup controlId='description'>
                   <ControlLabel>JOB DESCRIPTION</ControlLabel>
                   <FormControl
@@ -224,16 +225,16 @@ export default class JobUpdateDisplay extends Component {
                   name='employment_types'
                   onChange={this.handleChange('employment_types')}>
                   <ControlLabel>EMPLOYMENT TYPE(S)</ControlLabel>
-                  <Checkbox value='Full-time' defaultChecked={this.isChecked('Full-time')}>
-                    Full-time
+                  <Checkbox value='FullTime' defaultChecked={this.isChecked('Full Time')}>
+                    Full Time
                   </Checkbox>
-                  <Checkbox value='Part-time' defaultChecked={this.isChecked('Part-time')}>
-                    Part-time
+                  <Checkbox value='PartTime' defaultChecked={this.isChecked('Part Time')}>
+                    Part Time
                   </Checkbox>
                   <Checkbox value='Contract' defaultChecked={this.isChecked('Contract')}>
                     Contract
                   </Checkbox>
-                  <Checkbox value='Contract to Hire' defaultChecked={this.isChecked('Contract to Hire')}>
+                  <Checkbox value='ContractToHire' defaultChecked={this.isChecked('Contract to Hire')}>
                     Contract to Hire
                   </Checkbox>
                   <Checkbox value='Internship' defaultChecked={this.isChecked('Internship')}>
@@ -292,7 +293,9 @@ JobUpdateDisplay.propTypes = {
   job: PropTypes.object.isRequired,
   user: PropTypes.any.isRequired,
   history: PropTypes.object,
-  skills: PropTypes.array.isRequired,
+  selected: PropTypes.array.isRequired, // selected skills
   deleteJob: PropTypes.func.isRequired,
-  updateJob: PropTypes.func.isRequired
+  updateJob: PropTypes.func.isRequired,
+  handleNewSkills: PropTypes.func
+  // ^creates new skills if user made any custom ones (class method of App.js)
 }

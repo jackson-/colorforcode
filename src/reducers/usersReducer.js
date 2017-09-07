@@ -1,49 +1,43 @@
-import { RECEIVE_USERS, AUTHENTICATED, REQUEST_ALL_USERS,
-         RECEIVE_USER, REQUEST_USER, REQUEST_FILTERED_USERS } from './constants'
+import {
+  RECEIVE_USERS, REQUEST_ALL_USERS, RECEIVE_USER, REQUEST_USER, REQUEST_FILTERED_USERS } from './constants'
 
 const initialState = {
-  all: null,
-  currentUser: null,
-  selected: null
+  fetchingSelected: false,
+  selected: null,
+  fetchingAll: false,
+  all: null
 }
 
 const usersReducer = (state = initialState, action) => {
   switch (action.type) {
-    case RECEIVE_USERS: return {
-      fetching: false,
-      fetchingUser: false,
-      all: action.users,
-      currentUser: state.currentUser ? {...state.currentUser} : null,
-      selected: state.selected ? {...state.selected} : null
-    }
-    case AUTHENTICATED: return {
-      fetchingUser: false,
-      currentUser: action.user,
-      all: state.all ? [...state.all] : null,
-      selected: state.selected ? {...state.selected} : null
-    }
     case REQUEST_ALL_USERS: return {
-      fetchingUser: false,
-      fetching: true,
-      currentUser: state.currentUser ? {...state.currentUser} : null,
-      selected: state.selected ? {...state.selected} : null
+      fetchingSelected: false,
+      selected: null,
+      fetchingAll: true,
+      all: state.all ? [...state.all] : null
     }
     case REQUEST_FILTERED_USERS: return {
-      fetchingUser: false,
-      fetching: true,
-      currentUser: state.currentUser ? {...state.currentUser} : null,
-      selected: state.selected ? {...state.selected} : null
+      fetchingSelected: false,
+      selected: null,
+      fetchingAll: true,
+      all: state.all ? [...state.all] : null
+    }
+    case RECEIVE_USERS: return {
+      fetchingSelected: false,
+      selected: null,
+      fetchingAll: false,
+      all: action.users
     }
     case REQUEST_USER: return {
-      fetchingUser: true,
-      currentUser: state.currentUser ? {...state.currentUser} : null,
-      all: state.all ? [...state.all] : null,
-      selected: null
+      fetchingSelected: true,
+      selected: null,
+      fetchingAll: false,
+      all: state.all ? [...state.all] : null
     }
     case RECEIVE_USER: return {
-      fetchingUser: false,
+      fetchingSelected: false,
       selected: action.selected,
-      currentUser: state.currentUser ? {...state.currentUser} : null,
+      fetchingAll: false,
       all: state.all ? [...state.all] : null
     }
 

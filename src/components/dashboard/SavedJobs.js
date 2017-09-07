@@ -6,7 +6,6 @@ import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
 import './ManageJobs.css'
 
 class SavedJobs extends Component {
-
   mostRecentDate = job => {
     const {created_at, updated_at} = job
     if (Date.parse(created_at) < Date.parse(updated_at)) {
@@ -28,12 +27,15 @@ class SavedJobs extends Component {
   }
 
   render () {
-    const jobs = this.props.user.savedJobs
+    const {user, animated} = this.props
+    const jobs = user.savedJobs
     return (
       <Row className='SavedJobs'>
-        <h1 className='SavedJobs-header fadeIn animated'>SAVED JOBS</h1>
+        <h1 className={`SavedJobs-header fadeIn`}>
+          SAVED JOBS
+        </h1>
         <ScrollToTopOnMount />
-        <Table className='fadeIn animated' responsive>
+        <Table className={`fadeIn ${animated}`} responsive>
           <thead>
             <tr>
               <td>JOB TITLE</td>
@@ -93,7 +95,8 @@ SavedJobs.propTypes = {
   saveJob: PropTypes.func,
   unsaveJob: PropTypes.func,
   jobs: PropTypes.array,
-  history: PropTypes.object
+  history: PropTypes.object,
+  animated: PropTypes.string
 }
 
 export default withRouter(SavedJobs)

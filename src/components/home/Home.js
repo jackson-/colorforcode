@@ -1,61 +1,60 @@
-import React, { Component } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { Row, Col, Jumbotron } from 'react-bootstrap'
 import './Home.css'
 import JobBoard from './JobBoard'
 import CandidateSearch from '../users/CandidateSearch'
 
-class Home extends Component {
-  render () {
-    const {
-      user,
-      getJobs,
-      filterJobs,
-      advancedFilterJobs,
-      getUsers,
-      filterUsers,
-      advancedFilterUsers
-    } = this.props
-
-    return (
-      <div className='Home fadeIn animated'>
-        <header className='Home-header'>
-          <Row>
-            <Jumbotron className='Home-hero'>
-              <Col className='parallax-content' xs={12} sm={12} md={12} lg={12}>
-                <h1 className='tagline'>Welcome to HireBlack</h1>
-              </Col>
-            </Jumbotron>
-          </Row>
-        </header>
-        {
-          user && user.is_employer
-            ? (
-              <CandidateSearch
-                user={user}
-                getUsers={getUsers}
-                filterUsers={filterUsers}
-                advancedFilterUsers={advancedFilterUsers}
-              />
-            )
-            : (
-              <JobBoard
-                user={user}
-                getJobs={getJobs}
-                filterJobs={filterJobs}
-                advancedFilterJobs={advancedFilterJobs}
-              />
-            )
-        }
-      </div>
-    )
-  }
+const Home = ({
+  getJobs,
+  filterJobs,
+  advancedFilterJobs,
+  getUsers,
+  filterUsers,
+  advancedFilterUsers,
+  coords,
+  isEmployer,
+  animated
+}) => {
+  const anim = animated ? 'animated' : ''
+  return (
+    <div className={`Home fadeIn ${anim}`}>
+      <header className='Home-header'>
+        <Row>
+          <Jumbotron className='Home-hero'>
+            <Col className='parallax-content' xs={12} sm={12} md={12} lg={12}>
+              <h1 className='tagline'>Welcome to HireBlack</h1>
+            </Col>
+          </Jumbotron>
+        </Row>
+      </header>
+      {
+        isEmployer
+          ? (
+            <CandidateSearch
+              coords={coords}
+              getUsers={getUsers}
+              filterUsers={filterUsers}
+              advancedFilterUsers={advancedFilterUsers}
+            />
+          )
+          : (
+            <JobBoard
+              coords={coords}
+              getJobs={getJobs}
+              filterJobs={filterJobs}
+              advancedFilterJobs={advancedFilterJobs}
+            />
+          )
+      }
+    </div>
+  )
 }
+
 Home.propTypes = {
-  user: PropTypes.any,
-  skills: PropTypes.arrayOf(PropTypes.object),
-  users: PropTypes.arrayOf(PropTypes.object),
-  jobs: PropTypes.arrayOf(PropTypes.object),
+  coords: PropTypes.string,
+  isEmployer: PropTypes.bool,
+  animated: PropTypes.string,
   getUsers: PropTypes.func,
   getJobs: PropTypes.func,
   filterJobs: PropTypes.func,

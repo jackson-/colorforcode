@@ -100,7 +100,7 @@ class ProjectsPage extends Component {
 }
 
 const mapStateToProps = state => ({
-  user: state.users.currentUser,
+  user: state.auth.currentUser,
   loading: state.loading
 })
 

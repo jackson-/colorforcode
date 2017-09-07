@@ -5,15 +5,15 @@ import PropTypes from 'prop-types'
 import './ManageJobs.css'
 
 class Applications extends Component {
-
   humanReadableDate = (dateString) => {
     return new Date(dateString).toLocaleDateString()
   }
 
   render () {
-    const applications = this.props.user.applications
+    const {user, animated} = this.props
+    const applications = user.applications
     return (
-      <Row className='Applications fadeIn animated'>
+      <Row className={`Applications fadeIn ${animated}`}>
         <h1 className='Applications-header fadeIn animated'>
           APPLICATION HISTORY
         </h1>
@@ -47,7 +47,8 @@ class Applications extends Component {
 }
 
 Applications.propTypes = {
-  user: PropTypes.any
+  user: PropTypes.any,
+  animated: PropTypes.string
 }
 
 export default Applications

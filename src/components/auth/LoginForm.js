@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { Row, Col, FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap'
-import { login } from 'APP/src/reducers/actions/users'
+import { login } from 'APP/src/reducers/actions/auth'
 import './Form.css'
 import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
 
@@ -35,8 +35,9 @@ class LoginForm extends Component {
   handleSubmit = event => {
     event.preventDefault()
     const { email, password } = this.state
+    const {history, next} = this.props
     this.clearForm()
-    this.props.loginUser(email, password, this.props.history)
+    this.props.loginUser(email, password, history, next)
   }
 
   render () {
@@ -80,13 +81,12 @@ class LoginForm extends Component {
 }
 
 const mapStateToProps = state => ({
-  user: state.users.currentUser
+  user: state.auth.currentUser,
+  next: state.location.nextRoute
 })
 
 const mapDispatchToProps = dispatch => ({
-  loginUser: (email, password, history) => dispatch(login(email, password, history))
+  loginUser: (email, password, history, next) => dispatch(login(email, password, history, next))
 })
 
-const LoginFormContainer = connect(mapStateToProps, mapDispatchToProps)(LoginForm)
-
-export default withRouter(LoginFormContainer)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(LoginForm))

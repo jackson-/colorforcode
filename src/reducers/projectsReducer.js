@@ -1,19 +1,33 @@
-import { RECEIVE_ALL_PROJECTS, RECEIVE_PROJECT } from './constants'
+import {
+  RECEIVE_PROJECT, REQUEST_PROJECT,
+  CREATE_PROJECT, UPDATE_PROJECT, DELETE_PROJECT } from './constants'
 
 const initialState = {
-  all: [],
-  currentProject: null
+  currentProject: null,
+  fetchingProject: false
 }
 
 const projectsReducer = (state = initialState, action) => {
   switch (action.type) {
+    case REQUEST_PROJECT: return {
+      currentProject: null,
+      fetchingProject: true
+    }
     case RECEIVE_PROJECT: return {
-      all: [...state.all] || [],
+      fetchingProject: false,
       currentProject: action.project
     }
-    case RECEIVE_ALL_PROJECTS: return {
-      all: action.projects,
-      currentProject: null
+    case UPDATE_PROJECT: return {
+      currentProject: {...state.currentProject},
+      fetchingProject: true
+    }
+    case CREATE_PROJECT: return {
+      currentProject: {...state.currentProject},
+      fetchingProject: true
+    }
+    case DELETE_PROJECT: return {
+      currentProject: {...state.currentProject},
+      fetchingProject: true
     }
     default: return state
   }

@@ -93,11 +93,14 @@ class CreateProjectForm extends Component {
 
   render () {
     let skills = []
-    this.props.skills.forEach(s => {
-      skills.push({label: s.title, value: s.id})
-    })
+    if (this.props.skills) {
+      this.props.skills.forEach(s => {
+        skills.push({label: s.title, value: s.id})
+      })
+    }
+    const {animated} = this.props
     return (
-      <Row className='PostJobForm fadeIn animated'>
+      <Row className={`PostJobForm fadeIn ${animated}`}>
         <ScrollToTopOnMount />
         <Col xs={12} sm={6} md={6} lg={6}>
           <h1 className='PostJobForm-header'>Add New Project</h1>
@@ -108,6 +111,7 @@ class CreateProjectForm extends Component {
             arrowRenderer={arrowRenderer}
             state={this.state}
             skills={skills}
+            animated={animated}
           />
         </Col>
       </Row>
@@ -120,11 +124,12 @@ CreateProjectForm.propTypes = {
   createProject: PropTypes.func,
   history: PropTypes.object,
   user: PropTypes.any,
-  skills: PropTypes.arrayOf(PropTypes.object)
+  skills: PropTypes.arrayOf(PropTypes.object),
+  animated: PropTypes.string
 }
 
 const mapStateToProps = state => ({
-  user: state.users.currentUser,
+  user: state.auth.currentUser,
   skills: state.skills.all
 })
 

@@ -26,41 +26,28 @@ class CandidateSearch extends Component {
     }
   }
 
-  componentDidMount () {
-    const {users} = this.props
-    console.log(`CDM - USERS: ${users ? users.length : 0}`)
-    // if (!users && !loading) {
-    //   console.log('GETTING USERS')
-    //   getUsers()
-    // }
-    // if (users) {
-    //   this.setState({loading: false})
-    // }
-  }
-
   componentWillMount () {
-    const {users, fetching, getUsers} = this.props
-    console.log(`CWM - USERS: ${users ? users.length : 0}`)
-    if (!users && !fetching) {
-      console.log('GETTING USERS, FETCHING: ', fetching)
-      getUsers()
-    }
-    if (users) {
-      this.setState({loading: false})
+    const {users, fetching, authenticating, getUsers} = this.props
+    if (!authenticating) {
+      if (!users && !fetching) {
+        getUsers()
+      }
+      if (users) {
+        this.setState({loading: false})
+      }
     }
   }
 
   componentWillReceiveProps (nextProps) {
-    const {users, getUsers} = this.props
-    console.log(`CWRP - USERS HAD: ${users ? users.length : 0}, GETTING: ${nextProps.users ? nextProps.users.length : 0}`)
-    if (!users) getUsers()
-    if (nextProps.users) {
-      this.setState({loading: false})
+    const {getUsers, authenticating} = this.props
+    if (!authenticating) {
+      if (!nextProps.users && !nextProps.fetching) {
+        getUsers()
+      }
+      if (nextProps.users) {
+        this.setState({loading: false})
+      }
     }
-  }
-
-  componentWillUnMount () {
-    console.log(`CWUM - UNMOUNTING!`)
   }
 
   handleLocation(zip_code) {
@@ -165,7 +152,7 @@ class CandidateSearch extends Component {
     this.clearFilter()
   }
 
-  buildBody = coords => {
+  buildBody = (coords, from) => {
     const {terms, distance, sortBy} = this.state
     let must = terms.map(term => ({term: {_all: term}}))
     const body = {
@@ -215,7 +202,7 @@ class CandidateSearch extends Component {
     event.preventDefault()
     const coords = this.state.coords
       ? this.state.coords
-      : this.props.user.coords || ''
+      : this.props.coords
     const {page_num, from} = this.handlePagination(this.props.users, sign)
     if (!page_num) {
       return
@@ -230,7 +217,6 @@ class CandidateSearch extends Component {
 
   render () {
     const {users} = this.props
-    console.log('RENDERING, LOADING: ', this.props.loading)
     return (
       <Row className='CandidateSearch'>
         <SearchBar
@@ -292,16 +278,18 @@ class CandidateSearch extends Component {
 
 CandidateSearch.propTypes = {
   users: PropTypes.arrayOf(PropTypes.object),
-  user: PropTypes.any,
+  coords: PropTypes.string,
   getUsers: PropTypes.func,
   filterUsers: PropTypes.func,
-  advancedFilterUsers: PropTypes.func
+  advancedFilterUsers: PropTypes.func,
+  fetching: PropTypes.bool,
+  authenticating: PropTypes.bool
 }
 
 const mapStateToProps = state => ({
   users: state.users.all,
-  user: state.users.currentUser,
-  fetching: state.users.fetching
+  authenticating: state.auth.authenticating,
+  fetching: state.users.fetchingAll
 })
 
 export default connect(mapStateToProps)(CandidateSearch)

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Switch, withRouter } from 'react-router-dom'
 import { LinkContainer } from 'react-router-bootstrap'
 import { Nav, NavItem, Row, Col, Glyphicon } from 'react-bootstrap'
 import './Dashboard.css'
@@ -27,20 +27,19 @@ class EmployerDashboard extends Component {
   render () {
     const {
       user,
-      job,
-      skills,
+      handleNewSkills,
       updateUser,
-      location,
       getJob,
       updateJob,
       deleteJob,
       closeJob,
-      duplicateJob
+      duplicateJob,
+      animated
     } = this.props
     const firstName = user ? user.first_name : ''
     const jobs = user && user.is_employer && [...user.employer.listings]
     return (
-      <Router location={location}>
+      <Router>
         <Row className='Dashboard'>
           <div className='container__flex'>
             <Col xsHidden sm={3} md={3} lg={3} className='Dashboard__sidebar'>
@@ -68,42 +67,41 @@ class EmployerDashboard extends Component {
               <ScrollToTopOnMount />
               <Switch>
                 <Route exact path='/dashboard/edit-profile' component={() => (
-                  <EditProfile user={user} updateUser={updateUser} location={location} />
+                  <EditProfile
+                    user={user}
+                    updateUser={updateUser}
+                    animated={animated}
+                  />
                 )} />
                 <Route exact path='/dashboard/jobs/:id' component={({match, history}) => (
                   <JobDetailPage
-                    job={job}
                     user={user}
-                    skills={skills}
                     getJob={getJob}
                     updateJob={updateJob}
                     deleteJob={deleteJob}
                     match={match}
                     history={history}
+                    handleNewSkills={handleNewSkills}
+                    animated={animated}
                   />
                 )} />
-                <Route exact path='/dashboard/post-new-job' component={() => (
-                  <PostAJob location={location} />
+                <Route path='/dashboard/post-new-job' component={({match, history}) => (
+                  <PostAJob handleNewSkills={handleNewSkills} animated={animated} />
                 )} />
                 <Route exact path='/dashboard/applicants' component={() => (
-                  <ApplicantsList
-                    location={location}
-                    jobs={jobs}
-                  />
+                  <ApplicantsList jobs={jobs} animated={animated} />
                 )} />
-                <Route exact path='/dashboard/manage-jobs' component={() => (
+                <Route exact path='/dashboard/manage-jobs' component={({location}) => (
                   <ManageJobs
                     location={location}
                     closeJob={closeJob}
                     duplicateJob={duplicateJob}
                     jobs={jobs}
+                    animated={animated}
                   />
                 )} />
-                <Route exact path='/dashboard/edit-profile' component={() => (
-                  <EditProfile user={user} updateUser={updateUser} location={location} />
-                )} />
                 <Route exact path='/dashboard/users/:id' component={() => (
-                  <UserProfile />
+                  <UserProfile animated={animated} />
                 )} />
               </Switch>
             </Col>
@@ -115,17 +113,16 @@ class EmployerDashboard extends Component {
 }
 
 EmployerDashboard.propTypes = {
-  skills: PropTypes.array,
+  handleNewSkills: PropTypes.func,
   user: PropTypes.any,
   job: PropTypes.object,
-  jobs: PropTypes.array,
-  location: PropTypes.object,
   getJob: PropTypes.func.isRequired,
   updateJob: PropTypes.func.isRequired,
   deleteJob: PropTypes.func.isRequired,
   closeJob: PropTypes.func.isRequired,
   duplicateJob: PropTypes.func.isRequired,
-  updateUser: PropTypes.func.isRequired
+  updateUser: PropTypes.func.isRequired,
+  animated: PropTypes.string
 }
 
-export default EmployerDashboard
+export default withRouter(EmployerDashboard)

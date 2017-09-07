@@ -42,7 +42,7 @@ class JobSeekerDashboard extends Component {
 }
 
 const mapStateToProps = state => ({
-  user: state.users.currentUser
+  user: state.auth.currentUser
 })
 
 const mapDispatchToProps = dispatch => ({

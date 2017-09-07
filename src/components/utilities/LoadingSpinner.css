@@ -1,8 +1,10 @@
 .loader-bg {
   background: #FFFFFF;
+  margin: 0;
   position: absolute;
+  right: 0;
   width: 100%;
-  height: inherit;
+  height: 100%;
   transition: all .35s ease-in-out;
 }
 
@@ -16,7 +18,7 @@
   margin: -75px 0 0 -75px;
   border-radius: 50%;
   border: 3px solid transparent;
-  border-top-color: #12CD6A;
+  border-top-color: #01C688;
   animation: spin 2s linear infinite;
 }
 
@@ -29,7 +31,7 @@
   bottom: 5px;
   border-radius: 50%;
   border: 3px solid transparent;
-  border-top-color: #099B4E;
+  border-top-color: #01B27A;
   animation: spin 3s linear infinite;
 }
 
@@ -42,7 +44,7 @@
   bottom: 15px;
   border-radius: 50%;
   border: 3px solid transparent;
-  border-top-color: #f9c922;
+  border-top-color: #F9C922;
   animation: spin 1.5s linear infinite;
 }
 
