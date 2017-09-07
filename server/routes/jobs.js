@@ -2,12 +2,7 @@
 const nodemailer = require('nodemailer')
 const stripe = require('stripe')('sk_test_BQokikJOvBiI2HlWgH4olfQ2')
 const db = require('APP/db')
-const {Job, Employer, Skill, User} = db
-// const elasticsearch = require('elasticsearch')
-// const esClient = new elasticsearch.Client({
-//   host: '127.0.0.1:9200',
-//   log: 'error'
-// })
+const {Job, Employer, Skill} = db
 const Promise = require('bluebird')
 
 module.exports = require('express').Router()
@@ -145,7 +140,7 @@ module.exports = require('express').Router()
     }
     db.query(sql, options)
       .then(jobs => {
-        console.log('JOBS: ', jobs.length)
+        console.log('NUM JOBS MATCHED: ', jobs.length)
         res.status(200).json(jobs)
       })
       .catch(err => {
@@ -223,16 +218,6 @@ module.exports = require('express').Router()
           const updatedJob = updatedJobsArr[0]
           return updatedJob.addSkills(skills)
         })
-        .then(() => Job.findOne({
-          where: {id: req.params.id},
-          include: [Skill, Employer]
-        }))
-        .then(editedJob => esClient.update({
-          index: 'data',
-          type: 'job',
-          id: req.params.id,
-          body: {doc: editedJob.get()}
-        }))
         .then(() => res.sendStatus(200))
         .catch(next)
     })
@@ -246,12 +231,7 @@ module.exports = require('express').Router()
         where: {id: req.params.id},
         returning: true
       })
-        .spread((numClosedJobs, closedJobsArr) => esClient.delete({
-          index: 'data',
-          type: 'job',
-          id: req.params.id
-        }))
-        .then(() => res.sendStatus(204))
+        .spread((numClosedJobs, closedJobsArr) => res.sendStatus(204))
         .catch(next)
     })
 
@@ -285,28 +265,5 @@ module.exports = require('express').Router()
           return foundJob.addApplicant(user.id)
         })
         .then(application => res.sendStatus(201))
-        .catch(next)
-    })
-
-  .get('/apps/:id',
-    (req, res, next) =>
-      User.findOne({
-        where: {
-          id: req.params.id
-        },
-        include: [{ association: 'Job' }]
-      })
-        .then(jobs => res.json(jobs))
-        .catch(next))
-
-  .get('/employer/:id',
-    (req, res, next) => {
-      Job.findAll({
-        where: {
-          employer_id: req.params.id
-        },
-        include: [Employer, Skill]
-      })
-        .then(jobs => res.json(jobs))
         .catch(next)
     })
