@@ -39,7 +39,8 @@
     "test-node-watch": "npm run test-node -- --watch --reporter=min",
     "seed": "node db/seed.js",
     "deploy-heroku": "bin/deploy-heroku.sh",
-    "prepush": "npm run test-node"
+    "prepush": "npm run test-node",
+    "heroku-postbuild": "npm run build"
   },
   "license": "MIT",
   "bugs": {
