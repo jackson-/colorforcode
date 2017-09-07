@@ -23,7 +23,7 @@
   },
   "proxy": "http://localhost:1337/",
   "scripts": {
-    "start": "concurrently \"npm run serve-dev\" \"node scripts/start.js\"",
+    "start": "DATABASE_URL=postgres://postgres@localhost:5432/hireblack concurrently \"npm run serve-dev\" \"node scripts/start.js\"",
     "build": "node scripts/build.js",
     "test-react": "node scripts/test.js --env=jsdom",
     "dev": "          node dev",
@@ -71,7 +71,6 @@
     "passport-local": "^1.0.0",
     "payment": "^1.0.4",
     "pg": "^6.1.0",
-    "pg-search-sequelize": "0.0.10",
     "pretty-error": "^2.0.2",
     "prop-types": "^15.5.10",
     "react": "^15.3.2",

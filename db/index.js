@@ -8,7 +8,7 @@ let SearchModel = require('pg-search-sequelize');
 
 const name = (app.env.DATABASE_NAME || app.name) + (app.isTesting ? '_test' : '')
 
-const url = app.env.DATABASE_URL || `postgres://postgres:blackity@localhost:5432/${name}`
+const url = process.env.DATABASE_URL || `postgres://postgres@localhost:5432/${name}`
 
 debug(chalk.yellow(`Opening database connection to ${url}`))
 
