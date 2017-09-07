@@ -113,9 +113,9 @@ const About = ({animated}) => {
           </Col>
           <Col className='text-center' xs={12} sm={12} md={12} lg={12}>
             <i className='fa fa-envelope-o fa-3x sr-contact' />
-            <a href='mailto:info@webuildblack.com'>
+            <a href='mailto:info@colorforcode.com'>
               <p className='About__text text-primary'>
-                info@webuildblack.com
+                info@colorforcode.com
               </p>
             </a>
           </Col>

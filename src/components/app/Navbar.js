@@ -6,7 +6,7 @@ import {
   Navbar, NavbarBrand, Nav, Glyphicon,
   Col, NavItem, NavDropdown, MenuItem } from 'react-bootstrap'
 import './App.css'
-import navLogo from '../../img/colorforcode-logo-no-border.svg'
+import navLogo from '../../img/c4c-logo-no-border.svg'
 
 const NavBar = props => {
   let dashLocs = {

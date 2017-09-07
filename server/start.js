@@ -1,5 +1,3 @@
-'use strict'
-
 const path = require('path')
 const express = require('express')
 const bodyParser = require('body-parser')
@@ -48,9 +46,9 @@ module.exports = app
   })
   .use(require('cookie-session')({
     name: 'session',
-    keys: [process.env.SESSION_SECRET || 'an insecure secret key'],
+    keys: [process.env.SESSION_SECRET || 'an insecure secret key']
   }))
-  //cors
+  // cors
   .use(cors())
   // Body parsing middleware
   .use(bodyParser.urlencoded({ extended: true }))
@@ -61,7 +59,7 @@ module.exports = app
   .use(passport.session())
 
   // Serve static files from ../public
-  .use(express.static(resolve(__dirname, '..', 'bundle')))
+  .use(express.static(resolve(__dirname, '../public', 'index.html')))
   // Serve our api - ./api also requires in ../db, which syncs with our database
   .use('/api', require('./api'))
   // any requests with an extension (.js, .css, etc.) turn into 404

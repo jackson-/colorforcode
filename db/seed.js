@@ -15,7 +15,7 @@ const employers = seed(Employer, {
   },
   colorforcode: {
     name: 'Color For Code',
-    company_site: 'https://www.colorforcode.io'
+    company_site: 'https://www.colorforcode.com'
   },
   shopify: {
     name: 'Shopify',
@@ -101,7 +101,11 @@ const users = seed(User,
     hb1: {
       first_name: 'Devin',
       last_name: 'Blackson',
+<<<<<<< HEAD
       email: 'devin@colorforcode.io',
+=======
+      email: 'devin@colorforcode.com',
+>>>>>>> 48483faf32bc235da8afc7635b12533d0d940eeb
       password: '123',
       is_employer: true,
       coords: points.bk,
@@ -112,7 +116,11 @@ const users = seed(User,
     hb2: {
       first_name: 'Chloe',
       last_name: 'Ice',
+<<<<<<< HEAD
       email: 'chloe@colorforcode.io',
+=======
+      email: 'chloe@colorforcode.com',
+>>>>>>> 48483faf32bc235da8afc7635b12533d0d940eeb
       password: '123',
       zip_code: '95817',
       location: 'Sacramento, CA',

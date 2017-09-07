@@ -2,13 +2,8 @@ const db = require('APP/db')
 const {User, Employer, Skill, Project} = db
 const aws = require('aws-sdk')
 const S3_BUCKET = 'colorforcode'
-const elasticsearch = require('elasticsearch')
-const esClient = new elasticsearch.Client({
-  host: '127.0.0.1:9200',
-  log: 'error'
-})
-const tinify = require('tinify')
-tinify.key = 'lm8HbN3+BXgdBe9KvYLG3+KkS7SISwCHXcbW1ybx'
+// const tinify = require('tinify')
+// tinify.key = 'lm8HbN3+BXgdBe9KvYLG3+KkS7SISwCHXcbW1ybx'
 
 module.exports = require('express').Router()
 
@@ -199,18 +194,6 @@ module.exports = require('express').Router()
           include: [{model: Project, include: [Skill]}]
         })
       })
-      .then(updatedUser => {
-        // employer-users aren't in our ES data layer
-        if (!updatedUser.is_employer) {
-          return esClient.update({
-            index: 'data',
-            type: 'user',
-            id: req.params.id,
-            body: {doc: updatedUser.get()}
-          })
-        }
-        return
-      })
-      .then(() => res.sendStatus(200))
+      .then(updatedUser => res.sendStatus(200))
       .catch(next)
   })
