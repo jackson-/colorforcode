@@ -12,11 +12,11 @@ const About = ({animated}) => {
             <div className='hero-overlay' />
             <div className='About__hero-header'>
               <h1 className='About__hero-heading'>
-                VAR HIREBLACK = DIVERSITY + TALENT
+                VAR COLOR_FOR_CODE = DIVERSITY + TALENT
               </h1>
               <hr className='About__hero-separator' />
               <p className='About__hero-text'>
-                {`What happens when premium opportunities meet premium Black technology professionals? No need to wonder. It's HireBlack. The different perspectives and experience our job seekers provide are changing the industry for the better.`}
+                {`What happens when premium opportunities meet premium Black technology professionals? No need to wonder. It's Color For Code. The different perspectives and experience our job seekers provide are changing the industry for the better.`}
               </p>
             </div>
           </Col>
@@ -33,7 +33,7 @@ const About = ({animated}) => {
             </h2>
             <hr className='About__separator-white' />
             <p className='About__text text-faded'>
-              {`Diversity empowers innovation. Innovation is what companies look for in the talent they hire. HireBlack provides a platform for hiring employers and Black engineers and designers seeking opportunities to meet and fill the gap of racial inequality in the current tech landscape.`}
+              {`Diversity empowers innovation. Innovation is what companies look for in the talent they hire. Color For Code provides a platform for hiring employers and Black engineers and designers seeking opportunities to meet and fill the gap of racial inequality in the current tech landscape.`}
             </p>
           </Col>
         </Row>
@@ -92,7 +92,7 @@ const About = ({animated}) => {
             </h2>
             <hr className='About__separator-white' />
             <p className='About__text text-faded'>
-              {`It feels good to know that an employer is looking for someone like you when you walk into an interview. HireBlack is a platform that provides just that. We connect talented black designers and engineers with innovative companies that don't just talk about the value of diversity—they cultivate it.`}
+              {`It feels good to know that an employer is looking for someone like you when you walk into an interview. Color For Code is a platform that provides just that. We connect talented black designers and engineers with innovative companies that don't just talk about the value of diversity—they cultivate it.`}
             </p>
           </Col>
         </Row>
@@ -113,9 +113,9 @@ const About = ({animated}) => {
           </Col>
           <Col className='text-center' xs={12} sm={12} md={12} lg={12}>
             <i className='fa fa-envelope-o fa-3x sr-contact' />
-            <a href='mailto:info@hireblack.com'>
+            <a href='mailto:info@webuildblack.com'>
               <p className='About__text text-primary'>
-                info@hireblack.io
+                info@webuildblack.com
               </p>
             </a>
           </Col>

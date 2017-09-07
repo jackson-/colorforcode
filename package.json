@@ -1,11 +1,11 @@
 {
   "version": "0.1.0",
   "private": true,
-  "name": "hireblack",
+  "name": "colorforcode",
   "authors": "Devin Jackson & Chloe Rice",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jackson-/hireblack.io.git"
+    "url": "https://github.com/jackson-/colorforcode.io.git"
   },
   "keywords": [
     "react",
@@ -23,7 +23,7 @@
   },
   "proxy": "http://localhost:1337/",
   "scripts": {
-    "start": "DATABASE_URL=postgres://postgres@localhost:5432/hireblack concurrently \"npm run serve-dev\" \"node scripts/start.js\"",
+    "start": "DATABASE_URL=postgres://postgres@localhost:5432/colorforcode concurrently \"npm run serve-dev\" \"node scripts/start.js\"",
     "build": "node scripts/build.js",
     "test-react": "node scripts/test.js --env=jsdom",
     "dev": "          node dev",
@@ -42,9 +42,9 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jackson-/hireblack.io.git/issues"
+    "url": "https://github.com/jackson-/colorforcode.io.git/issues"
   },
-  "homepage": "https://github.com/jackson-/hireblack.io.git#readme",
+  "homepage": "https://github.com/jackson-/colorforcode.io.git#readme",
   "dependencies": {
     "aws-sdk": "^2.73.0",
     "axios": "^0.15.2",

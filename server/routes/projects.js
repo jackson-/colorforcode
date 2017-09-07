@@ -10,7 +10,7 @@ var stripe = require("stripe")(
 const db = require('APP/db')
 const {Project, Skill, User} = db
 const aws = require('aws-sdk')
-const S3_BUCKET = 'hireblack'
+const S3_BUCKET = 'colorforcode'
 const elasticsearch = require('elasticsearch')
 const esClient = new elasticsearch.Client({
   host: '127.0.0.1:9200',
