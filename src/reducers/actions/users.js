@@ -127,7 +127,7 @@ export const updatingUser = (user, savedJobs) => dispatch => {
 
 export const uploadingAvatar = (user, file) => dispatch => {
   dispatch(beginUploading())
-  user.image_url = `https://s3.amazonaws.com/hireblack/avatars/${file.name}`
+  user.image_url = `https://s3.amazonaws.com/colorforcode/avatars/${file.name}`
   const options = {headers: {'Content-Type': file.type}}
   axios.get(
     `http://localhost:1337/api/users/avatars/sign-s3?&file-name=${file.name}&file-type=${file.type}`
@@ -140,7 +140,7 @@ export const uploadingAvatar = (user, file) => dispatch => {
 
 export const uploadingResume = (user, file) => dispatch => {
   dispatch(beginUploading())
-  user.resume_url = `https://s3.amazonaws.com/hireblack/resumes/${file.name}`
+  user.resume_url = `https://s3.amazonaws.com/colorforcode/resumes/${file.name}`
   const options = {headers: {'Content-Type': file.type}}
   axios.get(
     `http://localhost:1337/api/users/resumes/sign-s3?&file-name=${file.name}&file-type=${file.type}`

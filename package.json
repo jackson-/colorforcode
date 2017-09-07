@@ -1,11 +1,11 @@
 {
   "version": "0.1.0",
   "private": true,
-  "name": "hireblack",
+  "name": "color-for-code",
   "authors": "Devin Jackson & Chloe Rice",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jackson-/hireblack.io.git"
+    "url": "https://github.com/jackson-/colorforcode.git"
   },
   "keywords": [
     "react",
@@ -42,9 +42,9 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jackson-/hireblack.io.git/issues"
+    "url": "https://github.com/jackson-/colorforcode.git/issues"
   },
-  "homepage": "https://github.com/jackson-/hireblack.io.git#readme",
+  "homepage": "https://github.com/jackson-/colorforcode.git#readme",
   "dependencies": {
     "aws-sdk": "^2.73.0",
     "axios": "^0.15.2",

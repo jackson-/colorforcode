@@ -1,7 +1,7 @@
 const db = require('APP/db')
 const {User, Employer, Skill, Project} = db
 const aws = require('aws-sdk')
-const S3_BUCKET = 'hireblack'
+const S3_BUCKET = 'colorforcode'
 // const tinify = require('tinify')
 // tinify.key = 'lm8HbN3+BXgdBe9KvYLG3+KkS7SISwCHXcbW1ybx'
 

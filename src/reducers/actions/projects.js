@@ -102,7 +102,7 @@ export const updatingProject = (postData) => dispatch => {
 export const uploadingScreenshot = (project, file) => dispatch => {
   const name = `project-${project.id}-created-${project.created_at}-by-user-${project.user_id}`
   dispatch(beginUploading())
-  project.screenshot = `https://s3.amazonaws.com/hireblack/screenshots/${name}`
+  project.screenshot = `https://s3.amazonaws.com/colorforcode/screenshots/${name}`
   const options = {headers: {'Content-Type': file.type}}
 
   axios.get(

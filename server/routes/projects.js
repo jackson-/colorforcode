@@ -2,7 +2,7 @@ const _ = require('underscore')
 const db = require('APP/db')
 const {Project, Skill, User} = db
 const aws = require('aws-sdk')
-const S3_BUCKET = 'hireblack'
+const S3_BUCKET = 'colorforcode'
 
 module.exports = require('express').Router()
 
