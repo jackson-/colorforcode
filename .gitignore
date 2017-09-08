@@ -4,9 +4,6 @@ node_modules/*
 # ...except the symlink to ourselves.
 !node_modules/APP
 
-# Compiled Assets
-/build
-
 # errors/logs
 npm-debug.log
 yarn-error.log
