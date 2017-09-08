@@ -2,7 +2,9 @@ const _ = require('underscore')
 const db = require('APP/db')
 const {Project, Skill, User} = db
 const aws = require('aws-sdk')
-const S3_BUCKET = 'colorforcode'
+const S3_BUCKET = 'c4c-user-assets'
+const ACCESS_KEY_ID = 'AKIAIMMU5UVEDXYE7SJQ'
+const SECRET_ACCESS_KEY = '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'
 
 module.exports = require('express').Router()
 
@@ -20,8 +22,8 @@ module.exports = require('express').Router()
   // add/update project screenshot
   .get('/screenshots/sign-s3', (req, res, next) => {
     const s3 = new aws.S3({
-      accessKeyId: 'AKIAJBADUWOAWQFRHKKQ',
-      secretAccessKey: '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'
+      accessKeyId: ACCESS_KEY_ID,
+      secretAccessKey: SECRET_ACCESS_KEY
     })
     const fileName = req.query['file-name']
     const fileType = req.query['file-type']

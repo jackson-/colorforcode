@@ -77,7 +77,7 @@ export const gettingUserById = user_id => dispatch => {
   axios.get(`/api/users/${user_id}`)
     .then(res => res.data)
     .then(user => {
-      
+
       dispatch(receiveUser(user))
     })
     .catch(err => console.error(`Mang I couldn't find the user! ${err.stack}`))
@@ -127,7 +127,7 @@ export const updatingUser = (user, savedJobs) => dispatch => {
 
 export const uploadingAvatar = (user, file) => dispatch => {
   dispatch(beginUploading())
-  user.image_url = `https://s3.amazonaws.com/colorforcode/avatars/${file.name}`
+  user.image_url = `https://s3.amazonaws.com/c4c-user-assets/avatars/${file.name}`
   const options = {headers: {'Content-Type': file.type}}
   axios.get(
     `http://localhost:1337/api/users/avatars/sign-s3?&file-name=${file.name}&file-type=${file.type}`
@@ -140,7 +140,7 @@ export const uploadingAvatar = (user, file) => dispatch => {
 
 export const uploadingResume = (user, file) => dispatch => {
   dispatch(beginUploading())
-  user.resume_url = `https://s3.amazonaws.com/colorforcode/resumes/${file.name}`
+  user.resume_url = `https://s3.amazonaws.com/c4c-user-assets/resumes/${file.name}`
   const options = {headers: {'Content-Type': file.type}}
   axios.get(
     `http://localhost:1337/api/users/resumes/sign-s3?&file-name=${file.name}&file-type=${file.type}`
