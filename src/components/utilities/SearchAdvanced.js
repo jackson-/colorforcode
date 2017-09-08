@@ -20,7 +20,7 @@ const SearchAdvanced = props => {
           </Col>
           <Button
             className='SearchAdvanced__button--warning'
-            onClick={(event, filter) => props.clearFilter(filter)}
+            onClick={props.clearFilter('filter')}
           >
             Clear Filter
           </Button>

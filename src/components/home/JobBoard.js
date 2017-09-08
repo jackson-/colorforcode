@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+ximport React, { Component } from 'react'
 import { Row, Col, Button } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import axios from 'axios'
@@ -102,12 +102,13 @@ class JobBoard extends Component {
     )
   }
 
-  clearFilter = filter => {
+  clearFilter = filter => event => {
     if (filter) {
       // if this method is invoked with a filter param,
       // we reset all search interface elements by:
       // clearing the search bar, showing all job listings, and hiding search-header
       // see SearchAdvanced.js line 21 (the Clear Filter button onClick)
+      console.log('CLEARING FILTER')
       this.setState({
         query: '',
         pendingTerms: [],
@@ -201,14 +202,14 @@ class JobBoard extends Component {
       }, this.props.filterJobs(query))
     }
     // we only show the search results header if this.state.filtered === true
-    this.clearFilter()
+    this.clearFilter()()
   }
 
   render () {
     const {allJobs, filteredJobs} = this.props
     const {loading, filtered} = this.state
     const jobs = !filteredJobs || !filtered ? allJobs : filteredJobs
-    console.log('JOBS: ', jobs)
+    console.log('JOBS: ', jobs, 'STATE: ', this.state)
     return (
       <Row className='JobBoard'>
         <SearchBar
