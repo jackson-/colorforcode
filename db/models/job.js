@@ -1,4 +1,4 @@
-const {STRING, TEXT, ARRAY, GEOMETRY, VIRTUAL, BOOLEAN} = require('sequelize')
+const {STRING, TEXT, ARRAY, GEOMETRY} = require('sequelize')
 
 module.exports = db => db.define('job', {
   title: {

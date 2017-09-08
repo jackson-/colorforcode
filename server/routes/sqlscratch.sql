@@ -7,4 +7,4 @@ LEFT OUTER JOIN (
   ON skills.id = skills.jobskill."skill_id"
 )
 ON job.id = skills.jobskill."job_id"
-WHERE job.employment_types @> ARRAY['Remote','FullTime']::VARCHAR(255)[];
+WHERE job.employment_types @> ARRAY['Remote','Full Time']::VARCHAR(255)[];

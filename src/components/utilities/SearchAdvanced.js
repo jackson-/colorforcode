@@ -33,14 +33,14 @@ const SearchAdvanced = props => {
       >
         <ControlLabel>EMPLOYMENT TYPES</ControlLabel>
         <Checkbox
-          value='FullTime'
-          checked={props.state && props.state.employment_types.has('FullTime')}
+          value='Full Time'
+          checked={props.state && props.state.employment_types.has('Full Time')}
         >
           Full Time
         </Checkbox>
         <Checkbox
-          value='PartTime'
-          checked={props.state && props.state.employment_types.has('PartTime')}
+          value='Part Time'
+          checked={props.state && props.state.employment_types.has('Part Time')}
         >
           Part Time
         </Checkbox>

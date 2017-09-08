@@ -82,7 +82,7 @@ export default class JobUpdateDisplay extends Component {
           : `${city}, ${state} ${country}`
         const coords = {
           type: 'Point',
-          coordinates: [parseFloat(geometry.lat), parseFloat(geometry.lng)],
+          coordinates: [parseFloat(geometry.lng), parseFloat(geometry.lat)],
           crs: {type: 'name', properties: {name: 'EPSG:32661'}}
         }
         this.setState({coords, zip_code, location})
@@ -225,10 +225,10 @@ export default class JobUpdateDisplay extends Component {
                   name='employment_types'
                   onChange={this.handleChange('employment_types')}>
                   <ControlLabel>EMPLOYMENT TYPE(S)</ControlLabel>
-                  <Checkbox value='FullTime' defaultChecked={this.isChecked('Full Time')}>
+                  <Checkbox value='Full Time' defaultChecked={this.isChecked('Full Time')}>
                     Full Time
                   </Checkbox>
-                  <Checkbox value='PartTime' defaultChecked={this.isChecked('Part Time')}>
+                  <Checkbox value='Part Time' defaultChecked={this.isChecked('Part Time')}>
                     Part Time
                   </Checkbox>
                   <Checkbox value='Contract' defaultChecked={this.isChecked('Contract')}>

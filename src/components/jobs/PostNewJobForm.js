@@ -67,7 +67,7 @@ class PostJobForm extends Component {
           : `${city}, ${state} ${country}`
         const coords = {
           type: 'Point',
-          coordinates: [parseFloat(geometry.lat), parseFloat(geometry.lng)],
+          coordinates: [parseFloat(geometry.lng), parseFloat(geometry.lat)],
           crs: {type: 'name', properties: {name: 'EPSG:32661'}}
         }
         this.setState({coords, zip_code, location})

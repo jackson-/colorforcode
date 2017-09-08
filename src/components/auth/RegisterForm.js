@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Row, Col, FormGroup, ControlLabel, FormControl } from 'react-bootstrap'
 import axios from 'axios'
-import { creatingNewUser } from 'APP/src/reducers/actions/users'
+import PropTypes from 'prop-types'
+import { creatingNewUser } from 'APP/src/reducers/actions/auth'
 import EmployerFields from './EmployerRegisterFields'
 import ApplicantFields from './ApplicantRegisterFields'
 import { withRouter } from 'react-router-dom'
@@ -92,16 +93,18 @@ class RegisterForm extends Component {
 
   clearForm = () => {
     this.setState({
+      showEmployer: false,
+      showApplicant: false,
       email: '',
       password: '',
       passwordConfirm: '',
       company_name: '',
       company_role: '',
-      first_name: '',
-      last_name: '',
       summary: '',
       headline: '',
       title: '',
+      first_name: '',
+      last_name: '',
       zip_code: '',
       location: '',
       image_url: '',
@@ -182,11 +185,11 @@ class RegisterForm extends Component {
   handleSubmit = event => {
     event.preventDefault()
     const newUser = {...this.state}
-    const {history, next} = this.props
+    const {history, next, createUser} = this.props
     // turn the set into an array (postgres rejects sets)
     newUser.employment_types = [...newUser.employment_types]
     this.clearForm()
-    this.props.createUser(newUser, history, next)
+    createUser(newUser, history, next)
   }
 
   render () {
@@ -240,14 +243,21 @@ class RegisterForm extends Component {
   }
 }
 
+RegisterForm.propTypes = {
+  user: PropTypes.any, // object or null
+  next: PropTypes.any, // object or null
+  history: PropTypes.object,
+  createUser: PropTypes.func,
+  animated: PropTypes.string
+}
+
 const mapStateToProps = state => ({
   user: state.auth.currentUser,
   next: state.location.nextRoute
 })
 
 const mapDispatchToProps = dispatch => ({
-  createUser: (user) => dispatch(creatingNewUser(user))
+  createUser: (user, history, next) => dispatch(creatingNewUser(user, history, next))
 })
 
-const RegisterFormContainer = connect(mapStateToProps, mapDispatchToProps)(RegisterForm)
-export default withRouter(RegisterFormContainer)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(RegisterForm))

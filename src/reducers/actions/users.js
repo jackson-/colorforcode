@@ -1,8 +1,11 @@
 import axios from 'axios'
 import {
-  RECEIVE_USERS, RECEIVE_USER, CREATE_USER, UPDATE_USER, DELETE_USER, REQUEST_ALL_USERS, BEGIN_UPLOADING,
+  RECEIVE_USERS, RECEIVE_USER, UPDATE_USER, DELETE_USER,
+  REQUEST_ALL_USERS, BEGIN_UPLOADING,
   DONE_UPLOADING, REQUEST_USER, REQUEST_FILTERED_USERS } from '../constants'
-import { whoami, login } from './auth'
+import { whoami } from './auth'
+import { receiveAlert } from './alert'
+
 /* --------- PURE ACTION CREATORS --------- */
 
 export const receiveAllUsers = users => ({
@@ -31,10 +34,6 @@ export const requestUser = () => ({
   type: REQUEST_USER
 })
 
-export const createNewUser = () => ({
-  type: CREATE_USER
-})
-
 export const updateUser = () => ({
   type: UPDATE_USER
 })
@@ -49,21 +48,6 @@ export const requestAllUsers = () => ({
 
 /* --------- ASYNC ACTION CREATORS (THUNKS) --------- */
 
-export const creatingNewUser = (user, history, next) => dispatch => {
-  // set loading state to true to trigger UI changes
-  dispatch(createNewUser())
-  // create the new user
-  axios.post('/api/users', user)
-    .then(res => res.data)
-    // if the user is successfully created, we receive the updated users list
-    .then(newUser => {
-      dispatch(login(newUser.email, newUser.password, history, next))
-      dispatch(whoami())
-    })
-    // otherwise we catch the error...
-    .catch(err => console.error(`Sorry, cuz. We couldn't create that user...${err.stack}`))
-}
-
 export const gettingAllUsers = () => dispatch => {
   dispatch(requestAllUsers())
   axios.get('/api/users')
@@ -77,7 +61,6 @@ export const gettingUserById = user_id => dispatch => {
   axios.get(`/api/users/${user_id}`)
     .then(res => res.data)
     .then(user => {
-
       dispatch(receiveUser(user))
     })
     .catch(err => console.error(`Mang I couldn't find the user! ${err.stack}`))
@@ -109,7 +92,16 @@ export const buildBodyThenSearchUsers = (bodyBuilderFunc, coords) => {
 export const creatingNewEmployer = employer => dispatch => {
   axios.post('/api/employers', employer)
     .then(res => res.data)
-    .catch(err => console.error(`Couldn't create employer ${employer.name}...${err.stack}`))
+    .catch((err) => {
+      console.error(err)
+      dispatch(receiveAlert({
+        type: 'error',
+        style: 'danger',
+        title: 'Uh Oh!',
+        body: 'Sorry, we weren\'t able to create your account. Please try again. If trouble persists please contact us!',
+        next: null
+      }))
+    })
 }
 
 export const updatingUser = (user, savedJobs) => dispatch => {
@@ -122,31 +114,61 @@ export const updatingUser = (user, savedJobs) => dispatch => {
       dispatch(whoami())
     })
     // otherwise we catch the error...
-    .catch(err => console.error(`Sorry, cuz. We couldn't update that user...${err.stack}`))
+    .catch((err) => {
+      console.error(err)
+      let alertBody = savedJobs
+        ? 'We were unable to save this job. Please try again, and let us know if trouble persists!'
+        : 'Sorry, we\'re having trouble updating your profile at the moment. Please try again later.'
+      dispatch(receiveAlert({
+        type: 'error',
+        style: 'danger',
+        title: 'Uh Oh!',
+        body: alertBody,
+        next: null
+      }))
+    })
 }
 
 export const uploadingAvatar = (user, file) => dispatch => {
   dispatch(beginUploading())
-  user.image_url = `https://s3.amazonaws.com/c4c-user-assets/avatars/${file.name}`
+  user.image_url = `https://colorforcode.s3.amazonaws.com/colorforcode/avatars/${file.name}`
   const options = {headers: {'Content-Type': file.type}}
   axios.get(
-    `http://localhost:1337/api/users/avatars/sign-s3?&file-name=${file.name}&file-type=${file.type}`
+    `/api/users/avatars/sign-s3?&file-name=${file.name}&file-type=${file.type}`
   )
     .then(res => axios.put(res.data.signedRequest, file, options))
     .then(() => dispatch(updatingUser(user)))
     .then(() => dispatch(doneUploading()))
-    .catch(err => console.error(`Mang, I couldn't upload the avatar! ${err.stack}`))
+    .catch((err) => {
+      console.error(err)
+      dispatch(receiveAlert({
+        type: 'error',
+        style: 'danger',
+        title: 'Uh Oh!',
+        body: 'Sorry, we\'re having trouble uploading your profile picture. Please try again later.',
+        next: null
+      }))
+    })
 }
 
 export const uploadingResume = (user, file) => dispatch => {
   dispatch(beginUploading())
-  user.resume_url = `https://s3.amazonaws.com/c4c-user-assets/resumes/${file.name}`
+  user.resume_url = `https://colorforcode.s3.amazonaws.com/colorforcode/resumes/${file.name}`
   const options = {headers: {'Content-Type': file.type}}
   axios.get(
-    `http://localhost:1337/api/users/resumes/sign-s3?&file-name=${file.name}&file-type=${file.type}`
+    `/api/users/resumes/sign-s3?&file-name=${file.name}&file-type=${file.type}`
   )
     .then(res => axios.put(res.data.signedRequest, file, options))
     .then(() => dispatch(updatingUser(user)))
     .then(() => dispatch(doneUploading()))
-    .catch(err => console.error(`Mang, I couldn't upload the resume! ${err.stack}`))
+    .catch((err) => {
+      console.error(err)
+      dispatch(receiveAlert({
+        type: 'error',
+        style: 'danger',
+        title: 'Uh Oh!',
+        body: 'Sorry, we\'re having trouble uploading your resume. Please try again.',
+        next: null
+      }))
+    })
 }

@@ -33,13 +33,28 @@
   background: rgba(0, 0, 0, 0.5);
   width: 100%;
   height: calc(100vh - 60px);
-  padding: 28% 30px 0;
+  padding: 22% 30px 0;
   color: #EEEEEE;
-  font-family: Lato Black;
+  font-family: Merriweather;
 }
 
-.tagline {
-  font-size: 58px;
+.Home__hero-tagline {
+  font-size: 3em !important;
+}
+
+.Home__hero-separator {
+  margin: 30px auto;
+  border-color: #01C688;
+  border-width: 3px;
+  max-width: 50px;
+}
+
+.Home__hero-subtag {
+  color: #FFFFFF;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 300;
+  margin-bottom: 50px;
+  font-size: 1.5em;
 }
 
 .JobBoard,
@@ -78,7 +93,13 @@ and (min-width: 767px) {
     background-attachment: fixed;
   }
   .parallax-content {
-    padding: 18% 30px 0;
+    padding: 13% 30px 0;
+  }
+  .Home__hero-tagline {
+    font-size: 4em !important;
+  }
+  .Home__hero-subtag {
+    font-size: 2em;
   }
 }
 

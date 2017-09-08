@@ -41,6 +41,8 @@ class EditProjectForm extends Component {
     if (!fetchingProject) {
       if (!project || project.id !== Number(id)) {
         getProject(id)
+      } else {
+        this.setState({loading: false})
       }
     }
   }
@@ -110,6 +112,7 @@ class EditProjectForm extends Component {
   render () {
     let {project, selected, animated} = this.props
     const {loading} = this.state
+    console.log('PROJECT LOADING: ', loading)
     return loading
       ? <LoadingSpinner />
       : (

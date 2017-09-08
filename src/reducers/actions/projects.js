@@ -102,11 +102,11 @@ export const updatingProject = (postData) => dispatch => {
 export const uploadingScreenshot = (project, file) => dispatch => {
   const name = `project-${project.id}-created-${project.created_at}-by-user-${project.user_id}`
   dispatch(beginUploading())
-  project.screenshot = `https://s3.amazonaws.com/c4c-user-assets/screenshots/${name}`
+  project.screenshot = `https://s3.amazonaws.com/colorforcode/screenshots/${name}`
   const options = {headers: {'Content-Type': file.type}}
 
   axios.get(
-    `http://localhost:1337/api/projects/screenshots/sign-s3?&file-name=${name}&file-type=${file.type}`
+    `/api/projects/screenshots/sign-s3?&file-name=${name}&file-type=${file.type}`
   )
     .then(res => {
       axios.put(res.data.signedRequest, file, options)

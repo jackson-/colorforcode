@@ -12,12 +12,15 @@ const About = ({animated}) => {
             <div className='hero-overlay' />
             <div className='About__hero-header'>
               <h1 className='About__hero-heading'>
-                VAR COLOR_FOR_CODE = DIVERSITY + TALENT
+                VAR COLOR_FOR_CODE =
+              </h1>
+              <h1 className='About__hero-heading'>
+                DIVERSITY + TALENT
               </h1>
               <hr className='About__hero-separator' />
-              <p className='About__hero-text'>
-                {`What happens when premium opportunities meet premium Black technology professionals? No need to wonder. It's Color For Code. The different perspectives and experience our job seekers provide are changing the industry for the better.`}
-              </p>
+              <h2 className='About__hero-text'>
+                Join us in breathing new life into the tech industry.
+              </h2>
             </div>
           </Col>
         </Row>
@@ -33,7 +36,7 @@ const About = ({animated}) => {
             </h2>
             <hr className='About__separator-white' />
             <p className='About__text text-faded'>
-              {`Diversity empowers innovation. Innovation is what companies look for in the talent they hire. Color For Code provides a platform for hiring employers and Black engineers and designers seeking opportunities to meet and fill the gap of racial inequality in the current tech landscape.`}
+              {`Diversity empowers innovation. Innovation is what you're looking for in your next hire. Color for Code is a technology recruitment platform. We're connecting Black software engineers and designers with companies like yours, building teams as colorful as your growing user base.`}
             </p>
           </Col>
         </Row>
@@ -92,7 +95,7 @@ const About = ({animated}) => {
             </h2>
             <hr className='About__separator-white' />
             <p className='About__text text-faded'>
-              {`It feels good to know that an employer is looking for someone like you when you walk into an interview. Color For Code is a platform that provides just that. We connect talented black designers and engineers with innovative companies that don't just talk about the value of diversity—they cultivate it.`}
+              {`It feels good to walk into an interview knowing the employer is looking for someone just like you. Color for Code is a technology recruitment platform that provides just that. We're connecting talented Black designers and engineers like you with innovative companies that don't just talk about the value of diversity—they cultivate it.`}
             </p>
           </Col>
         </Row>
@@ -108,7 +111,7 @@ const About = ({animated}) => {
             </h2>
             <hr className='About__separator' />
             <p className='About__text'>
-              Ready to find your next employee with us? Give us a call or send us an email and we will get back to you as soon as possible!
+              Ready to find your next employee with us? Give us a call or send us an email and we'll get back to you as soon as possible!
             </p>
           </Col>
           <Col className='text-center' xs={12} sm={12} md={12} lg={12}>
