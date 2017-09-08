@@ -69,22 +69,24 @@ const SearchAdvanced = props => {
           Remote
         </Checkbox>
       </FormGroup>
-      <FormGroup
-        controlId='zipcode'
-        className='SearchAdvanced__zipcode'
-        onChange={props.handleChange('zip_code')}
-      >
-        <ControlLabel>ZIP CODE</ControlLabel>
-        <FormControl type='tel' value={props.state.zip_code} />
-      </FormGroup>
-      <FormGroup
-        controlId='distance'
-        className='SearchAdvanced__distance'
-        onChange={props.handleChange('distance')}
-      >
-        <ControlLabel>MAX DISTANCE (miles)</ControlLabel>
-        <FormControl type='tel' value={props.state.distance} />
-      </FormGroup>
+      <div className='SearchAdvanced__input-container'>
+        <FormGroup
+          controlId='zipcode'
+          className='SearchAdvanced__zipcode'
+          onChange={props.handleChange('zip_code')}
+        >
+          <ControlLabel>ZIP CODE</ControlLabel>
+          <FormControl type='tel' value={props.state.zip_code} />
+        </FormGroup>
+        <FormGroup
+          controlId='distance'
+          className='SearchAdvanced__distance'
+          onChange={props.handleChange('distance')}
+        >
+          <ControlLabel>MAX DISTANCE (miles)</ControlLabel>
+          <FormControl type='tel' value={props.state.distance} />
+        </FormGroup>
+      </div>
       <FormGroup
         controlId='sort-by'
         name='SearchAdvanced__sort-by'
