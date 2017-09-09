@@ -159,6 +159,7 @@ class EditProfile extends Component {
     user.id = this.props.user.id
     // turn the set into an array (postgres rejects sets)
     user.employment_types = [...user.employment_types]
+    user.coords.crs = {type: 'name', properties: {name: 'EPSG:32661'}}
     this.clearForm()
     this.props.updateUser(user)
     this.props.uploadResume(this.props.user, this.refs.resume.state.file)

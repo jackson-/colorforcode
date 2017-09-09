@@ -55,9 +55,9 @@ const jobsReducer = (state = initialState, action) => {
       filtered: state.filtered ? [...state.filtered] : null
     }
     case CREATE_JOBS: return {
-      fetchingSelected: true,
+      fetchingSelected: false,
       selected: state.selected ? {...state.selected} : null,
-      fetchingAll: false,
+      fetchingAll: true,
       all: state.all ? [...state.all] : null,
       filtered: state.filtered ? [...state.filtered] : null
     }

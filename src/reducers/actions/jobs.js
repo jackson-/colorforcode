@@ -157,8 +157,9 @@ export const creatingNewJobs = (data, history) => dispatch => {
   axios.post('/api/jobs', data)
     .then(res => res.data)
     // if the job is successfully created, we fetch the updated jobs list
-    .then(newJobId => {
+    .then(updatedJobsList => {
       dispatch(whoami())
+      dispatch(receiveJobs(updatedJobsList))
       dispatch(receiveAlert({
         type: 'confirmation',
         style: 'success',

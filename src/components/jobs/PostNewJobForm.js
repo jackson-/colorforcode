@@ -34,7 +34,9 @@ class PostJobForm extends Component {
       cvc: null,
       token: null,
       status: 'open',
-      app_method: 'email'
+      app_method: 'email',
+      jobs: [],
+      skills: []
     }
   }
 
@@ -108,19 +110,22 @@ class PostJobForm extends Component {
       cvc: null,
       token: null,
       status: 'open',
-      app_method: 'email'
+      app_method: 'email',
+      jobs: [],
+      skills: []
     })
   }
 
   handleSubmit = event => {
     event.preventDefault()
-    const {user, createJobPosts, receiveSelectedSkills, history, selected} = this.props
+    let {user, createJobPosts, receiveSelectedSkills, history, selected} = this.props
     let {jobs, skills, ...job} = this.state
     job.employer_id = user.employer.id
     job.employment_types = [...this.state.employment_types]
     this.clearForm()
     jobs.push(job)
-    skills.push(selected.map((s) => s.id))
+    selected = selected.map((s) => s.id)
+    skills.push(selected)
     receiveSelectedSkills([])
     createJobPosts({jobs, skills}, history)
   }
@@ -135,24 +140,6 @@ class PostJobForm extends Component {
     skills.push(this.props.selected.map((s) => s.id))
     this.props.receiveSelectedSkills([])
     this.setState({jobs, skills})
-  }
-
-  _selectSkill = data => {
-    let skill_ids = data.split(',')
-    let new_skills = []
-    if (skill_ids[0] !== '') {
-      skill_ids.forEach((id) => {
-        this.props.skills.forEach((s) => {
-          if (s.id === parseInt(id, 10)) {
-            new_skills.push({label: s.title, value: s.id})
-          }
-        })
-      })
-    }
-    this.setState({
-      selectValue: [...new_skills],
-      selected_skills: skill_ids
-    })
   }
 
   render () {
@@ -219,8 +206,8 @@ class PostJobForm extends Component {
               name='employment_types'
               onChange={this.handleChange('employment_types')}>
               <ControlLabel>Employment Type(s)</ControlLabel>
-              <Checkbox value='Fulltime'>Full Time</Checkbox>
-              <Checkbox value='Parttime'>Part Time</Checkbox>
+              <Checkbox value='Full Time'>Full Time</Checkbox>
+              <Checkbox value='Part Time'>Part Time</Checkbox>
               <Checkbox value='Contract'>Contract</Checkbox>
               <Checkbox value='ContractToHire'>Contract to Hire</Checkbox>
               <Checkbox value='Internship'>Internship</Checkbox>

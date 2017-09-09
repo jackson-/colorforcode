@@ -24,33 +24,8 @@ export default class JobUpdateDisplay extends Component {
       compensation_type: this.props.job.compensation_type || '',
       travel_requirements: this.props.job.travel_requirements,
       country: 'US',
-      selectValue: this.formatInitialSkills() || [],
       employment_types: new Set([...this.props.job.employment_types]) || new Set([])
     }
-  }
-
-  formatInitialSkills = () => this.props.job.skills.map(skill => ({
-    label: skill.title,
-    value: skill.id
-  }))
-
-  _selectSkill = data => {
-    let skill_ids = data.split(',')
-    let new_skills = []
-
-    if (skill_ids[0] !== '') {
-      skill_ids.forEach((sk_id) => {
-        this.props.skills.forEach((s) => {
-          if (s.id === parseInt(sk_id, 10)) {
-            new_skills.push({label: s.title, value: s.id})
-          }
-        })
-      })
-    }
-    this.setState({
-      selectValue: [...new_skills],
-      selected_skills: skill_ids
-    })
   }
 
   handleDelete = event => {
@@ -121,7 +96,6 @@ export default class JobUpdateDisplay extends Component {
       country: 'US',
       compensation_type: this.props.job.compensation_type || '',
       pay_rate: this.props.job.pay_rate || '',
-      selectValue: this.formatInitialSkills() || '',
       employment_types: new Set([...this.props.job.employment_types]) || new Set([]),
       travel_requirements: this.props.job.travel_requirements
     })
@@ -135,7 +109,7 @@ export default class JobUpdateDisplay extends Component {
     job.employer_id = user.employer.id
     // change employment_types from Set to Array
     job.employment_types = [...this.state.employment_types]
-    job.status = 'open'
+    job.coords.crs = {type: 'name', properties: {name: 'EPSG:32661'}}
     const skills = selected.map(s => s.id)
     this.clearForm()
     updateJob({job, skills}, history)
@@ -164,13 +138,10 @@ export default class JobUpdateDisplay extends Component {
                     onChange={this.handleChange('title')}
                   />
                 </FormGroup>
-                <ControlLabel>
-                  KEY SKILLS
-                </ControlLabel>
-                <SkillTypeaheadSelect handleChange={this.handleChange} />
-                <HelpBlock>
-                  Type and use arrows to select skill, then hit 'Enter' to add selected skill.
-                </HelpBlock>
+                <SkillTypeaheadSelect
+                  label='KEY SKILLS'
+                  handleChange={this.handleChange}
+                />
                 <FormGroup controlId='description'>
                   <ControlLabel>JOB DESCRIPTION</ControlLabel>
                   <FormControl

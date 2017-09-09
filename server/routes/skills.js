@@ -12,7 +12,7 @@ module.exports = require('express').Router()
     const {skills} = req.body
     Skill.bulkCreate(skills)
       .then(() => Skill.findAll()) // bulkCreate doesn't return any params
-      .then(skills => res.json(skills))
+      .then(updatedSkills => res.json(updatedSkills))
       .catch(next)
   })
 

@@ -102,7 +102,7 @@ class App extends Component {
     console.log('HANDLING SKILLS - SELECTED: ', selected)
     const {createNewSkills, receiveSelectedSkills} = this.props
     // first we check for new skills and filter them out into a separate list
-    let selectedSkillsNew = selected.filter(skill => !!skill.className)
+    let selectedSkillsNew = selected.filter(skill => skill.className !== undefined)
     // then we filter existing skills into a separate list
     const selectedSkillsExisting = selected.filter(skill => !skill.className)
     // if the user made any new skills, we format them for Sequelize,
@@ -111,9 +111,9 @@ class App extends Component {
       selectedSkillsNew = selectedSkillsNew.map(skill => {
         return {title: skill.title, template: false}
       })
-      createNewSkills(selectedSkillsNew)
+      return createNewSkills(selectedSkillsNew, selectedSkillsExisting)
     }
-    receiveSelectedSkills([...selectedSkillsNew, ...selectedSkillsExisting])
+    receiveSelectedSkills(selected)
   }
 
   handleClickPostJob = event => {
@@ -379,7 +379,7 @@ const mapDispatchToProps = dispatch => ({
   saveJob: (userId, savedJobs) => dispatch(savingJob(userId, savedJobs)),
   getJobs: () => dispatch(gettingAllJobs()),
   getSkills: () => dispatch(gettingAllSkills()),
-  createNewSkills: skills => dispatch(creatingNewSkills(skills)),
+  createNewSkills: (skills, selected) => dispatch(creatingNewSkills(skills, selected)),
   receiveSelectedSkills: skills => dispatch(receiveSelectedSkills(skills)),
   filterJobs: query => dispatch(filteringJobs(query)),
   advancedFilterJobs: (bodyBuilder, coords, from) => {
