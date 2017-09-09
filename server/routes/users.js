@@ -1,9 +1,5 @@
 const db = require('APP/db')
 const {User, Employer, Skill, Project} = db
-const aws = require('aws-sdk')
-const S3_BUCKET = 'colorforcode'
-const ACCESS_KEY_ID = 'AKIAJBADUWOAWQFRHKKQ'
-const SECRET_ACCESS_KEY = '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'
 // const tinify = require('tinify')
 // tinify.key = 'lm8HbN3+BXgdBe9KvYLG3+KkS7SISwCHXcbW1ybx'
 
