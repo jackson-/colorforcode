@@ -30,11 +30,7 @@ export const whoami = (history, next, origin) => dispatch => {
           history.push(next)
           receiveNextRoute('')
         } else {
-          history.push(
-            user.is_employer
-              ? '/dashboard/manage-jobs'
-              : '/dashboard/saved-jobs'
-          )
+          history.push('/dashboard')
         }
       }
       if (origin === 'login') {
