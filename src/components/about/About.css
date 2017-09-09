@@ -6,20 +6,20 @@
 /* HEADER */
 .About__hero {
   background-image: url('../../img/women-whiteboard__xs.jpg');
-  background-position: center;
+  background-position: left;
   background-repeat: no-repeat;
   background-size: cover;
   color: white;
-  height: 100vh;
+  height: calc(100vh - 60px);
   width: 100%;
   margin: 0;
   text-align: center;
 }
 
 .hero-overlay {
-  height: 100vh;
+  height: inherit;
   width: 100%;
-  background: black;
+  background: #000000;
   opacity: .5;
   position: absolute;
   top: 0;
@@ -29,11 +29,11 @@
 .About__hero-header {
   z-index: 5;
   position: relative;
+  padding-top: 30%;
 }
 
 .About__hero-heading {
-  padding-top: 10%;
-  font-size: 30px;
+  font-size: 1.25em;
   font-weight: 700;
 }
 
@@ -46,14 +46,14 @@
 
 .About__hero-text {
   color: #FFFFFF;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 16px;
+  color: rgba(255, 255, 255, 0.9);
   font-weight: 300;
   margin-bottom: 50px;
+  font-size: 1.25em;
 }
 
 .About__text {
-  font-size: 16px;
+  font-size: 1em;
   line-height: 1.5;
   margin-bottom: 20px;
 }
@@ -98,7 +98,7 @@
 
 .text-faded {
   color: #FFFFFF;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .text-primary {
@@ -122,19 +122,22 @@
     text-align: center;
   }
 
-  .About__hero-heading {
+  .About__hero-header {
     padding-top: 13%;
-    font-size: 2.5em;
+  }
+
+  .About__hero-heading {
+    font-size: 3em;
   }
 
   .About__hero-text {
-    font-size: 18px;
     margin-left: auto;
     margin-right: auto;
     max-width: 65%;
   }
 
   .About__text {
+    font-size: .8em;
     margin: auto;
     max-width: 80%;
   }

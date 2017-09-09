@@ -166,7 +166,6 @@ module.exports = require('express').Router()
         status: 500
       }))
     }
-    console.log('AMOUNT', amount)
     const token = req.body.token
     stripe.charges.create({
       amount,
@@ -181,12 +180,13 @@ module.exports = require('express').Router()
         return Promise.map(jobs, (job, i) => {
           return Job.create(job)
             .then((created) => {
-              console.log('CREATE', created, 'I', typeof skills[i])
+              console.log('CREATE', created, 'SKILLS', skills[i])
               return created.addSkills(skills[i])
             })
         })
       })
-      .then(() => res.status(200).json({message: 'Jobs succesfully created!'}))
+      .then(() => Job.findAll())
+      .then(jobs => res.status(201).json(jobs))
       .catch(err => next(err))
   })
 

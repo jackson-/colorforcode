@@ -1,16 +1,15 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
-import { Row, Col, FormGroup, ControlLabel, FormControl, Button, Checkbox, HelpBlock } from 'react-bootstrap'
+import {
+  Row, Col, FormGroup, ControlLabel,
+  FormControl, Button, Checkbox } from 'react-bootstrap'
 import axios from 'axios'
 import { creatingNewJobs } from 'APP/src/reducers/actions/jobs'
-import { gettingAllSkills, receiveSelectedSkills } from 'APP/src/reducers/actions/skills'
+import { receiveSelectedSkills } from 'APP/src/reducers/actions/skills'
 import CreditCardFormControls from './CreditCard'
-import SkillTypeaheadSelect from 'APP/src/components/utilities/SkillTypeaheadSelect'
+import SkillTypeaheadSelect from '../utilities/SkillTypeaheadSelect'
 import PropTypes from 'prop-types'
-import 'react-select/dist/react-select.css'
-import 'react-virtualized/styles.css'
-import 'react-virtualized-select/styles.css'
 import '../auth/Form.css'
 
 class PostJobForm extends Component {
@@ -25,7 +24,6 @@ class PostJobForm extends Component {
       location: '',
       coords: '',
       zip_code: '',
-      selectValue: [],
       employment_types: new Set([]),
       pay_rate: '',
       compensation_type: 'Salary',
@@ -37,18 +35,13 @@ class PostJobForm extends Component {
       token: null,
       status: 'open',
       app_method: 'email',
-      jobs:[],
-      skills:[]
+      jobs: [],
+      skills: []
     }
   }
 
-  componentDidMount () {
-    const {skills} = this.props
-    if (!skills || skills.length === 0) this.props.getSkills()
-  }
-
   handleLocation = zip_code => {
-    axios.get(`http://maps.googleapis.com/maps/api/geocode/json?address=${zip_code}`)
+    axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${zip_code}`)
       .then(res => res.data)
       .then(json => {
         const address = json.results[0].address_components
@@ -67,7 +60,7 @@ class PostJobForm extends Component {
           : `${city}, ${state} ${country}`
         const coords = {
           type: 'Point',
-          coordinates: [parseFloat(geometry.lat), parseFloat(geometry.lng)],
+          coordinates: [parseFloat(geometry.lng), parseFloat(geometry.lat)],
           crs: {type: 'name', properties: {name: 'EPSG:32661'}}
         }
         this.setState({coords, zip_code, location})
@@ -117,20 +110,24 @@ class PostJobForm extends Component {
       cvc: null,
       token: null,
       status: 'open',
-      app_method: 'email'
+      app_method: 'email',
+      jobs: [],
+      skills: []
     })
   }
 
   handleSubmit = event => {
     event.preventDefault()
+    let {user, createJobPosts, receiveSelectedSkills, history, selected} = this.props
     let {jobs, skills, ...job} = this.state
-    job.employer_id = this.props.user.employer.id
+    job.employer_id = user.employer.id
     job.employment_types = [...this.state.employment_types]
     this.clearForm()
     jobs.push(job)
-    skills.push(this.props.selected.map((s) => s.id))
-    this.props.receiveSelectedSkills([])
-    this.props.createJobPosts({jobs, skills}, this.props.history)
+    selected = selected.map((s) => s.id)
+    skills.push(selected)
+    receiveSelectedSkills([])
+    createJobPosts({jobs, skills}, history)
   }
 
   addJob = event => {
@@ -143,24 +140,6 @@ class PostJobForm extends Component {
     skills.push(this.props.selected.map((s) => s.id))
     this.props.receiveSelectedSkills([])
     this.setState({jobs, skills})
-  }
-
-  _selectSkill = data => {
-    let skill_ids = data.split(',')
-    let new_skills = []
-    if (skill_ids[0] !== '') {
-      skill_ids.forEach((id) => {
-        this.props.skills.forEach((s) => {
-          if (s.id === parseInt(id, 10)) {
-            new_skills.push({label: s.title, value: s.id})
-          }
-        })
-      })
-    }
-    this.setState({
-      selectValue: [...new_skills],
-      selected_skills: skill_ids
-    })
   }
 
   render () {
@@ -178,13 +157,7 @@ class PostJobForm extends Component {
                 onChange={this.handleChange('title')}
               />
             </FormGroup>
-            <ControlLabel>
-              Key Skills
-            </ControlLabel>
             <SkillTypeaheadSelect handleChange={this.handleChange} />
-            <HelpBlock>
-              Type and use arrows to select skill, then hit 'Enter' to add selected skill.
-            </HelpBlock>
             <FormGroup controlId='description'>
               <ControlLabel>Job Description and Requirements</ControlLabel>
               <FormControl
@@ -233,8 +206,8 @@ class PostJobForm extends Component {
               name='employment_types'
               onChange={this.handleChange('employment_types')}>
               <ControlLabel>Employment Type(s)</ControlLabel>
-              <Checkbox value='Fulltime'>Full Time</Checkbox>
-              <Checkbox value='Parttime'>Part Time</Checkbox>
+              <Checkbox value='Full Time'>Full Time</Checkbox>
+              <Checkbox value='Part Time'>Part Time</Checkbox>
               <Checkbox value='Contract'>Contract</Checkbox>
               <Checkbox value='ContractToHire'>Contract to Hire</Checkbox>
               <Checkbox value='Internship'>Internship</Checkbox>
@@ -283,7 +256,6 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   createJobPosts: (data, history) => dispatch(creatingNewJobs(data, history)),
-  getSkills: post => dispatch(gettingAllSkills()),
   receiveSelectedSkills: skills => dispatch(receiveSelectedSkills(skills))
 })
 
@@ -294,8 +266,10 @@ PostJobForm.propTypes = {
   selected: PropTypes.arrayOf(PropTypes.object),
   createJobPost: PropTypes.func,
   animated: PropTypes.string,
-  handleNewSkills: PropTypes.func
+  handleNewSkills: PropTypes.func,
   // ^creates new skills if user made any custom ones (class method of App.js)
+  receiveSelectedSkills: PropTypes.func,
+  createJobPosts: PropTypes.func
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(PostJobForm))

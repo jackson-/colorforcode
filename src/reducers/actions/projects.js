@@ -106,7 +106,7 @@ export const uploadingScreenshot = (project, file) => dispatch => {
   const options = {headers: {'Content-Type': file.type}}
 
   axios.get(
-    `http://localhost:1337/api/projects/screenshots/sign-s3?&file-name=${name}&file-type=${file.type}`
+    `/api/projects/screenshots/sign-s3?&file-name=${name}&file-type=${file.type}`
   )
     .then(res => {
       axios.put(res.data.signedRequest, file, options)

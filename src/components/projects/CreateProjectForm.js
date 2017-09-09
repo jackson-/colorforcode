@@ -6,11 +6,8 @@ import ProjectFields from './ProjectFields'
 import { Row, Col } from 'react-bootstrap'
 import { creatingNewProject } from 'APP/src/reducers/actions/projects'
 import { gettingAllSkills } from 'APP/src/reducers/actions/skills'
-import 'react-select/dist/react-select.css'
-import 'react-virtualized/styles.css'
-import 'react-virtualized-select/styles.css'
-import '../auth/Form.css'
 import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
+import '../auth/Form.css'
 
 function arrowRenderer () {
   return (
@@ -41,7 +38,11 @@ class CreateProjectForm extends Component {
 
   handleChange = type => event => {
     const { value } = event.target
-    this.setState({[type]: value})
+    if (type === 'skills') {
+      this.props.handleNewSkills(value)
+    } else {
+      this.setState({[type]: value})
+    }
   }
 
   _selectSkill = data => {
@@ -91,6 +92,27 @@ class CreateProjectForm extends Component {
     this.props.createProject({project, skills})
   }
 
+  isInvalid = () => {
+    const {
+      title,
+      repo,
+      problem,
+      approach,
+      challenges,
+      outcome,
+      selectedSkills } = this.state
+
+    return !(
+      title &&
+      repo &&
+      problem &&
+      approach &&
+      challenges &&
+      outcome &&
+      selectedSkills
+    )
+  }
+
   render () {
     let skills = []
     if (this.props.skills) {
@@ -112,6 +134,7 @@ class CreateProjectForm extends Component {
             state={this.state}
             skills={skills}
             animated={animated}
+            isInvalid={this.isInvalid()}
           />
         </Col>
       </Row>
@@ -125,7 +148,8 @@ CreateProjectForm.propTypes = {
   history: PropTypes.object,
   user: PropTypes.any,
   skills: PropTypes.arrayOf(PropTypes.object),
-  animated: PropTypes.string
+  animated: PropTypes.string,
+  handleNewSkills: PropTypes.func
 }
 
 const mapStateToProps = state => ({

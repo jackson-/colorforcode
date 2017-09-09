@@ -9,7 +9,9 @@ class JobDetailPage extends Component {
   componentWillMount () {
     const {job, fetching, match, getJob} = this.props
     const {id} = match.params
-    if ((!job && !fetching) || (job && (job.id !== Number(id)) && !fetching)) getJob(id)
+    if ((!job && !fetching) || (job && (job.id !== Number(id)) && !fetching)) {
+      getJob(id)
+    }
   }
 
   render () {

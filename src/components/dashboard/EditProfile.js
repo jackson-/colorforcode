@@ -39,7 +39,7 @@ class EditProfile extends Component {
   }
 
   handleLocation = zip_code => {
-    axios.get(`http://maps.googleapis.com/maps/api/geocode/json?address=${zip_code}`)
+    axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${zip_code}`)
       .then(res => res.data)
       .then(json => {
         const address = json.results[0].address_components.filter(c => (
@@ -159,6 +159,7 @@ class EditProfile extends Component {
     user.id = this.props.user.id
     // turn the set into an array (postgres rejects sets)
     user.employment_types = [...user.employment_types]
+    user.coords.crs = {type: 'name', properties: {name: 'EPSG:32661'}}
     this.clearForm()
     this.props.updateUser(user)
     this.props.uploadResume(this.props.user, this.refs.resume.state.file)
