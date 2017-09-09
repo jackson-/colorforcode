@@ -1,14 +1,14 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { Row, Col, Button, FormGroup, Image,
-         FormControl, ControlLabel, Glyphicon } from 'react-bootstrap'
+import {
+  Row, Col, Button, FormGroup, Image,
+  FormControl, ControlLabel, Glyphicon } from 'react-bootstrap'
 import { uploadingAvatar } from '../../reducers/actions/users'
 import { uploadingScreenshot } from '../../reducers/actions/projects'
 import blankAvatar from './blank-avatar.png'
 
 class ImageUploader extends Component {
-
   constructor (props) {
     super(props)
     this.state = {
@@ -36,7 +36,7 @@ class ImageUploader extends Component {
   handleFile = event => {
     const reader = new FileReader()
     const file = event.target.files[0]
-    
+
     reader.onload = (upload) => {
       this.setState({
         file,
@@ -87,34 +87,34 @@ class ImageUploader extends Component {
         <Col xs={12} sm={12} md={12} lg={12}>
           {
             changeImg
-            ? (
-              <form onSubmit={this.handleSubmit} encType='multipart/form-data'>
-                <FormGroup controlId='image'>
-                  <ControlLabel srOnly>{label}</ControlLabel>
-                  <FormControl type='file' onChange={this.handleFile} />
-                </FormGroup>
-                <Button
-                  className='avatar-btn'
-                  bsSize='xs'
-                  disabled={this.state.processing || !this.state.data_uri}
-                  type='submit'
-                >
-                  Save Image
+              ? (
+                <form onSubmit={this.handleSubmit} encType='multipart/form-data'>
+                  <FormGroup controlId='image'>
+                    <ControlLabel srOnly>{label}</ControlLabel>
+                    <FormControl type='file' onChange={this.handleFile} />
+                  </FormGroup>
+                  <Button
+                    className='avatar-btn'
+                    bsSize='xs'
+                    disabled={this.state.processing || !this.state.data_uri}
+                    type='submit'
+                  >
+                    Save Image
+                  </Button>
+                  <Button
+                    className='avatar-btn'
+                    bsSize='xs'
+                    onClick={this.cancelChgImg}
+                  >
+                    Cancel
+                  </Button>
+                </form>
+              )
+              : (
+                <Button className='avatar-btn' bsSize='xs' onClick={this.handleChangeImg}>
+                  <Glyphicon glyph='camera' /> {buttonText}
                 </Button>
-                <Button
-                  className='avatar-btn'
-                  bsSize='xs'
-                  onClick={this.cancelChgImg}
-                >
-                  Cancel
-                </Button>
-              </form>
-            )
-            : (
-              <Button className='avatar-btn' bsSize='xs' onClick={this.handleChangeImg}>
-                <Glyphicon glyph='camera' /> {buttonText}
-              </Button>
-            )
+              )
           }
         </Col>
       </Row>

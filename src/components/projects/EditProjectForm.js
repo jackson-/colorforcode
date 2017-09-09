@@ -5,9 +5,6 @@ import PropTypes from 'prop-types'
 import { Row, Col, Button } from 'react-bootstrap'
 import ProjectFields from './ProjectFields'
 import ImageUploader from '../dashboard/ImageUploader'
-import 'react-select/dist/react-select.css'
-import 'react-virtualized/styles.css'
-import 'react-virtualized-select/styles.css'
 import '../auth/Form.css'
 import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
 import LoadingSpinner from '../utilities/LoadingSpinner'
@@ -57,7 +54,11 @@ class EditProjectForm extends Component {
 
   handleChange = type => event => {
     const { value } = event.target
-    this.setState({[type]: value})
+    if (type === 'skills') {
+      this.props.handleNewSkills(value)
+    } else {
+      this.setState({[type]: value})
+    }
   }
 
   formatSkills = skills => {
@@ -103,6 +104,27 @@ class EditProjectForm extends Component {
     this.props.updateProject({project, skills}, this.props.history)
   }
 
+  isInvalid = () => {
+    const {
+      title,
+      repo,
+      problem,
+      approach,
+      challenges,
+      outcome,
+      selectedSkills } = this.state
+
+    return !(
+      title &&
+      repo &&
+      problem &&
+      approach &&
+      challenges &&
+      outcome &&
+      selectedSkills
+    )
+  }
+
   handleDelete = event => {
     event.preventDefault()
     const {project, history} = this.props
@@ -112,7 +134,8 @@ class EditProjectForm extends Component {
   render () {
     let {project, selected, animated} = this.props
     const {loading} = this.state
-    console.log('PROJECT LOADING: ', loading)
+    console.log(this.state)
+
     return loading
       ? <LoadingSpinner />
       : (
@@ -131,6 +154,7 @@ class EditProjectForm extends Component {
               skills={selected}
               project={project}
               formatSkills={this.formatSkills}
+              isInvalid={this.isInvalid()}
             />
             <div style={{background: '#323638', padding: '10px'}}>
               <ImageUploader
@@ -163,7 +187,8 @@ EditProjectForm.propTypes = {
   deleteProject: PropTypes.func,
   getProject: PropTypes.func,
   fetchingProject: PropTypes.bool,
-  animated: PropTypes.string
+  animated: PropTypes.string,
+  handleNewSkills: PropTypes.func
 }
 
 const mapStateToProps = state => ({

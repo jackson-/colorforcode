@@ -5,7 +5,6 @@ import PropTypes from 'prop-types'
 import './ManageJobs.css'
 
 class Projects extends Component {
-
   mostRecentDate = project => {
     const {created_at, updated_at} = project
     if (Date.parse(created_at) < Date.parse(updated_at)) {
@@ -67,6 +66,7 @@ Projects.propTypes = {
   saveJob: PropTypes.func,
   unsaveJob: PropTypes.func,
   projects: PropTypes.array,
+  deleteProject: PropTypes.func,
   history: PropTypes.object,
   animated: PropTypes.string
 }

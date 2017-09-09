@@ -4,11 +4,7 @@ import {
   FormControl, Button, Checkbox, HelpBlock } from 'react-bootstrap'
 import axios from 'axios'
 import PropTypes from 'prop-types'
-// import VirtualizedSelect from 'react-virtualized-select'
 import SkillTypeaheadSelect from '../utilities/SkillTypeaheadSelect'
-// import 'react-select/dist/react-select.css'
-// import 'react-virtualized/styles.css'
-// import 'react-virtualized-select/styles.css'
 import '../auth/Form.css'
 
 export default class JobUpdateDisplay extends Component {
