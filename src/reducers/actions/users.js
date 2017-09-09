@@ -5,6 +5,8 @@ import {
   DONE_UPLOADING, REQUEST_USER, REQUEST_FILTERED_USERS } from '../constants'
 import { whoami } from './auth'
 import { receiveAlert } from './alert'
+import storage from 'APP/firebase'
+const storageRef = storage.ref()
 
 /* --------- PURE ACTION CREATORS --------- */
 
@@ -130,15 +132,15 @@ export const updatingUser = (user, savedJobs) => dispatch => {
 }
 
 export const uploadingAvatar = (user, file) => dispatch => {
+  const picture = storageRef.child(`avatars/${user.id}`)
   dispatch(beginUploading())
-  user.image_url = `https://colorforcode.s3.amazonaws.com/colorforcode/avatars/${file.name}`
-  const options = {headers: {'Content-Type': file.type}}
-  axios.get(
-    `/api/users/avatars/sign-s3?&file-name=${file.name}&file-type=${file.type}`
-  )
-    .then(res => axios.put(res.data.signedRequest, file, options))
-    .then(() => dispatch(updatingUser(user)))
-    .then(() => dispatch(doneUploading()))
+  storageRef.put(picture)
+    .then(() => storageRef.getDownloadURL())
+    .then(url => {
+      user.image_url = url
+      dispatch(updatingUser(user))
+      dispatch(doneUploading())
+    })
     .catch((err) => {
       console.error(err)
       dispatch(receiveAlert({
@@ -153,21 +155,22 @@ export const uploadingAvatar = (user, file) => dispatch => {
 
 export const uploadingResume = (user, file) => dispatch => {
   dispatch(beginUploading())
-  user.resume_url = `https://colorforcode.s3.amazonaws.com/colorforcode/resumes/${file.name}`
-  const options = {headers: {'Content-Type': file.type}}
-  axios.get(
-    `/api/users/resumes/sign-s3?&file-name=${file.name}&file-type=${file.type}`
-  )
-    .then(res => axios.put(res.data.signedRequest, file, options))
-    .then(() => dispatch(updatingUser(user)))
-    .then(() => dispatch(doneUploading()))
+  const resume = storageRef.child(`resumes/${user.id}`)
+  dispatch(beginUploading())
+  storageRef.put(resume)
+    .then(() => storageRef.getDownloadURL())
+    .then(url => {
+      user.resume_url = url
+      dispatch(updatingUser(user))
+      dispatch(doneUploading())
+    })
     .catch((err) => {
       console.error(err)
       dispatch(receiveAlert({
         type: 'error',
         style: 'danger',
         title: 'Uh Oh!',
-        body: 'Sorry, we\'re having trouble uploading your resume. Please try again.',
+        body: 'Sorry, we\'re having trouble uploading your resume. Please try again later.',
         next: null
       }))
     })

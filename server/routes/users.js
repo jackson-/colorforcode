@@ -7,11 +7,11 @@ module.exports = require('express').Router()
 
   .get('/', (req, res, next) => {
     User.findAll({
+      where: {is_employer: false},
       include: [{
         model: Project,
         include: [Skill]
-      }],
-      limit: 10
+      }]
     })
       .then(result => res.status(200).json(result))
       .catch(next)
@@ -75,69 +75,10 @@ module.exports = require('express').Router()
       }).catch(next)
   })
 
-  .post('/search/advanced', (req, res, next) => {
-    const {body} = req
-    esClient.search({body, index: 'data', type: 'user'})
-      .then(advancedResults => res.status(200).json(advancedResults.hits.hits))
-      .catch(next)
-  })
-
-  .get('/avatars/sign-s3', (req, res) => {
-    const fileName = req.query['file-name']
-    const fileType = req.query['file-type']
-    const s3 = new aws.S3({
-      accessKeyId: ACCESS_KEY_ID,
-      secretAccessKey: SECRET_ACCESS_KEY
-    })
-    const s3Params = {
-      Bucket: S3_BUCKET,
-      Key: `avatars/${fileName}`,
-      Expires: 60,
-      ContentType: fileType,
-      ACL: 'public-read'
-    }
-    s3.getSignedUrl('putObject', s3Params, (err, data) => {
-      if (err) {
-        console.error(err)
-        return res.end()
-      }
-      const returnData = {
-        signedRequest: data,
-        url: `https://${S3_BUCKET}.s3.amazonaws.com/${fileName}`
-      }
-      res.write(JSON.stringify(returnData))
-      res.end()
-    })
-  })
-
-  .get('/resumes/sign-s3', (req, res) => {
-    const fileName = req.query['file-name']
-    const fileType = req.query['file-type']
-    const s3 = new aws.S3({
-      accessKeyId: ACCESS_KEY_ID,
-      secretAccessKey: SECRET_ACCESS_KEY
-    })
-    const s3Params = {
-      Bucket: S3_BUCKET,
-      Key: `resumes/${fileName}`,
-      Expires: 60,
-      ContentType: fileType,
-      ACL: 'public-read'
-    }
-
-    s3.getSignedUrl('putObject', s3Params, (err, data) => {
-      if (err) {
-        console.error(err)
-        return res.end()
-      }
-      const returnData = {
-        signedRequest: data,
-        url: `https://${S3_BUCKET}.s3.amazonaws.com/${fileName}`
-      }
-      res.write(JSON.stringify(returnData))
-      res.end()
-    })
-  })
+  // .post('/search/advanced', (req, res, next) => {
+  //   const {body} = req
+  //
+  // })
 
   .get('/:id', (req, res, next) => {
     User.findById(req.params.id, {
