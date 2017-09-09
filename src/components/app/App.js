@@ -99,7 +99,6 @@ class App extends Component {
   }
 
   handleNewSkills = selected => {
-    console.log('HANDLING SKILLS - SELECTED: ', selected)
     const {createNewSkills, receiveSelectedSkills} = this.props
     // first we check for new skills and filter them out into a separate list
     let selectedSkillsNew = selected.filter(skill => skill.className !== undefined)

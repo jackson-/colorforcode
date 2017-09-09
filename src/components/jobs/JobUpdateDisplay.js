@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import {
   Row, Col, FormGroup, ControlLabel,
-  FormControl, Button, Checkbox, HelpBlock } from 'react-bootstrap'
+  FormControl, Button, Checkbox } from 'react-bootstrap'
 import axios from 'axios'
 import PropTypes from 'prop-types'
 import SkillTypeaheadSelect from '../utilities/SkillTypeaheadSelect'
