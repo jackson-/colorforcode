@@ -88,7 +88,7 @@ const ApplicantDashboard = ({
               <Projects deleteProject={deleteProject} user={user} animated={animated} />
             )} />
             <Route exact path='/dashboard/add-project' component={() => (
-              <ProjectCreate animated={animated} />
+              <ProjectCreate animated={animated} handleNewSkills={handleNewSkills} />
             )} />
             <Route exact path='/dashboard/edit-project/:id' component={({match, history}) => {
               return (

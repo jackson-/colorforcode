@@ -24,8 +24,8 @@ const skillsReducer = (state = initialState, action) => {
       selected: action.selected
     }
     case RECEIVE_PROJECT: return {
-      all: action.skills,
-      selected: [...action.project.skills] || null
+      all: action.skills.all ? action.skills.all : ([...state.all] || null),
+      selected: action.skills.selected
     }
     case RECEIVE_JOB: return {
       all: action.skills,

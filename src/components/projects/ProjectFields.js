@@ -21,7 +21,7 @@ const ProjectFields = ({
       <ControlLabel>Project Title</ControlLabel>
       <FormControl
         type='text'
-        value={project ? project.title : state.title}
+        value={state.title}
         onChange={handleChange('title')}
       />
     </FormGroup>
@@ -30,7 +30,7 @@ const ProjectFields = ({
       <ControlLabel>Github Repo Link</ControlLabel>
       <FormControl
         type='url'
-        value={project ? project.repo : state.repo}
+        value={state.repo}
         onChange={handleChange('repo')}
       />
     </FormGroup>
@@ -38,7 +38,7 @@ const ProjectFields = ({
       <ControlLabel>Other External Link</ControlLabel>
       <FormControl
         type='url'
-        value={project ? project.site : state.site}
+        value={state.site}
         onChange={handleChange('site')}
       />
     </FormGroup>
@@ -47,7 +47,7 @@ const ProjectFields = ({
       <FormControl
         type='text'
         componentClass='textarea'
-        value={project ? project.problem : state.problem}
+        value={state.problem}
         onChange={handleChange('problem')}
         placeholder={`What problem were you exploring, analyzing, and/or solving with this project? What made you interested in this problem?`}
       />
@@ -57,7 +57,7 @@ const ProjectFields = ({
       <FormControl
         type='text'
         componentClass='textarea'
-        value={project ? project.approach : state.approach}
+        value={state.approach}
         onChange={handleChange('approach')}
         placeholder={`Describe the process you undertook in building this project.`}
       />
@@ -67,7 +67,7 @@ const ProjectFields = ({
       <FormControl
         type='text'
         componentClass='textarea'
-        value={project ? project.challenges : state.challenges}
+        value={state.challenges}
         onChange={handleChange('challenges')}
         placeholder={`Discuss trade-offs you had to make, things you got stuck on (and how you went about figuring things out), etc`}
       />
@@ -77,7 +77,7 @@ const ProjectFields = ({
       <FormControl
         type='text'
         componentClass='textarea'
-        value={project ? project.outcome : state.outcome}
+        value={state.outcome}
         onChange={handleChange('outcome')}
         placeholder={`Briefly sum up any findings, conclusions, takeaways, things you'd change were you to continue on with the project, or "Ahaa!" moments, etc.`}
       />

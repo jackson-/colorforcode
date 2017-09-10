@@ -5,6 +5,8 @@ import {
   DONE_UPLOADING, REQUEST_USER, REQUEST_FILTERED_USERS } from '../constants'
 import { whoami } from './auth'
 import { receiveAlert } from './alert'
+import storage from 'APP/firebase'
+const storageRef = storage.ref()
 
 /* --------- PURE ACTION CREATORS --------- */
 
@@ -107,6 +109,7 @@ export const creatingNewEmployer = employer => dispatch => {
 export const updatingUser = (user, savedJobs) => dispatch => {
   // set loading state to true to trigger UI changes
   // update the user
+  user.coords.crs = {type: 'name', properties: {name: 'EPSG:32661'}}
   axios.put(`/api/users/${user.id}`, {user, savedJobs})
     .then(res => res.data)
     // if the user is successfully updated, we fetch the updated users list
@@ -131,14 +134,14 @@ export const updatingUser = (user, savedJobs) => dispatch => {
 
 export const uploadingAvatar = (user, file) => dispatch => {
   dispatch(beginUploading())
-  user.image_url = `https://colorforcode.s3.amazonaws.com/colorforcode/avatars/${file.name}`
-  const options = {headers: {'Content-Type': file.type}}
-  axios.get(
-    `/api/users/avatars/sign-s3?&file-name=${file.name}&file-type=${file.type}`
-  )
-    .then(res => axios.put(res.data.signedRequest, file, options))
-    .then(() => dispatch(updatingUser(user)))
-    .then(() => dispatch(doneUploading()))
+  const avatarRef = storageRef.child(`avatars/${user.id}`)
+  avatarRef.put(file)
+    .then(() => avatarRef.getDownloadURL())
+    .then(url => {
+      user.image_url = url
+      dispatch(updatingUser(user))
+      dispatch(doneUploading())
+    })
     .catch((err) => {
       console.error(err)
       dispatch(receiveAlert({
@@ -153,21 +156,22 @@ export const uploadingAvatar = (user, file) => dispatch => {
 
 export const uploadingResume = (user, file) => dispatch => {
   dispatch(beginUploading())
-  user.resume_url = `https://colorforcode.s3.amazonaws.com/colorforcode/resumes/${file.name}`
-  const options = {headers: {'Content-Type': file.type}}
-  axios.get(
-    `/api/users/resumes/sign-s3?&file-name=${file.name}&file-type=${file.type}`
-  )
-    .then(res => axios.put(res.data.signedRequest, file, options))
-    .then(() => dispatch(updatingUser(user)))
-    .then(() => dispatch(doneUploading()))
+  const resumeRef = storageRef.child(`resumes/${user.id}`)
+  dispatch(beginUploading())
+  resumeRef.put(file)
+    .then(() => resumeRef.getDownloadURL())
+    .then(url => {
+      user.resume_url = url
+      dispatch(updatingUser(user))
+      dispatch(doneUploading())
+    })
     .catch((err) => {
       console.error(err)
       dispatch(receiveAlert({
         type: 'error',
         style: 'danger',
         title: 'Uh Oh!',
-        body: 'Sorry, we\'re having trouble uploading your resume. Please try again.',
+        body: 'Sorry, we\'re having trouble uploading your resume. Please try again later.',
         next: null
       }))
     })

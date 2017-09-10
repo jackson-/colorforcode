@@ -117,6 +117,7 @@
   background: none;
   border: 1px solid #9FA5A9;
   border-radius: 0;
+  margin-bottom: 25px;
 }
 
 .screenshot-placeholder {
@@ -271,6 +272,7 @@ and (min-width: 992px) {
 
   .summary {
     padding: 50px;
-    height: fill;
+    height: 100%;
+    min-height: 100vh;
   }
 }

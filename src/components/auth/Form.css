@@ -57,6 +57,8 @@
 }
 
 .EditProfile,
+.EditProject,
+.CreateProject,
 .PostJobForm,
 .UpdateJobForm {
   padding: 10px 25px 25px 25px;
@@ -65,6 +67,8 @@
 
 .EditProfile-header,
 .PostJobForm-header,
+.EditProject-header,
+.CreateProject-header,
 .UpdateJobForm-header {
   font-family: Lato Bold;
   text-transform: uppercase;
@@ -83,6 +87,8 @@
 }
 
 .EditProfile .form-group input,
+.EditProject .form-group input,
+.CreateProject .form-group input,
 .PostJobForm .form-group input,
 .UpdateJobForm .form-group input {
   box-shadow: none;
@@ -177,6 +183,10 @@ input[type=file] {
 
 .EditProfile input[type=file] {
   padding: 15px 0 25px;
+}
+
+.EditProject input[type=file] {
+  color: #FFFFFF;
 }
 
 @media only screen

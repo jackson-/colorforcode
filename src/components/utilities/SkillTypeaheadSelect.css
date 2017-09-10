@@ -16,19 +16,25 @@
 }
 
 .Select--multi .Select-value {
-  background: rgba(18,205,106, 0.08) !important;
-  border: solid 1px rgba(18,205,106, 0.24) !important;
-  color: #01C688 !important;
+  background: rgba(18,205,106, 0.08);
+  border: solid 1px rgba(18,205,106, 0.24);
+  color: #01C688;
   width: max-content;
   border-radius: 3px;
   margin: 5px 2px;
   display: flex;
   align-items: center;
-  font-size: 16px !important;
+  font-size: 16px;
 }
 
 .Select--multi .Select-value-icon {
   padding-top: 3px;
+  border-color: rgba(18,205,106, 0.24);
+}
+
+.Select--multi .Select-value-icon:hover {
+  color: #01C688;
+  background: rgba(1, 198, 136, 0.15);
 }
 
 .Select--multi .Select-value-label {

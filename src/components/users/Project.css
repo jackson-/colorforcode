@@ -54,6 +54,9 @@
 @media only screen and (min-width: 768px) {
   .ProjectModal .icons {
     padding-left: 25px;
-    margin-top: -25px
+    margin-top: -20px;
+  }
+  .modal.in .modal-dialog {
+    height: 130vh;
   }
 }
