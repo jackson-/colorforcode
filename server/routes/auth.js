@@ -57,9 +57,7 @@ passport.deserializeUser(
   (id, done) => {
     debug('will deserialize user.id=%d', id)
     User.findOne({
-      where: {
-        uuid: id
-      },
+      where: {id},
       include: [
         {model: Employer,
           include: [{
