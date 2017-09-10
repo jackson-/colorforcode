@@ -2,7 +2,8 @@ import axios from 'axios'
 import {
   RECEIVE_PROJECT, REQUEST_PROJECT,
   CREATE_PROJECT, UPDATE_PROJECT, DELETE_PROJECT } from '../constants'
-import { beginUploading, doneUploading, whoami } from './users'
+import { beginUploading, doneUploading } from './users'
+import { whoami } from './auth'
 import { receiveAlert } from './alert'
 import storage from 'APP/firebase'
 const storageRef = storage.ref()
@@ -44,11 +45,11 @@ export const gettingProjectById = (id) => dispatch => {
     .catch(err => console.error(`Mang I couldn't find the project! ${err.stack}`))
 }
 
-export const creatingNewProject = (projectPost) => dispatch => {
+export const creatingNewProject = ({project, skills}) => dispatch => {
   // set loading state to true to trigger UI changes
   dispatch(createNewProject())
   // create the new project
-  axios.post('/api/projects', projectPost)
+  axios.post('/api/projects', {project, skills})
     .then(res => res.data)
   // if the project is successfully created, we receive the update to date
   // projects list by regrabbing the user (projects are eager loaded)
@@ -75,20 +76,24 @@ export const creatingNewProject = (projectPost) => dispatch => {
     })
 }
 
-export const updatingProject = (postData) => dispatch => {
+export const updatingProject = (postData, screenshot) => dispatch => {
   dispatch(updateProject())
   axios.put(`/api/projects/${postData.project.id}`, postData)
     .then(project => {
-      dispatch(whoami)
-      return dispatch(receiveProject(project))
+      dispatch(whoami())
+      return dispatch(receiveProject(project, {selected: project.skills}))
     })
-    .then(() => dispatch(receiveAlert({
-      type: 'confirmation',
-      style: 'success',
-      title: 'Success!',
-      body: 'Your project has been successfully updated.',
-      next: '/dashboard/projects'
-    })))
+    .then(() => {
+      if (!screenshot) {
+        dispatch(receiveAlert({
+          type: 'confirmation',
+          style: 'success',
+          title: 'Success!',
+          body: 'Your project has been successfully updated.',
+          next: '/dashboard/projects'
+        }))
+      }
+    })
     .catch(err => {
       dispatch(receiveAlert({
         type: 'error',
@@ -102,14 +107,14 @@ export const updatingProject = (postData) => dispatch => {
 }
 
 export const uploadingScreenshot = (project, file) => dispatch => {
+  const name = `${project.title.split(' ').join('-')}-${project.user_id}`
+  const screenshotRef = storageRef.child(`screenshots/${name}`)
   dispatch(beginUploading())
-  const screenshot = storageRef.child(`screenshots/${project.user_id}`)
-  dispatch(beginUploading())
-  storageRef.put(screenshot)
-    .then(() => storageRef.getDownloadURL())
+  screenshotRef.put(file)
+    .then(() => screenshotRef.getDownloadURL())
     .then(url => {
       project.screenshot = url
-      dispatch(updatingProject(project))
+      dispatch(updatingProject({project}, 'screenshot'))
       dispatch(doneUploading())
     })
     .catch((err) => {

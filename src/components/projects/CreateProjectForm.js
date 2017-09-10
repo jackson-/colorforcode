@@ -7,6 +7,7 @@ import { Row, Col } from 'react-bootstrap'
 import { creatingNewProject } from 'APP/src/reducers/actions/projects'
 import { gettingAllSkills } from 'APP/src/reducers/actions/skills'
 import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
+import ImageUploader from '../dashboard/ImageUploader'
 import '../auth/Form.css'
 
 function arrowRenderer () {
@@ -26,9 +27,7 @@ class CreateProjectForm extends Component {
       problem: '',
       approach: '',
       challenges: '',
-      outcome: '',
-      selectValue: [],
-      selectedSkills: []
+      outcome: ''
     }
   }
 
@@ -37,30 +36,14 @@ class CreateProjectForm extends Component {
   }
 
   handleChange = type => event => {
-    const { value } = event.target
+    let value = Array.isArray(event)
+      ? event
+      : event.target.value
     if (type === 'skills') {
       this.props.handleNewSkills(value)
     } else {
       this.setState({[type]: value})
     }
-  }
-
-  _selectSkill = data => {
-    let skillIds = data.split(',')
-    let newSkills = []
-    if (skillIds[0] !== '') {
-      skillIds.forEach((id) => {
-        this.props.skills.forEach((s) => {
-          if (s.id === parseInt(id, 10)) {
-            newSkills.push({label: s.title, value: s.id})
-          }
-        })
-      })
-    }
-    this.setState({
-      selectValue: [...newSkills],
-      selectedSkills: skillIds
-    })
   }
 
   clearForm = () => {
@@ -72,24 +55,18 @@ class CreateProjectForm extends Component {
       problem: '',
       approach: '',
       challenges: '',
-      outcome: '',
-      selectValue: [],
-      selectedSkills: []
+      outcome: ''
     })
   }
 
   handleSubmit = event => {
     event.preventDefault()
     const project = this.state
-    project.user = this.props.user
-
-    const skills = []
-    this.state.selectValue.forEach((skill) => {
-      skills.push(skill.value)
-    })
-
+    let {user, skills, createProject} = this.props
+    skills = skills.map(s => s.id)
+    project.user_id = user.id
     this.clearForm()
-    this.props.createProject({project, skills})
+    createProject({project, skills})
   }
 
   isInvalid = () => {
@@ -99,8 +76,7 @@ class CreateProjectForm extends Component {
       problem,
       approach,
       challenges,
-      outcome,
-      selectedSkills } = this.state
+      outcome } = this.state
 
     return !(
       title &&
@@ -108,31 +84,23 @@ class CreateProjectForm extends Component {
       problem &&
       approach &&
       challenges &&
-      outcome &&
-      selectedSkills
+      outcome
     )
   }
 
   render () {
-    let skills = []
-    if (this.props.skills) {
-      this.props.skills.forEach(s => {
-        skills.push({label: s.title, value: s.id})
-      })
-    }
     const {animated} = this.props
     return (
-      <Row className={`PostJobForm fadeIn ${animated}`}>
+      <Row className={`CreateProject fadeIn ${animated}`}>
         <ScrollToTopOnMount />
         <Col xs={12} sm={6} md={6} lg={6}>
-          <h1 className='PostJobForm-header'>Add New Project</h1>
+          <h1 className='CreateProject-header'>Add New Project</h1>
           <ProjectFields
             handleSubmit={this.handleSubmit}
             handleChange={this.handleChange}
             selectSkill={this._selectSkill}
             arrowRenderer={arrowRenderer}
             state={this.state}
-            skills={skills}
             animated={animated}
             isInvalid={this.isInvalid()}
           />
@@ -154,7 +122,7 @@ CreateProjectForm.propTypes = {
 
 const mapStateToProps = state => ({
   user: state.auth.currentUser,
-  skills: state.skills.all
+  skills: state.skills.selected
 })
 
 const mapDispatchToProps = dispatch => ({

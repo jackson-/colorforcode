@@ -7,7 +7,6 @@ const config = {
 }
 
 firebase.initializeApp(config)
+const storage = firebase.storage()
 
-module.exports = {
-  storage: firebase.storage()
-}
+module.exports = storage

@@ -57,6 +57,7 @@ export const login = (email, password, history, next) => dispatch => {
 
 export const creatingNewUser = (user, history, next) => dispatch => {
   // set loading state to true to trigger UI changes
+  user.coords.crs = {type: 'name', properties: {name: 'EPSG:32661'}}
   dispatch(createNewUser())
   // create the new user
   axios.post('/api/users', user)

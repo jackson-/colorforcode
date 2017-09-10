@@ -19,15 +19,13 @@ class EditProjectForm extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      title: '',
-      site: '',
-      repo: '',
-      problem: '',
-      approach: '',
-      challenges: '',
-      outcome: '',
-      selectValue: [],
-      selectedSkills: [],
+      title: this.props.project ? this.props.project.title : '',
+      site: this.props.project ? this.props.project.site : '',
+      repo: this.props.project ? this.props.project.repo : '',
+      problem: this.props.project ? this.props.project.problem : '',
+      approach: this.props.project ? this.props.project.approach : '',
+      challenges: this.props.project ? this.props.project.challenges : '',
+      outcome: this.props.project ? this.props.project.outcome : '',
       loading: true
     }
   }
@@ -39,8 +37,19 @@ class EditProjectForm extends Component {
       if (!project || project.id !== Number(id)) {
         getProject(id)
       } else {
-        this.setState({loading: false})
+        this.setState({
+          title: project.title,
+          site: project.site,
+          repo: project.repo,
+          problem: project.problem,
+          approach: project.approach,
+          challenges: project.challenges,
+          outcome: project.outcome,
+          loading: false
+        })
       }
+    } else if (fetchingProject && project !== null && project.id === id) {
+      this.setState({loading: false})
     }
   }
 
@@ -48,12 +57,23 @@ class EditProjectForm extends Component {
     const {match} = this.props
     const {id} = match.params
     if (nextProps.project && nextProps.project.id === Number(id)) {
-      this.setState({loading: false})
+      this.setState({
+        title: nextProps.project.title,
+        site: nextProps.project.site,
+        repo: nextProps.project.repo,
+        problem: nextProps.project.problem,
+        approach: nextProps.project.approach,
+        challenges: nextProps.project.challenges,
+        outcome: nextProps.project.outcome,
+        loading: false
+      })
     }
   }
 
   handleChange = type => event => {
-    const { value } = event.target
+    let value = Array.isArray(event)
+      ? event
+      : event.target.value
     if (type === 'skills') {
       this.props.handleNewSkills(value)
     } else {
@@ -61,47 +81,16 @@ class EditProjectForm extends Component {
     }
   }
 
-  formatSkills = skills => {
-    if (skills) {
-      return skills.map(skill => ({
-        label: skill.title,
-        value: skill.id
-      }))
-    }
-    return null
-  }
-
-  _selectSkill = data => {
-    let skillIds = data.split(',')
-    let newSkills = []
-    if (skillIds[0] !== '') {
-      skillIds.forEach((id) => {
-        this.props.skills.forEach((s) => {
-          if (s.id === parseInt(id, 10)) {
-            newSkills.push({label: s.title, value: s.id})
-          }
-        })
-      })
-    }
-    this.setState({
-      selectValue: [...newSkills],
-      selectedSkills: skillIds
-    })
-  }
-
   handleSubmit = event => {
     event.preventDefault()
     let skills, project
-
+    const {updateProject, selected} = this.props
+    const {id, user_id} = this.props.project
     project = this.state
-    project.user_id = this.props.project.user_id
-    project.id = this.props.project.id
-    skills = this.state.selectedSkills
-      ? this.state.selectedSkills
-      : project.selectValue.map(s => s.id)
-    delete project.selectValue
-    delete project.selectedSkills
-    this.props.updateProject({project, skills}, this.props.history)
+    project.user_id = user_id
+    project.id = id
+    skills = selected.map(s => s.id)
+    updateProject({project, skills})
   }
 
   isInvalid = () => {
@@ -111,17 +100,15 @@ class EditProjectForm extends Component {
       problem,
       approach,
       challenges,
-      outcome,
-      selectedSkills } = this.state
+      outcome } = this.state
 
-    return !(
-      title &&
-      repo &&
-      problem &&
-      approach &&
-      challenges &&
-      outcome &&
-      selectedSkills
+    return (
+      !title &&
+      !repo &&
+      !problem &&
+      !approach &&
+      !challenges &&
+      !outcome
     )
   }
 
@@ -134,15 +121,13 @@ class EditProjectForm extends Component {
   render () {
     let {project, selected, animated} = this.props
     const {loading} = this.state
-    console.log(this.state)
-
     return loading
       ? <LoadingSpinner />
       : (
-        <Row className='EditProfile'>
+        <Row className='EditProject'>
           <ScrollToTopOnMount />
           <Col xs={12} sm={6} md={6} lg={6}>
-            <h1 className={`EditProfile-header fadeIn ${animated}`}>
+            <h1 className={`EditProject-header fadeIn ${animated}`}>
               EDIT PROJECT
             </h1>
             <ProjectFields
@@ -156,7 +141,7 @@ class EditProjectForm extends Component {
               formatSkills={this.formatSkills}
               isInvalid={this.isInvalid()}
             />
-            <div style={{background: '#323638', padding: '10px'}}>
+            <div style={{background: '#323638', padding: '25px 10px 10px', margin: '15px 0'}}>
               <ImageUploader
                 project={project}
                 label='Project Screenshot'

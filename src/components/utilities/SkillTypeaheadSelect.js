@@ -25,7 +25,6 @@ class SkillTypeaheadSelect extends Component {
         <Creatable
           multi
           clearable={false}
-          autofocus
           options={skills}
           onChange={handleChange('skills')}
           value={selected}

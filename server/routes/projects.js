@@ -5,11 +5,8 @@ const {Project, Skill, User} = db
 module.exports = require('express').Router()
 
   .post('/', (req, res, next) => {
-    const {skills} = req.body
-    const {user} = req.body.project
-    req.body.project.user_id = user.id
-    Project.create(req.body.project)
-      .then(createdProject => createdProject.setUser(user.id))
+    const {skills, project} = req.body
+    Project.create(project)
       .then(createdProject => createdProject.addSkills(skills))
       .then((addedSkills) => res.sendStatus(201))
       .catch(next)
@@ -26,7 +23,7 @@ module.exports = require('express').Router()
           project = foundProject
           return Skill.findAll()
         })
-        .then(skills => res.json({skills, project}))
+        .then(all => res.json({skills: {all, selected: project.skills}, project}))
         .catch(next)
     })
 

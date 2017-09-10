@@ -21,7 +21,7 @@ const PortfolioCard = ({opacity, title, src, skills, handleClick, handleOnLoad})
         <h4>{title}</h4>
         <Chips
           words={skills}
-          type={'round-bordered'}
+          type={'square-bordered'}
           align={'center'}
           justify={'flex-start'}
           margin={'10px 0'}

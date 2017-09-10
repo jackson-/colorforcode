@@ -109,6 +109,7 @@ export const creatingNewEmployer = employer => dispatch => {
 export const updatingUser = (user, savedJobs) => dispatch => {
   // set loading state to true to trigger UI changes
   // update the user
+  user.coords.crs = {type: 'name', properties: {name: 'EPSG:32661'}}
   axios.put(`/api/users/${user.id}`, {user, savedJobs})
     .then(res => res.data)
     // if the user is successfully updated, we fetch the updated users list
@@ -132,10 +133,10 @@ export const updatingUser = (user, savedJobs) => dispatch => {
 }
 
 export const uploadingAvatar = (user, file) => dispatch => {
-  const picture = storageRef.child(`avatars/${user.id}`)
   dispatch(beginUploading())
-  storageRef.put(picture)
-    .then(() => storageRef.getDownloadURL())
+  const avatarRef = storageRef.child(`avatars/${user.id}`)
+  avatarRef.put(file)
+    .then(() => avatarRef.getDownloadURL())
     .then(url => {
       user.image_url = url
       dispatch(updatingUser(user))
@@ -155,10 +156,10 @@ export const uploadingAvatar = (user, file) => dispatch => {
 
 export const uploadingResume = (user, file) => dispatch => {
   dispatch(beginUploading())
-  const resume = storageRef.child(`resumes/${user.id}`)
+  const resumeRef = storageRef.child(`resumes/${user.id}`)
   dispatch(beginUploading())
-  storageRef.put(resume)
-    .then(() => storageRef.getDownloadURL())
+  resumeRef.put(file)
+    .then(() => resumeRef.getDownloadURL())
     .then(url => {
       user.resume_url = url
       dispatch(updatingUser(user))

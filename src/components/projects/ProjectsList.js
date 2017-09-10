@@ -11,7 +11,9 @@ const ProjectList = props => (
           <Row>
             <Col xs={12} sm={6} md={6} lg={6}>
               <h2 className='ProjectCard-title'>{project.title}</h2>
-              <p className='ProjectCard-skills'>{project.skills.map(skill => skill.title).join(', ')}</p>
+              <p className='ProjectCard-skills'>
+                {project.skills.map(skill => skill.title).join(', ')}
+              </p>
             </Col>
           </Row>
         </LinkContainer>
