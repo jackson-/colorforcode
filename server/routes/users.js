@@ -81,7 +81,8 @@ module.exports = require('express').Router()
   // })
 
   .get('/:id', (req, res, next) => {
-    User.findById(req.params.id, {
+    User.findOne({
+      where: {id: req.params.id},
       include: [{
         model: Project,
         include: [Skill]
@@ -96,7 +97,7 @@ module.exports = require('express').Router()
   .put('/:id', (req, res, next) => {
     const {user, savedJobsArr} = req.body
 
-    User.findById(req.params.id)
+    User.findOne({where: {id: req.params.id}})
       .then(foundUser => {
         // the same route is used to save jobs for users and to update users,
         // but these tasks are never simultaneous
