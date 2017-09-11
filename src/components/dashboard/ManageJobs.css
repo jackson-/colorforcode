@@ -5,12 +5,13 @@
 .Projects {
   padding: 5px 10px;
   background: #E4E4E4;
-  height: 100%;
+  height: inherit;
 }
 
 .ManageJobs-header,
 .Applicants-header,
-.SavedJobs-header {
+.SavedJobs-header,
+.Projects-header, {
   text-align: center;
 }
 
@@ -71,7 +72,8 @@ tbody > tr:hover {
   .Applicants-header,
   .ManageJobs-header,
   .Applications-header,
-  .SavedJobs-header {
+  .SavedJobs-header,
+  .Projects-header {
     text-align: left;
   }
 

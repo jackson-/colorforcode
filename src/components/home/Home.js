@@ -23,7 +23,9 @@ const Home = ({
         <Row>
           <Jumbotron className='Home-hero'>
             <Col className='parallax-content' xs={12} sm={12} md={12} lg={12}>
-              <h1 className='tagline'>Welcome to Color For Code</h1>
+              <h1 className='Home__hero-tagline'>Color for Code</h1>
+              <hr className='Home__hero-separator' />
+              <h2 className='Home__hero-subtag'>Black Tech Talent Hub</h2>
             </Col>
           </Jumbotron>
         </Row>

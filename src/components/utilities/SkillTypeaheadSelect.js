@@ -1,46 +1,56 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Typeahead } from 'react-bootstrap-typeahead'
+import { Creatable } from 'react-select'
+import { ControlLabel, HelpBlock } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { gettingAllSkills } from 'APP/src/reducers/actions/skills'
+import 'react-select/dist/react-select.css'
 import './SkillTypeaheadSelect.css'
 
 class SkillTypeaheadSelect extends Component {
   componentWillMount () {
-    const {skills, fetching, getSkills} = this.props
+    let {skills, fetching, getSkills} = this.props
     if (!skills && !fetching) {
-      console.log('CWM - FETCHING SKILLS')
       getSkills()
     }
   }
 
   render () {
-    const {handleChange, skills, selected} = this.props
+    const {handleChange, skills, selected, label} = this.props
     return (
-      <Typeahead
-        multiple
-        allowNew
-        bsStyle={'lg'}
-        newSelectionPrefix={`add new skill: `}
-        onChange={handleChange('skills')}
-        options={skills || [{title: 'no skills loaded yet'}]}
-        selected={selected}
-        labelKey='title'
-        emptyLabel=''
-        placeholder='click or type to begin selecting...'
-      />
+      <div>
+        <ControlLabel>
+          {label || 'Key Skills'}
+        </ControlLabel>
+        <Creatable
+          multi
+          clearable={false}
+          options={skills}
+          onChange={handleChange('skills')}
+          value={selected}
+          labelKey='title'
+          valueKey='title'
+          placeholder='type to begin selecting...'
+          promptTextCreator={(label) => (`Create skill "${label}"`)}
+        />
+        <HelpBlock>
+          Type, click or use arrows to search skills. Press 'Enter' or click to add selected skill.
+        </HelpBlock>
+      </div>
     )
   }
 }
 
 SkillTypeaheadSelect.propTypes = {
   fetching: PropTypes.bool,
-  selected: PropTypes.arrayOf(PropTypes.object),
   getSkills: PropTypes.func,
+  selected: PropTypes.arrayOf(PropTypes.object),
+  // ^selected skills saved to store with each selection
   handleChange: PropTypes.func,
   // ^parent's handleChange func
-  skills: PropTypes.arrayOf(PropTypes.string)
+  skills: PropTypes.arrayOf(PropTypes.object),
   // ^complete list of skills for typeahead selection
+  label: PropTypes.string
 }
 
 const mapStateToProps = state => ({
@@ -50,7 +60,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  getSkills: post => dispatch(gettingAllSkills())
+  getSkills: (select) => dispatch(gettingAllSkills(select))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SkillTypeaheadSelect)

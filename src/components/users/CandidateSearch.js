@@ -51,7 +51,7 @@ class CandidateSearch extends Component {
   }
 
   handleLocation(zip_code) {
-    axios.get(`http://maps.googleapis.com/maps/api/geocode/json?address=${zip_code}`)
+    axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${zip_code}`)
       .then(res => res.data)
       .then(json => {
         const city = json.results[0].address_components[1].long_name

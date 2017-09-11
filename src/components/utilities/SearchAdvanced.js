@@ -20,7 +20,7 @@ const SearchAdvanced = props => {
           </Col>
           <Button
             className='SearchAdvanced__button--warning'
-            onClick={(event, filter) => props.clearFilter(filter)}
+            onClick={props.clearFilter('filter')}
           >
             Clear Filter
           </Button>
@@ -33,14 +33,14 @@ const SearchAdvanced = props => {
       >
         <ControlLabel>EMPLOYMENT TYPES</ControlLabel>
         <Checkbox
-          value='FullTime'
-          checked={props.state && props.state.employment_types.has('FullTime')}
+          value='Full Time'
+          checked={props.state && props.state.employment_types.has('Full Time')}
         >
           Full Time
         </Checkbox>
         <Checkbox
-          value='PartTime'
-          checked={props.state && props.state.employment_types.has('PartTime')}
+          value='Part Time'
+          checked={props.state && props.state.employment_types.has('Part Time')}
         >
           Part Time
         </Checkbox>
@@ -69,22 +69,24 @@ const SearchAdvanced = props => {
           Remote
         </Checkbox>
       </FormGroup>
-      <FormGroup
-        controlId='zipcode'
-        className='SearchAdvanced__zipcode'
-        onChange={props.handleChange('zip_code')}
-      >
-        <ControlLabel>ZIP CODE</ControlLabel>
-        <FormControl type='tel' value={props.state.zip_code} />
-      </FormGroup>
-      <FormGroup
-        controlId='distance'
-        className='SearchAdvanced__distance'
-        onChange={props.handleChange('distance')}
-      >
-        <ControlLabel>MAX DISTANCE (miles)</ControlLabel>
-        <FormControl type='tel' value={props.state.distance} />
-      </FormGroup>
+      <div className='SearchAdvanced__input-container'>
+        <FormGroup
+          controlId='zipcode'
+          className='SearchAdvanced__zipcode'
+          onChange={props.handleChange('zip_code')}
+        >
+          <ControlLabel>ZIP CODE</ControlLabel>
+          <FormControl type='tel' value={props.state.zip_code} />
+        </FormGroup>
+        <FormGroup
+          controlId='distance'
+          className='SearchAdvanced__distance'
+          onChange={props.handleChange('distance')}
+        >
+          <ControlLabel>MAX DISTANCE (miles)</ControlLabel>
+          <FormControl type='tel' value={props.state.distance} />
+        </FormGroup>
+      </div>
       <FormGroup
         controlId='sort-by'
         name='SearchAdvanced__sort-by'

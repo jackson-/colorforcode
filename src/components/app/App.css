@@ -236,3 +236,7 @@ and (min-width: 768px) {
   transition: all 0.1s ease-in;
   transition-duration: 0.1s;
 }
+
+.btn-default[disabled]:hover {
+  color: #000000;
+}

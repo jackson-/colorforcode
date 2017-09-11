@@ -88,31 +88,6 @@ export const advancedFilteringJobs = body => dispatch => {
     .catch(err => console.error(`Mang, I couldn't advanced filter the jobs! ${err.stack}`))
 }
 
-export const grabbingCoords = () => {
-  // returning a Promise so it's thenable (*then* we'll call setState once resolved)
-  return new Promise((resolve, reject) => {
-    let coords = ''
-    if (navigator.geolocation) {
-      console.log('GRABBING COORDS')
-      const positionId = navigator.geolocation.watchPosition(
-        position => {
-          const {latitude, longitude} = position.coords
-          coords = `${latitude}, ${longitude}`
-          navigator.geolocation.clearWatch(positionId)
-          resolve(coords)
-        },
-        error => {
-          console.error(
-            'Could not locate user for advanced search distance filters.',
-            error.stack
-          )
-          reject(error)
-        }
-      )
-    }
-  })
-}
-
 export const buildBodyThenSearchJobs = (bodyBuilderFunc, coords, from) => {
   return dispatch => {
     dispatch(requestFilteredJobs())
@@ -157,8 +132,9 @@ export const creatingNewJobs = (data, history) => dispatch => {
   axios.post('/api/jobs', data)
     .then(res => res.data)
     // if the job is successfully created, we fetch the updated jobs list
-    .then(newJobId => {
+    .then(updatedJobsList => {
       dispatch(whoami())
+      dispatch(receiveJobs(updatedJobsList))
       dispatch(receiveAlert({
         type: 'confirmation',
         style: 'success',

@@ -57,6 +57,8 @@
 }
 
 .EditProfile,
+.EditProject,
+.CreateProject,
 .PostJobForm,
 .UpdateJobForm {
   padding: 10px 25px 25px 25px;
@@ -65,16 +67,12 @@
 
 .EditProfile-header,
 .PostJobForm-header,
+.EditProject-header,
+.CreateProject-header,
 .UpdateJobForm-header {
   font-family: Lato Bold;
   text-transform: uppercase;
   margin: 16px 0;
-}
-
-.Select--multi .Select-value {
-  background: rgba(18,205,106, 0.08) !important;
-  border: solid 1px rgba(18,205,106, 0.24) !important;
-  color: #01C688 !important;
 }
 
 .form-group input {
@@ -89,6 +87,8 @@
 }
 
 .EditProfile .form-group input,
+.EditProject .form-group input,
+.CreateProject .form-group input,
 .PostJobForm .form-group input,
 .UpdateJobForm .form-group input {
   box-shadow: none;
@@ -103,8 +103,7 @@
   transition: border 0.5s ease-in-out;
 }
 
-.form-group select,
-.Select, .Select.control {
+.form-group select {
   text-align: left;
   font-family: Open Sans Semibold;
   font-size: 16px;
@@ -130,15 +129,10 @@
 
 .EditProfile .form-group select:focus,
 .PostJobForm .form-group select:focus,
-.UpdateJobForm .form-group select:focus,
-.Select:focus, .Select-menu-outer:focus, .Select.control:focus {
+.UpdateJobForm .form-group select:focus {
   box-shadow: none;
   border: 2px solid #01C688;
   transition: border 0.5s ease-in-out;
-}
-
-.Select div {
-  border: 0;
 }
 
 .form-group textarea {
@@ -189,6 +183,10 @@ input[type=file] {
 
 .EditProfile input[type=file] {
   padding: 15px 0 25px;
+}
+
+.EditProject input[type=file] {
+  color: #FFFFFF;
 }
 
 @media only screen

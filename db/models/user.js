@@ -1,8 +1,16 @@
 // bcrypt docs: https://www.npmjs.com/package/bcrypt
 const bcrypt = require('bcryptjs')
-const {STRING, TEXT, VIRTUAL, BOOLEAN, ENUM, ARRAY, GEOMETRY} = require('sequelize')
+const {STRING, TEXT, VIRTUAL, BOOLEAN, ENUM, ARRAY, GEOMETRY, UUID, UUIDV4} = require('sequelize')
 
 module.exports = db => db.define('user', {
+  id: {
+    type: UUID,
+    primaryKey: true,
+    defaultValue: UUIDV4,
+    validate: {
+      isUUID: 4
+    }
+  },
   first_name: STRING,
   last_name: STRING,
   is_employer: BOOLEAN,

@@ -1,40 +1,56 @@
-.rbt {
+.Select {
   height: auto;
-  display: inline-flex;
+}
+
+.Select div {
+  border: 0;
+}
+
+.Select--multi .Select-multi-value-wrapper {
+  height: auto;
+  display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   justify-content: flex-start;
   align-items: center;
 }
 
-.rbt-input {
-  display: flex;
-  flex-flow: row wrap;
-}
-
-.rbt-input-main {
-  margin: 5px;
-  display: inline-flex;
-  align-self: center;
-}
-
-.rbt-token {
-  width: fit-content;
-  background: #01C688;
+.Select--multi .Select-value {
+  background: rgba(18,205,106, 0.08);
+  border: solid 1px rgba(18,205,106, 0.24);
+  color: #01C688;
+  width: max-content;
   border-radius: 3px;
-  margin: 5px;
-  padding: 3px 5px;
-  color: #FFFFFF;
+  margin: 5px 2px;
   display: flex;
   align-items: center;
-}
-
-.rbt-token-close-button {
-  margin: 0 5px 0 10px;
   font-size: 16px;
 }
 
-.rbt-menu {
-  width: 100% !important;
-  max-height: 150px !important;
+.Select--multi .Select-value-icon {
+  padding-top: 3px;
+  border-color: rgba(18,205,106, 0.24);
+}
+
+.Select--multi .Select-value-icon:hover {
+  color: #01C688;
+  background: rgba(1, 198, 136, 0.15);
+}
+
+.Select--multi .Select-value-label {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.Select, .Select.control {
   text-align: left;
+  font-family: Open Sans Semibold;
+  font-size: 16px;
+  color: #333;
+}
+
+.Select-option.is-focused {
+  background-color: rgba(1, 198, 136, 0.15) !important;
 }

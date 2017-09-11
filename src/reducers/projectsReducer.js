@@ -23,11 +23,11 @@ const projectsReducer = (state = initialState, action) => {
     }
     case CREATE_PROJECT: return {
       currentProject: {...state.currentProject},
-      fetchingProject: true
+      fetchingProject: false
     }
     case DELETE_PROJECT: return {
       currentProject: {...state.currentProject},
-      fetchingProject: true
+      fetchingProject: false
     }
     default: return state
   }

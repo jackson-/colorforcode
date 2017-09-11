@@ -4,11 +4,9 @@ import { Modal } from 'react-bootstrap'
 import IconBar from '../utilities/icons/IconBar'
 import LinkIcon from '../utilities/icons/LinkIcon'
 import GithubIcon from '../utilities/icons/GithubIcon'
-
 import './Project.css'
 
 class ProjectModal extends Component {
-
   onHide = () => {
     const {dismissProject} = this.props
     dismissProject()
