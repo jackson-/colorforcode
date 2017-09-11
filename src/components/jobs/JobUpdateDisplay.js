@@ -121,7 +121,7 @@ export default class JobUpdateDisplay extends Component {
 
   render () {
     const {job} = this.props
-
+    console.log('STATE', this.state)
     return (
       job &&
       <Row className='UpdateJobForm'>

@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Row, Col, Jumbotron } from 'react-bootstrap'
+import { HashLink } from 'react-router-hash-link'
 import './Home.css'
 import JobBoard from './JobBoard'
 import CandidateSearch from '../users/CandidateSearch'
@@ -26,29 +27,37 @@ const Home = ({
               <h1 className='Home__hero-tagline'>Color for Code</h1>
               <hr className='Home__hero-separator' />
               <h2 className='Home__hero-subtag'>Black Tech Talent Hub</h2>
+              <HashLink to={`/#search`}>
+                <span className='btn-oval btn-oval__white'>
+                  {`SEARCH FOR ${isEmployer ? 'TALENT' : 'JOBS'}`}
+                </span>
+              </HashLink>
+              <div id='search' />
             </Col>
           </Jumbotron>
         </Row>
       </header>
-      {
-        isEmployer
-          ? (
-            <CandidateSearch
-              coords={coords}
-              getUsers={getUsers}
-              filterUsers={filterUsers}
-              advancedFilterUsers={advancedFilterUsers}
-            />
-          )
-          : (
-            <JobBoard
-              coords={coords}
-              getJobs={getJobs}
-              filterJobs={filterJobs}
-              advancedFilterJobs={advancedFilterJobs}
-            />
-          )
-      }
+      <main>
+        {
+          isEmployer
+            ? (
+              <CandidateSearch
+                coords={coords}
+                getUsers={getUsers}
+                filterUsers={filterUsers}
+                advancedFilterUsers={advancedFilterUsers}
+              />
+            )
+            : (
+              <JobBoard
+                coords={coords}
+                getJobs={getJobs}
+                filterJobs={filterJobs}
+                advancedFilterJobs={advancedFilterJobs}
+              />
+            )
+        }
+      </main>
     </div>
   )
 }

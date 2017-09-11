@@ -2,6 +2,7 @@ import React from 'react'
 import { Row, Col } from 'react-bootstrap'
 import './About.css'
 import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom'
 
 const About = ({animated}) => {
   return (
@@ -38,6 +39,11 @@ const About = ({animated}) => {
             <p className='About__text text-faded'>
               {`Diversity empowers innovation. Innovation is what you're looking for in your next hire. Color for Code is a technology recruitment platform. We're connecting Black software engineers and designers with companies like yours, building teams as colorful as your growing user base.`}
             </p>
+            <Link to='/register'>
+              <span className='btn-oval btn-oval__white'>
+                JOIN AS AN EMPLOYER
+              </span>
+            </Link>
           </Col>
         </Row>
         <Row className='About__section'>
@@ -52,7 +58,7 @@ const About = ({animated}) => {
               <i className='fa fa-4x fa-diamond text-primary sr-icons' />
               <h3>Quality Jobs</h3>
               <p className='About__text text-muted'>
-                All of our employers are vetted
+                All of our employers are vetted.
               </p>
             </div>
           </Col>
@@ -61,7 +67,7 @@ const About = ({animated}) => {
               <i className='fa fa-4x fa-paper-plane text-primary sr-icons' />
               <h3>Easy to Apply</h3>
               <p className='About__text text-muted'>
-                One click apply method makes job seeking super simple!
+                One click apply makes job seeking super simple!
               </p>
             </div>
           </Col>
@@ -70,7 +76,7 @@ const About = ({animated}) => {
               <i className='fa fa-4x fa-newspaper-o text-primary sr-icons' />
               <h3>Up to Date Skills</h3>
               <p className='About__text text-muted'>
-                Job seekers can show prowess with skill tags and project links.
+                Job seekers demonstrate prowess with projects.
               </p>
             </div>
           </Col>
@@ -79,7 +85,7 @@ const About = ({animated}) => {
               <i className='fa fa-4x fa-heart text-primary sr-icons' />
               <h3>Made with Love</h3>
               <p className='About__text text-muted'>
-                All the founders are Black engineers!
+                Built and founded by Black engineers!
               </p>
             </div>
           </Col>
@@ -97,6 +103,11 @@ const About = ({animated}) => {
             <p className='About__text text-faded'>
               {`It feels good to walk into an interview knowing the employer is looking for someone just like you. Color for Code is a technology recruitment platform that provides just that. We're connecting talented Black designers and engineers like you with innovative companies that don't just talk about the value of diversity—they cultivate it.`}
             </p>
+            <Link to='/register'>
+              <span className='btn-oval btn-oval__white'>
+                JOIN AS AN APPLICANT
+              </span>
+            </Link>
           </Col>
         </Row>
         <Row className='About__section'>
@@ -111,7 +122,7 @@ const About = ({animated}) => {
             </h2>
             <hr className='About__separator' />
             <p className='About__text'>
-              Ready to find your next employee with us? Give us a call or send us an email and we'll get back to you as soon as possible!
+              Ready to find your next employee with us? Send us an email and we'll get back to you as soon as possible.
             </p>
           </Col>
           <Col className='text-center' xs={12} sm={12} md={12} lg={12}>

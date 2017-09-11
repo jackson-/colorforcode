@@ -222,6 +222,7 @@ class CandidateSearch extends Component {
         <SearchBar
           type='project'
           inline
+          id='search-talent'
           query={this.state.query}
           handleSubmit={this.filterUsers}
           handleChange={this.handleChange('query')}

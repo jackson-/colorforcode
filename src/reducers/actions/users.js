@@ -5,7 +5,7 @@ import {
   DONE_UPLOADING, REQUEST_USER, REQUEST_FILTERED_USERS } from '../constants'
 import { whoami } from './auth'
 import { receiveAlert } from './alert'
-import storage from 'APP/firebase'
+import storage from '../../../firebase'
 const storageRef = storage.ref()
 
 /* --------- PURE ACTION CREATORS --------- */

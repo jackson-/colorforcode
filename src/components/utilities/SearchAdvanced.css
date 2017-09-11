@@ -89,6 +89,10 @@
   font-size: 16px;
 }
 
+.SearchAdvanced .help-block {
+  max-width: 150px;
+}
+
 .SearchAdvanced .form-group label {
   font-size: 14px;
 }
