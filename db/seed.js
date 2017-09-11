@@ -98,6 +98,69 @@ const users = seed(User,
       twitter: 'https://twitter.com/theunifarmer',
       status: 'active'
     },
+    alex: {
+      email: 'alex@123.com',
+      first_name: 'Alex',
+      last_name: 'Moore',
+      password: '123',
+      is_employer: false,
+      coords: points.bk,
+      'location': 'Brooklyn, NY',
+      'zip_code': '11207',
+      'employment_types': ['Full Time', 'Remote'],
+      image_url: '',
+      headline: 'I love code, this, that, and the third!',
+      summary: '',
+      title: 'Node Wizard',
+      work_auth: 'US Citizen',
+      personal_site: 'https://sliqback-hacks.io',
+      github: 'https://github.com/jackson-',
+      linkedin: 'https://linkedin.com/in/sliqbackhacks',
+      twitter: 'https://twitter.com/sliqbackhacks',
+      status: 'active'
+    },
+    kris: {
+      email: 'kris@123.com',
+      first_name: 'Kris',
+      last_name: 'Lee',
+      password: '123',
+      is_employer: false,
+      coords: points.bk,
+      'location': 'Brooklyn, NY',
+      'zip_code': '11207',
+      'employment_types': ['Full Time', 'Remote'],
+      image_url: '',
+      headline: 'I love code, this, that, and the third!',
+      summary: '',
+      title: 'React Wizard',
+      work_auth: 'US Citizen',
+      personal_site: 'https://sliqback-hacks.io',
+      github: 'https://github.com/jackson-',
+      linkedin: 'https://linkedin.com/in/sliqbackhacks',
+      twitter: 'https://twitter.com/sliqbackhacks',
+      status: 'active'
+    },
+    rome: {
+      email: 'rome@123.com',
+      first_name: 'Jerome',
+      last_name: 'Moore',
+      password: '123',
+      is_employer: false,
+      coords: points.bk,
+      'location': 'Brooklyn, NY',
+      'zip_code': '11207',
+      'employment_types': ['Full Time', 'Remote'],
+      image_url: '',
+      headline: 'I love code, this, that, and the third!',
+      summary: '',
+      title: 'Mobile Wizard',
+      work_auth: 'US Citizen',
+      personal_site: 'https://sliqback-hacks.io',
+      github: 'https://github.com/jackson-',
+      linkedin: 'https://linkedin.com/in/sliqbackhacks',
+      twitter: 'https://twitter.com/sliqbackhacks',
+      status: 'active'
+    },
     hb1: {
       first_name: 'Devin',
       last_name: 'Blackson',email: 'devin@colorforcode.com',
@@ -194,7 +257,106 @@ const projects = seed(Project,
       outcome: `After a long summer and lots of late nights debugging and making the UI pixel perfect, we’re really proud of what we’ve built. What differentiates us from other recruitment platforms is our project based approach to presenting the skills of our candidates. Our goal is for our applicants to have a chance to show off their talent and present themselves to hiring employers as much more than buzzwords on paper. `,
       site: `http://colorforcode.com`,
       repo: `https://github.com/jackson-/colorforcode`
-    }
+    },
+    a1: {
+      user_id: users.alex.id,
+      title: 'Where Can I Eat?: Gluten Free Restaurant Finder',
+      screenshot: 'https://firebasestorage.googleapis.com/v0/b/colorforcode.appspot.com/o/screenshots%2FWhere-Can-I-Eat%3F%3A-Gluten-Free-Restaurant-Finder-1377eb3a-f246-4b2a-b06a-992512fede14?alt=media&token=2c5b3d90-e2a1-4603-a090-7901af768f5c',
+      problem: 'This is a description',
+      approach: 'This is how I approached it.',
+      challenges: 'This really pissed me off',
+      outcome: 'I learned so much yo',
+      site: 'http://www.wherecanieat.com',
+      repo: 'https://github.com/where-can-i-eat'
+    },
+    a2: {
+      user_id: users.alex.id,
+      title: 'Interactive Guide: Working with an OCD programmer',
+      screenshot: 'https://firebasestorage.googleapis.com/v0/b/colorforcode.appspot.com/o/screenshots%2FInteractive-Guide%3A-Working-with-an-OCD-programmer-1377eb3a-f246-4b2a-b06a-992512fede14?alt=media&token=d89cd542-9b2e-427d-89e5-614f855b3138',
+      problem: 'This is a description',
+      approach: 'This is how I approached it.',
+      challenges: 'This really pissed me off',
+      outcome: 'I learned so much yo',
+      site: 'http://www.ocd-programmer.guide',
+      repo: 'https://github.com/ocd-programmer'
+    },
+    a3: {
+      user_id: users.alex.id,
+      title: `Color for Code`,
+      screenshot: `https://firebasestorage.googleapis.com/v0/b/colorforcode.appspot.com/o/screenshots%2FColor-for-Code-1377eb3a-f246-4b2a-b06a-992512fede14?alt=media&token=049eb454-0248-42ef-9578-7684336b3b2a`,
+      problem: `Tech has a diversity problem and everyone's talking about it. Many companies were approaching my co-founder Devin, the organizer and founder of the Black Software Engineers of NYC Meetup, with recruitment inquiries as the group has thousands of talented members. It was becoming cumbersome to keep passing job opportunities along from recruiters to well-suited members on an individual basis. On the other hand, each week members casually discuss their experiences with one another, and all too often those experiences are job search and interview horror stories detailing the ignorance and even outright racism they've encountered from employers. There was a clear need for amazing employers eagerly cultivating diverse teams and our job seeking Meetup members to have a platform on which to meet and build a better tech industry together. So C4C was born!`,
+      approach: `We built the platform using React, Redux, and Bootstrap for the performant, responsive client. Node, Express, PostgreSQL and Sequelize are the fantastic four holding down the server side. Though we work in a pretty agile style, we were focused on quality and performance so we didn't rush to release.`,
+      challenges: `We ran into quite a few hiccups along the way. AWS S3 crapped out on us a couple of days prior to beta testing, so we happily switched to Firebase Storage for storing user image and resume assets. We initially used Elasticsearch for the job and user search and were really happy with the speed and extensibility, but the SDK was weighing down the server to an egregious extent. We pivoted and went out on a limb to try implementing full text search with Postgres. Getting the raw queries just right (our ORM Sequelize doesn't have an implementation built in) was quite the challenge. Postgres' archaic documentation paled in comparison to that of PostGIS, which we needed in order to make the advanced search options geo-aware. After 3 days of trial and error we got the search back up and running, and we couldn't be happier! The speed and scalability are still there, but now we no longer need to cross update our data as the indexing and data all live in one place.`,
+      outcome: `After a long summer and lots of late nights debugging and making the UI pixel perfect, we’re really proud of what we’ve built. What differentiates us from other recruitment platforms is our project based approach to presenting the skills of our candidates. Our goal is for our applicants to have a chance to show off their talent and present themselves to hiring employers as much more than buzzwords on paper. `,
+      site: `http://colorforcode.com`,
+      repo: `https://github.com/jackson-/colorforcode`
+    },
+    k1: {
+      user_id: users.kris.id,
+      title: 'Where Can I Eat?: Gluten Free Restaurant Finder',
+      screenshot: 'https://firebasestorage.googleapis.com/v0/b/colorforcode.appspot.com/o/screenshots%2FWhere-Can-I-Eat%3F%3A-Gluten-Free-Restaurant-Finder-1377eb3a-f246-4b2a-b06a-992512fede14?alt=media&token=2c5b3d90-e2a1-4603-a090-7901af768f5c',
+      problem: 'This is a description',
+      approach: 'This is how I approached it.',
+      challenges: 'This really pissed me off',
+      outcome: 'I learned so much yo',
+      site: 'http://www.wherecanieat.com',
+      repo: 'https://github.com/where-can-i-eat'
+    },
+    k2: {
+      user_id: users.kris.id,
+      title: 'Interactive Guide: Working with an OCD programmer',
+      screenshot: 'https://firebasestorage.googleapis.com/v0/b/colorforcode.appspot.com/o/screenshots%2FInteractive-Guide%3A-Working-with-an-OCD-programmer-1377eb3a-f246-4b2a-b06a-992512fede14?alt=media&token=d89cd542-9b2e-427d-89e5-614f855b3138',
+      problem: 'This is a description',
+      approach: 'This is how I approached it.',
+      challenges: 'This really pissed me off',
+      outcome: 'I learned so much yo',
+      site: 'http://www.ocd-programmer.guide',
+      repo: 'https://github.com/ocd-programmer'
+    },
+    k3: {
+      user_id: users.kris.id,
+      title: `Color for Code`,
+      screenshot: `https://firebasestorage.googleapis.com/v0/b/colorforcode.appspot.com/o/screenshots%2FColor-for-Code-1377eb3a-f246-4b2a-b06a-992512fede14?alt=media&token=049eb454-0248-42ef-9578-7684336b3b2a`,
+      problem: `Tech has a diversity problem and everyone's talking about it. Many companies were approaching my co-founder Devin, the organizer and founder of the Black Software Engineers of NYC Meetup, with recruitment inquiries as the group has thousands of talented members. It was becoming cumbersome to keep passing job opportunities along from recruiters to well-suited members on an individual basis. On the other hand, each week members casually discuss their experiences with one another, and all too often those experiences are job search and interview horror stories detailing the ignorance and even outright racism they've encountered from employers. There was a clear need for amazing employers eagerly cultivating diverse teams and our job seeking Meetup members to have a platform on which to meet and build a better tech industry together. So C4C was born!`,
+      approach: `We built the platform using React, Redux, and Bootstrap for the performant, responsive client. Node, Express, PostgreSQL and Sequelize are the fantastic four holding down the server side. Though we work in a pretty agile style, we were focused on quality and performance so we didn't rush to release.`,
+      challenges: `We ran into quite a few hiccups along the way. AWS S3 crapped out on us a couple of days prior to beta testing, so we happily switched to Firebase Storage for storing user image and resume assets. We initially used Elasticsearch for the job and user search and were really happy with the speed and extensibility, but the SDK was weighing down the server to an egregious extent. We pivoted and went out on a limb to try implementing full text search with Postgres. Getting the raw queries just right (our ORM Sequelize doesn't have an implementation built in) was quite the challenge. Postgres' archaic documentation paled in comparison to that of PostGIS, which we needed in order to make the advanced search options geo-aware. After 3 days of trial and error we got the search back up and running, and we couldn't be happier! The speed and scalability are still there, but now we no longer need to cross update our data as the indexing and data all live in one place.`,
+      outcome: `After a long summer and lots of late nights debugging and making the UI pixel perfect, we’re really proud of what we’ve built. What differentiates us from other recruitment platforms is our project based approach to presenting the skills of our candidates. Our goal is for our applicants to have a chance to show off their talent and present themselves to hiring employers as much more than buzzwords on paper. `,
+      site: `http://colorforcode.com`,
+      repo: `https://github.com/jackson-/colorforcode`
+    },
+    r1: {
+      user_id: users.rome.id,
+      title: 'Where Can I Eat?: Gluten Free Restaurant Finder',
+      screenshot: 'https://firebasestorage.googleapis.com/v0/b/colorforcode.appspot.com/o/screenshots%2FWhere-Can-I-Eat%3F%3A-Gluten-Free-Restaurant-Finder-1377eb3a-f246-4b2a-b06a-992512fede14?alt=media&token=2c5b3d90-e2a1-4603-a090-7901af768f5c',
+      problem: 'This is a description',
+      approach: 'This is how I approached it.',
+      challenges: 'This really pissed me off',
+      outcome: 'I learned so much yo',
+      site: 'http://www.wherecanieat.com',
+      repo: 'https://github.com/where-can-i-eat'
+    },
+    r2: {
+      user_id: users.rome.id,
+      title: 'Interactive Guide: Working with an OCD programmer',
+      screenshot: 'https://firebasestorage.googleapis.com/v0/b/colorforcode.appspot.com/o/screenshots%2FInteractive-Guide%3A-Working-with-an-OCD-programmer-1377eb3a-f246-4b2a-b06a-992512fede14?alt=media&token=d89cd542-9b2e-427d-89e5-614f855b3138',
+      problem: 'This is a description',
+      approach: 'This is how I approached it.',
+      challenges: 'This really pissed me off',
+      outcome: 'I learned so much yo',
+      site: 'http://www.ocd-programmer.guide',
+      repo: 'https://github.com/ocd-programmer'
+    },
+    r3: {
+      user_id: users.rome.id,
+      title: `Color for Code`,
+      screenshot: `https://firebasestorage.googleapis.com/v0/b/colorforcode.appspot.com/o/screenshots%2FColor-for-Code-1377eb3a-f246-4b2a-b06a-992512fede14?alt=media&token=049eb454-0248-42ef-9578-7684336b3b2a`,
+      problem: `Tech has a diversity problem and everyone's talking about it. Many companies were approaching my co-founder Devin, the organizer and founder of the Black Software Engineers of NYC Meetup, with recruitment inquiries as the group has thousands of talented members. It was becoming cumbersome to keep passing job opportunities along from recruiters to well-suited members on an individual basis. On the other hand, each week members casually discuss their experiences with one another, and all too often those experiences are job search and interview horror stories detailing the ignorance and even outright racism they've encountered from employers. There was a clear need for amazing employers eagerly cultivating diverse teams and our job seeking Meetup members to have a platform on which to meet and build a better tech industry together. So C4C was born!`,
+      approach: `We built the platform using React, Redux, and Bootstrap for the performant, responsive client. Node, Express, PostgreSQL and Sequelize are the fantastic four holding down the server side. Though we work in a pretty agile style, we were focused on quality and performance so we didn't rush to release.`,
+      challenges: `We ran into quite a few hiccups along the way. AWS S3 crapped out on us a couple of days prior to beta testing, so we happily switched to Firebase Storage for storing user image and resume assets. We initially used Elasticsearch for the job and user search and were really happy with the speed and extensibility, but the SDK was weighing down the server to an egregious extent. We pivoted and went out on a limb to try implementing full text search with Postgres. Getting the raw queries just right (our ORM Sequelize doesn't have an implementation built in) was quite the challenge. Postgres' archaic documentation paled in comparison to that of PostGIS, which we needed in order to make the advanced search options geo-aware. After 3 days of trial and error we got the search back up and running, and we couldn't be happier! The speed and scalability are still there, but now we no longer need to cross update our data as the indexing and data all live in one place.`,
+      outcome: `After a long summer and lots of late nights debugging and making the UI pixel perfect, we’re really proud of what we’ve built. What differentiates us from other recruitment platforms is our project based approach to presenting the skills of our candidates. Our goal is for our applicants to have a chance to show off their talent and present themselves to hiring employers as much more than buzzwords on paper. `,
+      site: `http://colorforcode.com`,
+      repo: `https://github.com/jackson-/colorforcode`
+    },
   })
 )
 
@@ -706,7 +868,115 @@ const project_skills = seed(ProjectSkill,
     12: {
       project_id: projects.c2.id,
       skill_id: skills.node.id
-    }
+    },
+    13: {
+      project_id: projects.a1.id,
+      skill_id: skills.python.id
+    },
+    14: {
+      project_id: projects.a1.id,
+      skill_id: skills.jquery.id
+    },
+    15: {
+      project_id: projects.a1.id,
+      skill_id: skills.django.id
+    },
+    16: {
+      project_id: projects.a2.id,
+      skill_id: skills.ruby.id
+    },
+    17: {
+      project_id: projects.a2.id,
+      skill_id: skills.rails.id
+    },
+    18: {
+      project_id: projects.a2.id,
+      skill_id: skills.regex.id
+    },
+    19: {
+      project_id: projects.a3.id,
+      skill_id: skills.iOS.id
+    },
+    20: {
+      project_id: projects.a3.id,
+      skill_id: skills.swift.id
+    },
+    21: {
+      project_id: projects.a3.id,
+      skill_id: skills.sorting.id
+    },
+    22: {
+      project_id: projects.k1.id,
+      skill_id: skills.postgresql.id
+    },
+    23: {
+      project_id: projects.k1.id,
+      skill_id: skills.angular.id
+    },
+    24: {
+      project_id: projects.k1.id,
+      skill_id: skills.javascript.id
+    },
+    25: {
+      project_id: projects.k2.id,
+      skill_id: skills.spring.id
+    },
+    26: {
+      project_id: projects.k2.id,
+      skill_id: skills.eclipse.id
+    },
+    27: {
+      project_id: projects.k2.id,
+      skill_id: skills.html5.id
+    },
+    28: {
+      project_id: projects.k3.id,
+      skill_id: skills.iOS.id
+    },
+    29: {
+      project_id: projects.k3.id,
+      skill_id: skills.swift.id
+    },
+    30: {
+      project_id: projects.k3.id,
+      skill_id: skills.xcode.id
+    },
+    31: {
+      project_id: projects.r1.id,
+      skill_id: skills.shell.id
+    },
+    32: {
+      project_id: projects.r1.id,
+      skill_id: skills.perl.id
+    },
+    33: {
+      project_id: projects.r1.id,
+      skill_id: skills.sqlite.id
+    },
+    34: {
+      project_id: projects.r2.id,
+      skill_id: skills.maven.id
+    },
+    35: {
+      project_id: projects.r2.id,
+      skill_id: skills.cordova.id
+    },
+    36: {
+      project_id: projects.r2.id,
+      skill_id: skills.sockets.id
+    },
+    37: {
+      project_id: projects.r3.id,
+      skill_id: skills.android.id
+    },
+    38: {
+      project_id: projects.r3.id,
+      skill_id: skills.java.id
+    },
+    39: {
+      project_id: projects.r3.id,
+      skill_id: skills.bootstrap.id
+    },
   })
 )
 
