@@ -177,13 +177,11 @@ and (min-width: 768px) {
   background: #000000;
   border-color: #000000;
   color: #FFFFFF;
-  transition: all 0.2s ease-in-out;
 }
 
 .btn-oval__white {
   color: #FFFFFF;
   border-color: #FFFFFF;
-  /*background: rgba(255, 255, 255, 0.25);*/
   font-size: .75em;
 }
 

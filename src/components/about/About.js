@@ -40,8 +40,8 @@ const About = ({animated}) => {
               {`Diversity empowers innovation. Innovation is what you're looking for in your next hire. Color for Code is a technology recruitment platform. We're connecting Black software engineers and designers with companies like yours, building teams as colorful as your growing user base.`}
             </p>
             <Link to='/register'>
-              <span className='btn-oval btn-oval--white'>
-                SIGN UP!
+              <span className='btn-oval btn-oval__white'>
+                JOIN AS AN EMPLOYER
               </span>
             </Link>
           </Col>
@@ -104,8 +104,8 @@ const About = ({animated}) => {
               {`It feels good to walk into an interview knowing the employer is looking for someone just like you. Color for Code is a technology recruitment platform that provides just that. We're connecting talented Black designers and engineers like you with innovative companies that don't just talk about the value of diversity—they cultivate it.`}
             </p>
             <Link to='/register'>
-              <span className='btn-oval btn-oval--white'>
-                SIGN UP!
+              <span className='btn-oval btn-oval__white'>
+                JOIN AS AN APPLICANT
               </span>
             </Link>
           </Col>

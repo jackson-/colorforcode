@@ -76,6 +76,17 @@ class JobBoard extends Component {
     }
   }
 
+  getValidationState = (type) => {
+    const { zip_code, distance } = this.state
+    if (type === 'zip_code') {
+      if (zip_code.length < 5 && distance.length > 0) return 'error'
+      else if (distance.length > 0 && zip_code.length > 0) return null
+    } else {
+      if (!distance && zip_code.length > 0) return 'error'
+      else if (distance.length > 0 && zip_code.length > 0) return null
+    }
+  }
+
   toggleJobTypes = event => {
     const {value} = event.target
     this.state.employment_types.has(value)
@@ -228,6 +239,7 @@ class JobBoard extends Component {
               filterJobs={this.advancedFilterJobs()}
               handleChange={this.handleChange}
               toggleCheckbox={this.toggleJobTypes}
+              validate={this.getValidationState}
               clearFilter={this.clearFilter}
               clearChip={this.clearChip}
               filtered={this.state.filtered}

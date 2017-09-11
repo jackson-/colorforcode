@@ -100,6 +100,7 @@
 .text-faded {
   color: #FFFFFF;
   color: rgba(255, 255, 255, 0.9);
+  padding-bottom: 30px;
 }
 
 .text-primary {
@@ -108,6 +109,11 @@
 
 .sr-icons {
   font-size: 3em;
+}
+
+.About .btn-oval__white:hover {
+  background: #FFFFFF;
+  color: #01C688;
 }
 
 @media (min-width: 768px) {

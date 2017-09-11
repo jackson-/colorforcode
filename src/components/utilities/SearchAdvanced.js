@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import {
-  FormGroup, FormControl, ControlLabel,
-  Checkbox, Radio, Button, Glyphicon, Row, Col } from 'react-bootstrap'
+  FormGroup, FormControl, ControlLabel, HelpBlock,
+  Checkbox, Button, Glyphicon, Row, Col } from 'react-bootstrap'
 import './SearchAdvanced.css'
 
 const SearchAdvanced = props => {
@@ -74,42 +74,33 @@ const SearchAdvanced = props => {
           controlId='zipcode'
           className='SearchAdvanced__zipcode'
           onChange={props.handleChange('zip_code')}
+          validationState={props.validate('zip_code')}
         >
           <ControlLabel>ZIP CODE</ControlLabel>
           <FormControl type='tel' value={props.state.zip_code} />
+          {
+            props.validate('zip_code') === 'error' &&
+              <HelpBlock>
+                {`Enter the zip code to find jobs within ${props.state.distance} miles of.`}
+              </HelpBlock>
+          }
         </FormGroup>
         <FormGroup
           controlId='distance'
           className='SearchAdvanced__distance'
           onChange={props.handleChange('distance')}
+          validationState={props.validate('distance')}
         >
           <ControlLabel>MAX DISTANCE (miles)</ControlLabel>
           <FormControl type='tel' value={props.state.distance} />
+          {
+            props.validate('distance') === 'error' &&
+              <HelpBlock>
+                Filter requires the max number of miles away from your zip code.
+              </HelpBlock>
+          }
         </FormGroup>
       </div>
-      <FormGroup
-        controlId='sort-by'
-        name='SearchAdvanced__sort-by'
-        onChange={props.handleChange('sortBy')}
-      >
-        <ControlLabel>SORT BY</ControlLabel>
-        <Radio
-          className='SearchAdvanced__radio'
-          name='radioGroup'
-          value='date'
-          checked={props.state && props.state.sortBy === 'date'}
-        >
-          Date (most recent)
-        </Radio>
-        <Radio
-          className='SearchAdvanced__radio'
-          name='radioGroup'
-          value='distance'
-          checked={props.state.sortBy && props.state.sortBy === 'distance'}
-        >
-          Distance
-        </Radio>
-      </FormGroup>
       <Row className='SearchAdvanced__button-container'>
         <Col className='SearchAdvanced__chip-container' xs={12} sm={12} md={12} lg={12}>
           <Button className='SearchAdvanced__button' type='submit'>
@@ -127,6 +118,7 @@ SearchAdvanced.propTypes = {
   handleChange: PropTypes.func.isRequired,
   clearFilter: PropTypes.func.isRequired,
   clearChip: PropTypes.func.isRequired,
+  validate: PropTypes.func.isRequired,
   filtered: PropTypes.bool.isRequired,
   terms: PropTypes.array.isRequired,
   query: PropTypes.string.isRequired,
