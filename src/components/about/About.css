@@ -111,7 +111,7 @@
   font-size: 3em;
 }
 
-.About .btn-oval__white:hover {
+.About .btn-oval__white {
   background: #FFFFFF;
   color: #01C688;
 }
@@ -153,5 +153,10 @@
 @media (min-width: 992px) {
   .about .service-box {
     margin: 20px auto 0;
+  }
+
+  .About .btn-oval__white:hover {
+    background: #FFFFFF;
+    color: #01C688;
   }
 }
