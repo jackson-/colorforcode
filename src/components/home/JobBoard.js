@@ -32,7 +32,6 @@ class JobBoard extends Component {
     const {allJobs, fetching, authenticating, getJobs} = this.props
     if (!authenticating) {
       if (!allJobs && !fetching) {
-        console.log('CWM - FETCHING JOBS')
         getJobs()
       }
       if (allJobs) {
@@ -45,7 +44,6 @@ class JobBoard extends Component {
     const {authenticating, getJobs} = this.props
     if (!authenticating) {
       if (!nextProps.allJobs && !nextProps.filteredJobs && !nextProps.fetching) {
-        console.log('CWRP - FETCHING JOBS')
         getJobs()
       }
       if (nextProps.allJobs || nextProps.filteredJobs) {
@@ -90,14 +88,18 @@ class JobBoard extends Component {
 
   clearChip = event => {
     event.preventDefault()
+    this.setState({loading: true})
     const chipToClear = event.target.value
+    console.log('chipToClear - ', chipToClear)
     let terms = this.state.terms.filter(term => {
       return term !== chipToClear && term !== ''
     })
     const query = terms.join(' ')
     this.setState(
-      {terms, query, filtered: query.length > 0},
-      this.filterJobs
+      {terms, query, filtered: query.length > 0, loading: false},
+      () => {
+        if (query) this.props.filterJobs(query)
+      }
       // ^second param of setState (optional) is callback to execute after setting state
     )
   }
@@ -123,7 +125,7 @@ class JobBoard extends Component {
       })
     } else {
       // just clear the search bar, nbd
-      this.setState({query: ''})
+      this.setState({query: '', pendingTerms: []})
     }
   }
 
@@ -191,9 +193,8 @@ class JobBoard extends Component {
     // this is an event handler but we also use this in clearFilter & clearChip,
     // in which case there's no event object to call preventDefault on
     if (event) event.preventDefault()
-    this.setState({loading: true})
     const {query} = this.state
-    // ^ when query === '', all job listings are shown
+    // ^ when query === '', we don't filter so all job listings continue to be shown
     if (query) {
       this.setState({
         filtered: true,
@@ -209,12 +210,12 @@ class JobBoard extends Component {
     const {allJobs, filteredJobs} = this.props
     const {loading, filtered} = this.state
     const jobs = !filteredJobs || !filtered ? allJobs : filteredJobs
-    console.log('JOBS: ', jobs, 'STATE: ', this.state)
     return (
       <Row className='JobBoard'>
         <SearchBar
           type='job'
           inline
+          id='search-jobs'
           query={this.state.query}
           handleSubmit={this.filterJobs}
           handleChange={this.handleChange('query')}

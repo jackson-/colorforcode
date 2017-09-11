@@ -7,14 +7,7 @@ import { Row, Col } from 'react-bootstrap'
 import { creatingNewProject } from 'APP/src/reducers/actions/projects'
 import { gettingAllSkills } from 'APP/src/reducers/actions/skills'
 import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
-import ImageUploader from '../dashboard/ImageUploader'
 import '../auth/Form.css'
-
-function arrowRenderer () {
-  return (
-    <span />
-  )
-}
 
 class CreateProjectForm extends Component {
   constructor (props) {
@@ -99,7 +92,6 @@ class CreateProjectForm extends Component {
             handleSubmit={this.handleSubmit}
             handleChange={this.handleChange}
             selectSkill={this._selectSkill}
-            arrowRenderer={arrowRenderer}
             state={this.state}
             animated={animated}
             isInvalid={this.isInvalid()}

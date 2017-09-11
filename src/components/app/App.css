@@ -165,7 +165,7 @@ and (min-width: 768px) {
 .btn-oval {
   margin: 8px 0;
   padding: 12px 30px;
-  font-size: 13px !important;
+  font-size: 13px;
   font-family: Open Sans Bold;
   border: solid 2px #01C688;
   border-radius: 25px;
@@ -178,6 +178,13 @@ and (min-width: 768px) {
   border-color: #000000;
   color: #FFFFFF;
   transition: all 0.2s ease-in-out;
+}
+
+.btn-oval__white {
+  color: #FFFFFF;
+  border-color: #FFFFFF;
+  /*background: rgba(255, 255, 255, 0.25);*/
+  font-size: .75em;
 }
 
 .btn-oval:hover,

@@ -57,6 +57,14 @@
   font-size: 1.5em;
 }
 
+#search {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 60px;
+  width: 100%;
+}
+
 .JobBoard,
 .CandidateSearch {
   z-index: 2;
@@ -67,7 +75,8 @@
   padding: 25px 12px 0 12px;
 }
 
-.JobList {
+.JobList,
+.CandidateList {
   padding-bottom: 25px;
 }
 
@@ -103,14 +112,10 @@ and (min-width: 767px) {
   }
 }
 
-.candidate {
-  padding: 0;
-}
-
 .paginate {
   padding-top: 30px;
 }
 
 .page-number{
-    display: inline;
+  display: inline;
 }
