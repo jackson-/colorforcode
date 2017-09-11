@@ -17,7 +17,7 @@ module.exports = require('express').Router()
       .catch(next)
   })
 
-  .post('/', (req, res, next) =>
+  .post('/', (req, res, next) => 
     User.create(req.body)
       .then(user => {
         if (user.is_employer) {
