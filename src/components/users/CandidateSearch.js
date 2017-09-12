@@ -279,7 +279,7 @@ class CandidateSearch extends Component {
 
 CandidateSearch.propTypes = {
   users: PropTypes.arrayOf(PropTypes.object),
-  coords: PropTypes.string,
+  coords: PropTypes.object,
   getUsers: PropTypes.func,
   filterUsers: PropTypes.func,
   advancedFilterUsers: PropTypes.func,

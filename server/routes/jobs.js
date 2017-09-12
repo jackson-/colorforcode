@@ -207,20 +207,20 @@ module.exports = require('express').Router()
         .catch(next)
     })
 
-  .put('/:id',
-    (req, res, next) => {
-      const {job, skills} = req.body
-      Job.update(job, {
-        where: {id: req.params.id},
-        returning: true
-      })
-        .spread((numJobsUpdated, updatedJobsArr) => {
-          const updatedJob = updatedJobsArr[0]
-          return updatedJob.addSkills(skills)
-        })
-        .then(() => res.sendStatus(200))
-        .catch(next)
+  .put('/:id', (req, res, next) => {
+    const {job, skills} = req.body
+    Job.update(job, {
+      where: {id: req.params.id},
+      returning: true
     })
+      .spread((numJobsUpdated, updatedJobsArr) => {
+        const updatedJob = updatedJobsArr[0]
+        return updatedJob.addSkills(skills)
+      })
+      .then(() => Job.findOne({where: {id: req.params.id}, include: [Skill, Employer]}))
+      .then(updatedJob => res.status(200).json(updatedJob))
+      .catch(next)
+  })
 
   .delete('/:id',
     (req, res, next) => {
