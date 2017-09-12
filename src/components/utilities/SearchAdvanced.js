@@ -81,7 +81,7 @@ const SearchAdvanced = props => {
           {
             props.validate('zip_code') === 'error' &&
               <HelpBlock>
-                {`Enter the zip code to find jobs within ${props.state.distance} miles of.`}
+                {`Enter a zip code to find jobs within ${props.state.distance} miles of.`}
               </HelpBlock>
           }
         </FormGroup>
@@ -96,7 +96,7 @@ const SearchAdvanced = props => {
           {
             props.validate('distance') === 'error' &&
               <HelpBlock>
-                Filter requires the max number of miles away from your zip code.
+                {`Enter the max number of miles away from ${props.state.zip_code}.`}
               </HelpBlock>
           }
         </FormGroup>

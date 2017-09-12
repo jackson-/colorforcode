@@ -1,7 +1,7 @@
 import axios from 'axios'
 import {
   RECEIVE_USERS, RECEIVE_USER, UPDATE_USER, DELETE_USER,
-  REQUEST_ALL_USERS, BEGIN_UPLOADING,
+  REQUEST_ALL_USERS, BEGIN_UPLOADING, RECEIVE_FILTERED_USERS,
   DONE_UPLOADING, REQUEST_USER, REQUEST_FILTERED_USERS } from '../constants'
 import { whoami } from './auth'
 import { receiveAlert } from './alert'
@@ -13,6 +13,11 @@ const storageRef = storage.ref()
 export const receiveAllUsers = users => ({
   users,
   type: RECEIVE_USERS
+})
+
+export const receiveFilteredUsers = users => ({
+  users,
+  type: RECEIVE_FILTERED_USERS
 })
 
 export const receiveUser = user => ({
@@ -72,14 +77,14 @@ export const filteringUsers = query => dispatch => {
   dispatch(requestFilteredUsers())
   axios.post('/api/users/search', {query})
     .then(res => res.data)
-    .then(users => dispatch(receiveAllUsers(users)))
+    .then(users => dispatch(receiveFilteredUsers(users)))
     .catch(err => console.error(`Mang, I couldn't filter the users! ${err.stack}`))
 }
 
 export const advancedFilteringUsers = body => dispatch => {
   axios.post('/api/users/search/advanced', body)
     .then(res => res.data)
-    .then(users => dispatch(receiveAllUsers(users)))
+    .then(users => dispatch(receiveFilteredUsers(users)))
     .catch(err => console.error(`Mang, I couldn't advanced filter the users! ${err.stack}`))
 }
 

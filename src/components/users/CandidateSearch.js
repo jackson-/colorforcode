@@ -18,6 +18,8 @@ class CandidateSearch extends Component {
       coords: '',
       pendingTerms: [],
       filtered: false,
+      zip_code: '',
+      employment_types: new Set([]),
       distance: '',
       sortBy: '',
       page_num: 1,
@@ -27,12 +29,12 @@ class CandidateSearch extends Component {
   }
 
   componentWillMount () {
-    const {users, fetching, authenticating, getUsers} = this.props
+    const {allUsers, fetching, authenticating, getUsers} = this.props
     if (!authenticating) {
-      if (!users && !fetching) {
+      if (!allUsers && !fetching) {
         getUsers()
       }
-      if (users) {
+      if (allUsers) {
         this.setState({loading: false})
       }
     }
@@ -41,24 +43,22 @@ class CandidateSearch extends Component {
   componentWillReceiveProps (nextProps) {
     const {getUsers, authenticating} = this.props
     if (!authenticating) {
-      if (!nextProps.users && !nextProps.fetching) {
+      if (!nextProps.allUsers && !nextProps.fetching) {
         getUsers()
       }
-      if (nextProps.users) {
+      if (nextProps.allUsers || nextProps.filteredUsers) {
         this.setState({loading: false})
       }
     }
   }
 
-  handleLocation(zip_code) {
+  handleLocation = zip_code => {
     axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${zip_code}`)
       .then(res => res.data)
       .then(json => {
-        const city = json.results[0].address_components[1].long_name
-        const state = json.results[0].address_components[2].short_name
-        const location = `${city}, ${state}`
-        const coords = `${json.results[0].geometry.location.lat},${json.results[0].geometry.location.lng}`
-        this.setState({coords, zip_code, location})
+        const geometry = json.results[0].geometry.location
+        const coords = {lat: parseFloat(geometry.lat), lng: parseFloat(geometry.lng)}
+        this.setState({coords})
       })
       .catch(err => console.error(err.stack))
   }
@@ -68,7 +68,33 @@ class CandidateSearch extends Component {
     const nextState = {}
     nextState[`${type}`] = value
     if (type === 'query') nextState.pendingTerms = value.split(' ')
-    this.setState(nextState)
+    if (type === 'zip_code' && value.toString().length >= 5) {
+      /* first we finish updating the state of the input, then we use the zip to find the rest of the location data by passing the callback to setState (an optional 2nd param) */
+      this.setState({[type]: value}, this.handleLocation(value))
+    } else {
+      this.setState(nextState)
+    }
+  }
+
+  getValidationState = (type) => {
+    const { zip_code, distance } = this.state
+    if (type === 'zip_code') {
+      if (zip_code.length < 5 && distance.length > 0) return 'error'
+      else if (distance.length > 0 && zip_code.length > 0) return null
+    } else {
+      if (!distance && zip_code.length > 0) return 'error'
+      else if (distance.length > 0 && zip_code.length > 0) return null
+    }
+  }
+
+  toggleJobTypes = event => {
+    const {value} = event.target
+    this.state.employment_types.has(value)
+      ? this.state.employment_types.delete(value)
+      : this.state.employment_types.add(value)
+    const employment_types = new Set([...this.state.employment_types])
+    /* ^Using a Set instead of an array because we want the data values to be unique */
+    this.setState({employment_types})
   }
 
   clearFilter = filter => {
@@ -79,10 +105,17 @@ class CandidateSearch extends Component {
       // see SearchAdvanced.js line 21 (the Clear Filter button onClick)
       this.setState({
         query: '',
-        pendingTerms: [],
         terms: [],
+        coords: '',
+        pendingTerms: [],
+        filtered: false,
+        zip_code: '',
+        employment_types: new Set([]),
+        distance: '',
         sortBy: '',
-        filtered: false
+        page_num: 1,
+        from: 0,
+        loading: false
       })
       this.filterUsers()
     } else {
@@ -93,29 +126,44 @@ class CandidateSearch extends Component {
 
   clearChip = event => {
     event.preventDefault()
+    this.setState({loading: true})
     const chipToClear = event.target.value
+    console.log('chipToClear - ', chipToClear)
     let terms = this.state.terms.filter(term => {
       return term !== chipToClear && term !== ''
     })
     const query = terms.join(' ')
     this.setState(
-      {terms, query, filtered: query.length > 0},
-      this.filterUsers
+      {terms, query, filtered: query.length > 0, loading: false},
+      () => {
+        if (query) this.props.filterUsers(query)
+      }
       // ^second param of setState (optional) is callback to execute after setting state
     )
   }
 
-  clearFilter = (filter) => {
+  clearFilter = filter => event => {
     if (filter) {
-      // clear the search bar, show all job listings, and hide search header
+      // if this method is invoked with a filter param,
+      // we reset all search interface elements by:
+      // clearing the search bar, showing all job listings, and hiding search-header
+      // see SearchAdvanced.js line 21 (the Clear Filter button onClick)
+      console.log('CLEARING FILTER')
       this.setState({
         query: '',
-        filtered: false
+        pendingTerms: [],
+        terms: [],
+        distance: '',
+        sortBy: '',
+        zip_code: '',
+        coords: '',
+        employment_types: new Set([]),
+        filtered: false,
+        loading: false
       })
-      this.filterUsers()
     } else {
       // just clear the search bar, nbd
-      this.setState({query: ''})
+      this.setState({query: '', pendingTerms: []})
     }
   }
 
@@ -140,16 +188,20 @@ class CandidateSearch extends Component {
   }
 
   filterUsers = event => {
-    // this is an event handler but we also use this in clearFilter,
-    // in which case there's no event object to preventDefault of
+    // this is an event handler but we also use this in clearFilter & clearChip,
+    // in which case there's no event object to call preventDefault on
     if (event) event.preventDefault()
-
     const {query} = this.state
-    this.props.filterUsers(query)
-    // ^ when query === '', all users are shown
-    if (query) this.setState({filtered: true, terms: [...this.state.pendingTerms]})
+    // ^ when query === '', we don't filter so all job listings continue to be shown
+    if (query) {
+      this.setState({
+        filtered: true,
+        terms: [...this.state.pendingTerms],
+        loading: true
+      }, this.props.filterUsers(query))
+    }
     // we only show the search results header if this.state.filtered === true
-    this.clearFilter()
+    this.clearFilter()()
   }
 
   buildBody = (coords, from) => {
@@ -216,7 +268,9 @@ class CandidateSearch extends Component {
   }
 
   render () {
-    const {users} = this.props
+    const {allUsers, filteredUsers} = this.props
+    const {loading, filtered} = this.state
+    const users = !filteredUsers || !filtered ? allUsers : filteredUsers
     return (
       <Row className='CandidateSearch'>
         <SearchBar
@@ -233,6 +287,8 @@ class CandidateSearch extends Component {
           <Col className='SearchAdvanced__container' xs={12} sm={3} md={3} lg={3}>
             <CandidateSearchAdvanced
               advancedFilterUsers={this.advancedFilterUsers()}
+              toggleCheckbox={this.toggleJobTypes}
+              validate={this.getValidationState}
               handleChange={this.handleChange}
               clearFilter={this.clearFilter}
               clearChip={this.clearChip}
@@ -257,7 +313,7 @@ class CandidateSearch extends Component {
               </Col>
             </Row>
             {
-              this.state.loading
+              loading
                 ? <LoadingSpinner top={'20vh'} />
                 : (
                   <CandidateList
@@ -278,7 +334,8 @@ class CandidateSearch extends Component {
 }
 
 CandidateSearch.propTypes = {
-  users: PropTypes.arrayOf(PropTypes.object),
+  allUsers: PropTypes.arrayOf(PropTypes.object),
+  filteredUsers: PropTypes.arrayOf(PropTypes.object),
   coords: PropTypes.object,
   getUsers: PropTypes.func,
   filterUsers: PropTypes.func,
@@ -288,7 +345,8 @@ CandidateSearch.propTypes = {
 }
 
 const mapStateToProps = state => ({
-  users: state.users.all,
+  allUsers: state.users.all,
+  filteredUsers: state.users.filtered,
   authenticating: state.auth.authenticating,
   fetching: state.users.fetchingAll
 })

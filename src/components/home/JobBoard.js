@@ -17,7 +17,6 @@ class JobBoard extends Component {
       pendingTerms: [],
       terms: [],
       distance: '',
-      sortBy: '',
       zip_code: '',
       employment_types: new Set([]),
       filtered: false,
@@ -127,11 +126,12 @@ class JobBoard extends Component {
         pendingTerms: [],
         terms: [],
         distance: '',
-        sortBy: '',
         zip_code: '',
-        coords: '',
         employment_types: new Set([]),
         filtered: false,
+        coords: '',
+        page_num: 1,
+        from: 0,
         loading: false
       })
     } else {
