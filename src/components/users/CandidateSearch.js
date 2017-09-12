@@ -336,7 +336,7 @@ class CandidateSearch extends Component {
 CandidateSearch.propTypes = {
   allUsers: PropTypes.arrayOf(PropTypes.object),
   filteredUsers: PropTypes.arrayOf(PropTypes.object),
-  coords: PropTypes.object,
+  coords: PropTypes.any, // either '' (for falsey-ness) or an object
   getUsers: PropTypes.func,
   filterUsers: PropTypes.func,
   advancedFilterUsers: PropTypes.func,

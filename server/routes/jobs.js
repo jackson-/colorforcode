@@ -24,7 +24,7 @@ module.exports = require('express').Router()
       model: db.Job,
       hasJoin: true
     }
-    let q = query.split(' ').join(' & ')
+    let q = query.split(' ').join(' && ')
     const sql = (
       'SELECT * FROM (' +
         'SELECT DISTINCT ' +

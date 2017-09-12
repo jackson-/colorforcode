@@ -281,7 +281,7 @@ JobBoard.propTypes = {
   filterJobs: PropTypes.func,
   advancedFilterJobs: PropTypes.func,
   fetching: PropTypes.bool,
-  coords: PropTypes.object,
+  coords: PropTypes.any, // either '' (for falsey-ness) or an object
   authenticating: PropTypes.bool
 }
 

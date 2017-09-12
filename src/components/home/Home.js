@@ -63,7 +63,7 @@ const Home = ({
 }
 
 Home.propTypes = {
-  coords: PropTypes.object,
+  coords: PropTypes.any, // either '' (for falsey-ness) or an object
   isEmployer: PropTypes.bool,
   animated: PropTypes.string,
   getUsers: PropTypes.func,
