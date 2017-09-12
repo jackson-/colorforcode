@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import JobInfoDisplay from './JobInfoDisplay'
 import JobUpdateDisplay from './JobUpdateDisplay'
+import LoadingSpinner from '../utilities/LoadingSpinner'
 import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
 
 class JobDetailPage extends Component {
@@ -66,7 +67,11 @@ class JobDetailPage extends Component {
     return (
       <div className={`JobDetailPage fadeIn ${animated}`}>
         <ScrollToTopOnMount />
-        {jobComponent}
+        {
+          job
+            ? jobComponent
+            : <LoadingSpinner />
+        }
       </div>
     )
   }

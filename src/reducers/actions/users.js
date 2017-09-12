@@ -107,12 +107,12 @@ export const creatingNewEmployer = employer => dispatch => {
 }
 
 export const updatingUser = (user, savedJobs) => dispatch => {
-  // set loading state to true to trigger UI changes
-  // update the user
-  user.coords.crs = {type: 'name', properties: {name: 'EPSG:32661'}}
+  if (user.coords) {
+    user.coords.crs = {type: 'name', properties: {name: 'EPSG:32661'}}
+  }
   axios.put(`/api/users/${user.id}`, {user, savedJobs})
     .then(res => res.data)
-    // if the user is successfully updated, we fetch the updated users list
+    // if the user is successfully updated, we reauthenticate to update the store
     .then(updatedUser => {
       dispatch(whoami())
     })

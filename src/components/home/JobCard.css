@@ -16,9 +16,7 @@
 }
 
 .JobCard-title,
-.JobCard-payrate,
-.UserCard-name,
-.UserCard-projects {
+.JobCard-payrate {
   font-size: 17px;
   font-family: Open Sans Bold;
   margin-top: 10px;
@@ -27,9 +25,28 @@
 .JobCard-title,
 .JobCard-skills,
 .UserCard-name,
+.UserCard-title,
 .UserCard-skills {
   margin-left: 10%;
   text-align: left;
+}
+
+.UserCard-name {
+  font-size: 22px;
+  font-family: Open Sans Bold;
+  margin-top: 10px;
+}
+
+.UserCard-title {
+  font-family: Open Sans Regular;
+  font-size: 17px;
+  margin-top: 10px;
+}
+
+.UserCard-projects {
+  font-size: 17px;
+  font-family: Open Sans Regular;
+  margin-top: 10px;
 }
 
 .JobCard-skills,
@@ -67,12 +84,17 @@
 and (max-width: 767px) {
   .JobCard-title,
   .JobCard-skills,
-  .JobCard-payrate {
-    margin: 5px;
+  .JobCard-payrate,
+  .UserCard-projects,
+  .UserCard-name,
+  .UserCard-title,
+  .UserCard-skills {
+    margin: 10px;
     text-align: center;
   }
 
-  .JobCard {
+  .JobCard,
+  .UserCard {
     padding: 20px 0;
   }
 }

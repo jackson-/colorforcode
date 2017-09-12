@@ -20,8 +20,8 @@ const Home = ({
   const anim = animated ? 'animated' : ''
   return (
     <div className={`Home fadeIn ${anim}`}>
-      <header className='Home-header'>
-        <Row>
+      <Row>
+        <header className='Home-header'>
           <Jumbotron className='Home-hero'>
             <Col className='parallax-content' xs={12} sm={12} md={12} lg={12}>
               <h1 className='Home__hero-tagline'>Color for Code</h1>
@@ -35,8 +35,8 @@ const Home = ({
               <div id='search' />
             </Col>
           </Jumbotron>
-        </Row>
-      </header>
+        </header>
+      </Row>
       <main>
         {
           isEmployer

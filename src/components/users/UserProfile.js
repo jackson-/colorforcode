@@ -13,6 +13,7 @@ import LinkedInIcon from '../utilities/icons/LinkedInIcon'
 import PortfolioCard from './PortfolioCard'
 import ProjectModal from './ProjectModal'
 import Project from './Project'
+import LoadingSpinner from '../utilities/LoadingSpinner'
 import './UserProfile.css'
 
 class UserProfile extends Component {
@@ -71,6 +72,7 @@ class UserProfile extends Component {
     const {opacity, showModal, currentProject} = this.state
     return (
       <Row className={`UserDetail fadeIn ${animated}`}>
+        {!user && <LoadingSpinner />}
         {
           user &&
           <Col xs={12} sm={12} md={12} lg={12}>

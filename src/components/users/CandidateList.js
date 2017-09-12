@@ -27,7 +27,10 @@ const CandidateList = ({users, filtered}) => (
             <Row>
               <Col xs={12} sm={6} md={6} lg={6}>
                 <h2 className='UserCard-name'>
-                  {`${user.first_name} ${user.last_name}, ${user.title}`}
+                  {`${user.first_name} ${user.last_name}`}
+                </h2>
+                <h2 className='UserCard-title'>
+                  {`${user.title}`}
                 </h2>
                 <p className='UserCard-skills'>
                   {skills}
