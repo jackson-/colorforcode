@@ -35,6 +35,15 @@ prettyError.skipPackage('express')
 module.exports = app
   // Session middleware - compared to express-session (which is what's used in the Auther workshop), cookie-session stores sessions in a cookie, rather than some other type of session store.
   // Cookie-session docs: https://www.npmjs.com/package/cookie-session
+  app.use(function (req, res, next) {
+    if ('/robots.txt' === req.url) {
+      console.log("GOTEM")
+      res.type('text/plain')
+      res.send("User-agent: *\nDisallow: ");
+    } else {
+      next();
+    }
+  })
   .use(require('cookie-session')({
     name: 'session',
     keys: [process.env.SESSION_SECRET || 'an insecure secret key']
@@ -53,7 +62,6 @@ module.exports = app
   .use(express.static(resolve(__dirname, '..', 'build')))
   // Serve our api - ./api also requires in ../db, which syncs with our database
   .use('/api', require('./api'))
-
   // any requests with an extension (.js, .css, etc.) turn into 404
   .use((req, res, next) => {
     if (path.extname(req.path).length) {

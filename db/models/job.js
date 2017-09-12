@@ -1,6 +1,13 @@
-const {STRING, TEXT, ARRAY, GEOMETRY} = require('sequelize')
+const {STRING, TEXT, ARRAY, GEOMETRY, UUID, UUIDV4} = require('sequelize')
 
 module.exports = db => db.define('job', {
+  uuid: {
+    type: UUID,
+    defaultValue: UUIDV4,
+    validate: {
+      isUUID: 4
+    }
+  },
   title: {
     type: STRING,
     allowNull: false
