@@ -1,6 +1,14 @@
 const {STRING, TEXT, ARRAY, GEOMETRY} = require('sequelize')
 
 module.exports = db => db.define('job', {
+  id: {
+    type: UUID,
+    primaryKey: true,
+    defaultValue: UUIDV4,
+    validate: {
+      isUUID: 4
+    }
+  },
   title: {
     type: STRING,
     allowNull: false
