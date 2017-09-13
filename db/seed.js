@@ -514,7 +514,7 @@ const jobs = seed(Job,
         'zip_code': 'K2P1L4',
         'employment_types': ['Internship', 'Full Time'],
         'pay_rate': '$30',
-        'compensation_type': 'Salary',
+        'compensation_type': 'Hourly',
         'travel_requirements': 'None',
         'employer_id': employers.shopify.id
       },

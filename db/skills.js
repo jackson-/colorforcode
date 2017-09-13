@@ -746,7 +746,7 @@ const skillList = [{
   'title': 'internationalization',
   'template': true
 }, {
-  'title': 'neural network',
+  'title': 'neural networks',
   'template': true
 }, {
   'title': 'erlang',
