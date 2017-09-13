@@ -3,6 +3,7 @@ import { Row, Col } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
 
 const CandidateList = props => {
+  console.log("LIST ", props.users)
   return (
   <div className='JobList'>
     {props.filtered &&
@@ -14,11 +15,15 @@ const CandidateList = props => {
     }
     {props.users && props.users.map((user, i) => {
       let skills = new Set([])
-      user.projects.forEach(p => {
-        p.skills.forEach(s => {
-          skills.add(s.title)
+      if(user.projects){
+        user.projects.forEach(p => {
+          if(p.skills){
+            p.skills.forEach(s => {
+              skills.add(s.title)
+            })
+          }
         })
-      })
+      }
       skills = [...skills].join(' ')
       return (
         <LinkContainer className='JobCard' key={i} to={`/users/${user.id}`}>

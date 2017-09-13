@@ -68,9 +68,7 @@ module.exports = require('express').Router()
       'WHERE ' +
       `p_search.document @@ to_tsquery('english', '${q}') ` +
       `ORDER BY id ASC, ts_rank(p_search.document, to_tsquery('english', '${q}')) DESC;`
-      // `ORDER BY id ASC;`
     )
-    console.log("QUERY", db_query)
     db.query(db_query, options)
       .then(result => {
         return res.status(200).json(result)

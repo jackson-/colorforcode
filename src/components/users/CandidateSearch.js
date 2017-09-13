@@ -71,20 +71,25 @@ class CandidateSearch extends Component {
     this.setState(nextState)
   }
 
-  clearFilter = filter => {
+  clearFilter = filter => event => {
     if (filter) {
       // if this method is invoked with a filter param,
       // we reset all search interface elements by:
       // clearing the search bar, showing all job listings, and hiding search-header
       // see SearchAdvanced.js line 21 (the Clear Filter button onClick)
+      console.log('CLEARING FILTER')
       this.setState({
         query: '',
         pendingTerms: [],
         terms: [],
+        distance: '',
         sortBy: '',
-        filtered: false
+        zip_code: '',
+        coords: '',
+        employment_types: new Set([]),
+        filtered: false,
+        loading: false
       })
-      this.filterUsers()
     } else {
       // just clear the search bar, nbd
       this.setState({query: ''})
@@ -99,7 +104,7 @@ class CandidateSearch extends Component {
     })
     const query = terms.join(' ')
     this.setState(
-      {terms, query, filtered: query.length > 0},
+      {pendingTerms:terms, query, filtered: query.length > 0},
       this.filterUsers
       // ^second param of setState (optional) is callback to execute after setting state
     )
@@ -145,6 +150,7 @@ class CandidateSearch extends Component {
     if (event) event.preventDefault()
 
     const {query} = this.state
+    debugger
     this.props.filterUsers(query)
     // ^ when query === '', all users are shown
     if (query) this.setState({filtered: true, terms: [...this.state.pendingTerms]})
@@ -217,6 +223,7 @@ class CandidateSearch extends Component {
 
   render () {
     const {users} = this.props
+    console.log("SEARCH", users)
     return (
       <Row className='CandidateSearch'>
         <SearchBar
