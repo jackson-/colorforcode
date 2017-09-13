@@ -17,7 +17,6 @@ class CandidateSearch extends Component {
       terms: [],
       coords: '',
       pendingTerms: [],
-      filtered: false,
       zip_code: '',
       employment_types: new Set([]),
       distance: '',
@@ -77,8 +76,9 @@ class CandidateSearch extends Component {
   }
 
   getValidationState = (type) => {
-    const { zip_code, distance } = this.state
-    if (type === 'zip_code') {
+    const {zip_code, distance, sortBy} = this.state
+    if (sortBy === 'distance' && (!zip_code || !distance)) return 'error'
+    else if (type === 'zip_code') {
       if (zip_code.length < 5 && distance.length > 0) return 'error'
       else if (distance.length > 0 && zip_code.length > 0) return null
     } else {
@@ -126,17 +126,16 @@ class CandidateSearch extends Component {
 
   clearChip = event => {
     event.preventDefault()
-    this.setState({loading: true})
     const chipToClear = event.target.value
-    console.log('chipToClear - ', chipToClear)
     let terms = this.state.terms.filter(term => {
       return term !== chipToClear && term !== ''
     })
     const query = terms.join(' ')
     this.setState(
-      {terms, query, filtered: query.length > 0, loading: false},
+      {terms, loading: true},
       () => {
         if (query) this.props.filterUsers(query)
+        else this.props.getUsers()
       }
       // ^second param of setState (optional) is callback to execute after setting state
     )
@@ -148,7 +147,6 @@ class CandidateSearch extends Component {
       // we reset all search interface elements by:
       // clearing the search bar, showing all job listings, and hiding search-header
       // see SearchAdvanced.js line 21 (the Clear Filter button onClick)
-      console.log('CLEARING FILTER')
       this.setState({
         query: '',
         pendingTerms: [],
@@ -158,9 +156,8 @@ class CandidateSearch extends Component {
         zip_code: '',
         coords: '',
         employment_types: new Set([]),
-        filtered: false,
         loading: false
-      })
+      }, this.props.getUsers)
     } else {
       // just clear the search bar, nbd
       this.setState({query: '', pendingTerms: []})
@@ -174,7 +171,7 @@ class CandidateSearch extends Component {
       ? this.state.page_num + 1
       : this.state.page_num - 1
     if (sign) {
-      const nextPageHasItems = (!(this.props.users.length < 10) || sign === 'minus')
+      const nextPageHasItems = (!(users.length < 10) || sign === 'minus')
       if (next_page > 0 && nextPageHasItems) {
         page_num = next_page
         from = sign === 'plus'
@@ -205,57 +202,24 @@ class CandidateSearch extends Component {
   }
 
   buildBody = (coords, from) => {
-    const {terms, distance, sortBy} = this.state
-    let must = terms.map(term => ({term: {_all: term}}))
-    const body = {
-      query: {
-        bool: {
-          must,
-          filter: [
-
-          ]
-        }
-      },
-      sort: [
-        {_score: {order: 'desc'}}
-      ]
+    const {terms, distance, employment_types, sortBy} = this.state
+    return {
+      terms,
+      coords,
+      distance,
+      employment_types: [...employment_types],
+      sortBy
     }
-    if (distance) {
-      body.query.bool.filter.push({
-        geo_distance: {
-          coords,
-          distance: `${distance}mi`
-        }
-      })
-    }
-    if (sortBy === 'projectCount') {
-      body.sort.push({
-        _script: {
-          type: 'number',
-          script: 'params._source?.projects?.length ?: 0',
-          order: 'desc'
-        }
-      })
-    }
-    if (sortBy === 'distance') {
-      body.sort = [{
-        _geo_distance: {
-          coords,
-          order: 'asc',
-          unit: 'mi',
-          distance_type: 'arc'
-        }
-      }]
-    }
-    return body
   }
 
   advancedFilterUsers = sign => event => {
     event.preventDefault()
+    const {filtered, filteredUsers, allUsers, advancedFilterUsers} = this.props
     const coords = this.state.coords
       ? this.state.coords
-      : this.props.coords
-    const {page_num, from} = this.handlePagination(this.props.users, sign)
+      : ''
+    const users = filtered ? filteredUsers : allUsers
+    const {page_num, from} = this.handlePagination(users, sign)
     if (!page_num) {
       return
     }
@@ -264,12 +228,12 @@ class CandidateSearch extends Component {
       filtered: true,
       page_num,
       loading: true
-    }, this.props.advancedFilterUsers(this.buildBody, coords, from))
+    }, advancedFilterUsers(this.buildBody, coords, from))
   }
 
   render () {
-    const {allUsers, filteredUsers} = this.props
-    const {loading, filtered} = this.state
+    const {allUsers, filteredUsers, filtered} = this.props
+    const {loading} = this.state
     const users = !filteredUsers || !filtered ? allUsers : filteredUsers
     return (
       <Row className='CandidateSearch'>
@@ -292,7 +256,7 @@ class CandidateSearch extends Component {
               handleChange={this.handleChange}
               clearFilter={this.clearFilter}
               clearChip={this.clearChip}
-              filtered={this.state.filtered}
+              filtered={this.props.filtered}
               query={this.state.query}
               terms={this.state.terms}
               state={this.state}
@@ -317,7 +281,7 @@ class CandidateSearch extends Component {
                 ? <LoadingSpinner top={'20vh'} />
                 : (
                   <CandidateList
-                    filtered={this.state.filtered}
+                    filtered={this.props.filtered}
                     users={users || []}
                     query={this.state.query}
                     clearFilter={this.clearFilter}
@@ -336,6 +300,7 @@ class CandidateSearch extends Component {
 CandidateSearch.propTypes = {
   allUsers: PropTypes.arrayOf(PropTypes.object),
   filteredUsers: PropTypes.arrayOf(PropTypes.object),
+  filtered: PropTypes.bool,
   coords: PropTypes.any, // either '' (for falsey-ness) or an object
   getUsers: PropTypes.func,
   filterUsers: PropTypes.func,
@@ -346,7 +311,8 @@ CandidateSearch.propTypes = {
 
 const mapStateToProps = state => ({
   allUsers: state.users.all,
-  filteredUsers: state.users.filtered,
+  filteredUsers: state.users.filteredUsers,
+  filtered: state.users.filtered,
   authenticating: state.auth.authenticating,
   fetching: state.users.fetchingAll
 })

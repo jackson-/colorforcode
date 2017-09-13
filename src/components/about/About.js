@@ -9,7 +9,11 @@ const About = ({animated}) => {
     <Row className={`About fadeIn ${animated}`}>
       <Col xs={12} sm={12} md={12} lg={12}>
         <Row>
-          <Col className='About__hero' xs={12} sm={12} md={12} lg={12}>
+          <Col
+            className='About__hero'
+            title='Photo credit - #WOCinTechChat'
+            xs={12} sm={12} md={12} lg={12}
+          >
             <div className='hero-overlay' />
             <div className='About__hero-header'>
               <h1 className='About__hero-heading'>

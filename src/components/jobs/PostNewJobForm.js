@@ -209,9 +209,10 @@ class PostJobForm extends Component {
               <Checkbox value='Full Time'>Full Time</Checkbox>
               <Checkbox value='Part Time'>Part Time</Checkbox>
               <Checkbox value='Contract'>Contract</Checkbox>
-              <Checkbox value='ContractToHire'>Contract to Hire</Checkbox>
+              <Checkbox value='Contract to Hire'>Contract to Hire</Checkbox>
               <Checkbox value='Internship'>Internship</Checkbox>
               <Checkbox value='Remote'>Remote</Checkbox>
+              <Checkbox value='Freelance'>Freelance</Checkbox>
             </FormGroup>
             <FormGroup controlId='compensation'>
               <ControlLabel>Compensation Type</ControlLabel>

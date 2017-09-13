@@ -51,8 +51,8 @@ const SearchAdvanced = props => {
           Contract
         </Checkbox>
         <Checkbox
-          value='ContractToHire'
-          checked={props.state && props.state.employment_types.has('ContractToHire')}
+          value='Contract to Hire'
+          checked={props.state && props.state.employment_types.has('Contract to Hire')}
         >
           Contract to Hire
         </Checkbox>
@@ -67,6 +67,12 @@ const SearchAdvanced = props => {
           checked={props.state && props.state.employment_types.has('Remote')}
         >
           Remote
+        </Checkbox>
+        <Checkbox
+          value='Freelance'
+          checked={props.state && props.state.employment_types.has('Freelance')}
+        >
+          Freelance
         </Checkbox>
       </FormGroup>
       <div className='SearchAdvanced__input-container'>

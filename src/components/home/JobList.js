@@ -7,7 +7,7 @@ import './JobCard.css'
 
 const JobList = ({jobs, filtered}) => (
   <div className='JobList'>
-    {filtered && <h2>Search Results</h2>}
+    {filtered && <h2>{`Search Results (${jobs.length})`}</h2>}
     {
       jobs && jobs.map((job, i) => {
         return (
