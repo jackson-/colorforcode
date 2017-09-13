@@ -51,8 +51,8 @@ const SearchAdvanced = props => {
           Contract
         </Checkbox>
         <Checkbox
-          value='ContractToHire'
-          checked={props.state && props.state.employment_types.has('ContractToHire')}
+          value='Contract to Hire'
+          checked={props.state && props.state.employment_types.has('Contract to Hire')}
         >
           Contract to Hire
         </Checkbox>
@@ -68,6 +68,12 @@ const SearchAdvanced = props => {
         >
           Remote
         </Checkbox>
+        <Checkbox
+          value='Freelance'
+          checked={props.state && props.state.employment_types.has('Freelance')}
+        >
+          Freelance
+        </Checkbox>
       </FormGroup>
       <div className='SearchAdvanced__input-container'>
         <FormGroup
@@ -81,7 +87,7 @@ const SearchAdvanced = props => {
           {
             props.validate('zip_code') === 'error' &&
               <HelpBlock>
-                {`Enter the zip code to find jobs within ${props.state.distance} miles of.`}
+                {`Enter a zip code to find jobs within ${props.state.distance} miles of.`}
               </HelpBlock>
           }
         </FormGroup>
@@ -96,7 +102,7 @@ const SearchAdvanced = props => {
           {
             props.validate('distance') === 'error' &&
               <HelpBlock>
-                Filter requires the max number of miles away from your zip code.
+                {`Enter the max number of miles away from ${props.state.zip_code}.`}
               </HelpBlock>
           }
         </FormGroup>

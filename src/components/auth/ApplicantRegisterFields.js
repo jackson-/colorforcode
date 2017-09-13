@@ -91,6 +91,9 @@ const ApplicantRegisterFields = ({
         <Checkbox defaultChecked={isChecked('Remote')} value='Remote'>
           Remote
         </Checkbox>
+        <Checkbox defaultChecked={isChecked('Freelance')} value='Freelance'>
+          Freelance
+        </Checkbox>
       </FormGroup>
       {/* with zip_code we auto find user's city, state and country along with their coords */}
       <FormGroup controlId='zip_code'>

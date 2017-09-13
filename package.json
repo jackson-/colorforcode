@@ -73,7 +73,6 @@
     "passport-local": "^1.0.0",
     "payment": "^1.0.4",
     "pg": "^6.1.0",
-    "pg-search-sequelize": "0.0.10",
     "pretty-error": "^2.0.2",
     "prop-types": "^15.5.10",
     "react": "^15.3.2",

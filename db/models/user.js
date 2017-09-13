@@ -3,9 +3,8 @@ const bcrypt = require('bcryptjs')
 const {STRING, TEXT, VIRTUAL, BOOLEAN, ENUM, ARRAY, GEOMETRY, UUID, UUIDV4} = require('sequelize')
 
 module.exports = db => db.define('user', {
-  id: {
+  uuid: {
     type: UUID,
-    primaryKey: true,
     defaultValue: UUIDV4,
     validate: {
       isUUID: 4

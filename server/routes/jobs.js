@@ -24,7 +24,9 @@ module.exports = require('express').Router()
       model: db.Job,
       hasJoin: true
     }
-    let q = query.split(' ').join(' & ')
+
+    const q = query.split(' ').join(' | ')
+
     const sql = (
       'SELECT * FROM (' +
         'SELECT DISTINCT ' +
@@ -55,12 +57,7 @@ module.exports = require('express').Router()
       'ORDER BY updated_at DESC;'
     )
     db.query(sql, options)
-      .then(jobs => {
-        return Skill.findAll()
-          .then(skills => {
-            return res.status(200).json(jobs)
-          })
-      })
+      .then(jobs => res.status(200).json(jobs))
       .catch(next)
   })
 
@@ -69,8 +66,8 @@ module.exports = require('express').Router()
     // Account for coords
     let {coords, distance, terms, employment_types, sortBy} = req.body
     let within = ''
-    const q = terms.length
-      ? (terms.length > 1 ? terms.join(' & ') : terms[0])
+    const q = terms && terms.length
+      ? (terms.length > 1 ? terms.join(' | ') : terms[0])
       : ''
     const setWeight = q
       ? (
@@ -109,6 +106,7 @@ module.exports = require('express').Router()
     const orderBy = sortBy && sortBy === 'distance'
       ? `ORDER BY updated_at DESC, ST_Distance(coords, ${coords}) ASC;`
       : 'ORDER BY updated_at DESC;'
+
     const sql = (
       `SELECT *${distanceMiles} FROM (` +
         'SELECT DISTINCT ' +
@@ -134,10 +132,12 @@ module.exports = require('express').Router()
       ') jobs ' +
       employmentTypes + andORwhere + within + orderBy
     )
+
     const options = {
       model: Job,
       hasJoin: true
     }
+
     db.query(sql, options)
       .then(jobs => {
         console.log('NUM JOBS MATCHED: ', jobs.length)

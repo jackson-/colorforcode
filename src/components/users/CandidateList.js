@@ -9,7 +9,7 @@ const CandidateList = ({users, filtered}) => (
       filtered &&
         <div className='search-header'>
           <Row>
-            <h2>Search Results</h2>
+            <h2>{`Search Results (${users.length})`}</h2>
           </Row>
         </div>
     }

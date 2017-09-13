@@ -121,7 +121,6 @@ export default class JobUpdateDisplay extends Component {
 
   render () {
     const {job} = this.props
-    console.log('STATE', this.state)
     return (
       job &&
       <Row className='UpdateJobForm'>
@@ -201,7 +200,7 @@ export default class JobUpdateDisplay extends Component {
                   <Checkbox value='Contract' defaultChecked={this.isChecked('Contract')}>
                     Contract
                   </Checkbox>
-                  <Checkbox value='ContractToHire' defaultChecked={this.isChecked('Contract to Hire')}>
+                  <Checkbox value='Contract to Hire' defaultChecked={this.isChecked('Contract to Hire')}>
                     Contract to Hire
                   </Checkbox>
                   <Checkbox value='Internship' defaultChecked={this.isChecked('Internship')}>
@@ -209,6 +208,9 @@ export default class JobUpdateDisplay extends Component {
                   </Checkbox>
                   <Checkbox value='Remote' defaultChecked={this.isChecked('Remote')}>
                     Remote
+                  </Checkbox>
+                  <Checkbox defaultChecked={this.isChecked('Freelance')} value='Freelance'>
+                    Freelance
                   </Checkbox>
                 </FormGroup>
                 <FormGroup controlId='compensation'>
