@@ -232,7 +232,7 @@ class CandidateSearch extends Component {
   }
 
   render () {
-    const {allUsers, filteredUsers, filtered} = this.props
+    const {allUsers, filteredUsers, filtered, fetching} = this.props
     const {loading} = this.state
     const users = !filteredUsers || !filtered ? allUsers : filteredUsers
     return (
@@ -277,7 +277,7 @@ class CandidateSearch extends Component {
               </Col>
             </Row>
             {
-              loading
+              loading || fetching
                 ? <LoadingSpinner top={'20vh'} />
                 : (
                   <CandidateList

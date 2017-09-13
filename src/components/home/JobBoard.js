@@ -209,7 +209,7 @@ class JobBoard extends Component {
   }
 
   render () {
-    const {allJobs, filteredJobs, filtered} = this.props
+    const {allJobs, filteredJobs, filtered, fetching} = this.props
     const {loading} = this.state
     console.log('FILTERED JOBS - ', filteredJobs)
     const jobs = !filteredJobs || !filtered ? allJobs : filteredJobs
@@ -255,7 +255,7 @@ class JobBoard extends Component {
               </Col>
             </Row>
             {
-              loading
+              loading || fetching
                 ? <LoadingSpinner top={'40vh'} />
                 : <JobList filtered={this.props.filtered} jobs={jobs || []} />
             }
