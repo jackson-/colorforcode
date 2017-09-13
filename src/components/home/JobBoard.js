@@ -97,7 +97,7 @@ class JobBoard extends Component {
 
   clearChip = event => {
     event.preventDefault()
-    const chipToClear = event.target.value
+    const chipToClear = event.currentTarget.value
     let terms = this.state.terms.filter(term => {
       return term !== chipToClear && term !== ''
     })
