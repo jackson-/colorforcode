@@ -3,7 +3,9 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import JobInfoDisplay from './JobInfoDisplay'
 import JobUpdateDisplay from './JobUpdateDisplay'
+import LoadingSpinner from '../utilities/LoadingSpinner'
 import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
+import { receiveSelectedSkills } from '../../reducers/actions/skills'
 
 class JobDetailPage extends Component {
   componentWillMount () {
@@ -12,6 +14,10 @@ class JobDetailPage extends Component {
     if ((!job && !fetching) || (job && (job.id !== Number(id)) && !fetching)) {
       getJob(id)
     }
+  }
+
+  componentWillUnmount () {
+    this.props.receiveSelectedSkills(null)
   }
 
   render () {
@@ -66,7 +72,11 @@ class JobDetailPage extends Component {
     return (
       <div className={`JobDetailPage fadeIn ${animated}`}>
         <ScrollToTopOnMount />
-        {jobComponent}
+        {
+          job
+            ? jobComponent
+            : <LoadingSpinner />
+        }
       </div>
     )
   }
@@ -90,7 +100,8 @@ JobDetailPage.propTypes = {
   // ^creates new skills if user made any custom ones (class method of App.js)
   receiveNext: PropTypes.func,
   receiveAlert: PropTypes.func,
-  animated: PropTypes.string
+  animated: PropTypes.string,
+  receiveSelectedSkills: PropTypes.func
 }
 
 const mapStateToProps = state => ({
@@ -100,4 +111,8 @@ const mapStateToProps = state => ({
   user: state.auth.currentUser
 })
 
-export default connect(mapStateToProps)(JobDetailPage)
+const mapDispatchToProps = dispatch => ({
+  receiveSelectedSkills: skills => dispatch(receiveSelectedSkills(skills))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(JobDetailPage)

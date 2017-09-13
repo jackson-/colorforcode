@@ -8,6 +8,7 @@ import ImageUploader from '../dashboard/ImageUploader'
 import '../auth/Form.css'
 import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
 import LoadingSpinner from '../utilities/LoadingSpinner'
+import { receiveSelectedSkills } from '../../reducers/actions/skills'
 
 function arrowRenderer () {
   return (
@@ -31,10 +32,10 @@ class EditProjectForm extends Component {
   }
 
   componentDidMount () {
-    const {match, getProject, project, fetchingProject} = this.props
+    const {match, getProject, project, fetchingProject, selected} = this.props
     const {id} = match.params
     if (!fetchingProject) {
-      if (!project || project.id !== Number(id)) {
+      if (!project || project.id !== Number(id) || (!selected && project.skills.length > 0)) {
         getProject(id)
       } else {
         this.setState({
@@ -68,6 +69,11 @@ class EditProjectForm extends Component {
         loading: false
       })
     }
+  }
+
+  componentWillUnmount () {
+    console.log('GOOD TO CLEAR SELECTED SKILLS')
+    this.props.receiveSelectedSkills(null)
   }
 
   handleChange = type => event => {
@@ -173,7 +179,8 @@ EditProjectForm.propTypes = {
   getProject: PropTypes.func,
   fetchingProject: PropTypes.bool,
   animated: PropTypes.string,
-  handleNewSkills: PropTypes.func
+  handleNewSkills: PropTypes.func,
+  receiveSelectedSkills: PropTypes.func
 }
 
 const mapStateToProps = state => ({
@@ -183,4 +190,8 @@ const mapStateToProps = state => ({
   fetchingProject: state.projects.fetchingProject
 })
 
-export default withRouter(connect(mapStateToProps)(EditProjectForm))
+const mapDispatchToProps = dispatch => ({
+  receiveSelectedSkills: skills => dispatch(receiveSelectedSkills(skills))
+})
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(EditProjectForm))

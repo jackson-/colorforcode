@@ -28,6 +28,7 @@ class SavedJobs extends Component {
 
   render () {
     const {user, animated} = this.props
+    const appliedJobs = user.applications.map(a => a.id)
     const jobs = user.savedJobs
     return (
       <Row className='SavedJobs'>
@@ -46,41 +47,47 @@ class SavedJobs extends Component {
             </tr>
           </thead>
           <tbody>
-            {jobs && jobs.map((job, i) => (
-              <tr key={i}>
-                <td>
-                  {
-                    job.status === 'closed'
-                      ? job.title
-                      : <Link to={`/dashboard/saved-jobs/${job.id}`}>{job.title}</Link>
-                  }
-                </td>
-                <td>
-                  {
-                    job.status === 'open' &&
+            {
+              jobs && jobs.map((job, i) => {
+                let applied = appliedJobs.includes(job.id)
+                return (
+                  <tr key={i}>
+                    <td>
+                      {
+                        job.status === 'closed'
+                          ? job.title
+                          : <Link to={`/dashboard/saved-jobs/${job.id}`}>{job.title}</Link>
+                      }
+                    </td>
+                    <td>
+                      {
+                        job.status === 'open' &&
+                          <Button
+                            className='btn-xs--action'
+                            onClick={this.applyToJob(job.id)}
+                            bsSize='xsmall'
+                            bsStyle='primary'
+                            disabled={applied}
+                          >
+                            <Glyphicon glyph='briefcase' /> {applied ? 'applied' : 'apply'}
+                          </Button>
+                      }
                       <Button
+                        onClick={this.unsaveJob(job.id)}
                         className='btn-xs--action'
-                        onClick={this.applyToJob(job.id)}
                         bsSize='xsmall'
-                        bsStyle='primary'
+                        bsStyle='danger'
                       >
-                        <Glyphicon glyph='briefcase' /> apply
+                        <Glyphicon glyph='trash' /> unsave
                       </Button>
-                  }
-                  <Button
-                    onClick={this.unsaveJob(job.id)}
-                    className='btn-xs--action'
-                    bsSize='xsmall'
-                    bsStyle='danger'
-                  >
-                    <Glyphicon glyph='trash' /> unsave
-                  </Button>
-                </td>
-                <td>{job.status}</td>
-                <td>{this.mostRecentDate(job)}</td>
-                <td>{job.applicants.length}</td>
-              </tr>
-            ))}
+                    </td>
+                    <td>{job.status}</td>
+                    <td>{this.mostRecentDate(job)}</td>
+                    <td>{job.applicants.length}</td>
+                  </tr>
+                )
+              })
+            }
           </tbody>
         </Table>
       </Row>

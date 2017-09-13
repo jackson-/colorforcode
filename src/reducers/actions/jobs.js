@@ -149,8 +149,10 @@ export const creatingNewJobs = (data, history) => dispatch => {
 
 export const updatingJob = (postData, history) => dispatch => {
   axios.put(`/api/jobs/${postData.job.id}`, postData)
-    .then(() => {
+    .then(res => res.data)
+    .then(updatedJob => {
       dispatch(whoami())
+      dispatch(receiveJob(updatedJob, updatedJob.skills))
       dispatch(receiveAlert({
         type: 'confirmation',
         style: 'success',

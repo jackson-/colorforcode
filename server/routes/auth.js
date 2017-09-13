@@ -56,7 +56,8 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser(
   (id, done) => {
     debug('will deserialize user.id=%d', id)
-    User.findById(id, {
+    User.findOne({
+      where: {id},
       include: [
         {model: Employer,
           include: [{
@@ -123,8 +124,8 @@ passport.use('local-signup',
         })
       }
     })
-  }
-))
+  })
+)
 
 passport.use('local-signin',
   new LocalStrategy({

@@ -104,7 +104,7 @@ class CandidateSearch extends Component {
     })
     const query = terms.join(' ')
     this.setState(
-      {pendingTerms:terms, query, filtered: query.length > 0},
+      {pendingTerms:terms, terms, query, filtered: query.length > 0},
       this.filterUsers
       // ^second param of setState (optional) is callback to execute after setting state
     )
@@ -151,7 +151,13 @@ class CandidateSearch extends Component {
 
     const {query} = this.state
     debugger
-    this.props.filterUsers(query)
+    if(query){
+      this.props.filterUsers(query)}
+    else if(this.state.pendingTerms.join(' ')){
+      this.props.filterUsers(this.state.pendingTerms.join(' '))}
+    else {
+      this.props.getUsers()
+    }
     // ^ when query === '', all users are shown
     if (query) this.setState({filtered: true, terms: [...this.state.pendingTerms]})
     // we only show the search results header if this.state.filtered === true
@@ -229,6 +235,7 @@ class CandidateSearch extends Component {
         <SearchBar
           type='project'
           inline
+          id='search-talent'
           query={this.state.query}
           handleSubmit={this.filterUsers}
           handleChange={this.handleChange('query')}
@@ -285,7 +292,7 @@ class CandidateSearch extends Component {
 
 CandidateSearch.propTypes = {
   users: PropTypes.arrayOf(PropTypes.object),
-  coords: PropTypes.string,
+  coords: PropTypes.object,
   getUsers: PropTypes.func,
   filterUsers: PropTypes.func,
   advancedFilterUsers: PropTypes.func,

@@ -49,7 +49,7 @@ module.exports = require('express').Router()
       model: db.User,
       hasJoin: true
     }
-    let q = query.split(' ').join(' & ')
+    let q = query.split(' ').join(' | ')
     const db_query = (
       'SELECT DISTINCT ON(id) id, * ' +
       'FROM (SELECT "user".*, ' +
@@ -79,7 +79,7 @@ module.exports = require('express').Router()
     let {coords, distance, terms, employment_types, sortBy} = req.body
     let within = ''
     const q = terms.length
-      ? (terms.length > 1 ? terms.join(' & ') : terms[0])
+      ? (terms.length > 1 ? terms.join(' | ') : terms[0])
       : ''
     const setWeight = q
       ? (
@@ -159,7 +159,8 @@ module.exports = require('express').Router()
   })
 
   .get('/:id', (req, res, next) => {
-    User.findById(req.params.id, {
+    User.findOne({
+      where: {id: req.params.id},
       include: [{
         model: Project,
         include: [Skill]
@@ -174,7 +175,7 @@ module.exports = require('express').Router()
   .put('/:id', (req, res, next) => {
     const {user, savedJobsArr} = req.body
 
-    User.findById(req.params.id)
+    User.findOne({where: {id: req.params.id}})
       .then(foundUser => {
         // the same route is used to save jobs for users and to update users,
         // but these tasks are never simultaneous

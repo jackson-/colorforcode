@@ -50,6 +50,7 @@
   font-weight: 300;
   margin-bottom: 50px;
   font-size: 1.25em;
+  line-height: 1.5;
 }
 
 .About__text {
@@ -99,6 +100,7 @@
 .text-faded {
   color: #FFFFFF;
   color: rgba(255, 255, 255, 0.9);
+  padding-bottom: 30px;
 }
 
 .text-primary {
@@ -107,6 +109,11 @@
 
 .sr-icons {
   font-size: 3em;
+}
+
+.About .btn-oval__white {
+  background: #FFFFFF;
+  color: #01C688;
 }
 
 @media (min-width: 768px) {
@@ -146,5 +153,10 @@
 @media (min-width: 992px) {
   .about .service-box {
     margin: 20px auto 0;
+  }
+
+  .About .btn-oval__white:hover {
+    background: #FFFFFF;
+    color: #01C688;
   }
 }

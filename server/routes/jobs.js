@@ -24,7 +24,8 @@ module.exports = require('express').Router()
       model: db.Job,
       hasJoin: true
     }
-    let q = query.split(' ').join(' & ')
+    let q = query.split(' ').join(' | ')
+    console.log("QEURY", q)
     const sql = (
       'SELECT * FROM (' +
         'SELECT DISTINCT ' +
@@ -70,7 +71,7 @@ module.exports = require('express').Router()
     let {coords, distance, terms, employment_types, sortBy} = req.body
     let within = ''
     const q = terms.length
-      ? (terms.length > 1 ? terms.join(' & ') : terms[0])
+      ? (terms.length > 1 ? terms.join(' | ') : terms[0])
       : ''
     const setWeight = q
       ? (
@@ -207,20 +208,20 @@ module.exports = require('express').Router()
         .catch(next)
     })
 
-  .put('/:id',
-    (req, res, next) => {
-      const {job, skills} = req.body
-      Job.update(job, {
-        where: {id: req.params.id},
-        returning: true
-      })
-        .spread((numJobsUpdated, updatedJobsArr) => {
-          const updatedJob = updatedJobsArr[0]
-          return updatedJob.addSkills(skills)
-        })
-        .then(() => res.sendStatus(200))
-        .catch(next)
+  .put('/:id', (req, res, next) => {
+    const {job, skills} = req.body
+    Job.update(job, {
+      where: {id: req.params.id},
+      returning: true
     })
+      .spread((numJobsUpdated, updatedJobsArr) => {
+        const updatedJob = updatedJobsArr[0]
+        return updatedJob.addSkills(skills)
+      })
+      .then(() => Job.findOne({where: {id: req.params.id}, include: [Skill, Employer]}))
+      .then(updatedJob => res.status(200).json(updatedJob))
+      .catch(next)
+  })
 
   .delete('/:id',
     (req, res, next) => {

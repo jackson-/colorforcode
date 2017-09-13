@@ -8,8 +8,8 @@ node_modules/*
 npm-debug.log
 yarn-error.log
 
-#compiled assets
-/build
+# compiled assets
+# /build
 
 # Misc
 .DS_Store

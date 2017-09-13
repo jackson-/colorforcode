@@ -5,7 +5,7 @@ import {
 import { beginUploading, doneUploading } from './users'
 import { whoami } from './auth'
 import { receiveAlert } from './alert'
-import storage from 'APP/firebase'
+import storage from '../../../firebase'
 const storageRef = storage.ref()
 
 /* --------- PURE ACTION CREATORS --------- */
