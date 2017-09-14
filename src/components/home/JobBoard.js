@@ -232,6 +232,7 @@ class JobBoard extends Component {
     let jobs = jobList ? jobList.slice(offset, (offset + limit)) : jobList
     console.log(`SLICING AT ${offset}, ${(offset + limit)} - `, jobs)
     console.log(`LAST INDEX - ${lastIndex}`, jobList)
+    console.log(`NEXT DISABLED - `, lastIndex - (offset + limit) < 0)
     return (
       <Row className='JobBoard'>
         <SearchBar
