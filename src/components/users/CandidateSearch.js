@@ -38,6 +38,25 @@ class CandidateSearch extends Component {
     }
   }
 
+  componentDidMount () {
+    console.log('CDM - ', this.props.filter)
+    const {terms, distance, zip_code, employment_types, coords, query, pendingTerms} = this.state
+    const {filter} = this.props
+    if (
+      !terms.length &&
+      !distance &&
+      !zip_code &&
+      !employment_types.length &&
+      !coords &&
+      !query &&
+      !pendingTerms.length
+    ) {
+      if (filter) {
+        this.handleChange('filter')()
+      }
+    }
+  }
+
   componentWillReceiveProps (nextProps) {
     const {getUsers, authenticating} = this.props
     if (!authenticating) {
@@ -62,9 +81,17 @@ class CandidateSearch extends Component {
   }
 
   handleChange = type => event => {
-    const {value} = event.target
-    const nextState = {}
-    nextState[`${type}`] = value
+    let nextState, value
+    if (event) {
+      value = event.target.value
+      nextState = {}
+      nextState[`${type}`] = value
+    }
+    if (type === 'filter') {
+      const {filter} = this.props
+      if (filter.employment_types) filter.employment_types = new Set([...filter.employment_types])
+      return this.setState(filter)
+    }
     if (type === 'query') nextState.pendingTerms = value.split(' ')
     if (type === 'zip_code' && value.toString().length >= 5) {
       /* first we finish updating the state of the input, then we use the zip to find the rest of the location data by passing the callback to setState (an optional 2nd param) */
@@ -257,7 +284,6 @@ class CandidateSearch extends Component {
               clearFilter={this.clearFilter}
               clearChip={this.clearChip}
               filtered={this.props.filtered}
-              filter={filter}
               query={this.state.query}
               terms={this.state.terms}
               state={this.state}

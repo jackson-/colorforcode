@@ -27,6 +27,7 @@ class JobBoard extends Component {
 
   componentWillMount () {
     const {allJobs, fetching, authenticating, getJobs} = this.props
+    console.log('CWM - ', this.props.filter)
     if (!authenticating) {
       if (!allJobs && !fetching) {
         getJobs()
@@ -37,8 +38,28 @@ class JobBoard extends Component {
     }
   }
 
+  componentDidMount () {
+    console.log('CDM - ', this.props.filter)
+    const {terms, distance, zip_code, employment_types, coords, query, pendingTerms} = this.state
+    const {filter} = this.props
+    if (
+      !terms.length &&
+      !distance &&
+      !zip_code &&
+      !employment_types.length &&
+      !coords &&
+      !query &&
+      !pendingTerms.length
+    ) {
+      if (filter) {
+        this.handleChange('filter')()
+      }
+    }
+  }
+
   componentWillReceiveProps (nextProps) {
     const {authenticating, getJobs} = this.props
+    console.log('CWRP - ', this.props.filter)
     if (!authenticating) {
       if (!nextProps.allJobs && !nextProps.filteredJobs && !nextProps.fetching) {
         getJobs()
@@ -61,9 +82,17 @@ class JobBoard extends Component {
   }
 
   handleChange = type => event => {
-    const {value} = event.target
-    const nextState = {}
-    nextState[`${type}`] = value
+    let nextState, value
+    if (event) {
+      value = event.target.value
+      nextState = {}
+      nextState[`${type}`] = value
+    }
+    if (type === 'filter') {
+      const {filter} = this.props
+      if (filter.employment_types) filter.employment_types = new Set([...filter.employment_types])
+      return this.setState(filter)
+    }
     if (type === 'query') nextState.pendingTerms = value.split(' ')
     if (type === 'zip_code' && value.toString().length >= 5) {
       /* first we finish updating the state of the input, then we use the zip to find the rest of the location data by passing the callback to setState (an optional 2nd param) */
@@ -195,13 +224,14 @@ class JobBoard extends Component {
   }
 
   render () {
-    const {allJobs, filteredJobs, filtered, filter, fetching, offset, pageNum} = this.props
+    const {allJobs, filteredJobs, filtered, fetching, offset, pageNum} = this.props
     const {loading} = this.state
     const jobList = !filteredJobs || !filtered ? allJobs : filteredJobs
     const lastIndex = jobList ? jobList.length - 1 : 0
     const limit = 10
     let jobs = jobList ? jobList.slice(offset, (offset + limit)) : jobList
     console.log(`SLICING AT ${offset}, ${(offset + limit)} - `, jobs)
+    console.log(`LAST INDEX - ${lastIndex}`, jobList)
     return (
       <Row className='JobBoard'>
         <SearchBar
@@ -225,7 +255,6 @@ class JobBoard extends Component {
               isChecked={this.isChecked}
               clearChip={this.clearChip}
               filtered={this.props.filtered}
-              filter={filter}
               query={this.state.query}
               terms={this.state.terms}
               state={this.state}
