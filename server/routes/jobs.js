@@ -6,15 +6,9 @@ const {Job, Employer, Skill} = db
 const Promise = require('bluebird')
 
 module.exports = require('express').Router()
-
+  // we use post instead of get so we can set the offset
   .get('/', (req, res, next) => {
-    let jobs = []
-    Job.findAll({include: [Skill]})
-      .then(result => {
-        jobs = result
-        return Skill.findAll()
-      })
-      .then(skills => res.status(200).json({jobs, skills}))
+    Job.findAll({include: [Skill]}).then(jobs => res.status(200).json(jobs))
   })
 
   // search bar raw query

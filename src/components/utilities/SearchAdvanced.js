@@ -6,13 +6,16 @@ import {
 import './SearchAdvanced.css'
 
 const SearchAdvanced = props => {
+  const terms = !props.filter ? props.terms : props.filter.terms
+  const zipCode = !props.filter ? props.state.zip_code : props.filter.zip_code
+  const distance = !props.filter ? props.state.distance : props.filter.distance
   return (
     <form className='SearchAdvanced' onSubmit={props.filterJobs}>
       <h3 className='SearchAdvanced__header'>Advanced Search</h3>
       {props.filtered &&
         <Row className='SearchAdvanced__button-container'>
           <Col className='SearchAdvanced__chip-container' xs={12} sm={12} md={12} lg={12}>
-            {props.terms && props.terms.map((term, i) => (
+            {terms.map((term, i) => (
               <Button key={i} className='search-chip' value={term} onClick={props.clearChip}>
                 <Glyphicon glyph='remove-sign' /> {term}
               </Button>
@@ -34,43 +37,43 @@ const SearchAdvanced = props => {
         <ControlLabel>EMPLOYMENT TYPES</ControlLabel>
         <Checkbox
           value='Full Time'
-          checked={props.state && props.state.employment_types.has('Full Time')}
+          checked={props.isChecked('Full Time')}
         >
           Full Time
         </Checkbox>
         <Checkbox
           value='Part Time'
-          checked={props.state && props.state.employment_types.has('Part Time')}
+          checked={props.isChecked('Part Time')}
         >
           Part Time
         </Checkbox>
         <Checkbox
           value='Contract'
-          checked={props.state && props.state.employment_types.has('Contract')}
+          checked={props.isChecked('Contract')}
         >
           Contract
         </Checkbox>
         <Checkbox
           value='Contract to Hire'
-          checked={props.state && props.state.employment_types.has('Contract to Hire')}
+          defaultChecked={props.isChecked('Contract to Hire')}
         >
           Contract to Hire
         </Checkbox>
         <Checkbox
           value='Internship'
-          checked={props.state && props.state.employment_types.has('Internship')}
+          checked={props.isChecked('Internship')}
         >
           Internship
         </Checkbox>
         <Checkbox
           value='Remote'
-          checked={props.state && props.state.employment_types.has('Remote')}
+          checked={props.isChecked('Remote')}
         >
           Remote
         </Checkbox>
         <Checkbox
           value='Freelance'
-          checked={props.state && props.state.employment_types.has('Freelance')}
+          checked={props.isChecked('Freelance')}
         >
           Freelance
         </Checkbox>
@@ -83,7 +86,7 @@ const SearchAdvanced = props => {
           validationState={props.validate('zip_code')}
         >
           <ControlLabel>ZIP CODE</ControlLabel>
-          <FormControl type='tel' value={props.state.zip_code} />
+          <FormControl type='tel' value={zipCode} />
           {
             props.validate('zip_code') === 'error' &&
               <HelpBlock>
@@ -98,7 +101,7 @@ const SearchAdvanced = props => {
           validationState={props.validate('distance')}
         >
           <ControlLabel>MAX DISTANCE (miles)</ControlLabel>
-          <FormControl type='tel' value={props.state.distance} />
+          <FormControl type='tel' value={distance} />
           {
             props.validate('distance') === 'error' &&
               <HelpBlock>
@@ -128,7 +131,9 @@ SearchAdvanced.propTypes = {
   filtered: PropTypes.bool.isRequired,
   terms: PropTypes.array.isRequired,
   query: PropTypes.string.isRequired,
-  state: PropTypes.object.isRequired
+  state: PropTypes.object.isRequired,
+  isChecked: PropTypes.func.isRequired,
+  filter: PropTypes.object
 }
 
 export default SearchAdvanced

@@ -5,9 +5,9 @@ import PropTypes from 'prop-types'
 import './Home.css'
 import './JobCard.css'
 
-const JobList = ({jobs, filtered}) => (
+const JobList = ({jobs, filtered, total}) => (
   <div className='JobList'>
-    {filtered && <h2>{`Search Results (${jobs.length})`}</h2>}
+    {filtered && <h2 className='Joblist__heading'>{`Search Results (${total})`}</h2>}
     {
       jobs && jobs.map((job, i) => {
         return (
@@ -46,7 +46,8 @@ const JobList = ({jobs, filtered}) => (
 
 JobList.propTypes = {
   jobs: PropTypes.arrayOf(PropTypes.object),
-  filtered: PropTypes.bool
+  filtered: PropTypes.bool,
+  total: PropTypes.number
 }
 
 export default JobList
