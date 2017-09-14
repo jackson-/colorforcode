@@ -51,7 +51,7 @@ export default class Applicants extends Component {
         {
           jobs.length === 0
             ? (
-              <h2 className={`fadeIn ${animated}`}>
+              <h2 className={`fadeIn ${animated} Applicants__none`}>
                 No applicants yet, check back soon!
               </h2>
             )
