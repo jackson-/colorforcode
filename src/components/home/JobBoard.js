@@ -175,6 +175,7 @@ class JobBoard extends Component {
 
   handlePagination = action => event => {
     event.preventDefault()
+    console.log('HANDLING PAGINATION')
     const {allJobs, filteredJobs, filtered, savePagination, pageNum, offset} = this.props
     const total = filtered ? filteredJobs.length : allJobs.length
     const maxPageNum = Math.round(total % 10)
@@ -277,7 +278,6 @@ class JobBoard extends Component {
                 <Button
                   className='btn-paginate'
                   onClick={this.handlePagination('next')}
-                  disabled={lastIndex - (offset + limit) < 0}
                 >
                   Next
                 </Button>
