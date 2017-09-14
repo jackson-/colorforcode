@@ -9,7 +9,7 @@ npm-debug.log
 yarn-error.log
 
 # compiled assets
-/build
+# /build
 
 # Misc
 .DS_Store
