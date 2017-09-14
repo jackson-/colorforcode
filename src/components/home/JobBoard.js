@@ -96,9 +96,6 @@ class JobBoard extends Component {
 
   isChecked = type => {
     const {filter} = this.props
-    const employmentTypes = filter && filter.employment_types
-      ? new Set(filter.employment_types)
-      : new Set([])
     if (filter && filter.employment_types) {
       return new Set(filter.employment_types).has(type)
     } else {

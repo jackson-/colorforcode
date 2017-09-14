@@ -1,8 +1,7 @@
 import axios from 'axios'
 import {
-  RECEIVE_USERS, RECEIVE_USER, UPDATE_USER, DELETE_USER,
-  REQUEST_ALL_USERS, BEGIN_UPLOADING, RECEIVE_FILTERED_USERS,
-  DONE_UPLOADING, REQUEST_USER, REQUEST_FILTERED_USERS } from '../constants'
+  RECEIVE_ALL_USERS, RECEIVE_USER, UPDATE_USER,
+  DELETE_USER, REQUEST_ALL_USERS, BEGIN_UPLOADING, RECEIVE_FILTERED_USERS, DONE_UPLOADING, REQUEST_USER, REQUEST_FILTERED_USERS, PAGINATE_USERS } from '../constants'
 import { whoami } from './auth'
 import { receiveAlert } from './alert'
 import storage from 'APP/firebase'
@@ -10,9 +9,18 @@ const storageRef = storage.ref()
 
 /* --------- PURE ACTION CREATORS --------- */
 
+export const requestAllUsers = () => ({
+  type: REQUEST_ALL_USERS
+})
+
 export const receiveAllUsers = users => ({
   users,
-  type: RECEIVE_USERS
+  type: RECEIVE_ALL_USERS
+})
+
+export const requestFilteredUsers = filter => ({
+  filter,
+  type: REQUEST_FILTERED_USERS
 })
 
 export const receiveFilteredUsers = users => ({
@@ -20,25 +28,19 @@ export const receiveFilteredUsers = users => ({
   type: RECEIVE_FILTERED_USERS
 })
 
-export const receiveUser = user => ({
-  selected: user,
-  type: RECEIVE_USER
-})
-
-export const beginUploading = () => ({
-  type: BEGIN_UPLOADING
-})
-
-export const doneUploading = () => ({
-  type: DONE_UPLOADING
-})
-
-export const requestFilteredUsers = () => ({
-  type: REQUEST_FILTERED_USERS
+export const paginateUsers = (offset, pageNum) => ({
+  offset,
+  pageNum,
+  type: PAGINATE_USERS
 })
 
 export const requestUser = () => ({
   type: REQUEST_USER
+})
+
+export const receiveUser = user => ({
+  selected: user,
+  type: RECEIVE_USER
 })
 
 export const updateUser = () => ({
@@ -49,8 +51,12 @@ export const deleteUser = () => ({
   type: DELETE_USER
 })
 
-export const requestAllUsers = () => ({
-  type: REQUEST_ALL_USERS
+export const beginUploading = () => ({
+  type: BEGIN_UPLOADING
+})
+
+export const doneUploading = () => ({
+  type: DONE_UPLOADING
 })
 
 /* --------- ASYNC ACTION CREATORS (THUNKS) --------- */
@@ -74,7 +80,7 @@ export const gettingUserById = user_id => dispatch => {
 }
 
 export const filteringUsers = query => dispatch => {
-  dispatch(requestFilteredUsers())
+  dispatch(requestFilteredUsers({query}))
   axios.post('/api/users/search', {query})
     .then(res => res.data)
     .then(users => dispatch(receiveFilteredUsers(users)))
@@ -82,6 +88,7 @@ export const filteringUsers = query => dispatch => {
 }
 
 export const advancedFilteringUsers = body => dispatch => {
+  dispatch(requestFilteredUsers(body))
   axios.post('/api/users/search/advanced', body)
     .then(res => res.data)
     .then(users => dispatch(receiveFilteredUsers(users)))

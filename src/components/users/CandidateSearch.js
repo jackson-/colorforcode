@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Row, Col, Button } from 'react-bootstrap'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import { paginateUsers } from '../../reducers/actions/users'
 import SearchBar from '../utilities/SearchBar'
 import LoadingSpinner from '../utilities/LoadingSpinner'
 import CandidateSearchAdvanced from '../utilities/CandidateSearchAdvanced'
@@ -21,8 +22,6 @@ class CandidateSearch extends Component {
       employment_types: new Set([]),
       distance: '',
       sortBy: '',
-      page_num: 1,
-      from: 0,
       loading: true
     }
   }
@@ -97,6 +96,19 @@ class CandidateSearch extends Component {
     this.setState({employment_types})
   }
 
+  isChecked = (type, sortBy) => {
+    const {filter} = this.props
+    if (sortBy) {
+      return sortBy === this.state.sortBy
+    } else {
+      if (filter && filter.employment_types) {
+        return new Set(filter.employment_types).has(type)
+      } else {
+        return this.state.employment_types.has(type)
+      }
+    }
+  }
+
   clearFilter = filter => {
     if (filter) {
       // if this method is invoked with a filter param,
@@ -108,13 +120,10 @@ class CandidateSearch extends Component {
         terms: [],
         coords: '',
         pendingTerms: [],
-        filtered: false,
         zip_code: '',
         employment_types: new Set([]),
         distance: '',
         sortBy: '',
-        page_num: 1,
-        from: 0,
         loading: false
       })
       this.filterUsers()
@@ -130,7 +139,7 @@ class CandidateSearch extends Component {
     let terms = this.state.terms.filter(term => {
       return term !== chipToClear && term !== ''
     })
-    const query = terms.join(' ')
+    const query = terms.length > 0 ? terms.join(' ') : ''
     this.setState(
       {terms, loading: true},
       () => {
@@ -164,24 +173,16 @@ class CandidateSearch extends Component {
     }
   }
 
-  handlePagination = (users, sign) => {
-    let page_num = 1
-    let from = 0
-    const next_page = sign === 'plus'
-      ? this.state.page_num + 1
-      : this.state.page_num - 1
-    if (sign) {
-      const nextPageHasItems = (!(users.length < 10) || sign === 'minus')
-      if (next_page > 0 && nextPageHasItems) {
-        page_num = next_page
-        from = sign === 'plus'
-          ? this.state.from + 10
-          : this.state.from - 10
-      } else {
-        return null
-      }
+  handlePagination = action => event => {
+    event.preventDefault()
+    const {allUsers, filteredUsers, filtered, savePagination, pageNum, offset} = this.props
+    const total = filtered ? filteredUsers.length : allUsers.length
+    const maxPageNum = Math.round(total % 10)
+    if (action === 'next' && (pageNum + 1 <= maxPageNum)) {
+      return savePagination(offset + 10, pageNum + 1)
+    } else if (action === 'back' && (pageNum - 1 > 0)) {
+      return savePagination(offset - 10, pageNum - 1)
     }
-    return {page_num, from}
   }
 
   filterUsers = event => {
@@ -202,10 +203,11 @@ class CandidateSearch extends Component {
   }
 
   buildBody = (coords, from) => {
-    const {terms, distance, employment_types, sortBy} = this.state
+    const {terms, distance, employment_types, zip_code, sortBy} = this.state
     return {
       terms,
       coords,
+      zip_code,
       distance,
       employment_types: [...employment_types],
       sortBy
@@ -214,27 +216,22 @@ class CandidateSearch extends Component {
 
   advancedFilterUsers = sign => event => {
     event.preventDefault()
-    const {filtered, filteredUsers, allUsers, advancedFilterUsers} = this.props
-    const coords = this.state.coords
-      ? this.state.coords
-      : ''
-    const users = filtered ? filteredUsers : allUsers
-    const {page_num, from} = this.handlePagination(users, sign)
-    if (!page_num) {
-      return
-    }
-    this.setState({
-      from,
-      filtered: true,
-      page_num,
-      loading: true
-    }, advancedFilterUsers(this.buildBody, coords, from))
+    const {advancedFilterUsers} = this.props
+    const {coords} = this.state
+    this.setState(
+      {loading: true},
+      advancedFilterUsers(this.buildBody, coords)
+    )
   }
 
   render () {
-    const {allUsers, filteredUsers, filtered, fetching} = this.props
+    const {allUsers, filteredUsers, filtered, fetching, filter, offset, pageNum} = this.props
     const {loading} = this.state
-    const users = !filteredUsers || !filtered ? allUsers : filteredUsers
+    const userList = !filteredUsers || !filtered ? allUsers : filteredUsers
+    const lastIndex = userList ? userList.length - 1 : 0
+    const limit = 10
+    let users = userList ? userList.slice(offset, (offset + limit)) : userList
+    console.log(`SLICING AT ${offset}, ${(offset + limit)} - `, users)
     return (
       <Row className='CandidateSearch'>
         <SearchBar
@@ -250,13 +247,15 @@ class CandidateSearch extends Component {
         <div className='container__flex'>
           <Col className='SearchAdvanced__container' xs={12} sm={3} md={3} lg={3}>
             <CandidateSearchAdvanced
-              advancedFilterUsers={this.advancedFilterUsers()}
+              filterUsers={this.advancedFilterUsers()}
               toggleCheckbox={this.toggleJobTypes}
               validate={this.getValidationState}
+              isChecked={this.isChecked}
               handleChange={this.handleChange}
               clearFilter={this.clearFilter}
               clearChip={this.clearChip}
               filtered={this.props.filtered}
+              filter={filter}
               query={this.state.query}
               terms={this.state.terms}
               state={this.state}
@@ -265,13 +264,21 @@ class CandidateSearch extends Component {
           <Col xs={12} sm={9} md={9} lg={9}>
             <Row>
               <Col className='paginate-container' xs={12} sm={12} md={12} lg={12}>
-                <Button className='btn-paginate' onClick={this.advancedFilterUsers('plus')}>
+                <Button
+                  className='btn-paginate'
+                  disabled={offset === 0}
+                  onClick={this.handlePagination('back')}
+                >
                   Back
                 </Button>
                 <span>
-                  {this.state.page_num}
+                  {pageNum}
                 </span>
-                <Button className='btn-paginate' onClick={this.advancedFilterUsers('minus')}>
+                <Button
+                  className='btn-paginate'
+                  disabled={lastIndex - (offset + limit) < 0}
+                  onClick={this.handlePagination('next')}
+                >
                   Next
                 </Button>
               </Col>
@@ -283,10 +290,7 @@ class CandidateSearch extends Component {
                   <CandidateList
                     filtered={this.props.filtered}
                     users={users || []}
-                    query={this.state.query}
-                    clearFilter={this.clearFilter}
-                    clearChip={this.clearChip}
-                    terms={this.state.terms}
+                    total={userList ? userList.length : 0}
                   />
                 )
             }
@@ -301,12 +305,16 @@ CandidateSearch.propTypes = {
   allUsers: PropTypes.arrayOf(PropTypes.object),
   filteredUsers: PropTypes.arrayOf(PropTypes.object),
   filtered: PropTypes.bool,
-  coords: PropTypes.any, // either '' (for falsey-ness) or an object
+  coords: PropTypes.oneOfType([PropTypes.object, PropTypes.string]), // either '' (for falsey-ness) or an object
   getUsers: PropTypes.func,
   filterUsers: PropTypes.func,
   advancedFilterUsers: PropTypes.func,
   fetching: PropTypes.bool,
-  authenticating: PropTypes.bool
+  authenticating: PropTypes.bool,
+  filter: PropTypes.object,
+  offset: PropTypes.number,
+  pageNum: PropTypes.number,
+  savePagination: PropTypes.func
 }
 
 const mapStateToProps = state => ({
@@ -314,7 +322,14 @@ const mapStateToProps = state => ({
   filteredUsers: state.users.filteredUsers,
   filtered: state.users.filtered,
   authenticating: state.auth.authenticating,
-  fetching: state.users.fetchingAll
+  fetching: state.users.fetchingAll,
+  filter: state.users.filter,
+  offset: state.users.offset,
+  pageNum: state.users.pageNum
 })
 
-export default connect(mapStateToProps)(CandidateSearch)
+const mapDispatchToProps = dispatch => ({
+  savePagination: (offset, pageNum) => dispatch(paginateUsers(offset, pageNum))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(CandidateSearch)
