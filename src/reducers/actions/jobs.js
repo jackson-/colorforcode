@@ -73,8 +73,8 @@ export const gettingAllJobs = () => dispatch => {
     .catch(err => console.error(`Mang, I couldn't find the jobs! ${err.stack}`))
 }
 
-export const filteringJobs = query => dispatch => {
-  dispatch(requestFilteredJobs({terms: query.split(' ')}))
+export const filteringJobs = ({query, advanced}) => dispatch => {
+  dispatch(requestFilteredJobs({terms: query.split(' '), advanced}))
   axios.post('/api/jobs/search', {query})
     .then(res => res.data)
     .then(jobs => dispatch(receiveFilteredJobs(jobs)))
@@ -90,14 +90,6 @@ export const advancedFilteringJobs = body => dispatch => {
       else dispatch(receiveFilteredJobs(Array.isArray(jobs) ? jobs : [jobs]))
     })
     .catch(err => console.error(`Mang, I couldn't advanced filter the jobs! ${err.stack}`))
-}
-
-export const buildBodyThenSearchJobs = (bodyBuilderFunc, coords, from) => {
-  return dispatch => {
-    dispatch(requestFilteredJobs())
-    const body = bodyBuilderFunc(coords, from)
-    dispatch(advancedFilteringJobs(body))
-  }
 }
 
 export const applyingToJob = (user, job_id, history) => dispatch => {

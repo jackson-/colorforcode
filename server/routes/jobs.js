@@ -34,10 +34,10 @@ module.exports = require('express').Router()
                 'WHERE jobskill.job_id = job.id ' +
               ') ' +
             'AS skills, ' +
-             "setweight(to_tsvector(job.title), 'A') || " +
-             "setweight(to_tsvector(job.description), 'B') || " +
-             "setweight(to_tsvector('simple', skill.title), 'A') || " +
-             "setweight(to_tsvector('simple', coalesce(string_agg(skill.title, ' '))), 'B') " +
+             "setweight(to_tsvector('english', job.title), 'A') || " +
+             "setweight(to_tsvector('english', job.description), 'B') || " +
+             "setweight(to_tsvector('english', skill.title), 'A') || " +
+             "setweight(to_tsvector('english', coalesce(string_agg(skill.title, ' '))), 'B') " +
             'AS document ' +
             'FROM job ' +
             'JOIN jobskill ON jobskill.job_id = job.id ' +
@@ -65,10 +65,10 @@ module.exports = require('express').Router()
       : ''
     const setWeight = q
       ? (
-        ", setweight(to_tsvector(job.title), 'A') || " +
-        "setweight(to_tsvector(job.description), 'B') || " +
-        "setweight(to_tsvector('simple', skill.title), 'A') || " +
-        "setweight(to_tsvector('simple', coalesce(string_agg(skill.title, ' '))), 'B') " +
+        ", setweight(to_tsvector('english', job.title), 'A') || " +
+        "setweight(to_tsvector('english', job.description), 'B') || " +
+        "setweight(to_tsvector('english', skill.title), 'A') || " +
+        "setweight(to_tsvector('english', coalesce(string_agg(skill.title, ' '))), 'B') " +
         'AS document '
       )
       : ' '

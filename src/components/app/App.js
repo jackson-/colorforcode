@@ -10,7 +10,7 @@ import {
   uploadingResume,
   gettingAllUsers,
   filteringUsers,
-  buildBodyThenSearchUsers } from '../../reducers/actions/users'
+  advancedFilteringUsers } from '../../reducers/actions/users'
 
 import {
   applyingToJob,
@@ -22,7 +22,7 @@ import {
   creatingNewJob,
   gettingAllJobs,
   filteringJobs,
-  buildBodyThenSearchJobs } from '../../reducers/actions/jobs'
+  advancedFilteringJobs } from '../../reducers/actions/jobs'
 
 import {
   gettingAllSkills,
@@ -381,17 +381,13 @@ const mapDispatchToProps = dispatch => ({
   createNewSkills: (skills, selected) => dispatch(creatingNewSkills(skills, selected)),
   receiveSelectedSkills: skills => dispatch(receiveSelectedSkills(skills)),
   filterJobs: query => dispatch(filteringJobs(query)),
-  advancedFilterJobs: (bodyBuilder, coords, from) => {
-    dispatch(buildBodyThenSearchJobs(bodyBuilder, coords, from))
-  },
+  advancedFilterJobs: (body) => dispatch(advancedFilteringJobs(body)),
   closeJob: (id, history) => dispatch(deletingJob(id, history)),
   duplicateJob: (job, history) => dispatch(creatingNewJob(job, history)),
   updateUser: (user) => dispatch(updatingUser(user)),
   getUsers: post => dispatch(gettingAllUsers()),
   filterUsers: query => dispatch(filteringUsers(query)),
-  advancedFilterUsers: (bodyBuilderFunc, coords) => {
-    return dispatch(buildBodyThenSearchUsers(bodyBuilderFunc, coords))
-  },
+  advancedFilterUsers: (body) => dispatch(advancedFilteringUsers(body)),
   uploadResume: (user, file) => dispatch(uploadingResume(user, file)),
   getProject: (id) => dispatch(gettingProjectById(id)),
   updateProject: (project, history) => dispatch(updatingProject(project, history)),

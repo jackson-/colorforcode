@@ -81,7 +81,8 @@
   padding-bottom: 25px;
 }
 
-.Joblist__heading {
+.Joblist__heading,
+.CandidateList__heading {
   font-family: 'Open Sans Regular';
 }
 

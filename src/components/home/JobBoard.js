@@ -109,12 +109,14 @@ class JobBoard extends Component {
     let terms = this.state.terms.filter(term => {
       return term !== chipToClear && term !== ''
     })
+    const {getJobs, filter} = this.props
     const query = terms.length > 0 ? terms.join(' ') : ''
     this.setState(
-      {terms, loading: true},
+      {query, terms, loading: true},
       () => {
-        if (query) this.props.filterJobs(query)
-        else this.props.getJobs()
+        if (filter.advanced) this.advancedFilterJobs()
+        else if (query) this.filterJobs()
+        else getJobs()
       }
       // ^second param of setState (optional) is callback to execute after setting state
     )
@@ -142,18 +144,6 @@ class JobBoard extends Component {
     }
   }
 
-  buildBody = (coords) => {
-    const {terms, distance, employment_types, zip_code, sortBy} = this.state
-    return {
-      terms,
-      coords,
-      distance,
-      zip_code,
-      employment_types: [...employment_types],
-      sortBy
-    }
-  }
-
   handlePagination = action => event => {
     event.preventDefault()
     const {allJobs, filteredJobs, filtered, savePagination, pageNum, offset} = this.props
@@ -167,13 +157,18 @@ class JobBoard extends Component {
   }
 
   advancedFilterJobs = event => {
-    event.preventDefault()
+    if (event) event.preventDefault()
     const {advancedFilterJobs} = this.props
-    const {coords} = this.state
-    this.setState(
-      {loading: true},
-      advancedFilterJobs(this.buildBody, coords)
-    )
+    const {terms, coords, distance, employment_types, zip_code} = this.state
+    const body = {
+      terms,
+      coords,
+      distance,
+      zip_code,
+      advanced: true,
+      employment_types: [...employment_types]
+    }
+    this.setState({loading: true}, advancedFilterJobs(body))
   }
 
   filterJobs = event => {
@@ -186,7 +181,12 @@ class JobBoard extends Component {
       this.setState({
         terms: [...this.state.pendingTerms],
         loading: true
-      }, this.props.filterJobs(query))
+      }, this.props.filterJobs({
+        query,
+        advanced: this.props.filter
+          ? this.props.filter.advanced
+          : false
+      }))
     }
     // we only show the search results header if this.state.filtered === true
     this.clearFilter()()

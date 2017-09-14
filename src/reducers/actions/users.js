@@ -79,8 +79,8 @@ export const gettingUserById = user_id => dispatch => {
     .catch(err => console.error(`Mang I couldn't find the user! ${err.stack}`))
 }
 
-export const filteringUsers = query => dispatch => {
-  dispatch(requestFilteredUsers({query}))
+export const filteringUsers = ({query, advanced}) => dispatch => {
+  dispatch(requestFilteredUsers({terms: query.split(' '), advanced}))
   axios.post('/api/users/search', {query})
     .then(res => res.data)
     .then(users => dispatch(receiveFilteredUsers(users)))
@@ -93,14 +93,6 @@ export const advancedFilteringUsers = body => dispatch => {
     .then(res => res.data)
     .then(users => dispatch(receiveFilteredUsers(users)))
     .catch(err => console.error(`Mang, I couldn't advanced filter the users! ${err.stack}`))
-}
-
-export const buildBodyThenSearchUsers = (bodyBuilderFunc, coords) => {
-  return dispatch => {
-    dispatch(requestFilteredUsers())
-    const body = bodyBuilderFunc(coords)
-    dispatch(advancedFilteringUsers(body))
-  }
 }
 
 export const creatingNewEmployer = employer => dispatch => {

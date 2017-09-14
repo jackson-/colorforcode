@@ -101,7 +101,9 @@ class CandidateSearch extends Component {
     if (sortBy) {
       return sortBy === this.state.sortBy
     } else {
-      if (filter && filter.employment_types) {
+      if (!filter && this.state.employment_types.length === 0) {
+        return false
+      } else if (filter && filter.employment_types) {
         return new Set(filter.employment_types).has(type)
       } else {
         return this.state.employment_types.has(type)
@@ -139,12 +141,14 @@ class CandidateSearch extends Component {
     let terms = this.state.terms.filter(term => {
       return term !== chipToClear && term !== ''
     })
+    const {getUsers, filter} = this.props
     const query = terms.length > 0 ? terms.join(' ') : ''
     this.setState(
-      {terms, loading: true},
+      {query, terms, loading: true},
       () => {
-        if (query) this.props.filterUsers(query)
-        else this.props.getUsers()
+        if (filter.advanced) this.advancedFilterUsers()
+        else if (query) this.filterUsers()
+        else getUsers()
       }
       // ^second param of setState (optional) is callback to execute after setting state
     )
@@ -193,35 +197,33 @@ class CandidateSearch extends Component {
     // ^ when query === '', we don't filter so all job listings continue to be shown
     if (query) {
       this.setState({
-        filtered: true,
         terms: [...this.state.pendingTerms],
         loading: true
-      }, this.props.filterUsers(query))
+      }, this.props.filterUsers({
+        query,
+        advanced: this.props.filter
+          ? this.props.filter.advanced
+          : false
+      }))
     }
     // we only show the search results header if this.state.filtered === true
     this.clearFilter()()
   }
 
-  buildBody = (coords, from) => {
-    const {terms, distance, employment_types, zip_code, sortBy} = this.state
-    return {
+  advancedFilterUsers = event => {
+    if (event) event.preventDefault()
+    const {advancedFilterUsers} = this.props
+    const {terms, distance, employment_types, coords, zip_code, sortBy} = this.state
+    const body = {
       terms,
       coords,
       zip_code,
       distance,
+      advanced: true,
       employment_types: [...employment_types],
       sortBy
     }
-  }
-
-  advancedFilterUsers = sign => event => {
-    event.preventDefault()
-    const {advancedFilterUsers} = this.props
-    const {coords} = this.state
-    this.setState(
-      {loading: true},
-      advancedFilterUsers(this.buildBody, coords)
-    )
+    this.setState({loading: true}, advancedFilterUsers(body))
   }
 
   render () {
@@ -231,7 +233,7 @@ class CandidateSearch extends Component {
     const lastIndex = userList ? userList.length - 1 : 0
     const limit = 10
     let users = userList ? userList.slice(offset, (offset + limit)) : userList
-    console.log(`SLICING AT ${offset}, ${(offset + limit)} - `, users)
+
     return (
       <Row className='CandidateSearch'>
         <SearchBar
@@ -247,7 +249,7 @@ class CandidateSearch extends Component {
         <div className='container__flex'>
           <Col className='SearchAdvanced__container' xs={12} sm={3} md={3} lg={3}>
             <CandidateSearchAdvanced
-              filterUsers={this.advancedFilterUsers()}
+              filterUsers={this.advancedFilterUsers}
               toggleCheckbox={this.toggleJobTypes}
               validate={this.getValidationState}
               isChecked={this.isChecked}
