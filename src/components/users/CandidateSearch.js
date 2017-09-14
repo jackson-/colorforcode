@@ -233,7 +233,7 @@ class CandidateSearch extends Component {
     const lastIndex = userList ? userList.length - 1 : 0
     const limit = 10
     let users = userList ? userList.slice(offset, (offset + limit)) : userList
-
+    console.log(`SLICING AT ${offset}, ${(offset + limit)} - `, users)
     return (
       <Row className='CandidateSearch'>
         <SearchBar

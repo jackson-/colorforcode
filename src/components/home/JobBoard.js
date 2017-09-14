@@ -150,8 +150,10 @@ class JobBoard extends Component {
     const total = filtered ? filteredJobs.length : allJobs.length
     const maxPageNum = Math.round(total % 10)
     if (action === 'next' && (pageNum + 1 <= maxPageNum)) {
+      console.log('NEXT PAGE: ', pageNum + 1)
       return savePagination(offset + 10, pageNum + 1)
     } else if (action === 'back' && (pageNum - 1 > 0)) {
+      console.log('BACK TO PAGE: ', pageNum - 1)
       return savePagination(offset - 10, pageNum - 1)
     }
   }
@@ -199,7 +201,7 @@ class JobBoard extends Component {
     const lastIndex = jobList ? jobList.length - 1 : 0
     const limit = 10
     let jobs = jobList ? jobList.slice(offset, (offset + limit)) : jobList
-
+    console.log(`SLICING AT ${offset}, ${(offset + limit)} - `, jobs)
     return (
       <Row className='JobBoard'>
         <SearchBar
