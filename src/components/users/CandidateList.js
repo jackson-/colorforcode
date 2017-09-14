@@ -3,15 +3,13 @@ import { Row, Col } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
 import PropTypes from 'prop-types'
 
-const CandidateList = ({users, filtered}) => (
+const CandidateList = ({users, filtered, total}) => (
   <div className='CandidateList'>
     {
       filtered &&
-        <div className='search-header'>
-          <Row>
-            <h2>{`Search Results (${users.length})`}</h2>
-          </Row>
-        </div>
+        <h2 className='CandidateList__heading'>
+          {`Search Results (${total})`}
+        </h2>
     }
     {
       users && users.map((user, i) => {
@@ -61,7 +59,8 @@ const CandidateList = ({users, filtered}) => (
 
 CandidateList.propTypes = {
   users: PropTypes.arrayOf(PropTypes.object),
-  filtered: PropTypes.bool
+  filtered: PropTypes.bool,
+  total: PropTypes.number
 }
 
 export default CandidateList

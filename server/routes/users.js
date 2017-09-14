@@ -79,14 +79,14 @@ module.exports = require('express').Router()
           ') ' +
           'AS projects, ' +
           '(' +
-            `SELECT to_tsvector(string_agg(skill.title, ' ')) ` +
+            `SELECT to_tsvector('english', string_agg(skill.title, ' ')) ` +
             'FROM skill JOIN "ProjectSkill" ON "ProjectSkill".skill_id=skill.id ' +
             'INNER JOIN project ON project.id = "ProjectSkill".project_id ' +
             'WHERE project.user_id = "user".id' +
           ') || ' +
-          'to_tsvector("user".title) || ' +
-          'to_tsvector("user".summary) || ' +
-          'to_tsvector(project.title) ' +
+          `to_tsvector('english', "user".title) || ` +
+          `to_tsvector('english', "user".summary) || ` +
+          `to_tsvector('english', project.title) ` +
           'AS document ' +
           'FROM "user" ' +
           'JOIN project ON project.user_id = "user".id ' +
@@ -116,14 +116,14 @@ module.exports = require('express').Router()
     const tsVectors = q
       ? (
         ', (' +
-          `SELECT to_tsvector(string_agg(skill.title, ' ')) ` +
+          `SELECT to_tsvector('english', string_agg(skill.title, ' ')) ` +
           'FROM skill JOIN "ProjectSkill" ON "ProjectSkill".skill_id=skill.id ' +
           'INNER JOIN project ON project.id = "ProjectSkill".project_id ' +
           'WHERE project.user_id = "user".id' +
         ') || ' +
-        'to_tsvector("user".title) || ' +
-        'to_tsvector("user".summary) || ' +
-        'to_tsvector(project.title) ' +
+        `to_tsvector('english', "user".title) || ` +
+        `to_tsvector('english', "user".summary) || ` +
+        `to_tsvector('english', project.title) ` +
         'AS document '
       )
       : ' '

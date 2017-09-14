@@ -81,6 +81,11 @@
   padding-bottom: 25px;
 }
 
+.Joblist__heading,
+.CandidateList__heading {
+  font-family: 'Open Sans Regular';
+}
+
 .paginate-container {
   padding: 25px 0 0;
 }
