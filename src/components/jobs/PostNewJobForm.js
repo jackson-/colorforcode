@@ -240,7 +240,7 @@ class PostJobForm extends Component {
                 <option value='100%'>100%</option>
               </FormControl>
             </FormGroup>
-            <CreditCardFormControls ref='card' />
+            {/* <CreditCardFormControls ref='card' /> */}
             <Button className='primary' type='submit'>Add Job & Checkout</Button>
             <Button className='primary' onClick={this.addJob}>Add Another</Button>
           </form>
