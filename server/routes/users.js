@@ -218,11 +218,9 @@ module.exports = require('express').Router()
 
     db.query(sql, options)
       .then(users => {
-        console.log('NUM USERS MATCHED: ', users.length)
         res.status(200).json(users)
       })
       .catch(err => {
-        console.log('EMPLOYMENT TYPES: ', employment_types, 'FAILED QUERY: ', sql)
         return next(err)
       })
   })

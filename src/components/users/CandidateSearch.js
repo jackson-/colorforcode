@@ -39,7 +39,6 @@ class CandidateSearch extends Component {
   }
 
   componentDidMount () {
-    console.log('CDM - ', this.props.filter)
     const {terms, distance, zip_code, employment_types, coords, query, pendingTerms} = this.state
     const {filter} = this.props
     if (
@@ -144,7 +143,6 @@ class CandidateSearch extends Component {
       // we reset all search interface elements by:
       // clearing the search bar, showing all job listings, and hiding search-header
       // see SearchAdvanced.js line 21 (the Clear Filter button onClick)
-      console.log('CLEARING FILTER')
       this.setState({
         query: '',
         terms: [],
@@ -260,7 +258,6 @@ class CandidateSearch extends Component {
     const lastIndex = userList ? userList.length - 1 : 0
     const limit = 10
     let users = userList ? userList.slice(offset, (offset + limit)) : userList
-    console.log(`SLICING AT ${offset}, ${(offset + limit)} - `, users)
     return (
       <Row className='CandidateSearch'>
         <SearchBar
