@@ -6,15 +6,9 @@ const {Job, Employer, Skill} = db
 const Promise = require('bluebird')
 
 module.exports = require('express').Router()
-
+  // we use post instead of get so we can set the offset
   .get('/', (req, res, next) => {
-    let jobs = []
-    Job.findAll({include: [Skill]})
-      .then(result => {
-        jobs = result
-        return Skill.findAll()
-      })
-      .then(skills => res.status(200).json({jobs, skills}))
+    Job.findAll({include: [Skill]}).then(jobs => res.status(200).json(jobs))
   })
 
   // search bar raw query
@@ -24,8 +18,9 @@ module.exports = require('express').Router()
       model: db.Job,
       hasJoin: true
     }
-    let q = query.split(' ').join(' | ')
-    console.log("QEURY", q)
+
+    const q = query.split(' ').join(' | ')
+
     const sql = (
       'SELECT * FROM (' +
         'SELECT DISTINCT ' +
@@ -39,10 +34,10 @@ module.exports = require('express').Router()
                 'WHERE jobskill.job_id = job.id ' +
               ') ' +
             'AS skills, ' +
-             "setweight(to_tsvector(job.title), 'A') || " +
-             "setweight(to_tsvector(job.description), 'B') || " +
-             "setweight(to_tsvector('simple', skill.title), 'A') || " +
-             "setweight(to_tsvector('simple', coalesce(string_agg(skill.title, ' '))), 'B') " +
+             "setweight(to_tsvector('english', job.title), 'A') || " +
+             "setweight(to_tsvector('english', job.description), 'B') || " +
+             "setweight(to_tsvector('english', skill.title), 'A') || " +
+             "setweight(to_tsvector('english', coalesce(string_agg(skill.title, ' '))), 'B') " +
             'AS document ' +
             'FROM job ' +
             'JOIN jobskill ON jobskill.job_id = job.id ' +
@@ -56,12 +51,7 @@ module.exports = require('express').Router()
       'ORDER BY updated_at DESC;'
     )
     db.query(sql, options)
-      .then(jobs => {
-        return Skill.findAll()
-          .then(skills => {
-            return res.status(200).json(jobs)
-          })
-      })
+      .then(jobs => res.status(200).json(jobs))
       .catch(next)
   })
 
@@ -70,15 +60,15 @@ module.exports = require('express').Router()
     // Account for coords
     let {coords, distance, terms, employment_types, sortBy} = req.body
     let within = ''
-    const q = terms.length
+    const q = terms && terms.length
       ? (terms.length > 1 ? terms.join(' | ') : terms[0])
       : ''
     const setWeight = q
       ? (
-        ", setweight(to_tsvector(job.title), 'A') || " +
-        "setweight(to_tsvector(job.description), 'B') || " +
-        "setweight(to_tsvector('simple', skill.title), 'A') || " +
-        "setweight(to_tsvector('simple', coalesce(string_agg(skill.title, ' '))), 'B') " +
+        ", setweight(to_tsvector('english', job.title), 'A') || " +
+        "setweight(to_tsvector('english', job.description), 'B') || " +
+        "setweight(to_tsvector('english', skill.title), 'A') || " +
+        "setweight(to_tsvector('english', coalesce(string_agg(skill.title, ' '))), 'B') " +
         'AS document '
       )
       : ' '
@@ -110,6 +100,7 @@ module.exports = require('express').Router()
     const orderBy = sortBy && sortBy === 'distance'
       ? `ORDER BY updated_at DESC, ST_Distance(coords, ${coords}) ASC;`
       : 'ORDER BY updated_at DESC;'
+
     const sql = (
       `SELECT *${distanceMiles} FROM (` +
         'SELECT DISTINCT ' +
@@ -135,10 +126,12 @@ module.exports = require('express').Router()
       ') jobs ' +
       employmentTypes + andORwhere + within + orderBy
     )
+
     const options = {
       model: Job,
       hasJoin: true
     }
+
     db.query(sql, options)
       .then(jobs => {
         console.log('NUM JOBS MATCHED: ', jobs.length)

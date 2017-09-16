@@ -22,7 +22,7 @@ const Home = ({
     <div className={`Home fadeIn ${anim}`}>
       <Row>
         <header className='Home-header'>
-          <Jumbotron className='Home-hero'>
+          <Jumbotron className='Home-hero' title='Photo credit - #WOCinTechChat'>
             <Col className='parallax-content' xs={12} sm={12} md={12} lg={12}>
               <h1 className='Home__hero-tagline'>Color for Code</h1>
               <hr className='Home__hero-separator' />
@@ -63,7 +63,7 @@ const Home = ({
 }
 
 Home.propTypes = {
-  coords: PropTypes.object,
+  coords: PropTypes.any, // either '' (for falsey-ness) or an object
   isEmployer: PropTypes.bool,
   animated: PropTypes.string,
   getUsers: PropTypes.func,

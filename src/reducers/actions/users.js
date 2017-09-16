@@ -1,39 +1,46 @@
 import axios from 'axios'
 import {
-  RECEIVE_USERS, RECEIVE_USER, UPDATE_USER, DELETE_USER,
-  REQUEST_ALL_USERS, BEGIN_UPLOADING,
-  DONE_UPLOADING, REQUEST_USER, REQUEST_FILTERED_USERS } from '../constants'
+  RECEIVE_ALL_USERS, RECEIVE_USER, UPDATE_USER,
+  DELETE_USER, REQUEST_ALL_USERS, BEGIN_UPLOADING, RECEIVE_FILTERED_USERS, DONE_UPLOADING, REQUEST_USER, REQUEST_FILTERED_USERS, PAGINATE_USERS } from '../constants'
 import { whoami } from './auth'
 import { receiveAlert } from './alert'
-import storage from '../../../firebase'
+import storage from 'APP/firebase'
 const storageRef = storage.ref()
 
 /* --------- PURE ACTION CREATORS --------- */
 
+export const requestAllUsers = () => ({
+  type: REQUEST_ALL_USERS
+})
+
 export const receiveAllUsers = users => ({
   users,
-  type: RECEIVE_USERS
+  type: RECEIVE_ALL_USERS
+})
+
+export const requestFilteredUsers = filter => ({
+  filter,
+  type: REQUEST_FILTERED_USERS
+})
+
+export const receiveFilteredUsers = users => ({
+  users,
+  type: RECEIVE_FILTERED_USERS
+})
+
+export const paginateUsers = (offset, pageNum) => ({
+  offset,
+  pageNum,
+  type: PAGINATE_USERS
+})
+
+export const requestUser = () => ({
+  type: REQUEST_USER
 })
 
 export const receiveUser = user => ({
   selected: user,
   type: RECEIVE_USER
-})
-
-export const beginUploading = () => ({
-  type: BEGIN_UPLOADING
-})
-
-export const doneUploading = () => ({
-  type: DONE_UPLOADING
-})
-
-export const requestFilteredUsers = () => ({
-  type: REQUEST_FILTERED_USERS
-})
-
-export const requestUser = () => ({
-  type: REQUEST_USER
 })
 
 export const updateUser = () => ({
@@ -44,8 +51,12 @@ export const deleteUser = () => ({
   type: DELETE_USER
 })
 
-export const requestAllUsers = () => ({
-  type: REQUEST_ALL_USERS
+export const beginUploading = () => ({
+  type: BEGIN_UPLOADING
+})
+
+export const doneUploading = () => ({
+  type: DONE_UPLOADING
 })
 
 /* --------- ASYNC ACTION CREATORS (THUNKS) --------- */
@@ -68,27 +79,20 @@ export const gettingUserById = user_id => dispatch => {
     .catch(err => console.error(`Mang I couldn't find the user! ${err.stack}`))
 }
 
-export const filteringUsers = query => dispatch => {
-  dispatch(requestFilteredUsers())
+export const filteringUsers = ({query, advanced}) => dispatch => {
+  dispatch(requestFilteredUsers({terms: query.split(' '), advanced}))
   axios.post('/api/users/search', {query})
     .then(res => res.data)
-    .then(users => dispatch(receiveAllUsers(users)))
+    .then(users => dispatch(receiveFilteredUsers(users)))
     .catch(err => console.error(`Mang, I couldn't filter the users! ${err.stack}`))
 }
 
 export const advancedFilteringUsers = body => dispatch => {
+  dispatch(requestFilteredUsers(body))
   axios.post('/api/users/search/advanced', body)
     .then(res => res.data)
-    .then(users => dispatch(receiveAllUsers(users)))
+    .then(users => dispatch(receiveFilteredUsers(users)))
     .catch(err => console.error(`Mang, I couldn't advanced filter the users! ${err.stack}`))
-}
-
-export const buildBodyThenSearchUsers = (bodyBuilderFunc, coords) => {
-  return dispatch => {
-    dispatch(requestFilteredUsers())
-    const body = bodyBuilderFunc(coords)
-    dispatch(advancedFilteringUsers(body))
-  }
 }
 
 export const creatingNewEmployer = employer => dispatch => {

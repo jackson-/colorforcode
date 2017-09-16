@@ -1,6 +1,6 @@
 import {
   RECEIVE_SKILLS, RECEIVE_PROJECT, RECEIVE_JOB,
-  RECEIVE_JOBS, REQUEST_ALL_SKILLS, RECEIVE_SELECTED_SKILLS } from './constants'
+  REQUEST_ALL_SKILLS, RECEIVE_SELECTED_SKILLS } from './constants'
 
 const initialState = {
   all: null,
@@ -30,10 +30,6 @@ const skillsReducer = (state = initialState, action) => {
     case RECEIVE_JOB: return {
       all: action.skills,
       selected: [...action.job.skills] || null
-    }
-    case RECEIVE_JOBS: return {
-      all: action.skills,
-      selected: null
     }
 
     default: return state

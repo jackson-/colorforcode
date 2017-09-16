@@ -356,7 +356,7 @@ const projects = seed(Project,
       outcome: `After a long summer and lots of late nights debugging and making the UI pixel perfect, we’re really proud of what we’ve built. What differentiates us from other recruitment platforms is our project based approach to presenting the skills of our candidates. Our goal is for our applicants to have a chance to show off their talent and present themselves to hiring employers as much more than buzzwords on paper. `,
       site: `http://colorforcode.com`,
       repo: `https://github.com/jackson-/colorforcode`
-    },
+    }
   })
 )
 
@@ -386,8 +386,8 @@ const jobs = seed(Job,
         'location': 'Brooklyn, New York',
         'zip_code': '11207',
         'employment_types': ['Full Time', 'Remote'],
-        'pay_rate': '$80',
-        'compensation_type': 'Hourly',
+        'pay_rate': '$98000',
+        'compensation_type': 'Salary',
         'travel_requirements': 'None'
       },
       dev_ops: {
@@ -416,14 +416,14 @@ const jobs = seed(Job,
         'coords': points.bk,
         'location': 'Brooklyn, NY',
         'zip_code': '11207',
-        'employment_types': ['Internship', 'Full Time'],
-        'pay_rate': '$100',
+        'employment_types': ['Full Time'],
+        'pay_rate': '$108000',
         'compensation_type': 'Salary',
         'travel_requirements': 'None',
         'employer_id': employers.colorforcode.id
       },
       ux: {
-        'title': 'UX / Visual Designer',
+        'title': 'UX Designer',
         'description': `BlackRocks User Experience team is looking for a professional with experience conceptualizing and visualizing user interfaces for large scale enterprise web applications to help us design next generation user interfaces for our Aladdin platform.`,
         'status': 'open',
         'application_email': '',
@@ -432,9 +432,9 @@ const jobs = seed(Job,
         'coords': points.bk,
         'location': 'Brooklyn, NY',
         'zip_code': '11207',
-        'employment_types': ['Internship', 'Full Time'],
-        'pay_rate': '$30',
-        'compensation_type': 'Salary',
+        'employment_types': ['Full Time'],
+        'pay_rate': '$70',
+        'compensation_type': 'Hourly',
         'travel_requirements': 'None',
         'employer_id': employers.colorforcode.id
       },
@@ -448,14 +448,14 @@ const jobs = seed(Job,
         'coords': points.bk,
         'location': 'Brooklyn, NY',
         'zip_code': '11207',
-        'employment_types': ['Internship', 'Full Time'],
-        'pay_rate': '$90',
-        'compensation_type': 'Salary',
+        'employment_types': ['Remote', 'Full Time'],
+        'pay_rate': '$70',
+        'compensation_type': 'Hourly',
         'travel_requirements': 'None',
         'employer_id': employers.colorforcode.id
       },
       net_dev: {
-        'title': '.Net Developer (Junior)',
+        'title': 'Junior .Net Developer',
         'description': `An NYC government agency located in Brooklyn, NY is looking for a junior .NET Developer for a 6 month contract, with the strong possibility for a long term renewal.`,
         'status': 'open',
         'application_email': '',
@@ -464,9 +464,9 @@ const jobs = seed(Job,
         'coords': points.bk,
         'location': 'Brooklyn, NY',
         'zip_code': '11207',
-        'employment_types': ['Internship', 'Full Time'],
+        'employment_types': ['Contract to Hire', 'Full Time'],
         'pay_rate': '$60',
-        'compensation_type': 'Salary',
+        'compensation_type': 'Hourly',
         'travel_requirements': 'None',
         'employer_id': employers.colorforcode.id
       },
@@ -481,7 +481,7 @@ const jobs = seed(Job,
         'location': 'Ottawa, ON Canada',
         'zip_code': 'K2P1L4',
         'employment_types': ['Remote', 'Full Time'],
-        'pay_rate': '$120000',
+        'pay_rate': '$94000',
         'compensation_type': 'Salary',
         'travel_requirements': 'None',
         'employer_id': employers.shopify.id
@@ -497,7 +497,7 @@ const jobs = seed(Job,
         'location': 'Ottawa, ON Canada',
         'zip_code': 'K2P1L4',
         'employment_types': ['Full Time'],
-        'pay_rate': '$89000',
+        'pay_rate': '$94000',
         'compensation_type': 'Salary',
         'travel_requirements': 'None',
         'employer_id': employers.shopify.id
@@ -514,12 +514,12 @@ const jobs = seed(Job,
         'zip_code': 'K2P1L4',
         'employment_types': ['Internship', 'Full Time'],
         'pay_rate': '$30',
-        'compensation_type': 'Salary',
+        'compensation_type': 'Hourly',
         'travel_requirements': 'None',
         'employer_id': employers.shopify.id
       },
       data: {
-        'title': 'Data Analyst',
+        'title': 'Data Engineer',
         'description': `We've got over 400,000 merchants from Tesla and Kanye West to small shops selling enamel pins. Help us build the best product to serve all of their needs by making our data talk!`,
         'status': 'open',
         'application_email': 'jobs@shopify.com',
@@ -529,12 +529,12 @@ const jobs = seed(Job,
         'location': 'Ottawa, ON Canada',
         'zip_code': 'K2P1L4',
         'employment_types': ['Full Time'],
-        'pay_rate': '$120000',
+        'pay_rate': '$94000',
         'compensation_type': 'Salary',
         'travel_requirements': 'None',
         'employer_id': employers.shopify.id
       },
-      full_stack1: {
+      sen_full_stack: {
         'employer_id': employers.colorforcode.id,
         'title': 'Senior Full Stack Dev',
         'description': 'This is a job for a full stack dev',
@@ -546,11 +546,11 @@ const jobs = seed(Job,
         'location': 'Brooklyn, New York',
         'zip_code': '11207',
         'employment_types': ['Full Time', 'Remote'],
-        'pay_rate': '$80',
-        'compensation_type': 'Hourly',
+        'pay_rate': '$125000',
+        'compensation_type': 'Salary',
         'travel_requirements': 'None'
       },
-      dev_ops1: {
+      sen_dev_ops: {
         'employer_id': employers.colorforcode.id,
         'title': 'Senior DevOps Engineer',
         'description': 'This is a job for a devops dude',
@@ -561,12 +561,12 @@ const jobs = seed(Job,
         'coords': points.bk,
         'location': 'Brooklyn, New York',
         'zip_code': '11207',
-        'employment_types': ['Full Time', 'Remote'],
+        'employment_types': ['Full Time', 'Contract'],
         'pay_rate': '$100',
         'compensation_type': 'Hourly',
         'travel_requirements': 'None'
       },
-      ml1: {
+      sen_ml: {
         'title': 'Senior Machine Learning Architect',
         'description': `Work with the latest machine learning techniques and technologies to influence the innovation of products in a highly collaborative environment.`,
         'status': 'open',
@@ -576,14 +576,14 @@ const jobs = seed(Job,
         'coords': points.bk,
         'location': 'Brooklyn, NY',
         'zip_code': '11207',
-        'employment_types': ['Internship', 'Full Time'],
-        'pay_rate': '$30',
+        'employment_types': ['Full Time'],
+        'pay_rate': '$145000',
         'compensation_type': 'Salary',
         'travel_requirements': 'None',
         'employer_id': employers.colorforcode.id
       },
-      ux1: {
-        'title': 'Senior UX / Visual Designer',
+      sen_ux: {
+        'title': 'Senior UX Designer',
         'description': `BlackRocks User Experience team is looking for a professional with experience conceptualizing and visualizing user interfaces for large scale enterprise web applications to help us design next generation user interfaces for our Aladdin platform.`,
         'status': 'open',
         'application_email': '',
@@ -592,13 +592,13 @@ const jobs = seed(Job,
         'coords': points.bk,
         'location': 'Brooklyn, NY',
         'zip_code': '11207',
-        'employment_types': ['Internship', 'Full Time'],
-        'pay_rate': '$30',
-        'compensation_type': 'Salary',
+        'employment_types': ['Full Time'],
+        'pay_rate': '$68',
+        'compensation_type': 'Hourly',
         'travel_requirements': 'None',
         'employer_id': employers.colorforcode.id
       },
-      messaging1: {
+      sen_messaging: {
         'title': 'Senior Messaging Engineer',
         'description': `Our client, a local Healthcare organization, is looking for a full-time Messaging Engineer. This individual will be part of a 7-12 member team of AD and Messaging Engineers (some offshore that do the overnight support).`,
         'status': 'open',
@@ -608,14 +608,14 @@ const jobs = seed(Job,
         'coords': points.bk,
         'location': 'Brooklyn, NY',
         'zip_code': '11207',
-        'employment_types': ['Internship', 'Full Time'],
-        'pay_rate': '$30',
-        'compensation_type': 'Salary',
+        'employment_types': ['Remote', 'Full Time'],
+        'pay_rate': '$80',
+        'compensation_type': 'Hourly',
         'travel_requirements': 'None',
         'employer_id': employers.colorforcode.id
       },
-      net_dev1: {
-        'title': '.Net Developer (Senior)',
+      sen_net_dev: {
+        'title': 'Senior .Net Developer',
         'description': `An NYC government agency located in Brooklyn, NY is looking for a senior .NET Developer for a 6 month contract, with the strong possibility for a long term renewal.`,
         'status': 'open',
         'application_email': '',
@@ -624,13 +624,13 @@ const jobs = seed(Job,
         'coords': points.bk,
         'location': 'Brooklyn, NY',
         'zip_code': '11207',
-        'employment_types': ['Internship', 'Full Time'],
-        'pay_rate': '$30',
-        'compensation_type': 'Salary',
+        'employment_types': ['Contract to Hire', 'Full Time'],
+        'pay_rate': '$90',
+        'compensation_type': 'Hourly',
         'travel_requirements': 'None',
         'employer_id': employers.colorforcode.id
       },
-      merchant1: {
+      sen_merchant: {
         'title': 'Merchant Success Engineering Lead',
         'description': 'Help make commerce better for everyone while building the biggest Rails app in the world!',
         'status': 'open',
@@ -641,12 +641,12 @@ const jobs = seed(Job,
         'location': 'New York, NY',
         'zip_code': '10009',
         'employment_types': ['Remote', 'Full Time'],
-        'pay_rate': '$120000',
+        'pay_rate': '$119000',
         'compensation_type': 'Salary',
         'travel_requirements': 'None',
         'employer_id': employers.shopify.id
       },
-      backend1: {
+      sen_backend: {
         'title': 'Backend Engineering Lead',
         'description': 'Work on the largest Rails app in the world!',
         'status': 'open',
@@ -657,29 +657,13 @@ const jobs = seed(Job,
         'location': 'Ottawa, ON Canada',
         'zip_code': 'K2P1L4',
         'employment_types': ['Full Time'],
-        'pay_rate': '$89000',
+        'pay_rate': '$119000',
         'compensation_type': 'Salary',
         'travel_requirements': 'None',
         'employer_id': employers.shopify.id
       },
-      intern1: {
-        'title': 'Backend Developer Intern',
-        'description': `4 month internship, Fall 2017 (9/5 - 12-22)\n\nCome help us build our new design system with React! \n\nYou'll be get to: \n\n~work on the largest Rails app on the planet\n~be treated like any other full time engineer\n~have an awesome dedicated mentor\n~eat fantastic meals catered daily by local restaurants (gluten free vegan options always!)`,
-        'status': 'open',
-        'application_email': '',
-        'cc_email': '',
-        'application_url': 'https://www.shopify.com/careers/fall-2017-internship',
-        'coords': points.on,
-        'location': 'Ottawa, ON Canada',
-        'zip_code': 'K2P1L4',
-        'employment_types': ['Internship', 'Full Time'],
-        'pay_rate': '$30',
-        'compensation_type': 'Salary',
-        'travel_requirements': 'None',
-        'employer_id': employers.shopify.id
-      },
-      data1: {
-        'title': 'Senior Data Analyst',
+      sen_data: {
+        'title': 'Data Engineering Lead',
         'description': `We've got over 400,000 merchants from Tesla and Kanye West to small shops selling enamel pins. Help us build the best product to serve all of their needs by making our data talk!`,
         'status': 'open',
         'application_email': 'jobs@shopify.com',
@@ -689,7 +673,7 @@ const jobs = seed(Job,
         'location': 'Ottawa, ON Canada',
         'zip_code': 'K2P1L4',
         'employment_types': ['Full Time'],
-        'pay_rate': '$140000',
+        'pay_rate': '$119000',
         'compensation_type': 'Salary',
         'travel_requirements': 'None',
         'employer_id': employers.shopify.id
@@ -710,11 +694,11 @@ const job_skills = seed(JobSkill,
     },
     3: {
       job_id: jobs.dev_ops.id,
-      skill_id: skills.mongodb.id
+      skill_id: skills.aws.id
     },
     4: {
       job_id: jobs.dev_ops.id,
-      skill_id: skills.node.id
+      skill_id: skills.google_app_engine.id
     },
     5: {
       job_id: jobs.full_stack.id,
@@ -746,7 +730,7 @@ const job_skills = seed(JobSkill,
     },
     12: {
       job_id: jobs.dev_ops.id,
-      skill_id: skills.aws.id
+      skill_id: skills.continuous_integration.id
     },
     13: {
       job_id: jobs.dev_ops.id,
@@ -767,6 +751,10 @@ const job_skills = seed(JobSkill,
     17: {
       job_id: jobs.merchant.id,
       skill_id: skills.rails.id
+    },
+    18: {
+      job_id: jobs.merchant.id,
+      skill_id: skills.redux.id
     },
     19: {
       job_id: jobs.merchant.id,
@@ -815,6 +803,174 @@ const job_skills = seed(JobSkill,
     30: {
       job_id: jobs.intern.id,
       skill_id: skills.git.id
+    },
+    31: {
+      job_id: jobs.sen_full_stack.id,
+      skill_id: skills.react.id
+    },
+    32: {
+      job_id: jobs.sen_full_stack.id,
+      skill_id: skills.nginx.id
+    },
+    33: {
+      job_id: jobs.sen_dev_ops.id,
+      skill_id: skills.travis_ci.id
+    },
+    34: {
+      job_id: jobs.sen_dev_ops.id,
+      skill_id: skills.heroku.id
+    },
+    35: {
+      job_id: jobs.sen_full_stack.id,
+      skill_id: skills.node.id
+    },
+    36: {
+      job_id: jobs.sen_data.id,
+      skill_id: skills.react.id
+    },
+    37: {
+      job_id: jobs.sen_data.id,
+      skill_id: skills.python.id
+    },
+    38: {
+      job_id: jobs.sen_data.id,
+      skill_id: skills.d3.id
+    },
+    39: {
+      job_id: jobs.sen_data.id,
+      skill_id: skills.rails.id
+    },
+    40: {
+      job_id: jobs.sen_data.id,
+      skill_id: skills.ruby.id
+    },
+    41: {
+      job_id: jobs.sen_data.id,
+      skill_id: skills.scala.id
+    },
+    42: {
+      job_id: jobs.sen_dev_ops.id,
+      skill_id: skills.google_cloud_functions.id
+    },
+    43: {
+      job_id: jobs.sen_dev_ops.id,
+      skill_id: skills.kubernetes.id
+    },
+    44: {
+      job_id: jobs.sen_backend.id,
+      skill_id: skills.rails.id
+    },
+    45: {
+      job_id: jobs.sen_backend.id,
+      skill_id: skills.ruby.id
+    },
+    46: {
+      job_id: jobs.sen_backend.id,
+      skill_id: skills.python.id
+    },
+    47: {
+      job_id: jobs.sen_merchant.id,
+      skill_id: skills.rails.id
+    },
+    48: {
+      job_id: jobs.sen_merchant.id,
+      skill_id: skills.react.id
+    },
+    49: {
+      job_id: jobs.sen_merchant.id,
+      skill_id: skills.javascript.id
+    },
+    50: {
+      job_id: jobs.sen_merchant.id,
+      skill_id: skills.ruby.id
+    },
+    52: {
+      job_id: jobs.sen_merchant.id,
+      skill_id: skills.html5.id
+    },
+    53: {
+      job_id: jobs.sen_merchant.id,
+      skill_id: skills.css3.id
+    },
+    54: {
+      job_id: jobs.sen_merchant.id,
+      skill_id: skills.git.id
+    },
+    55: {
+      job_id: jobs.messaging.id,
+      skill_id: skills.react.id
+    },
+    56: {
+      job_id: jobs.messaging.id,
+      skill_id: skills.javascript.id
+    },
+    57: {
+      job_id: jobs.messaging.id,
+      skill_id: skills.websockets.id
+    },
+    58: {
+      job_id: jobs.sen_messaging.id,
+      skill_id: skills.react.id
+    },
+    59: {
+      job_id: jobs.sen_messaging.id,
+      skill_id: skills['socket.io'].id
+    },
+    60: {
+      job_id: jobs.sen_messaging.id,
+      skill_id: skills.firebase.id
+    },
+    61: {
+      job_id: jobs.sen_ml.id,
+      skill_id: skills.python.id
+    },
+    62: {
+      job_id: jobs.sen_ml.id,
+      skill_id: skills.neural_network.id
+    },
+    63: {
+      job_id: jobs.sen_ml.id,
+      skill_id: skills.scala.id
+    },
+    64: {
+      job_id: jobs.sen_net_dev.id,
+      skill_id: skills['asp.net'].id
+    },
+    65: {
+      job_id: jobs.sen_net_dev.id,
+      skill_id: skills.windows.id
+    },
+    66: {
+      job_id: jobs.net_dev.id,
+      skill_id: skills['vb.net'].id
+    },
+    67: {
+      job_id: jobs.net_dev.id,
+      skill_id: skills['.net'].id
+    },
+    68: {
+      job_id: jobs.sen_ux.id,
+      skill_id: skills.uxpin.id
+    },
+    69: {
+      job_id: jobs.sen_ux.id,
+      skill_id: skills.adobe_cc.id
+    },
+    70: {
+      job_id: jobs.ux.id,
+      skill_id: skills.sketch.id
+    },
+    71: {
+      job_id: jobs.ux.id,
+      skill_id: skills.user_research.id
+    },
+    72: {
+      job_id: jobs.ml.id,
+      skill_id: skills.neural_network.id
+    },
+    73: {
+      job_id: jobs.ml.id,
+      skill_id: skills.lisp.id
     }
   })
 )
@@ -963,7 +1119,7 @@ const project_skills = seed(ProjectSkill,
     },
     36: {
       project_id: projects.r2.id,
-      skill_id: skills.sockets.id
+      skill_id: skills.websockets.id
     },
     37: {
       project_id: projects.r3.id,
@@ -977,6 +1133,30 @@ const project_skills = seed(ProjectSkill,
       project_id: projects.r3.id,
       skill_id: skills.bootstrap.id
     },
+    40: {
+      project_id: projects.c3.id,
+      skill_id: skills.bootstrap.id
+    },
+    41: {
+      project_id: projects.c3.id,
+      skill_id: skills.react.id
+    },
+    42: {
+      project_id: projects.c3.id,
+      skill_id: skills.node.id
+    },
+    43: {
+      project_id: projects.c3.id,
+      skill_id: skills.postgresql.id
+    },
+    44: {
+      project_id: projects.c3.id,
+      skill_id: skills.redux.id
+    },
+    45: {
+      project_id: projects.c3.id,
+      skill_id: skills.bemcss.id
+    }
   })
 )
 
@@ -989,7 +1169,6 @@ function getMethods (obj) {
   }
   return res
 }
-
 
 function seedEverything () {
   const seeded = {

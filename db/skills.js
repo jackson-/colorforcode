@@ -1,13 +1,19 @@
 const mapSkills = (skills) => {
   let dict = {}
   skills.forEach(skill => {
-    const title = skill.title.split(' ').join('-')
+    const title = skill.title.split(' ').join('_')
     dict[`${title}`] = skill
   })
   return dict
 }
 
 const skillList = [{
+  'title': 'kubernetes',
+  'template': true
+}, {
+  'title': 'uxpin',
+  'template': true
+}, {
   'title': 'wordpress',
   'template': true
 }, {
@@ -740,7 +746,7 @@ const skillList = [{
   'title': 'internationalization',
   'template': true
 }, {
-  'title': 'neural network',
+  'title': 'neural networks',
   'template': true
 }, {
   'title': 'erlang',
@@ -852,6 +858,10 @@ const skillList = [{
   'template': true
 }, {
   'title': 'windows',
+  'template': true
+},
+{
+  'title': 'user research',
   'template': true
 }]
 

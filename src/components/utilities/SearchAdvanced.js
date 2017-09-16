@@ -29,44 +29,56 @@ const SearchAdvanced = props => {
       <FormGroup
         controlId='job-types'
         name='search-advanced__job-types'
-        onChange={props.toggleCheckbox}
       >
         <ControlLabel>EMPLOYMENT TYPES</ControlLabel>
         <Checkbox
           value='Full Time'
-          checked={props.state && props.state.employment_types.has('Full Time')}
+          onChange={props.toggleCheckbox}
+          defaultChecked={props.isChecked('Full Time')}
         >
           Full Time
         </Checkbox>
         <Checkbox
           value='Part Time'
-          checked={props.state && props.state.employment_types.has('Part Time')}
+          onChange={props.toggleCheckbox}
+          defaultChecked={props.isChecked('Part Time')}
         >
           Part Time
         </Checkbox>
         <Checkbox
           value='Contract'
-          checked={props.state && props.state.employment_types.has('Contract')}
+          onChange={props.toggleCheckbox}
+          defaultChecked={props.isChecked('Contract')}
         >
           Contract
         </Checkbox>
         <Checkbox
-          value='ContractToHire'
-          checked={props.state && props.state.employment_types.has('ContractToHire')}
+          value='Contract to Hire'
+          onChange={props.toggleCheckbox}
+          defaultChecked={props.isChecked('Contract to Hire')}
         >
           Contract to Hire
         </Checkbox>
         <Checkbox
           value='Internship'
-          checked={props.state && props.state.employment_types.has('Internship')}
+          onChange={props.toggleCheckbox}
+          defaultChecked={props.isChecked('Internship')}
         >
           Internship
         </Checkbox>
         <Checkbox
           value='Remote'
-          checked={props.state && props.state.employment_types.has('Remote')}
+          onChange={props.toggleCheckbox}
+          defaultChecked={props.isChecked('Remote')}
         >
           Remote
+        </Checkbox>
+        <Checkbox
+          value='Freelance'
+          onChange={props.toggleCheckbox}
+          defaultChecked={props.isChecked('Freelance')}
+        >
+          Freelance
         </Checkbox>
       </FormGroup>
       <div className='SearchAdvanced__input-container'>
@@ -81,7 +93,7 @@ const SearchAdvanced = props => {
           {
             props.validate('zip_code') === 'error' &&
               <HelpBlock>
-                {`Enter the zip code to find jobs within ${props.state.distance} miles of.`}
+                {`Enter a zip code to find jobs within ${props.state.distance} miles of.`}
               </HelpBlock>
           }
         </FormGroup>
@@ -96,7 +108,7 @@ const SearchAdvanced = props => {
           {
             props.validate('distance') === 'error' &&
               <HelpBlock>
-                Filter requires the max number of miles away from your zip code.
+                {`Enter the max number of miles away from ${props.state.zip_code}.`}
               </HelpBlock>
           }
         </FormGroup>
@@ -122,7 +134,9 @@ SearchAdvanced.propTypes = {
   filtered: PropTypes.bool.isRequired,
   terms: PropTypes.array.isRequired,
   query: PropTypes.string.isRequired,
-  state: PropTypes.object.isRequired
+  state: PropTypes.object.isRequired,
+  isChecked: PropTypes.func.isRequired,
+  filter: PropTypes.object
 }
 
 export default SearchAdvanced

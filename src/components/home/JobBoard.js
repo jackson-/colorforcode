@@ -3,6 +3,7 @@ import { Row, Col, Button } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import axios from 'axios'
 import PropTypes from 'prop-types'
+import { paginateJobs } from '../../reducers/actions/jobs'
 import SearchBar from '../utilities/SearchBar'
 import SearchAdvanced from '../utilities/SearchAdvanced'
 import JobList from './JobList.js'
@@ -17,19 +18,16 @@ class JobBoard extends Component {
       pendingTerms: [],
       terms: [],
       distance: '',
-      sortBy: '',
       zip_code: '',
       employment_types: new Set([]),
-      filtered: false,
       coords: '',
-      page_num: 1,
-      from: 0,
       loading: true
     }
   }
 
   componentWillMount () {
     const {allJobs, fetching, authenticating, getJobs} = this.props
+    console.log('CWM - ', this.props.filter)
     if (!authenticating) {
       if (!allJobs && !fetching) {
         getJobs()
@@ -40,8 +38,28 @@ class JobBoard extends Component {
     }
   }
 
+  componentDidMount () {
+    console.log('CDM - ', this.props.filter)
+    const {terms, distance, zip_code, employment_types, coords, query, pendingTerms} = this.state
+    const {filter} = this.props
+    if (
+      !terms.length &&
+      !distance &&
+      !zip_code &&
+      !employment_types.length &&
+      !coords &&
+      !query &&
+      !pendingTerms.length
+    ) {
+      if (filter) {
+        this.handleChange('filter')()
+      }
+    }
+  }
+
   componentWillReceiveProps (nextProps) {
     const {authenticating, getJobs} = this.props
+    console.log('CWRP - ', this.props.filter)
     if (!authenticating) {
       if (!nextProps.allJobs && !nextProps.filteredJobs && !nextProps.fetching) {
         getJobs()
@@ -64,9 +82,17 @@ class JobBoard extends Component {
   }
 
   handleChange = type => event => {
-    const {value} = event.target
-    const nextState = {}
-    nextState[`${type}`] = value
+    let nextState, value
+    if (event) {
+      value = event.target.value
+      nextState = {}
+      nextState[`${type}`] = value
+    }
+    if (type === 'filter') {
+      const {filter} = this.props
+      if (filter.employment_types) filter.employment_types = new Set([...filter.employment_types])
+      return this.setState(filter)
+    }
     if (type === 'query') nextState.pendingTerms = value.split(' ')
     if (type === 'zip_code' && value.toString().length >= 5) {
       /* first we finish updating the state of the input, then we use the zip to find the rest of the location data by passing the callback to setState (an optional 2nd param) */
@@ -97,19 +123,29 @@ class JobBoard extends Component {
     this.setState({employment_types})
   }
 
+  isChecked = type => {
+    const {filter} = this.props
+    if (filter && filter.employment_types) {
+      return new Set(filter.employment_types).has(type)
+    } else {
+      return this.state.employment_types.has(type)
+    }
+  }
+
   clearChip = event => {
     event.preventDefault()
-    this.setState({loading: true})
-    const chipToClear = event.target.value
-    console.log('chipToClear - ', chipToClear)
+    const chipToClear = event.currentTarget.value
     let terms = this.state.terms.filter(term => {
       return term !== chipToClear && term !== ''
     })
-    const query = terms.join(' ')
+    const {getJobs, filter} = this.props
+    const query = terms.length > 0 ? terms.join(' ') : ''
     this.setState(
-      {pendingTerms:terms, terms, query, filtered: query.length > 0, loading: false},
+      {query, terms, loading: true},
       () => {
-        if (query) this.props.filterJobs(query)
+        if (filter.advanced) this.advancedFilterJobs()
+        else if (query) this.filterJobs()
+        else getJobs()
       }
       // ^second param of setState (optional) is callback to execute after setting state
     )
@@ -121,83 +157,49 @@ class JobBoard extends Component {
       // we reset all search interface elements by:
       // clearing the search bar, showing all job listings, and hiding search-header
       // see SearchAdvanced.js line 21 (the Clear Filter button onClick)
-      console.log('CLEARING FILTER')
       this.setState({
         query: '',
         pendingTerms: [],
         terms: [],
         distance: '',
-        sortBy: '',
         zip_code: '',
-        coords: '',
         employment_types: new Set([]),
-        filtered: false,
+        coords: '',
         loading: false
-      })
+      }, this.props.getJobs)
     } else {
       // just clear the search bar, nbd
       this.setState({query: '', pendingTerms: []})
     }
   }
 
-  buildBody = (coords, from) => {
-    const {terms, distance, employment_types, sortBy} = this.state
-    return {
+  handlePagination = action => event => {
+    event.preventDefault()
+    const {allJobs, filteredJobs, filtered, savePagination, pageNum, offset} = this.props
+    const total = filtered ? filteredJobs.length : allJobs.length
+    const maxPageNum = Math.round(total % 10)
+    if (action === 'next' && (pageNum + 1 <= maxPageNum)) {
+      console.log('NEXT PAGE: ', pageNum + 1)
+      return savePagination(offset + 10, pageNum + 1)
+    } else if (action === 'back' && (pageNum - 1 > 0)) {
+      console.log('BACK TO PAGE: ', pageNum - 1)
+      return savePagination(offset - 10, pageNum - 1)
+    }
+  }
+
+  advancedFilterJobs = event => {
+    if (event) event.preventDefault()
+    const {advancedFilterJobs} = this.props
+    const {terms, coords, distance, employment_types, zip_code} = this.state
+    const body = {
       terms,
       coords,
       distance,
-      employment_types: [...employment_types],
-      sortBy,
-      from
+      zip_code,
+      advanced: true,
+      employment_types: [...employment_types]
     }
-  }
-
-  handlePagination = (sign) => {
-    const {allJobs, filteredJobs} = this.props
-    const {filtered} = this.state
-    let page_num = 1
-    let from = 0
-    const next_page = sign === 'plus'
-      ? page_num + 1
-      : page_num - 1
-    const jobs = filtered ? filteredJobs : allJobs
-    const nextPageHasItems = (!(jobs.length < 10) || sign === 'minus')
-    if (next_page > 0 && nextPageHasItems) {
-      page_num = next_page
-      from = sign === 'plus'
-        ? from + 10
-        : from - 10
-    } else {
-      return null
-    }
-    return {page_num, from}
-  }
-
-  advancedFilterJobs = sign => event => {
-    event.preventDefault()
-    const coords = this.state.coords
-      ? this.state.coords
-      : this.props.coords
-    // if this method is being called as a result of clicking Next or Back:
-    if (sign) {
-      const {page_num, from} = this.handlePagination(sign)
-      if (!page_num) {
-        return
-      } else {
-        return this.setState({
-          from,
-          filtered: true,
-          page_num,
-          loading: true
-        }, this.props.advancedFilterJobs(this.buildBody, coords, from))
-      }
-    }
-    this.setState({
-      from: this.state.from,
-      filtered: true,
-      page_num: this.state.page_num,
-      loading: true
-    }, this.props.advancedFilterJobs(this.buildBody, coords, this.state.from))
+    this.setState({loading: true}, advancedFilterJobs(body))
   }
 
   filterJobs = event => {
@@ -208,19 +210,28 @@ class JobBoard extends Component {
     // ^ when query === '', we don't filter so all job listings continue to be shown
     if (query) {
       this.setState({
-        filtered: true,
         terms: [...this.state.pendingTerms],
         loading: true
-      }, this.props.filterJobs(query))
+      }, this.props.filterJobs({
+        query,
+        advanced: this.props.filter
+          ? this.props.filter.advanced
+          : false
+      }))
     }
     // we only show the search results header if this.state.filtered === true
     this.clearFilter()()
   }
 
   render () {
-    const {allJobs, filteredJobs} = this.props
-    const {loading, filtered} = this.state
-    const jobs = !filteredJobs || !filtered ? allJobs : filteredJobs
+    const {allJobs, filteredJobs, filtered, fetching, offset, pageNum} = this.props
+    const {loading} = this.state
+    const jobList = !filteredJobs || !filtered ? allJobs : filteredJobs
+    const lastIndex = jobList ? jobList.length - 1 : 0
+    const limit = 10
+    let jobs = jobList ? jobList.slice(offset, (offset + limit)) : jobList
+    console.log(`SLICING AT ${offset}, ${(offset + limit)} - `, jobs)
+    console.log(`LAST INDEX - ${lastIndex}`, jobList)
     return (
       <Row className='JobBoard'>
         <SearchBar
@@ -236,13 +247,14 @@ class JobBoard extends Component {
         <div className='container__flex'>
           <Col className='SearchAdvanced__container' xs={12} sm={3} md={3} lg={3}>
             <SearchAdvanced
-              filterJobs={this.advancedFilterJobs()}
+              filterJobs={this.advancedFilterJobs}
               handleChange={this.handleChange}
               toggleCheckbox={this.toggleJobTypes}
               validate={this.getValidationState}
               clearFilter={this.clearFilter}
+              isChecked={this.isChecked}
               clearChip={this.clearChip}
-              filtered={this.state.filtered}
+              filtered={this.props.filtered}
               query={this.state.query}
               terms={this.state.terms}
               state={this.state}
@@ -251,21 +263,35 @@ class JobBoard extends Component {
           <Col xs={12} sm={9} md={9} lg={9}>
             <Row>
               <Col className='paginate-container' xs={12} sm={12} md={12} lg={12}>
-                <Button className='btn-paginate' onClick={this.advancedFilterJobs('minus')}>
+                <Button
+                  className='btn-paginate'
+                  onClick={this.handlePagination('back')}
+                  disabled={offset === 0}
+                >
                   Back
                 </Button>
                 <span>
-                  {this.state.page_num}
+                  {pageNum}
                 </span>
-                <Button className='btn-paginate' onClick={this.advancedFilterJobs('plus')}>
+                <Button
+                  className='btn-paginate'
+                  onClick={this.handlePagination('next')}
+                  disabled={lastIndex - (offset + limit) < 0}
+                >
                   Next
                 </Button>
               </Col>
             </Row>
             {
-              loading
+              loading || fetching
                 ? <LoadingSpinner top={'40vh'} />
-                : <JobList filtered={this.state.filtered} jobs={jobs || []} />
+                : (
+                  <JobList
+                    filtered={filtered}
+                    jobs={jobs || []}
+                    total={jobList ? jobList.length : 0}
+                  />
+                )
             }
           </Col>
         </div>
@@ -277,19 +303,33 @@ class JobBoard extends Component {
 JobBoard.propTypes = {
   allJobs: PropTypes.arrayOf(PropTypes.object),
   filteredJobs: PropTypes.arrayOf(PropTypes.object),
+  filtered: PropTypes.bool,
   getJobs: PropTypes.func,
   filterJobs: PropTypes.func,
   advancedFilterJobs: PropTypes.func,
   fetching: PropTypes.bool,
-  coords: PropTypes.object,
-  authenticating: PropTypes.bool
+  coords: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
+  // either '' (for falsey-ness) or a GeoJSON object
+  authenticating: PropTypes.bool,
+  offset: PropTypes.number,
+  pageNum: PropTypes.number,
+  savePagination: PropTypes.func,
+  filter: PropTypes.any
 }
 
 const mapStateToProps = state => ({
   allJobs: state.jobs.all,
-  filteredJobs: state.jobs.filtered,
+  filteredJobs: state.jobs.filteredJobs,
+  filtered: state.jobs.filtered,
+  filter: state.jobs.filter,
   fetching: state.jobs.fetchingAll,
+  offset: state.jobs.offset,
+  pageNum: state.jobs.pageNum,
   authenticating: state.auth.authenticating
 })
 
-export default connect(mapStateToProps)(JobBoard)
+const mapDispatchToProps = dispatch => ({
+  savePagination: (offset, pageNum) => dispatch(paginateJobs(offset, pageNum))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(JobBoard)

@@ -11,11 +11,11 @@
 .ManageJobs-header,
 .Applicants-header,
 .SavedJobs-header,
-.Projects-header, {
+.Projects-header {
   text-align: center;
 }
 
-table {
+tbody > tr {
   background: #F5F5F5;
 }
 
@@ -60,6 +60,12 @@ thead {
 .Applicants__panel .icons {
   margin-top: -10px;
   padding: 0;
+}
+
+@media only screen and (max-width: 767px) {
+  .Applicants__none {
+    text-align: center;
+  }
 }
 
 @media only screen and (min-width: 768px) {
