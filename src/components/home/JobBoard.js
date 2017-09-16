@@ -27,7 +27,6 @@ class JobBoard extends Component {
 
   componentWillMount () {
     const {allJobs, fetching, authenticating, getJobs} = this.props
-    console.log('CWM - ', this.props.filter)
     if (!authenticating) {
       if (!allJobs && !fetching) {
         getJobs()
@@ -39,7 +38,6 @@ class JobBoard extends Component {
   }
 
   componentDidMount () {
-    console.log('CDM - ', this.props.filter)
     const {terms, distance, zip_code, employment_types, coords, query, pendingTerms} = this.state
     const {filter} = this.props
     if (
@@ -59,7 +57,6 @@ class JobBoard extends Component {
 
   componentWillReceiveProps (nextProps) {
     const {authenticating, getJobs} = this.props
-    console.log('CWRP - ', this.props.filter)
     if (!authenticating) {
       if (!nextProps.allJobs && !nextProps.filteredJobs && !nextProps.fetching) {
         getJobs()
@@ -179,10 +176,8 @@ class JobBoard extends Component {
     const total = filtered ? filteredJobs.length : allJobs.length
     const maxPageNum = Math.round(total % 10)
     if (action === 'next' && (pageNum + 1 <= maxPageNum)) {
-      console.log('NEXT PAGE: ', pageNum + 1)
       return savePagination(offset + 10, pageNum + 1)
     } else if (action === 'back' && (pageNum - 1 > 0)) {
-      console.log('BACK TO PAGE: ', pageNum - 1)
       return savePagination(offset - 10, pageNum - 1)
     }
   }
@@ -230,8 +225,6 @@ class JobBoard extends Component {
     const lastIndex = jobList ? jobList.length - 1 : 0
     const limit = 10
     let jobs = jobList ? jobList.slice(offset, (offset + limit)) : jobList
-    console.log(`SLICING AT ${offset}, ${(offset + limit)} - `, jobs)
-    console.log(`LAST INDEX - ${lastIndex}`, jobList)
     return (
       <Row className='JobBoard'>
         <SearchBar

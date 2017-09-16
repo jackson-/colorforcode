@@ -14,11 +14,15 @@ const CandidateList = ({users, filtered, total}) => (
     {
       users && users.map((user, i) => {
         let skills = new Set([])
-        user.projects.forEach(p => {
-          p.skills.forEach(s => {
-            skills.add(s.title)
+        if(user.projects){
+          user.projects.forEach(p => {
+            if(p.skills){
+              p.skills.forEach(s => {
+                skills.add(s.title)
+              })
+            }
           })
-        })
+        }
         skills = [...skills].join(', ')
         return (
           <LinkContainer className='UserCard' key={i} to={`/users/${user.id}`}>

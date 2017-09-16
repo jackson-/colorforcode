@@ -20,7 +20,7 @@ export const gettingAllEmployers = () => dispatch => {
   axios.get('/api/employers')
   .then(res => res.data)
   .then(employers => dispatch(receiveEmployers(employers)))
-  .catch(err => console.log('Bitch I couldn\'t find the employers!'))
+  .catch(err => console.log('We couldn\'t find the employers!'))
 }
 
 export const creatingNewEmployer = employer => dispatch => {
@@ -32,18 +32,16 @@ export const creatingNewEmployer = employer => dispatch => {
   // if the employer is successfully created, we receive the update to employers list
   .then(employers => dispatch(gettingAllEmployers()))
   // otherwise we catch the error...
-  .catch(err => console.error('Sorry, cuz. We couldn\'t create that employer...'))
+  .catch(err => console.error('Sorry, we couldn\'t create that employer...'))
 }
 
 export const authenticatingEmployer = employer => dispatch => {
-  console.log('NEW SHIT')
   dispatch(authenticateEmployer())
   axios.post('/api/employers/login', employer)
   .then(res => {
     return res.data
   })
   .then(employer => {
-    console.log("USER", employer)
     sessionStorage.setItem('employer', employer.id)
 
     dispatch(receiveEmployer(employer))
@@ -51,6 +49,5 @@ export const authenticatingEmployer = employer => dispatch => {
   .then(() => {
     dispatch(doneLoading())
   })
-  // .then(job => console.log("JOB", job))
-  .catch(err => console.log('Bitch I couldn\'t sign you in!'))
+  .catch(err => console.log('We couldn\'t sign you in!'))
 }

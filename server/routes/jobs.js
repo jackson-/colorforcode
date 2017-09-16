@@ -134,11 +134,9 @@ module.exports = require('express').Router()
 
     db.query(sql, options)
       .then(jobs => {
-        console.log('NUM JOBS MATCHED: ', jobs.length)
         res.status(200).json(jobs)
       })
       .catch(err => {
-        console.log('EMPLOYMENT TYPES: ', employment_types, 'FAILED QUERY: ', sql)
         return next(err)
       })
   })
@@ -146,7 +144,6 @@ module.exports = require('express').Router()
   .post('/', (req, res, next) => {
     // Extract out payment route
     const {jobs, skills} = req.body
-    console.log('JOBS', jobs, 'SKILLS', skills)
     let amount = 0
     if (jobs.length >= 5) {
       amount = jobs.length * 225 * 100
@@ -168,13 +165,12 @@ module.exports = require('express').Router()
       source: 'tok_visa',
       description: 'Charge for job stuff'
     }, (err, charge) => {
-      console.log('ERR', err, 'CHARGE', charge)
+      console.log('ERR', err)
     })
       .then(() => {
         return Promise.map(jobs, (job, i) => {
           return Job.create(job)
             .then((created) => {
-              console.log('CREATE', created, 'SKILLS', skills[i])
               return created.addSkills(skills[i])
             })
         })
