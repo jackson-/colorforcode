@@ -14,6 +14,9 @@ const skillList = [{
   'title': 'uxpin',
   'template': true
 }, {
+  'title': 'neural_network',
+  'template': true
+}, {
   'title': 'wordpress',
   'template': true
 }, {
