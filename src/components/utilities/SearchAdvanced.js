@@ -14,7 +14,7 @@ const SearchAdvanced = props => {
           <Col className='SearchAdvanced__chip-container' xs={12} sm={12} md={12} lg={12}>
             {props.terms && props.terms.map((term, i) => (
               <Button key={i} className='search-chip' value={term} onClick={props.clearChip}>
-                X {term}
+                <Glyphicon glyph='remove-sign' value={term}/> {term}
               </Button>
             ))}
           </Col>
