@@ -3,7 +3,7 @@ import { Row, Col } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
 import PropTypes from 'prop-types'
 
-const CandidateList = ({users, filtered, total}) => (
+const CandidateList = ({users, filtered, total, searchable}) => (
   <div className='CandidateList'>
     {
       filtered &&
@@ -12,7 +12,14 @@ const CandidateList = ({users, filtered, total}) => (
         </h2>
     }
     {
-      users && users.map((user, i) => {
+      !searchable &&
+        <h2 className='CandidateList__heading'>
+          We apologize but until you have an active job listing
+          the candidate search will be disabled.
+        </h2>
+    }
+    {
+      users && searchable && users.map((user, i) => {
         let skills = new Set([])
         if(user.projects){
           user.projects.forEach(p => {

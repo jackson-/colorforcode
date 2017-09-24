@@ -22,12 +22,14 @@ class CandidateSearch extends Component {
       employment_types: new Set([]),
       distance: '',
       sortBy: '',
-      loading: true
+      loading: true,
+      searchable:false,
     }
   }
 
   componentWillMount () {
     const {allUsers, fetching, authenticating, getUsers} = this.props
+    this.checkForActiveListings()
     if (!authenticating) {
       if (!allUsers && !fetching) {
         getUsers()
@@ -65,6 +67,19 @@ class CandidateSearch extends Component {
       if (nextProps.allUsers || nextProps.filteredUsers) {
         this.setState({loading: false})
       }
+    }
+  }
+
+  checkForActiveListings(){
+    let searchable = false
+    this.props.currentUser.employer.listings.forEach((l) => {
+      if(l.status === "open"){
+        searchable = true
+      }
+      return
+    })
+    if(searchable){
+      this.setState({searchable})
     }
   }
 
@@ -316,6 +331,7 @@ class CandidateSearch extends Component {
                     filtered={this.props.filtered}
                     users={users || []}
                     total={userList ? userList.length : 0}
+                    searchable={this.state.searchable}
                   />
                 )
             }
@@ -350,7 +366,8 @@ const mapStateToProps = state => ({
   fetching: state.users.fetchingAll,
   filter: state.users.filter,
   offset: state.users.offset,
-  pageNum: state.users.pageNum
+  pageNum: state.users.pageNum,
+  currentUser:state.auth.currentUser,
 })
 
 const mapDispatchToProps = dispatch => ({
