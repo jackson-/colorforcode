@@ -19,6 +19,7 @@ class EditProfile extends Component {
       company_name: this.props.user && this.props.user.is_employer ? this.props.user.employer.name : '',
       company_role: this.props.user ? this.props.user.company_role : '',
       headline: this.props.user ? this.props.user.headline : '',
+      is_looking:this.props.user ? this.props.user.is_looking : false,
       title: this.props.user ? this.props.user.title : '',
       summary: this.props.user ? this.props.user.summary : '',
       first_name: this.props.user ? this.props.user.first_name : '',
@@ -73,6 +74,8 @@ class EditProfile extends Component {
       value === 'select'
         ? this.setState({[type]: ''})
         : this.setState({[type]: value})
+    } else if (type === 'is_looking') {
+      this.setState({[type]: !JSON.parse(value)})
     } else {
       this.setState({[type]: value})
     }

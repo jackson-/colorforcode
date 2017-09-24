@@ -1,7 +1,7 @@
 import React from 'react'
 import {
   Col, FormGroup, ControlLabel, FormControl,
-  Checkbox, HelpBlock, Button } from 'react-bootstrap'
+  Checkbox, HelpBlock, Button, ToggleButton } from 'react-bootstrap'
 import PropTypes from 'prop-types'
 
 const ApplicantRegisterFields = ({
@@ -12,7 +12,8 @@ const ApplicantRegisterFields = ({
   validate,
   buttonText,
   isChecked
-}) => (
+}) => {
+  return (
   <div className={`applicant fadeIn ${animated}`}>
     <Col className='form-fields-container--left' xs={12} sm={6} md={6} lg={6}>
       <FormGroup controlId='first_name'>
@@ -59,6 +60,16 @@ const ApplicantRegisterFields = ({
         />
         <FormControl.Feedback />
         {validate() === 'error' ? <HelpBlock>Passwords do not match</HelpBlock> : null}
+      </FormGroup>
+      <FormGroup controlId='is_looking'>
+        <ControlLabel>Currently Looking</ControlLabel>
+        <input
+          type='checkbox'
+          name='is_looking'
+          checked={state.is_looking}
+          value={state.is_looking}
+          onChange={handleChange('is_looking')}
+        />
       </FormGroup>
       <FormGroup controlId='title'>
         <ControlLabel>Role You're Seeking</ControlLabel>
@@ -175,7 +186,7 @@ const ApplicantRegisterFields = ({
       </Button>
     </Col>
   </div>
-)
+)}
 
 ApplicantRegisterFields.propTypes = {
   animated: PropTypes.string,
