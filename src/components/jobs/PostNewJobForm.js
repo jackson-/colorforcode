@@ -5,6 +5,7 @@ import {
   Row, Col, FormGroup, ControlLabel,
   FormControl, Button, Checkbox } from 'react-bootstrap'
 import axios from 'axios'
+import PaymentModal from 'APP/src/components/utilities/PaymentModal'
 import { creatingNewJobs } from 'APP/src/reducers/actions/jobs'
 import { receiveSelectedSkills } from 'APP/src/reducers/actions/skills'
 import CreditCardFormControls from './CreditCard'
@@ -36,7 +37,11 @@ class PostJobForm extends Component {
       status: 'open',
       app_method: 'email',
       jobs: [],
-      skills: []
+      skills: [],
+      modal_show:false,
+      modal_style:'success',
+      modal_title:'',
+      modal_body:'',
     }
   }
 
@@ -120,6 +125,7 @@ class PostJobForm extends Component {
     event.preventDefault()
     let {user, createJobPosts, receiveSelectedSkills, history, selected} = this.props
     let {jobs, skills, ...job} = this.state
+    let amount = 0
     job.employer_id = user.employer.id
     job.employment_types = [...this.state.employment_types]
     this.clearForm()
@@ -127,6 +133,33 @@ class PostJobForm extends Component {
     selected = selected.map((s) => s.id)
     skills.push(selected)
     receiveSelectedSkills([])
+    if (jobs.length >= 5) {
+      amount = jobs.length * 225
+    } else if (jobs.length >= 2 && jobs.length <= 4) {
+      amount = jobs.length * 270
+    } else if (jobs.length === 1) {
+      amount = 300
+    }
+    if(amount === 0){
+      this.setState({modal_show:true, modal_title:"Error",
+        modal_body:'You must submit at least one job before checking out',
+      })
+    } else {
+      this.setState({modal_show:true, modal_title:"Checkout",
+        modal_body:`You're total price will be $${amount}`,
+        modal_style:'success', jobs
+      })
+    }
+  }
+
+  dismissAlert = () => {
+    this.setState({modal_show:false})
+  }
+
+  createPosts = () => {
+    const {jobs, skills, ...job} = this.state;
+    const {history, createJobPosts} = this.props;
+    this.setState({modal_show:false})
     createJobPosts({jobs, skills}, history)
   }
 
@@ -245,6 +278,26 @@ class PostJobForm extends Component {
             <Button className='primary' onClick={this.addJob}>Add Another</Button>
           </form>
         </Col>
+        <Col xs={12} sm={6} md={6} lg={6}>
+          <div>
+            <h2>Prices</h2>
+            <ul>
+              <li>1 post = $300</li>
+              <li>2-4 posts = $270 each</li>
+              <li>5+ posts = $225 each</li>
+            </ul>
+          </div>
+        </Col>
+        <PaymentModal
+          jobs={this.state.jobs}
+          show={this.state.modal_show}
+          style={this.state.modal_style}
+          title={this.state.modal_title}
+          body={this.state.modal_body}
+          footer={true}
+          dismissAlert={this.dismissAlert}
+          handleSubmit={this.createPosts}
+          />
       </Row>
     )
   }
