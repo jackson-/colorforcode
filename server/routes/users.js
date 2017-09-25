@@ -7,7 +7,7 @@ module.exports = require('express').Router()
 
   .get('/', (req, res, next) => {
     User.findAll({
-      where: {is_employer: false, is_looking:true},
+      where: {is_employer: false, is_looking: true},
       include: [{
         model: Project,
         include: [Skill]
