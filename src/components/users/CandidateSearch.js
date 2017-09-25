@@ -22,12 +22,14 @@ class CandidateSearch extends Component {
       employment_types: new Set([]),
       distance: '',
       sortBy: '',
-      loading: true
+      loading: true,
+      canSearch: false
     }
   }
 
   componentWillMount () {
     const {allUsers, fetching, authenticating, getUsers} = this.props
+    this.checkForActiveListings()
     if (!authenticating) {
       if (!allUsers && !fetching) {
         getUsers()
@@ -65,6 +67,18 @@ class CandidateSearch extends Component {
       if (nextProps.allUsers || nextProps.filteredUsers) {
         this.setState({loading: false})
       }
+    }
+  }
+
+  checkForActiveListings = () => {
+    let canSearch = false
+    const {employer: {listings}} = this.props.user
+    listings.forEach((l) => {
+      if (l.status === 'open') canSearch = true
+      return
+    })
+    if (canSearch) {
+      this.setState({canSearch})
     }
   }
 
@@ -301,7 +315,7 @@ class CandidateSearch extends Component {
                 </span>
                 <Button
                   className='btn-paginate'
-                  disabled={lastIndex - (offset + limit) < 0}
+                  disabled={(offset + limit) > lastIndex}
                   onClick={this.handlePagination('next')}
                 >
                   Next
@@ -316,6 +330,7 @@ class CandidateSearch extends Component {
                     filtered={this.props.filtered}
                     users={users || []}
                     total={userList ? userList.length : 0}
+                    canSearch={this.state.canSearch}
                   />
                 )
             }
@@ -339,7 +354,8 @@ CandidateSearch.propTypes = {
   filter: PropTypes.object,
   offset: PropTypes.number,
   pageNum: PropTypes.number,
-  savePagination: PropTypes.func
+  savePagination: PropTypes.func,
+  user: PropTypes.any
 }
 
 const mapStateToProps = state => ({
@@ -350,7 +366,8 @@ const mapStateToProps = state => ({
   fetching: state.users.fetchingAll,
   filter: state.users.filter,
   offset: state.users.offset,
-  pageNum: state.users.pageNum
+  pageNum: state.users.pageNum,
+  user: state.auth.currentUser
 })
 
 const mapDispatchToProps = dispatch => ({

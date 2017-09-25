@@ -3,7 +3,7 @@ import { Row, Col } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
 import PropTypes from 'prop-types'
 
-const CandidateList = ({users, filtered, total}) => (
+const CandidateList = ({users, filtered, total, canSearch}) => (
   <div className='CandidateList'>
     {
       filtered &&
@@ -12,11 +12,17 @@ const CandidateList = ({users, filtered, total}) => (
         </h2>
     }
     {
-      users && users.map((user, i) => {
+      !canSearch &&
+        <h2 className='CandidateList__heading'>
+          To protect our user's privacy, candidate search is only available to employers with active jobs listed.
+        </h2>
+    }
+    {
+      users && canSearch && users.map((user, i) => {
         let skills = new Set([])
-        if(user.projects){
+        if (user.projects) {
           user.projects.forEach(p => {
-            if(p.skills){
+            if (p.skills) {
               p.skills.forEach(s => {
                 skills.add(s.title)
               })
@@ -64,6 +70,7 @@ const CandidateList = ({users, filtered, total}) => (
 CandidateList.propTypes = {
   users: PropTypes.arrayOf(PropTypes.object),
   filtered: PropTypes.bool,
+  canSearch: PropTypes.bool,
   total: PropTypes.number
 }
 
