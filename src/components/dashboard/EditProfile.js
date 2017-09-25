@@ -7,7 +7,6 @@ import ApplicantFields from '../auth/ApplicantRegisterFields'
 import ResumeUploader from '../dashboard/ResumeUploader'
 import '../auth/Form.css'
 import './Dashboard.css'
-import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
 
 class EditProfile extends Component {
   constructor (props) {
@@ -42,16 +41,25 @@ class EditProfile extends Component {
     axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${zip_code}`)
       .then(res => res.data)
       .then(json => {
-        const address = json.results[0].address_components.filter(c => (
-          c.types.includes('locality') ||
-          c.types.includes('administrative_area_level_1') ||
+        const address = json.results[0].address_components
+        const geometry = json.results[0].geometry.location
+        let city = address.filter(c => (
+          c.types.includes('sublocality') || c.types.includes('locality')
+        ))[0].long_name
+        let state = address.filter(c => (
+          c.types.includes('administrative_area_level_1')
+        ))[0].short_name
+        let country = address.filter(c => (
           c.types.includes('country')
-        ))
-        const city = address[0].long_name
-        const state = address[1].short_name
-        const country = address[2].long_name
-        const location = country === 'United States' ? `${city}, ${state}` : `${city}, ${state} ${country}`
-        const coords = `${json.results[0].geometry.location.lat},${json.results[0].geometry.location.lng}`
+        ))[0].long_name
+        const location = country === 'United States'
+          ? `${city}, ${state}`
+          : `${city}, ${state} ${country}`
+        const coords = {
+          type: 'Point',
+          coordinates: [parseFloat(geometry.lng), parseFloat(geometry.lat)],
+          crs: {type: 'name', properties: {name: 'EPSG:32661'}}
+        }
         this.setState({coords, zip_code, location})
       })
       .catch(err => console.error(err.stack))
@@ -161,7 +169,6 @@ class EditProfile extends Component {
     user.employment_types = [...user.employment_types]
     this.clearForm()
     this.props.updateUser(user)
-    this.props.uploadResume(this.props.user, this.refs.resume.state.file)
   }
 
   render () {
@@ -194,16 +201,11 @@ class EditProfile extends Component {
 
     return (
       <Row className={`EditProfile fadeIn ${animated}`}>
-        <ScrollToTopOnMount />
         <Col xs={12} sm={12} md={12} lg={12}>
           <h1 className='EditProfile-header'>Edit Profile</h1>
           {
             !user.is_employer &&
-            <ResumeUploader
-              ref='resume'
-              uploadResume={this.props.uploadResume}
-              user={this.props.user}
-            />
+            <ResumeUploader user={user} />
           }
           {
             !user.is_employer && user.resume_url &&

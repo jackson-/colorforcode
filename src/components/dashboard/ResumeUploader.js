@@ -1,77 +1,113 @@
-import React, {Component} from 'react';
-import {bindAll} from 'lodash';
+import React, {Component} from 'react'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import {
+  Row, Col, Button, FormGroup,
+  FormControl, ControlLabel, Glyphicon } from 'react-bootstrap'
+import { uploadingResume } from '../../reducers/actions/users'
 
-class ImageUploader extends Component {
-
-  constructor() {
-    super()
+class ResumeUploader extends Component {
+  constructor (props) {
+    super(props)
     this.state = {
       data_uri: null,
-      processing: false
+      processing: false,
+      changeResume: false,
+      filename: 'No file selected'
     }
-
-    bindAll(this, 'handleFile', 'handleSubmit');
   }
 
-  handleSubmit(e) {
-    e.preventDefault();
-    const _this = this;
-
-    this.props.uploadResume(this.props.user, this.state.file)
-    _this.setState({
-        uploaded_uri:this.state.data_uri
-      });
-
-
+  handleChangeResume = event => {
+    event.preventDefault()
+    this.setState({changeResume: true})
   }
 
-  handleFile(e) {
-    const reader = new FileReader();
-    const file = e.target.files[0];
+  cancelChgResume = event => {
+    event.preventDefault()
+    this.setState({
+      data_uri: null,
+      processing: false,
+      changeResume: false
+    })
+  }
 
+  handleFile = event => {
+    const reader = new FileReader()
+    const file = event.target.files[0]
     reader.onload = (upload) => {
       this.setState({
-        file:file,
+        file,
         data_uri: upload.target.result,
         filename: file.name,
         filetype: file.type
-      });
-    };
-
-    reader.readAsDataURL(file);
+      })
+    }
+    reader.readAsDataURL(file)
   }
 
-  render() {
-    let processing;
-    let uploaded;
+  handleSubmit = event => {
+    event.preventDefault()
+    const {data_uri, file} = this.state
+    const {user, uploadResume} = this.props
+    this.setState({
+      uploaded_uri: data_uri,
+      changeResume: false
+    }, () => uploadResume(user, file))
+  }
 
-    if (this.state.uploaded_uri) {
-      uploaded = (
-        <div>
-          <h4>Image uploaded!</h4>
-          <img className='image-preview' src={this.state.uploaded_uri} alt='resume preview' />
-          <pre className='image-link-box'>{this.state.uploaded_uri}</pre>
-        </div>
-      );
-    }
-
-    if (this.state.processing) {
-      processing = "Processing image, hang tight";
-    }
-
+  render () {
+    const {changeResume} = this.state
     return (
-      <div className='row'>
-        <div className='col-sm-12'>
-          <label>Upload your resume</label>
-          <form onSubmit={this.handleSubmit} encType="multipart/form-data">
-            <input type="file" onChange={this.handleFile} />
-            {processing}
-          </form>
-          {uploaded}
-        </div>
-      </div>
-    );
+      <Row>
+        <Col xs={12} sm={12} md={12} lg={12}>
+          {
+            changeResume
+              ? (
+                <form onSubmit={this.handleSubmit} encType='multipart/form-data'>
+                  <FormGroup controlId='image'>
+                    <ControlLabel srOnly>Upload Resume</ControlLabel>
+                    <FormControl
+                      type='file'
+                      onChange={this.handleFile}
+                      className='resume-upload'
+                    />
+                  </FormGroup>
+                  <Button
+                    className='resume-btn'
+                    bsSize='xs'
+                    disabled={this.state.processing || !this.state.data_uri}
+                    type='submit'
+                  >
+                    Save Resume
+                  </Button>
+                  <Button
+                    className='resume-btn'
+                    bsSize='xs'
+                    onClick={this.cancelChgResume}
+                  >
+                    Cancel
+                  </Button>
+                </form>
+              )
+              : (
+                <Button className='resume-btn' bsSize='xs' onClick={this.handleChangeResume}>
+                  <Glyphicon glyph='file' /> Upload Resume
+                </Button>
+              )
+          }
+        </Col>
+      </Row>
+    )
   }
 }
 
-export default ImageUploader;
+ResumeUploader.propTypes = {
+  user: PropTypes.any,
+  uploadResume: PropTypes.func
+}
+
+const mapDispatchToProps = dispatch => ({
+  uploadResume: (user, file) => dispatch(uploadingResume(user, file))
+})
+
+export default connect(null, mapDispatchToProps)(ResumeUploader)

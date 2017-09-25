@@ -24,7 +24,6 @@ const ApplicantDashboard = ({
   getProject,
   updateUser,
   updateProject,
-  uploadResume,
   deleteProject,
   unsaveJob,
   applyToJob,
@@ -107,7 +106,6 @@ const ApplicantDashboard = ({
               <EditProfile
                 user={user}
                 updateUser={updateUser}
-                uploadResume={uploadResume}
                 animated={animated}
               />
             )} />
@@ -153,7 +151,6 @@ ApplicantDashboard.propTypes = {
   deleteProject: PropTypes.func.isRequired,
   getProject: PropTypes.func.isRequired,
   updateUser: PropTypes.func.isRequired,
-  uploadResume: PropTypes.func.isRequired,
   applyToJob: PropTypes.func.isRequired,
   saveJob: PropTypes.func.isRequired,
   unsaveJob: PropTypes.func.isRequired,

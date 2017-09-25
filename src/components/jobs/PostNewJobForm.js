@@ -7,7 +7,6 @@ import {
 import axios from 'axios'
 import { creatingNewJobs } from 'APP/src/reducers/actions/jobs'
 import { receiveSelectedSkills } from 'APP/src/reducers/actions/skills'
-import CreditCardFormControls from './CreditCard'
 import SkillTypeaheadSelect from '../utilities/SkillTypeaheadSelect'
 import PropTypes from 'prop-types'
 import '../auth/Form.css'
@@ -240,7 +239,7 @@ class PostJobForm extends Component {
                 <option value='100%'>100%</option>
               </FormControl>
             </FormGroup>
-            <CreditCardFormControls ref='card' />
+            {/* <CreditCardFormControls ref='card' /> */}
             <Button className='primary' type='submit'>Add Job & Checkout</Button>
             <Button className='primary' onClick={this.addJob}>Add Another</Button>
           </form>

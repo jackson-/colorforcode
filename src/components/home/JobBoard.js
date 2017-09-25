@@ -27,7 +27,6 @@ class JobBoard extends Component {
 
   componentWillMount () {
     const {allJobs, fetching, authenticating, getJobs} = this.props
-    console.log('CWM - ', this.props.filter)
     if (!authenticating) {
       if (!allJobs && !fetching) {
         getJobs()
@@ -39,7 +38,6 @@ class JobBoard extends Component {
   }
 
   componentDidMount () {
-    console.log('CDM - ', this.props.filter)
     const {terms, distance, zip_code, employment_types, coords, query, pendingTerms} = this.state
     const {filter} = this.props
     if (
@@ -59,7 +57,6 @@ class JobBoard extends Component {
 
   componentWillReceiveProps (nextProps) {
     const {authenticating, getJobs} = this.props
-    console.log('CWRP - ', this.props.filter)
     if (!authenticating) {
       if (!nextProps.allJobs && !nextProps.filteredJobs && !nextProps.fetching) {
         getJobs()
@@ -135,13 +132,13 @@ class JobBoard extends Component {
   clearChip = event => {
     event.preventDefault()
     const chipToClear = event.currentTarget.value
-    let terms = this.state.terms.filter(term => {
+    let pendingTerms = this.state.terms.filter(term => {
       return term !== chipToClear && term !== ''
     })
     const {getJobs, filter} = this.props
-    const query = terms.length > 0 ? terms.join(' ') : ''
+    const query = pendingTerms.length > 0 ? pendingTerms.join(' ') : ''
     this.setState(
-      {query, terms, loading: true},
+      {query, pendingTerms, loading: true},
       () => {
         if (filter.advanced) this.advancedFilterJobs()
         else if (query) this.filterJobs()
@@ -175,15 +172,12 @@ class JobBoard extends Component {
 
   handlePagination = action => event => {
     event.preventDefault()
-    console.log('HANDLING PAGINATION')
     const {allJobs, filteredJobs, filtered, savePagination, pageNum, offset} = this.props
     const total = filtered ? filteredJobs.length : allJobs.length
     const maxPageNum = Math.round(total % 10)
     if (action === 'next' && (pageNum + 1 <= maxPageNum)) {
-      console.log('NEXT PAGE: ', pageNum + 1)
       return savePagination(offset + 10, pageNum + 1)
     } else if (action === 'back' && (pageNum - 1 > 0)) {
-      console.log('BACK TO PAGE: ', pageNum - 1)
       return savePagination(offset - 10, pageNum - 1)
     }
   }
@@ -210,6 +204,7 @@ class JobBoard extends Component {
     const {query} = this.state
     // ^ when query === '', we don't filter so all job listings continue to be shown
     if (query) {
+      console.log('PENDING TERMS', this.state.pendingTerms, 'TERMS', this.state.terms)
       this.setState({
         terms: [...this.state.pendingTerms],
         loading: true
@@ -231,9 +226,6 @@ class JobBoard extends Component {
     const lastIndex = jobList ? jobList.length - 1 : 0
     const limit = 10
     let jobs = jobList ? jobList.slice(offset, (offset + limit)) : jobList
-    console.log(`SLICING AT ${offset}, ${(offset + limit)} - `, jobs)
-    console.log(`LAST INDEX - ${lastIndex}`, jobList)
-    console.log(`NEXT DISABLED - `, lastIndex - (offset + limit) < 0)
     return (
       <Row className='JobBoard'>
         <SearchBar
@@ -278,6 +270,7 @@ class JobBoard extends Component {
                 <Button
                   className='btn-paginate'
                   onClick={this.handlePagination('next')}
+                  disabled={(offset + limit) > lastIndex}
                 >
                   Next
                 </Button>

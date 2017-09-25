@@ -39,7 +39,6 @@ class CandidateSearch extends Component {
   }
 
   componentDidMount () {
-    console.log('CDM - ', this.props.filter)
     const {terms, distance, zip_code, employment_types, coords, query, pendingTerms} = this.state
     const {filter} = this.props
     if (
@@ -138,7 +137,7 @@ class CandidateSearch extends Component {
     }
   }
 
-  clearFilter = filter => {
+  clearFilter = filter => event => {
     if (filter) {
       // if this method is invoked with a filter param,
       // we reset all search interface elements by:
@@ -155,7 +154,6 @@ class CandidateSearch extends Component {
         sortBy: '',
         loading: false
       })
-      this.filterUsers()
     } else {
       // just clear the search bar, nbd
       this.setState({query: ''})
@@ -254,13 +252,12 @@ class CandidateSearch extends Component {
   }
 
   render () {
-    const {allUsers, filteredUsers, filtered, fetching, filter, offset, pageNum} = this.props
+    const {allUsers, filteredUsers, filtered, fetching, offset, pageNum} = this.props
     const {loading} = this.state
     const userList = !filteredUsers || !filtered ? allUsers : filteredUsers
     const lastIndex = userList ? userList.length - 1 : 0
     const limit = 10
     let users = userList ? userList.slice(offset, (offset + limit)) : userList
-    console.log(`SLICING AT ${offset}, ${(offset + limit)} - `, users)
     return (
       <Row className='CandidateSearch'>
         <SearchBar

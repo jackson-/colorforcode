@@ -72,7 +72,6 @@ class EditProjectForm extends Component {
   }
 
   componentWillUnmount () {
-    console.log('GOOD TO CLEAR SELECTED SKILLS')
     this.props.receiveSelectedSkills(null)
   }
 

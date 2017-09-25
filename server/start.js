@@ -37,7 +37,6 @@ module.exports = app
   // Cookie-session docs: https://www.npmjs.com/package/cookie-session
   app.use(function (req, res, next) {
     if ('/robots.txt' === req.url) {
-      console.log("GOTEM")
       res.type('text/plain')
       res.send("User-agent: *\nDisallow: ");
     } else {

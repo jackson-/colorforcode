@@ -1,4 +1,4 @@
-import { AUTHENTICATED, AUTHENTICATING } from './constants'
+import { AUTHENTICATED, AUTHENTICATING, BEGIN_UPLOADING } from './constants'
 
 const initialState = {
   currentUser: null,
@@ -12,6 +12,10 @@ const authReducer = (state = initialState, action) => {
       currentUser: action.user
     }
     case AUTHENTICATING: return {
+      authenticating: true,
+      currentUser: null
+    }
+    case BEGIN_UPLOADING: return {
       authenticating: true,
       currentUser: null
     }

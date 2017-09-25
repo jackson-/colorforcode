@@ -150,6 +150,11 @@
   border-color: #FFFFFF;
 }
 
+.RegisterForm textarea,
+.EditProfile textarea {
+  height: 234px;
+}
+
 .form-group textarea:focus {
   box-shadow: none;
   border: 2px solid #01C688;
@@ -182,7 +187,9 @@ input[type=file] {
 }
 
 .EditProfile input[type=file] {
-  padding: 15px 0 25px;
+  padding: 0;
+  border: none;
+  margin-bottom: -15px;
 }
 
 .EditProject input[type=file] {
