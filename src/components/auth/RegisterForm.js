@@ -23,7 +23,7 @@ class RegisterForm extends Component {
       summary: '',
       headline: '',
       title: '',
-      is_looking:true,
+      is_looking: true,
       first_name: '',
       last_name: '',
       zip_code: '',
@@ -88,7 +88,7 @@ class RegisterForm extends Component {
         ? this.setState({[type]: ''})
         : this.setState({[type]: value})
     } else if (type === 'is_looking') {
-      this.setState({[type]: !JSON.parse(value)})
+      this.setState({[type]: !this.state.is_looking})
     } else {
       this.setState({[type]: value})
     }
@@ -106,6 +106,7 @@ class RegisterForm extends Component {
       summary: '',
       headline: '',
       title: '',
+      is_looking: true,
       first_name: '',
       last_name: '',
       zip_code: '',

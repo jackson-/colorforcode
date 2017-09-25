@@ -150,6 +150,15 @@
   border-color: #FFFFFF;
 }
 
+.RegisterForm textarea,
+.EditProfile textarea {
+  height: 234px;
+}
+
+.EditProfile__applicant textarea {
+  height: 279px;
+}
+
 .form-group textarea:focus {
   box-shadow: none;
   border: 2px solid #01C688;

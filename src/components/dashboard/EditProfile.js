@@ -19,7 +19,7 @@ class EditProfile extends Component {
       company_name: this.props.user && this.props.user.is_employer ? this.props.user.employer.name : '',
       company_role: this.props.user ? this.props.user.company_role : '',
       headline: this.props.user ? this.props.user.headline : '',
-      is_looking:this.props.user ? this.props.user.is_looking : false,
+      is_looking: this.props.user ? this.props.user.is_looking : false,
       title: this.props.user ? this.props.user.title : '',
       summary: this.props.user ? this.props.user.summary : '',
       first_name: this.props.user ? this.props.user.first_name : '',
@@ -75,7 +75,7 @@ class EditProfile extends Component {
         ? this.setState({[type]: ''})
         : this.setState({[type]: value})
     } else if (type === 'is_looking') {
-      this.setState({[type]: !JSON.parse(value)})
+      this.setState({[type]: !this.state.is_looking})
     } else {
       this.setState({[type]: value})
     }
@@ -93,6 +93,7 @@ class EditProfile extends Component {
       company_name: this.props.user && this.props.user.is_employer ? this.props.user.employer.name : '',
       company_role: this.props.user ? this.props.user.company_role : '',
       headline: this.props.user ? this.props.user.headline : '',
+      is_looking: this.props.user ? this.props.user.is_looking : false,
       title: this.props.user ? this.props.user.title : '',
       summary: this.props.user ? this.props.user.summary : '',
       first_name: this.props.user ? this.props.user.first_name : '',
@@ -169,6 +170,7 @@ class EditProfile extends Component {
 
   render () {
     const {user, animated} = this.props
+    let applicantClass = !user.is_employer ? 'EditProfile__applicant' : ''
     let fields = ''
     if (user && user.is_employer) {
       fields = (
@@ -196,8 +198,7 @@ class EditProfile extends Component {
     }
 
     return (
-      <Row className={`EditProfile fadeIn ${animated}`}>
-        <ScrollToTopOnMount />
+      <Row className={`EditProfile ${applicantClass} fadeIn ${animated}`}>
         <Col xs={12} sm={12} md={12} lg={12}>
           <h1 className='EditProfile-header'>Edit Profile</h1>
           {
