@@ -155,8 +155,9 @@
   height: 234px;
 }
 
-.EditProfile__applicant textarea {
-  height: 279px;
+.EditProfile__applicant textarea,
+.RegisterForm__applicant textarea {
+  height: 280px;
 }
 
 .form-group textarea:focus {
