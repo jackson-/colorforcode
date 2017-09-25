@@ -13,6 +13,10 @@ module.exports = db => db.define('user', {
   first_name: STRING,
   last_name: STRING,
   is_employer: BOOLEAN,
+  is_looking: {
+    type: BOOLEAN,
+    defaultValue: true
+  },
   zip_code: STRING,
   location: STRING,
   coords: GEOMETRY('POINT', 32661),
