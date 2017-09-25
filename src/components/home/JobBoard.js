@@ -269,7 +269,7 @@ class JobBoard extends Component {
                 <Button
                   className='btn-paginate'
                   onClick={this.handlePagination('next')}
-                  disabled={lastIndex - (offset + limit) < 0}
+                  disabled={(offset + limit) > lastIndex}
                 >
                   Next
                 </Button>

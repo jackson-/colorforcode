@@ -23,7 +23,7 @@ class CandidateSearch extends Component {
       distance: '',
       sortBy: '',
       loading: true,
-      searchable:false,
+      canSearch: false
     }
   }
 
@@ -70,16 +70,15 @@ class CandidateSearch extends Component {
     }
   }
 
-  checkForActiveListings(){
-    let searchable = false
-    this.props.currentUser.employer.listings.forEach((l) => {
-      if(l.status === "open"){
-        searchable = true
-      }
+  checkForActiveListings = () => {
+    let canSearch = false
+    const {employer: {listings}} = this.props.user
+    listings.forEach((l) => {
+      if (l.status === 'open') canSearch = true
       return
     })
-    if(searchable){
-      this.setState({searchable})
+    if (canSearch) {
+      this.setState({canSearch})
     }
   }
 
@@ -267,7 +266,7 @@ class CandidateSearch extends Component {
   }
 
   render () {
-    const {allUsers, filteredUsers, filtered, fetching, filter, offset, pageNum} = this.props
+    const {allUsers, filteredUsers, filtered, fetching, offset, pageNum} = this.props
     const {loading} = this.state
     const userList = !filteredUsers || !filtered ? allUsers : filteredUsers
     const lastIndex = userList ? userList.length - 1 : 0
@@ -316,7 +315,7 @@ class CandidateSearch extends Component {
                 </span>
                 <Button
                   className='btn-paginate'
-                  disabled={lastIndex - (offset + limit) < 0}
+                  disabled={(offset + limit) > lastIndex}
                   onClick={this.handlePagination('next')}
                 >
                   Next
@@ -331,7 +330,7 @@ class CandidateSearch extends Component {
                     filtered={this.props.filtered}
                     users={users || []}
                     total={userList ? userList.length : 0}
-                    searchable={this.state.searchable}
+                    canSearch={this.state.canSearch}
                   />
                 )
             }
@@ -355,7 +354,8 @@ CandidateSearch.propTypes = {
   filter: PropTypes.object,
   offset: PropTypes.number,
   pageNum: PropTypes.number,
-  savePagination: PropTypes.func
+  savePagination: PropTypes.func,
+  user: PropTypes.any
 }
 
 const mapStateToProps = state => ({
@@ -367,7 +367,7 @@ const mapStateToProps = state => ({
   filter: state.users.filter,
   offset: state.users.offset,
   pageNum: state.users.pageNum,
-  currentUser:state.auth.currentUser,
+  user: state.auth.currentUser
 })
 
 const mapDispatchToProps = dispatch => ({
