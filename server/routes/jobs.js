@@ -233,16 +233,17 @@ module.exports = require('express').Router()
           var transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-              user: 'jackson.t.devin@gmail.com',
-              pass: '3rdEyeFly6733'
+              user: 'devin@colorforcode.com',
+              pass: 'wbbsavag3'
             }
           })
           var mailOptions = {
-            from: 'jackson.t.devin@gmail.com',
+            from: 'devin@colorforcode.com',
             to: `${foundJob.application_email}, ${foundJob.cc_email}`,
-            subject: 'New Applications!',
-            html: `<p>${user.first_name} ${user.last_name} just applied to ${foundJob.title}!
-            Check them out <a href='http://localhost:3000/users/${user.id}'>here</a>.</p>`
+            subject: 'New Application from Color For Code!',
+            html: `<h2>${user.first_name} ${user.last_name} just applied to ${foundJob.title}!</h2>
+            <p>Check them out <a href='http://localhost:3000/users/${user.id}'>here</a> or email
+            them at ${user.email} .</p>`
           }
 
           transporter.sendMail(mailOptions, (error, info) => {
