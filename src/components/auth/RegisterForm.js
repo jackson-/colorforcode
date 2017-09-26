@@ -23,6 +23,7 @@ class RegisterForm extends Component {
       summary: '',
       headline: '',
       title: '',
+      is_looking: true,
       first_name: '',
       last_name: '',
       zip_code: '',
@@ -86,6 +87,8 @@ class RegisterForm extends Component {
       value === 'select'
         ? this.setState({[type]: ''})
         : this.setState({[type]: value})
+    } else if (type === 'is_looking') {
+      this.setState({[type]: !this.state.is_looking})
     } else {
       this.setState({[type]: value})
     }
@@ -103,6 +106,7 @@ class RegisterForm extends Component {
       summary: '',
       headline: '',
       title: '',
+      is_looking: true,
       first_name: '',
       last_name: '',
       zip_code: '',
@@ -194,8 +198,9 @@ class RegisterForm extends Component {
 
   render () {
     const {animated} = this.props
+    let applicantClass = this.state.showApplicant ? 'RegisterForm__applicant' : ''
     return (
-      <Row className='RegisterForm fadeIn animated'>
+      <Row className={`RegisterForm ${applicantClass} fadeIn animated`}>
         <Col xs={12} sm={12} md={12} lg={12}>
           <div className='form-container'>
             <form className='RegisterForm-body' onSubmit={this.handleSubmit}>

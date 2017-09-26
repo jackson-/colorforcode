@@ -7,7 +7,6 @@ import PropTypes from 'prop-types'
 import { logout } from '../../reducers/actions/auth'
 import {
   updatingUser,
-  uploadingResume,
   gettingAllUsers,
   filteringUsers,
   advancedFilteringUsers } from '../../reducers/actions/users'
@@ -152,7 +151,6 @@ class App extends Component {
       advancedFilterUsers,
       updateUser,
       updateProject,
-      uploadResume,
       deleteProject,
       getProject,
       receiveLocation,
@@ -275,7 +273,6 @@ class App extends Component {
                           handleNewSkills={this.handleNewSkills}
                           user={user}
                           updateUser={updateUser}
-                          uploadResume={uploadResume}
                           alert={alert}
                           receiveAlert={receiveAlert}
                           receiveNext={receiveNext}
@@ -307,7 +304,6 @@ class App extends Component {
                           handleNewSkills={this.handleNewSkills}
                           user={user}
                           updateUser={updateUser}
-                          uploadResume={uploadResume}
                           alert={alert}
                           receiveAlert={receiveAlert}
                           receiveNext={receiveNext}
@@ -340,7 +336,6 @@ App.propTypes = {
   getUsers: PropTypes.func,
   filterUsers: PropTypes.func,
   advancedFilterUsers: PropTypes.func,
-  uploadResume: PropTypes.func.isRequired,
   updateUser: PropTypes.func.isRequired,
   applyToJob: PropTypes.func.isRequired,
   unsaveJob: PropTypes.func.isRequired,
@@ -388,7 +383,6 @@ const mapDispatchToProps = dispatch => ({
   getUsers: post => dispatch(gettingAllUsers()),
   filterUsers: query => dispatch(filteringUsers(query)),
   advancedFilterUsers: (body) => dispatch(advancedFilteringUsers(body)),
-  uploadResume: (user, file) => dispatch(uploadingResume(user, file)),
   getProject: (id) => dispatch(gettingProjectById(id)),
   updateProject: (project, history) => dispatch(updatingProject(project, history)),
   deleteProject: (projectId, history) => dispatch(deletingProject(projectId, history)),

@@ -18,7 +18,6 @@ class Dashboard extends Component {
       duplicateJob,
       updateUser,
       updateProject,
-      uploadResume,
       deleteProject,
       getProject,
       project,
@@ -58,7 +57,6 @@ class Dashboard extends Component {
                     user={user}
                     updateUser={updateUser}
                     updateProject={updateProject}
-                    uploadResume={uploadResume}
                     deleteProject={deleteProject}
                     getProject={getProject}
                     getJob={getJob}
@@ -86,7 +84,6 @@ Dashboard.propTypes = {
   user: PropTypes.any,
   project: PropTypes.object,
   job: PropTypes.object,
-  uploadResume: PropTypes.func.isRequired,
   updateUser: PropTypes.func.isRequired,
   applyToJob: PropTypes.func.isRequired,
   unsaveJob: PropTypes.func.isRequired,

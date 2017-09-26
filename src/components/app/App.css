@@ -20,6 +20,22 @@
   margin: 15px auto;
   display: block;
   color: #E4E4E4;
+  transition: all .2s ease-in-out;
+}
+
+.resume-btn {
+  background: #404648 !important;
+  border-color: #404648;
+  color: #E4E4E4;
+  display: inline-block;
+  margin: 0 10px 15px 0;
+  transition: all .2s ease-in-out;
+}
+
+.resume-btn:hover {
+  color: #E4E4E4;
+  background: #606B6D !important;
+  border-color: #606B6D;
 }
 
 @media only screen and (min-width: 500px) {

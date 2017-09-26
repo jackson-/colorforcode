@@ -132,13 +132,13 @@ class JobBoard extends Component {
   clearChip = event => {
     event.preventDefault()
     const chipToClear = event.currentTarget.value
-    let terms = this.state.terms.filter(term => {
+    let pendingTerms = this.state.terms.filter(term => {
       return term !== chipToClear && term !== ''
     })
     const {getJobs, filter} = this.props
-    const query = terms.length > 0 ? terms.join(' ') : ''
+    const query = pendingTerms.length > 0 ? pendingTerms.join(' ') : ''
     this.setState(
-      {query, terms, loading: true},
+      {query, pendingTerms, loading: true},
       () => {
         if (filter.advanced) this.advancedFilterJobs()
         else if (query) this.filterJobs()
@@ -204,6 +204,7 @@ class JobBoard extends Component {
     const {query} = this.state
     // ^ when query === '', we don't filter so all job listings continue to be shown
     if (query) {
+      console.log('PENDING TERMS', this.state.pendingTerms, 'TERMS', this.state.terms)
       this.setState({
         terms: [...this.state.pendingTerms],
         loading: true
@@ -269,7 +270,7 @@ class JobBoard extends Component {
                 <Button
                   className='btn-paginate'
                   onClick={this.handlePagination('next')}
-                  disabled={lastIndex - (offset + limit) < 0}
+                  disabled={(offset + limit) > lastIndex}
                 >
                   Next
                 </Button>
