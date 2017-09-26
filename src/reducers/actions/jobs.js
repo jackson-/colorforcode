@@ -102,7 +102,7 @@ export const applyingToJob = (user, job_id, history) => dispatch => {
         type: 'confirmation',
         style: 'success',
         title: 'Success!',
-        body: 'You\'ve applied to this job. If this recruiter reaches out to your email you\'ll be guaranteed a phone interview!',
+        body: 'You\'ve applied to this job. If this recruiter is interested they will reach out to your email!',
         next: '/dashboard/applications'
       }))
     })
