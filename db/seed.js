@@ -1183,7 +1183,7 @@ function seedEverything () {
   const seeded = {
     employers: employers(),
     users: users(),
-    skills: skills()
+    skills: skills(),
   }
   seeded.jobs = jobs(seeded)
   seeded.projects = projects(seeded)

@@ -32,6 +32,10 @@ const Home = ({
               <h1 className='Home__hero-tagline'>Color for Code</h1>
               <hr className='Home__hero-separator' />
               <h2 className='Home__hero-subtag'>Black Tech Talent Hub</h2>
+              <p>Color for Code is seeking {countdown} more engineers
+                before it officially releases. Until then enjoy all the fake data
+                we've created for you to get familiar with platform and
+                SPREAD THE WORD!</p>
               <HashLink to={`/#search`}>
                 <span className='btn-oval btn-oval__white'>
                   {`SEARCH FOR ${isEmployer ? 'TALENT' : 'JOBS'}`}
