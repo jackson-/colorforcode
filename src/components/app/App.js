@@ -62,6 +62,12 @@ class App extends Component {
     }
   }
 
+  componentWillMount(){
+    if(!this.props.users){
+      this.props.getUsers()
+    }
+  }
+
   toggleDashMenu = event => {
     if (event) event.preventDefault()
     this.setState({
@@ -204,6 +210,7 @@ class App extends Component {
 
                   <Route exact strict path='/' component={() => (
                     <Home
+                      users={this.props.users}
                       animated={anim}
                       showDashMenu={this.state.showDashMenu}
                       coords={user ? user.coords : ''}
@@ -357,6 +364,7 @@ App.propTypes = {
 }
 
 const mapStateToProps = state => ({
+  users:state.users.all,
   user: state.auth.currentUser,
   alert: state.alert,
   dashLocation: state.location.dashLocation,

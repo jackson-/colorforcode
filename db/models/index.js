@@ -20,7 +20,6 @@ const metaModels = {
   JobSkill: require('./jobskill'),
   ProjectSkill: require('./projectskill'),
   Project: require('./project'),
-  Coupon: require('./coupon')
 }
 
 const {mapValues} = require('lodash')
