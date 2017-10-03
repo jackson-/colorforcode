@@ -16,7 +16,7 @@ const rootReducer = combineReducers({
   skills,
   projects,
   alert,
-  location
+  location,
 })
 
 export default rootReducer
