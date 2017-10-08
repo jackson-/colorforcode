@@ -26,12 +26,13 @@ const NavBar = props => {
     }
   }
 
+  // <img src={navLogo} alt='Color for Code logo' height='40px' width='40px' />
   return (
     <Navbar fixedTop collapseOnSelect>
       <Navbar.Header>
         <NavbarBrand>
           <LinkContainer to='/'>
-            <img src={navLogo} alt='Color for Code logo' height='40px' width='40px' />
+            <span></span>
           </LinkContainer>
         </NavbarBrand>
         <Col
