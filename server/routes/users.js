@@ -1,5 +1,6 @@
 const db = require('APP/db')
 const {User, Employer, Skill, Project} = db
+const nodemailer = require('nodemailer')
 // const tinify = require('tinify')
 // tinify.key = 'lm8HbN3+BXgdBe9KvYLG3+KkS7SISwCHXcbW1ybx'
 
@@ -17,24 +18,65 @@ module.exports = require('express').Router()
       .catch(next)
   })
 
-  .post('/', (req, res, next) =>
+  .post('/', (req, res, next) => {
     User.create(req.body)
       .then(user => {
-        if (user.is_employer) {
-          return Employer.findOrCreate({
+        let mailOptions = {
+          from: 'devin@colorforcode.com',
+          to: `${user.email}`,
+          subject: 'Thanks for joining Color For Code!',
+          html: ``
+        }
+        var transporter = nodemailer.createTransport({
+          service: 'gmail',
+          auth: {
+            user: 'devin@colorforcode.com',
+            pass: 'wbbsavag3'
+          }
+        })
+        if(user.is_employer){
+          Employer.findOrCreate({
             where: {
               name: req.body.company_name,
               company_site: req.body.company_site
             }
           })
-            .spread((employer, created) => user.setEmployer(employer.id))
+          .spread((employer, created) => user.setEmployer(employer.id))
+          mailOptions.html = `<h2>Hey ${user.first_name} ${user.last_name},</h2>
+          <p>Thanks for joining the top platform for engineers of color
+            in the job market. The best way to take advantage of
+            the platform is to start using your candidate search after
+            posting a job. You can type in skill sets and look through
+            job seekers. Candidate profile pages with have a wealth of
+            knowledge about them like their resume, Github and Twitter.
+            The most interesting part is their projects though.
+            These are what power the search engine. The skill tags
+            attached to these projects give you real insight on how
+            some used a particular tool or library to accentuate their
+            project and how they might do the same for yours.</p>`
         } else {
-          res.status(201).json(user)
+          mailOptions.html = `<h2>Hey ${user.first_name} ${user.last_name},</h2>
+          <p>Thanks for joining the top platform for engineers of color
+            in the job market. The best way to take advantage of
+            the platform is to fill out your profile with projects
+            and attach some relevant skill tags to them. This way
+            when employers search for the kind of skill set they
+            want you can show up at the top right where you
+            belong. Link to anything even if it's a small side
+            project that hasn't been finished. It all helps us
+            sell that great talent you already have.</p>`
         }
+        transporter.sendMail(mailOptions, (error, info) => {
+          if (error) {
+            console.log(error)
+          } else {
+            console.log('Email sent: ' + info.response)
+          }
+        })
+        return res.status(201).json(user)
       })
-      .then(user => res.status(201).json(user))
       .catch(next)
-  )
+  })
 
   // search bar raw query
   .post('/search', (req, res, next) => {
