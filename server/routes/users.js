@@ -1,8 +1,8 @@
 const db = require('APP/db')
 const {User, Employer, Skill, Project} = db
 const nodemailer = require('nodemailer')
-// const tinify = require('tinify')
-// tinify.key = 'lm8HbN3+BXgdBe9KvYLG3+KkS7SISwCHXcbW1ybx'
+const employer_signup = require('APP/server/emails/employer_signup')
+const candidate_signup = require('APP/server/emails/employer_signup')
 
 module.exports = require('express').Router()
 
@@ -24,14 +24,14 @@ module.exports = require('express').Router()
         let mailOptions = {
           from: 'devin@colorforcode.com',
           to: `${user.email}`,
-          subject: 'Thanks for joining Color For Code!',
+          subject: `You're part Color For Code family now!`,
           html: ``
         }
         var transporter = nodemailer.createTransport({
           service: 'gmail',
           auth: {
             user: 'devin@colorforcode.com',
-            pass: 'wbbsavag3'
+            pass: 'c4csavag3'
           }
         })
         if(user.is_employer){
@@ -42,29 +42,9 @@ module.exports = require('express').Router()
             }
           })
           .spread((employer, created) => user.setEmployer(employer.id))
-          mailOptions.html = `<h2>Hey ${user.first_name} ${user.last_name},</h2>
-          <p>Thanks for joining the top platform for engineers of color
-            in the job market. The best way to take advantage of
-            the platform is to start using your candidate search after
-            posting a job. You can type in skill sets and look through
-            job seekers. Candidate profile pages with have a wealth of
-            knowledge about them like their resume, Github and Twitter.
-            The most interesting part is their projects though.
-            These are what power the search engine. The skill tags
-            attached to these projects give you real insight on how
-            some used a particular tool or library to accentuate their
-            project and how they might do the same for yours.</p>`
+          mailOptions.html = employer_signup(user, (new Date()).getFullYear());
         } else {
-          mailOptions.html = `<h2>Hey ${user.first_name} ${user.last_name},</h2>
-          <p>Thanks for joining the top platform for engineers of color
-            in the job market. The best way to take advantage of
-            the platform is to fill out your profile with projects
-            and attach some relevant skill tags to them. This way
-            when employers search for the kind of skill set they
-            want you can show up at the top right where you
-            belong. Link to anything even if it's a small side
-            project that hasn't been finished. It all helps us
-            sell that great talent you already have.</p>`
+          mailOptions.html = mailOptions.html = candidate_signup(user, (new Date()).getFullYear());
         }
         transporter.sendMail(mailOptions, (error, info) => {
           if (error) {
