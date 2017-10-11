@@ -1,4 +1,4 @@
-module.exports = (user, year) = {`	<head>
+module.exports = (user, year) => {`	<head>
 		<!-- NAME: FOLLOW UP -->
 		<!--[if gte mso 15]>
 		<xml>
@@ -532,7 +532,7 @@ module.exports = (user, year) = {`	<head>
 
                         <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:18px; padding-bottom:9px; padding-left:18px;">
 
-                            <h1>Welcome to Color For Code ${user.first_name} ${user.last_name}!</h1>
+                            <h1>Welcome to Color For Code ${user.first_name}!</h1>
 
                         </td>
                     </tr>
