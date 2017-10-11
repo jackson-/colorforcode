@@ -24,7 +24,7 @@ module.exports = require('express').Router()
         let mailOptions = {
           from: 'devin@colorforcode.com',
           to: `${user.email}`,
-          subject: `You're part Color For Code family now!`,
+          subject: `You're part of the Color For Code family now!`,
           html: ``
         }
         var transporter = nodemailer.createTransport({
