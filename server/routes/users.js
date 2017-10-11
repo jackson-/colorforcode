@@ -2,7 +2,7 @@ const db = require('APP/db')
 const {User, Employer, Skill, Project} = db
 const nodemailer = require('nodemailer')
 const employer_signup = require('APP/server/emails/employer_signup')
-const candidate_signup = require('APP/server/emails/employer_signup')
+const candidate_signup = require('APP/server/emails/candidate_signup')
 
 module.exports = require('express').Router()
 
@@ -24,7 +24,7 @@ module.exports = require('express').Router()
         let mailOptions = {
           from: 'devin@colorforcode.com',
           to: `${user.email}`,
-          subject: `You're part Color For Code family now!`,
+          subject: `You're part of the Color For Code family now!`,
           html: ``
         }
         var transporter = nodemailer.createTransport({
