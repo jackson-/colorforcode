@@ -4,6 +4,7 @@ const stripe = require('stripe')('sk_test_BQokikJOvBiI2HlWgH4olfQ2')
 const db = require('APP/db')
 const {Job, Employer, Skill} = db
 const Promise = require('bluebird')
+const job_application = require('APP/server/emails/job_application')
 
 module.exports = require('express').Router()
   // we use post instead of get so we can set the offset
@@ -228,33 +229,34 @@ module.exports = require('express').Router()
   .post('/:id/apply',
     (req, res, next) => {
       const {user} = req.body
+      var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: 'devin@colorforcode.com',
+          pass: 'c4csavag3'
+        }
+      })
+      let mailOptions = {
+        from: 'devin@colorforcode.com',
+        to: ``,
+        subject: 'New Application from Color For Code!',
+        html: ``
+      }
       Job.findById(req.params.id)
         .then(foundJob => {
-          var transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-              user: 'devin@colorforcode.com',
-              pass: 'wbbsavag3'
-            }
-          })
-          var mailOptions = {
-            from: 'devin@colorforcode.com',
-            to: `${foundJob.application_email}, ${foundJob.cc_email}`,
-            subject: 'New Application from Color For Code!',
-            html: `<h2>${user.first_name} ${user.last_name} just applied to ${foundJob.title}!</h2>
-            <p>Check them out <a href='http://localhost:3000/users/${user.id}'>here</a> or email
-            them at ${user.email} .</p>`
-          }
-
+          mailOptions.to = `${foundJob.application_email}`
+          mailOptions.html = job_application(user, foundJob, (new Date()).getFullYear())
+          return foundJob.addApplicant(user.id)
+        })
+        .then(application => {
           transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
-              console.log(error)
+              console.log("ERROR", error)
             } else {
               console.log('Email sent: ' + info.response)
             }
+            return res.sendStatus(201)
           })
-          return foundJob.addApplicant(user.id)
         })
-        .then(application => res.sendStatus(201))
         .catch(next)
     })

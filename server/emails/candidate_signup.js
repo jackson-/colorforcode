@@ -1,4 +1,5 @@
-module.exports = (user, year) => {`	<head>
+module.exports = (user, year) => {
+		return `	<head>
 		<!-- NAME: FOLLOW UP -->
 		<!--[if gte mso 15]>
 		<xml>
