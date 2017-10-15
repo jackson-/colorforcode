@@ -44,7 +44,7 @@ module.exports = require('express').Router()
           .spread((employer, created) => user.setEmployer(employer.id))
           mailOptions.html = employer_signup(user, (new Date()).getFullYear());
         } else {
-          mailOptions.html = mailOptions.html = candidate_signup(user, (new Date()).getFullYear());
+          mailOptions.html = candidate_signup(user, (new Date()).getFullYear());
         }
         transporter.sendMail(mailOptions, (error, info) => {
           if (error) {
