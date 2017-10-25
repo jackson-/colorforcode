@@ -91,8 +91,8 @@ class PaymentModal extends Component {
   }
 
   render () {
-    const {show, style, jobs} = this.props
-    const {amount, title, body, footer} = this.state
+    const {show, style, jobs, title, body, footer} = this.props
+    const {amount} = this.state
     const glyph = style === 'success' ? 'check' : 'exclamation-sign'
     return (
       <Modal
