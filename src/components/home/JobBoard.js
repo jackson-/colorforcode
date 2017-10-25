@@ -174,7 +174,7 @@ class JobBoard extends Component {
     event.preventDefault()
     const {allJobs, filteredJobs, filtered, savePagination, pageNum, offset} = this.props
     const total = filtered ? filteredJobs.length : allJobs.length
-    const maxPageNum = Math.round(total % 10)
+    const maxPageNum = Math.round(total / 10)
     if (action === 'next' && (pageNum + 1 <= maxPageNum)) {
       return savePagination(offset + 10, pageNum + 1)
     } else if (action === 'back' && (pageNum - 1 > 0)) {
@@ -204,7 +204,6 @@ class JobBoard extends Component {
     const {query} = this.state
     // ^ when query === '', we don't filter so all job listings continue to be shown
     if (query) {
-      console.log('PENDING TERMS', this.state.pendingTerms, 'TERMS', this.state.terms)
       this.setState({
         terms: [...this.state.pendingTerms],
         loading: true
