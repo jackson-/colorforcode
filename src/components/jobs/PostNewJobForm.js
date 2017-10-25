@@ -93,6 +93,10 @@ class PostJobForm extends Component {
     }
   }
 
+  isChecked = type => {
+    return this.state.employment_types.has(type)
+  }
+
   clearForm = () => {
     this.setState({
       title: '',
@@ -231,13 +235,48 @@ class PostJobForm extends Component {
               name='employment_types'
               onChange={this.handleChange('employment_types')}>
               <ControlLabel>Employment Type(s)</ControlLabel>
-              <Checkbox value='Full Time'>Full Time</Checkbox>
-              <Checkbox value='Part Time'>Part Time</Checkbox>
-              <Checkbox value='Contract'>Contract</Checkbox>
-              <Checkbox value='Contract to Hire'>Contract to Hire</Checkbox>
-              <Checkbox value='Internship'>Internship</Checkbox>
-              <Checkbox value='Remote'>Remote</Checkbox>
-              <Checkbox value='Freelance'>Freelance</Checkbox>
+              <Checkbox
+                value='Full Time'
+                checked={this.isChecked('Full Time')}
+              >
+                Full Time
+              </Checkbox>
+              <Checkbox
+                value='Part Time'
+                checked={this.isChecked('Part Time')}
+              >
+                Part Time
+              </Checkbox>
+              <Checkbox
+                value='Contract'
+                checked={this.isChecked('Contract')}
+              >
+                Contract
+              </Checkbox>
+              <Checkbox
+                value='Contract to Hire'
+                checked={this.isChecked('Contract to Hire')}
+              >
+                Contract to Hire
+              </Checkbox>
+              <Checkbox
+                value='Internship'
+                checked={this.isChecked('Internship')}
+              >
+                Internship
+              </Checkbox>
+              <Checkbox
+                value='Remote'
+                checked={this.isChecked('Remote')}
+              >
+                Remote
+              </Checkbox>
+              <Checkbox
+                value='Freelance'
+                checked={this.isChecked('Freelance')}
+              >
+                Freelance
+              </Checkbox>
             </FormGroup>
             <FormGroup controlId='compensation'>
               <ControlLabel>Compensation Type</ControlLabel>
