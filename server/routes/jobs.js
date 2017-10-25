@@ -9,7 +9,14 @@ const job_application = require('APP/server/emails/job_application')
 module.exports = require('express').Router()
   // we use post instead of get so we can set the offset
   .get('/', (req, res, next) => {
-    Job.findAll({include: [Skill]}).then(jobs => res.status(200).json(jobs))
+    Job.findAll({
+      where: {
+        not: {status: 'closed'}
+      },
+      include: [Skill]
+    })
+      .then(jobs => res.status(200).json(jobs))
+      .catch(next)
   })
 
   // search bar raw query
@@ -49,6 +56,7 @@ module.exports = require('express').Router()
           'ORDER BY id ASC, ' +
           `ts_rank(p_search.document, to_tsquery('english', '${q}')) DESC` +
       ') jobs ' +
+      `WHERE status NOT LIKE 'closed'` +
       'ORDER BY updated_at DESC;'
     )
     db.query(sql, options)
@@ -96,8 +104,8 @@ module.exports = require('express').Router()
       ? `, (ST_Distance(coords, ${coords}) / 0.016) AS distance_miles`
       : ''
     const andORwhere = employment_types.length
-      ? (within ? 'AND ' : '')
-      : (within ? 'WHERE ' : '')
+      ? (within ? `AND status NOT LIKE 'closed' AND ` : `AND status NOT LIKE 'closed' `)
+      : (within ? `WHERE status NOT LIKE 'closed' AND ` : `WHERE status NOT LIKE 'closed' `)
     const orderBy = sortBy && sortBy === 'distance'
       ? `ORDER BY updated_at DESC, ST_Distance(coords, ${coords}) ASC;`
       : 'ORDER BY updated_at DESC;'
@@ -132,7 +140,6 @@ module.exports = require('express').Router()
       model: Job,
       hasJoin: true
     }
-
     db.query(sql, options)
       .then(jobs => {
         res.status(200).json(jobs)
