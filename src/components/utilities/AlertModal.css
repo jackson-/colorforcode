@@ -12,6 +12,14 @@
   font-size: 1.25em;
 }
 
+.AlertModal__form {
+  padding: 20px 0;
+}
+
+.AlertModal__body-text {
+  padding: 15px 0;
+}
+
 .modal-success {
   background: #DFF0D8;
   border-color: #D6E9C6;

@@ -28,55 +28,49 @@ const SearchAdvanced = props => {
       }
       <FormGroup
         controlId='job-types'
+        onChange={props.toggleCheckbox}
         name='search-advanced__job-types'
       >
         <ControlLabel>EMPLOYMENT TYPES</ControlLabel>
         <Checkbox
           value='Full Time'
-          onChange={props.toggleCheckbox}
-          defaultChecked={props.isChecked('Full Time')}
+          checked={props.isChecked('Full Time')}
         >
           Full Time
         </Checkbox>
         <Checkbox
           value='Part Time'
-          onChange={props.toggleCheckbox}
-          defaultChecked={props.isChecked('Part Time')}
+          checked={props.isChecked('Part Time')}
         >
           Part Time
         </Checkbox>
         <Checkbox
           value='Contract'
-          onChange={props.toggleCheckbox}
-          defaultChecked={props.isChecked('Contract')}
+          checked={props.isChecked('Contract')}
         >
           Contract
         </Checkbox>
         <Checkbox
           value='Contract to Hire'
-          onChange={props.toggleCheckbox}
-          defaultChecked={props.isChecked('Contract to Hire')}
+          checked={props.isChecked('Contract to Hire')}
         >
           Contract to Hire
         </Checkbox>
         <Checkbox
           value='Internship'
-          onChange={props.toggleCheckbox}
-          defaultChecked={props.isChecked('Internship')}
+          checked={props.isChecked('Internship')}
         >
           Internship
         </Checkbox>
         <Checkbox
           value='Remote'
-          onChange={props.toggleCheckbox}
-          defaultChecked={props.isChecked('Remote')}
+          checked={props.isChecked('Remote')}
         >
           Remote
         </Checkbox>
         <Checkbox
           value='Freelance'
-          onChange={props.toggleCheckbox}
-          defaultChecked={props.isChecked('Freelance')}
+          checked={props.isChecked('Freelance')}
         >
           Freelance
         </Checkbox>

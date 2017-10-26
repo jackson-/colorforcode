@@ -37,7 +37,7 @@ class AlertModal extends Component {
           <p>{body}</p>
         </Alert>
         { // if users try to access private routes, an alert is dispatched
-          // with 'footer: true' so user can
+          // with 'footer: true' so user select login or register
           footer &&
           <Modal.Footer className={`modal-${style}`}>
             <Button
