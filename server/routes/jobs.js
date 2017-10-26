@@ -151,7 +151,7 @@ module.exports = require('express').Router()
   })
 
   .post('/', (req, res, next) => {
-    // Extract out payment route
+    // TODO Extract out payment route
     const {jobs, skills} = req.body
     let amount = 0
     if (jobs.length >= 5) {
@@ -174,13 +174,13 @@ module.exports = require('express').Router()
       source: 'tok_visa',
       description: 'Charge for job stuff'
     }, (err, charge) => {
-      console.log('ERR', err)
+      console.log('STRIPE ERR', err)
     })
       .then(() => {
         return Promise.map(jobs, (job, i) => {
           return Job.create(job)
             .then((created) => {
-              return created.addSkills(skills[i])
+              return created.setSkills(skills[i])
             })
         })
       })
