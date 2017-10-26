@@ -85,13 +85,16 @@ class JobInfoDisplay extends Component {
                   <p className='JobInfo--header-location'>{`${job.location}`}</p>
                 </Col>
                 <Col className='JobInfo__header-right' xs={12} sm={6} md={3} mdOffset={3} lg={3} lgOffset={3}>
-                  <h5 className='JobInfo--header-payrate'>
-                    {
-                      job.compensation_type === 'Hourly'
-                        ? `Pay: ${job.pay_rate}/hr`
-                        : `Pay: ${job.pay_rate}/yr`
-                    }
-                  </h5>
+                  {
+                    job.pay_rate &&
+                    <h5 className='JobInfo--header-payrate'>
+                      {
+                        job.compensation_type === 'Hourly'
+                          ? `Pay: ${job.pay_rate}/hr`
+                          : `Pay: ${job.pay_rate}/yr`
+                      }
+                    </h5>
+                  }
                   {job.employment_types && job.employment_types.map((type, i) => (
                     <span key={i} className='JobInfo--header-type'>{type}</span>
                   ))}

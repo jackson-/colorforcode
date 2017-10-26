@@ -123,11 +123,10 @@ export const gettingJobById = job_id => dispatch => {
 export const creatingNewJobs = (data, history) => dispatch => {
   // set loading state to true to trigger UI changes
   dispatch(createNewJobs())
-  // create the new job
-
+  // create the new jobs
   axios.post('/api/jobs', data)
     .then(res => res.data)
-    // if the job is successfully created, we fetch the updated jobs list
+    // if the jobs are successfully created, we fetch the updated jobs list
     .then(updatedJobsList => {
       dispatch(whoami())
       dispatch(receiveAllJobs(updatedJobsList))
@@ -144,6 +143,7 @@ export const creatingNewJobs = (data, history) => dispatch => {
 }
 
 export const updatingJob = (postData, history) => dispatch => {
+  dispatch(updateJob())
   axios.put(`/api/jobs/${postData.job.id}`, postData)
     .then(res => res.data)
     .then(updatedJob => {
@@ -161,6 +161,7 @@ export const updatingJob = (postData, history) => dispatch => {
 }
 
 export const deletingJob = (id, history) => dispatch => {
+  dispatch(deleteJob())
   axios.delete(`/api/jobs/${id}`)
     .then(() => {
       dispatch(whoami())
