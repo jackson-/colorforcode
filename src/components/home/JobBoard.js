@@ -170,11 +170,15 @@ class JobBoard extends Component {
     }
   }
 
+  toNearestTen = num => {
+    return Math.ceil((num + 1) / 10) * 10
+  }
+
   handlePagination = action => event => {
     event.preventDefault()
     const {allJobs, filteredJobs, filtered, savePagination, pageNum, offset} = this.props
     const total = filtered ? filteredJobs.length : allJobs.length
-    const maxPageNum = Math.round(total / 10)
+    const maxPageNum = this.toNearestTen(total) / 10
     if (action === 'next' && (pageNum + 1 <= maxPageNum)) {
       return savePagination(offset + 10, pageNum + 1)
     } else if (action === 'back' && (pageNum - 1 > 0)) {

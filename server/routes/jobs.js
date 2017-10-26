@@ -13,7 +13,8 @@ module.exports = require('express').Router()
       where: {
         not: {status: 'closed'}
       },
-      include: [Skill]
+      include: [Skill],
+      order: [['updated_at', 'DESC']]
     })
       .then(jobs => res.status(200).json(jobs))
       .catch(next)
