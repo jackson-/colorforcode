@@ -107,7 +107,7 @@ class JobInfoDisplay extends Component {
                   <Col className='JobInfo--summary' xs={12} sm={7} md={8} lg={8}>
                     <section className='JobInfo--summary-section'>
                       <h2>Description</h2>
-                      <p>{job.description}</p>
+                      <pre style={{"white-space":"pre-line"}}>{job.description}</pre>
                     </section>
                     <section className='JobInfo--summary-section'>
                       <h2>Key Skills</h2>
