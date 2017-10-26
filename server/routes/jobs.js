@@ -192,12 +192,7 @@ module.exports = require('express').Router()
   .get('/:id',
     (req, res, next) => {
       let job
-      Job.findOne({
-        where: {
-          id: req.params.id
-        },
-        include: [Employer, Skill]
-      })
+      Job.findOne({where: {id: req.params.id}, include: [Employer, Skill]})
         .then(foundJob => {
           job = foundJob
           return Skill.findAll()
@@ -214,7 +209,7 @@ module.exports = require('express').Router()
     })
       .spread((numJobsUpdated, updatedJobsArr) => {
         const updatedJob = updatedJobsArr[0]
-        return updatedJob.addSkills(skills)
+        return updatedJob.setSkills(skills)
       })
       .then(() => Job.findOne({where: {id: req.params.id}, include: [Skill, Employer]}))
       .then(updatedJob => res.status(200).json(updatedJob))

@@ -13,6 +13,8 @@ class JobDetailPage extends Component {
     const {id} = match.params
     if ((!job && !fetching) || (job && (job.id !== Number(id)) && !fetching)) {
       getJob(id)
+    } else if (job) {
+      this.props.receiveSelectedSkills(job.skills)
     }
   }
 

@@ -120,9 +120,9 @@ export default class JobUpdateDisplay extends Component {
   }
 
   render () {
-    const {job} = this.props
+    const {job, selected} = this.props
     return (
-      job &&
+      job && selected &&
       <Row className='UpdateJobForm'>
         <Col xs={12} sm={12} md={12} lg={12}>
           <h1 className='UpdateJobForm-header'>Edit Job</h1>
@@ -217,7 +217,8 @@ export default class JobUpdateDisplay extends Component {
                   <ControlLabel>COMPENSATION TYPE</ControlLabel>
                   <FormControl
                     componentClass='select'
-                    defaultValue={this.state.compensation_type} onChange={this.handleChange('compensation_type')}
+                    defaultValue={this.state.compensation_type}
+                    onChange={this.handleChange('compensation_type')}
                   >
                     <option value='Salary'>Salary</option>
                     <option value='Hourly'>Hourly</option>
@@ -246,7 +247,11 @@ export default class JobUpdateDisplay extends Component {
                   </FormControl>
                 </FormGroup>
                 <Button className='btn-oval' type='submit'>Update Job</Button>
-                <Button className='btn-oval btn-oval__black btn-oval__danger' bsStyle='danger' onClick={this.handleDelete}>
+                <Button
+                  className='btn-oval btn-oval__black btn-oval__danger'
+                  bsStyle='danger'
+                  onClick={this.handleDelete}
+                >
                   Delete Job
                 </Button>
               </Col>
