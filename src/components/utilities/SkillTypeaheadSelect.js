@@ -34,7 +34,7 @@ class SkillTypeaheadSelect extends Component {
           promptTextCreator={(label) => (`Create skill "${label}"`)}
         />
         <HelpBlock>
-          Type, click or use arrows to search skills. Press 'Enter' or click to add selected skill.
+          Type, click or use arrows to search skills. Press 'Enter' or click to add selected skill. Click 'X' left of skill chip or press 'Backspace' to delete skill.
         </HelpBlock>
       </div>
     )

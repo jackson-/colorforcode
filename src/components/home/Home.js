@@ -15,14 +15,9 @@ const Home = ({
   advancedFilterUsers,
   coords,
   isEmployer,
-  animated,
-  users
+  animated
 }) => {
   const anim = animated ? 'animated' : ''
-  let countdown = 0
-  if(users){
-    countdown = 500 - users.length
-  }
   return (
     <div className={`Home fadeIn ${anim}`}>
       <Row>

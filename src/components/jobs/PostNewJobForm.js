@@ -37,10 +37,10 @@ class PostJobForm extends Component {
       app_method: 'email',
       jobs: [],
       skills: [],
-      modal_show:false,
-      modal_style:'success',
-      modal_title:'',
-      modal_body:'',
+      modalShow: false,
+      modalStyle: 'success',
+      modalTitle: '',
+      modalBody: ''
     }
   }
 
@@ -93,6 +93,10 @@ class PostJobForm extends Component {
     }
   }
 
+  isChecked = type => {
+    return this.state.employment_types.has(type)
+  }
+
   clearForm = () => {
     this.setState({
       title: '',
@@ -121,33 +125,31 @@ class PostJobForm extends Component {
   }
 
 
-  handleSubmit = event => {
+  handleClickCheckout = event => {
     event.preventDefault()
-    let {user, receiveSelectedSkills, selected, coupon} = this.props
+    let {user, receiveSelectedSkills, selected} = this.props
     let {jobs, skills, ...job} = this.state
     job.employer_id = user.employer.id
     job.employment_types = [...this.state.employment_types]
     this.clearForm()
     jobs.push(job)
-    selected = selected.map((s) => s.id)
+    selected = selected.map(s => s.id)
     skills.push(selected)
     receiveSelectedSkills([])
-    console.log("JOBS", jobs)
-    this.setState({jobs, modal_show:true})
+    this.setState({jobs, skills, modalShow: true})
   }
 
   dismissAlert = () => {
-    this.setState({modal_show:false})
+    this.setState({modalShow: false})
   }
 
-  createPosts = () => {
-    const {jobs, skills} = this.state;
-    const {history, createJobPosts} = this.props;
-    this.setState({modal_show:false})
+  createPosts = (jobs, skills) => () => {
+    const {history, createJobPosts} = this.props
+    this.setState({modalShow: false})
     createJobPosts({jobs, skills}, history)
   }
 
-  addJob = event => {
+  handleClickAddJob = event => {
     event.preventDefault()
     let {jobs, skills, ...job} = this.state
     job.employer_id = this.props.user.employer.id
@@ -157,17 +159,17 @@ class PostJobForm extends Component {
     skills.push(this.props.selected.map((s) => s.id))
     this.props.receiveSelectedSkills([])
     this.setState({jobs, skills})
+    window.scrollTo(0, 0)
   }
 
-  applyCoupon = code => {
-    console.log("CODE", code)
-    this.props.getCouponByTitle(code).then(() => {
-      const {coupon} = this.props
-      console.log("AFTER", coupon)
-      let {jobs} = this.state
-      this.calculatePrice(jobs, coupon)
-    })
-  }
+  // applyCoupon = code => {
+  //   this.props.getCouponByTitle(code)
+  //     .then(() => {
+  //       const {coupon} = this.props
+  //       let {jobs} = this.state
+  //       this.calculatePrice(jobs, coupon)
+  //     })
+  // }
 
   render () {
     const {animated} = this.props
@@ -175,7 +177,7 @@ class PostJobForm extends Component {
       <Row className={`PostJobForm fadeIn ${animated}`}>
         <Col xs={12} sm={6} md={6} lg={6}>
           <h1 className='PostJobForm-header'>POST NEW JOB</h1>
-          <form className='PostJobForm-body' onSubmit={this.handleSubmit}>
+          <form className='PostJobForm-body'>
             <FormGroup controlId='title'>
               <ControlLabel>Job Title</ControlLabel>
               <FormControl
@@ -233,13 +235,48 @@ class PostJobForm extends Component {
               name='employment_types'
               onChange={this.handleChange('employment_types')}>
               <ControlLabel>Employment Type(s)</ControlLabel>
-              <Checkbox value='Full Time'>Full Time</Checkbox>
-              <Checkbox value='Part Time'>Part Time</Checkbox>
-              <Checkbox value='Contract'>Contract</Checkbox>
-              <Checkbox value='Contract to Hire'>Contract to Hire</Checkbox>
-              <Checkbox value='Internship'>Internship</Checkbox>
-              <Checkbox value='Remote'>Remote</Checkbox>
-              <Checkbox value='Freelance'>Freelance</Checkbox>
+              <Checkbox
+                value='Full Time'
+                checked={this.isChecked('Full Time')}
+              >
+                Full Time
+              </Checkbox>
+              <Checkbox
+                value='Part Time'
+                checked={this.isChecked('Part Time')}
+              >
+                Part Time
+              </Checkbox>
+              <Checkbox
+                value='Contract'
+                checked={this.isChecked('Contract')}
+              >
+                Contract
+              </Checkbox>
+              <Checkbox
+                value='Contract to Hire'
+                checked={this.isChecked('Contract to Hire')}
+              >
+                Contract to Hire
+              </Checkbox>
+              <Checkbox
+                value='Internship'
+                checked={this.isChecked('Internship')}
+              >
+                Internship
+              </Checkbox>
+              <Checkbox
+                value='Remote'
+                checked={this.isChecked('Remote')}
+              >
+                Remote
+              </Checkbox>
+              <Checkbox
+                value='Freelance'
+                checked={this.isChecked('Freelance')}
+              >
+                Freelance
+              </Checkbox>
             </FormGroup>
             <FormGroup controlId='compensation'>
               <ControlLabel>Compensation Type</ControlLabel>
@@ -251,7 +288,6 @@ class PostJobForm extends Component {
             <FormGroup controlId='pay_rate'>
               <ControlLabel>Pay Rate</ControlLabel>
               <FormControl
-                type='phone'
                 value={this.state.pay_rate}
                 onChange={this.handleChange('pay_rate')}
               />
@@ -268,32 +304,31 @@ class PostJobForm extends Component {
               </FormControl>
             </FormGroup>
             {/* <CreditCardFormControls ref='card' /> */}
-            <Button className='primary' type='submit'>Add Job & Checkout</Button>
-            <Button className='primary' onClick={this.addJob}>Add Another</Button>
+            <Button className='primary' onClick={this.handleClickCheckout}>Checkout</Button>
+            <Button className='primary' onClick={this.handleClickAddJob}>Add another job</Button>
           </form>
         </Col>
         <Col xs={12} sm={6} md={6} lg={6}>
-          <div>
-            <h2>Prices</h2>
-            <ul>
-              <li>1 post = $300</li>
-              <li>2-4 posts = $270 each</li>
-              <li>5+ posts = $225 each</li>
-            </ul>
-          </div>
+          <h2>Prices</h2>
+          <ul>
+            <li>1 post = $300</li>
+            <li>2-4 posts = $270 each</li>
+            <li>5+ posts = $225 each</li>
+          </ul>
         </Col>
-        {this.state.modal_show &&
-          <PaymentModal
-            jobs={this.state.jobs}
-            show={this.state.modal_show}
-            style={this.state.modal_style}
-            title={this.state.modal_title}
-            body={this.state.modal_body}
-            footer={true}
-            dismissAlert={this.dismissAlert}
-            handleSubmit={this.createPosts}
-            coupon={this.props.coupon}
-            applyCoupon={this.applyCoupon}
+        {
+          this.state.modalShow &&
+            <PaymentModal
+              footer
+              jobs={this.state.jobs}
+              skills={this.state.skills}
+              show={this.state.modalShow}
+              style={this.state.modalStyle}
+              title={this.state.modalTitle}
+              body={this.state.modalBody}
+              dismissAlert={this.dismissAlert}
+              handleSubmit={this.createPosts}
+              applyCode={this.applyCoupon}
             />
         }
       </Row>
@@ -303,12 +338,12 @@ class PostJobForm extends Component {
 
 const mapStateToProps = state => ({
   user: state.auth.currentUser,
-  selected: state.skills.selected,
+  selected: state.skills.selected
 })
 
 const mapDispatchToProps = dispatch => ({
   createJobPosts: (data, history) => dispatch(creatingNewJobs(data, history)),
-  receiveSelectedSkills: skills => dispatch(receiveSelectedSkills(skills)),
+  receiveSelectedSkills: skills => dispatch(receiveSelectedSkills(skills))
 })
 
 PostJobForm.propTypes = {
