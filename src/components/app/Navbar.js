@@ -6,7 +6,7 @@ import {
   Navbar, NavbarBrand, Nav, Glyphicon,
   Col, NavItem, NavDropdown, MenuItem } from 'react-bootstrap'
 import './App.css'
-import navLogo from '../../img/c4c-logo-no-border.svg'
+import navLogo from '../../img/c4c.png'
 
 const NavBar = props => {
   let dashLocs = {
@@ -32,7 +32,9 @@ const NavBar = props => {
       <Navbar.Header>
         <NavbarBrand>
           <LinkContainer to='/'>
-            <span></span>
+            <span>
+              <img src={navLogo} alt='Color for Code logo' height='40px' width='40px' />
+            </span>
           </LinkContainer>
         </NavbarBrand>
         <Col

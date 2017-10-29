@@ -6,7 +6,7 @@ import PropTypes from 'prop-types'
 import { creatingNewUser } from 'APP/src/reducers/actions/auth'
 import EmployerFields from './EmployerRegisterFields'
 import ApplicantFields from './ApplicantRegisterFields'
-import { createEmptyValue, createValueFromString } from 'react-rte'
+import { createValueFromString } from 'react-rte'
 import { withRouter } from 'react-router-dom'
 import './Form.css'
 

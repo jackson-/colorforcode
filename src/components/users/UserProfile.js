@@ -30,7 +30,7 @@ class UserProfile extends Component {
     const {user, fetching, match, getUser} = this.props
     const {id} = match.params
     if (!fetching) {
-      if (!user || user.id != id) getUser(id)
+      if (!user || user.id !== Number(id)) getUser(id)
     }
   }
 
