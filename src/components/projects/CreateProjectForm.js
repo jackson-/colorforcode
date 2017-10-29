@@ -3,10 +3,10 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import ProjectFields from './ProjectFields'
-import { Row, Col } from 'react-bootstrap'
+import { Row } from 'react-bootstrap'
 import { creatingNewProject } from 'APP/src/reducers/actions/projects'
 import { gettingAllSkills } from 'APP/src/reducers/actions/skills'
-import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
+import { createEmptyValue } from 'react-rte'
 import '../auth/Form.css'
 
 class CreateProjectForm extends Component {
@@ -17,11 +17,12 @@ class CreateProjectForm extends Component {
       screenshot: '',
       site: '',
       repo: '',
-      problem: '',
-      approach: '',
-      challenges: '',
-      outcome: ''
+      problem: createEmptyValue(),
+      approach: createEmptyValue(),
+      challenges: createEmptyValue(),
+      outcome: createEmptyValue()
     }
+    this.textareaTypes = ['problem', 'approach', 'challenges', 'outcome']
   }
 
   componentDidMount () {
@@ -29,7 +30,7 @@ class CreateProjectForm extends Component {
   }
 
   handleChange = type => event => {
-    let value = Array.isArray(event)
+    let value = type === 'skills' || this.textareaTypes.includes(type)
       ? event
       : event.target.value
     if (type === 'skills') {
@@ -45,17 +46,20 @@ class CreateProjectForm extends Component {
       screenshot: '',
       site: '',
       repo: '',
-      problem: '',
-      approach: '',
-      challenges: '',
-      outcome: ''
+      problem: createEmptyValue(),
+      approach: createEmptyValue(),
+      challenges: createEmptyValue(),
+      outcome: createEmptyValue()
     })
   }
 
   handleSubmit = event => {
     event.preventDefault()
-    const project = this.state
+    const project = {...this.state}
     let {user, skills, createProject} = this.props
+    this.textareaTypes.forEach(type => {
+      project[type] = project[type].toString('html')
+    })
     skills = skills.map(s => s.id)
     project.user_id = user.id
     this.clearForm()
@@ -85,18 +89,15 @@ class CreateProjectForm extends Component {
     const {animated} = this.props
     return (
       <Row className={`CreateProject fadeIn ${animated}`}>
-        <ScrollToTopOnMount />
-        <Col xs={12} sm={6} md={6} lg={6}>
-          <h1 className='CreateProject-header'>Add New Project</h1>
-          <ProjectFields
-            handleSubmit={this.handleSubmit}
-            handleChange={this.handleChange}
-            selectSkill={this._selectSkill}
-            state={this.state}
-            animated={animated}
-            isInvalid={this.isInvalid()}
-          />
-        </Col>
+        <h1 className='CreateProject-header'>Add New Project</h1>
+        <ProjectFields
+          handleSubmit={this.handleSubmit}
+          handleChange={this.handleChange}
+          selectSkill={this._selectSkill}
+          state={this.state}
+          animated={animated}
+          isInvalid={this.isInvalid()}
+        />
       </Row>
     )
   }

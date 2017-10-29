@@ -110,7 +110,7 @@ class JobInfoDisplay extends Component {
                   <Col className='JobInfo--summary' xs={12} sm={7} md={8} lg={8}>
                     <section className='JobInfo--summary-section'>
                       <h2>Description</h2>
-                      <pre style={{"white-space":"pre-line"}}>{job.description}</pre>
+                      <div dangerouslySetInnerHTML={{__html: job.description}} />
                     </section>
                     <section className='JobInfo--summary-section'>
                       <h2>Key Skills</h2>

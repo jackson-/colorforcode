@@ -165,7 +165,7 @@ class UserProfile extends Component {
                     <h2 className='UserDetail__body-header text-white'>Bio</h2>
                     {
                       user.summary
-                        ? user.summary
+                        ? <div dangerouslySetInnerHTML={{__html: user.summary}} />
                         : (
                           <div>
                             <p className='summary-text'>

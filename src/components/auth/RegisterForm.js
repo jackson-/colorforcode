@@ -6,6 +6,7 @@ import PropTypes from 'prop-types'
 import { creatingNewUser } from 'APP/src/reducers/actions/auth'
 import EmployerFields from './EmployerRegisterFields'
 import ApplicantFields from './ApplicantRegisterFields'
+import { createEmptyValue, createValueFromString } from 'react-rte'
 import { withRouter } from 'react-router-dom'
 import './Form.css'
 
@@ -20,7 +21,9 @@ class RegisterForm extends Component {
       passwordConfirm: '',
       company_name: '',
       company_role: '',
-      summary: '',
+      summary: createValueFromString(`<p>Expand on your tagline with a summary of your education or self-taught journey and experience.</p>
+<p>What are your specialities? What are you most interested in working on? What are you learning now?</p>
+<p>Give the employer a glimpse of who you are, both as a tech professional and as a human who cares about more than technology.</p>`, 'html'),
       headline: '',
       title: '',
       is_looking: true,
@@ -72,26 +75,30 @@ class RegisterForm extends Component {
   }
 
   handleChange = type => event => {
-    const {value} = event.target
-    if (type === 'zip_code' && value.toString().length === 5) {
+    let value = type === 'summary'
+      ? event
+      : event.target.value
+    if (type === 'zip_code' && value.toString().length >= 5) {
       /* first we finish updating the state of the input, then we use the zip to find the rest of the location data by passing the callback to setState (an optional 2nd param) */
-      this.setState({[type]: value}, this.handleLocation(value))
+      return this.setState(
+        {[type]: value},
+        this.handleLocation(value)
+      )
     } else if (type === 'employment_types') {
       this.state.employment_types.has(value)
         ? this.state.employment_types.delete(value)
         : this.state.employment_types.add(value)
       const employment_types = new Set([...this.state.employment_types])
       /* ^Using a Set instead of an array because we need the data values to be unique */
-      this.setState({employment_types})
+      return this.setState({employment_types})
     } else if (type === 'work_auth' || type === 'company_role') {
       value === 'select'
         ? this.setState({[type]: ''})
         : this.setState({[type]: value})
     } else if (type === 'is_looking') {
-      this.setState({[type]: !this.state.is_looking})
-    } else {
-      this.setState({[type]: value})
+      return this.setState({[type]: !this.state.is_looking})
     }
+    this.setState({[type]: value})
   }
 
   clearForm = () => {
@@ -103,7 +110,9 @@ class RegisterForm extends Component {
       passwordConfirm: '',
       company_name: '',
       company_role: '',
-      summary: '',
+      summary: createValueFromString(`<p>Expand on your headline with a summary of your education or self-taught journey and experience.</p>
+<p>What are your specialities? What are you most interested in working on? What are you learning now?</p>
+<p>Give the employer a glimpse of who you are, both as a tech professional and as a human who cares about more than technology.</p>`, 'html'),
       headline: '',
       title: '',
       is_looking: true,
@@ -192,6 +201,11 @@ class RegisterForm extends Component {
     const {history, next, createUser} = this.props
     // turn the set into an array (postgres rejects sets)
     newUser.employment_types = [...newUser.employment_types]
+    newUser.is_employer = true
+    if (this.state.showApplicant) {
+      newUser.summary = newUser.summary.toString('html')
+      newUser.is_employer = false
+    }
     this.clearForm()
     createUser(newUser, history, next)
   }

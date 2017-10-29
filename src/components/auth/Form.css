@@ -33,7 +33,7 @@
 }
 
 .RegisterForm, .LoginForm {
-  padding: 25px 0 25px 0;
+  padding: 25px 0;
   background: #01C688;
   min-height: 100vh;
   color: #FFFFFF;
@@ -93,14 +93,16 @@
 .UpdateJobForm .form-group input {
   box-shadow: none;
   border-bottom: 2px solid #C2C2C2;
+  transition: border 0.5s ease-in-out;
 }
 
 .EditProfile .form-group input:focus,
 .PostJobForm .form-group input:focus,
-.UpdateJobForm .form-group input:focus {
+.UpdateJobForm .form-group input:focus,
+.EditProject .form-group input:focus,
+.CreateProject .form-group input:focus {
   box-shadow: none;
   border-bottom: 2px solid #01C688;
-  transition: border 0.5s ease-in-out;
 }
 
 .form-group select {
@@ -111,6 +113,8 @@
   width: 100%;
   height: 42px;
   max-width: 500px;
+  min-width: 150px;
+  padding: 0 10px !important;
 }
 
 .RegisterForm .form-group input,
@@ -203,6 +207,10 @@ input[type=file] {
 
 @media only screen
 and (min-width: 768px) {
+  .RegisterForm, .LoginForm {
+    padding: 25px 15px;
+  }
+
   .LoginForm .form-container {
     padding-top: 10%;
   }
@@ -257,6 +265,10 @@ and (max-width: 767px) {
   .CreditCardForm-body .form-control,
   .UpdateJobForm-body .form-control {
     min-width: 100%;
+  }
+
+  .form-group input, .form-group select {
+    max-width: none;
   }
 
   .btn {

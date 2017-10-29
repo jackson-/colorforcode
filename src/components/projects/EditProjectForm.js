@@ -2,19 +2,12 @@ import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import {connect} from 'react-redux'
 import PropTypes from 'prop-types'
-import { Row, Col, Button } from 'react-bootstrap'
+import { Row } from 'react-bootstrap'
 import ProjectFields from './ProjectFields'
-import ImageUploader from '../dashboard/ImageUploader'
 import '../auth/Form.css'
-import ScrollToTopOnMount from '../utilities/ScrollToTopOnMount'
 import LoadingSpinner from '../utilities/LoadingSpinner'
 import { receiveSelectedSkills } from '../../reducers/actions/skills'
-
-function arrowRenderer () {
-  return (
-    <span />
-  )
-}
+import { createValueFromString, createEmptyValue } from 'react-rte'
 
 class EditProjectForm extends Component {
   constructor (props) {
@@ -23,12 +16,13 @@ class EditProjectForm extends Component {
       title: this.props.project ? this.props.project.title : '',
       site: this.props.project ? this.props.project.site : '',
       repo: this.props.project ? this.props.project.repo : '',
-      problem: this.props.project ? this.props.project.problem : '',
-      approach: this.props.project ? this.props.project.approach : '',
-      challenges: this.props.project ? this.props.project.challenges : '',
-      outcome: this.props.project ? this.props.project.outcome : '',
+      problem: this.props.project ? createValueFromString(this.props.project.problem, 'html') : createEmptyValue(),
+      approach: this.props.project ? createValueFromString(this.props.project.approach, 'html') : createEmptyValue(),
+      challenges: this.props.project ? createValueFromString(this.props.project.challenges, 'html') : createEmptyValue(),
+      outcome: this.props.project ? createValueFromString(this.props.project.outcome, 'html') : createEmptyValue(),
       loading: true
     }
+    this.textareaTypes = ['problem', 'approach', 'challenges', 'outcome']
   }
 
   componentDidMount () {
@@ -42,10 +36,10 @@ class EditProjectForm extends Component {
           title: project.title,
           site: project.site,
           repo: project.repo,
-          problem: project.problem,
-          approach: project.approach,
-          challenges: project.challenges,
-          outcome: project.outcome,
+          problem: createValueFromString(project.problem, 'html'),
+          approach: createValueFromString(project.approach, 'html'),
+          challenges: createValueFromString(project.challenges, 'html'),
+          outcome: createValueFromString(project.outcome, 'html'),
           loading: false
         })
       }
@@ -62,10 +56,10 @@ class EditProjectForm extends Component {
         title: nextProps.project.title,
         site: nextProps.project.site,
         repo: nextProps.project.repo,
-        problem: nextProps.project.problem,
-        approach: nextProps.project.approach,
-        challenges: nextProps.project.challenges,
-        outcome: nextProps.project.outcome,
+        problem: createValueFromString(nextProps.project.problem, 'html'),
+        approach: createValueFromString(nextProps.project.approach, 'html'),
+        challenges: createValueFromString(nextProps.project.challenges, 'html'),
+        outcome: createValueFromString(nextProps.project.outcome, 'html'),
         loading: false
       })
     }
@@ -76,7 +70,7 @@ class EditProjectForm extends Component {
   }
 
   handleChange = type => event => {
-    let value = Array.isArray(event)
+    let value = type === 'skills' || this.textareaTypes.includes(type)
       ? event
       : event.target.value
     if (type === 'skills') {
@@ -91,7 +85,10 @@ class EditProjectForm extends Component {
     let skills, project
     const {updateProject, selected} = this.props
     const {id, user_id} = this.props.project
-    project = this.state
+    project = {...this.state}
+    this.textareaTypes.forEach(type => {
+      project[type] = project[type].toString('html')
+    })
     project.user_id = user_id
     project.id = id
     skills = selected.map(s => s.id)
@@ -130,37 +127,21 @@ class EditProjectForm extends Component {
       ? <LoadingSpinner />
       : (
         <Row className='EditProject'>
-          <ScrollToTopOnMount />
-          <Col xs={12} sm={6} md={6} lg={6}>
-            <h1 className={`EditProject-header fadeIn ${animated}`}>
-              EDIT PROJECT
-            </h1>
-            <ProjectFields
-              handleSubmit={this.handleSubmit}
-              handleChange={this.handleChange}
-              selectSkill={this._selectSkill}
-              arrowRenderer={arrowRenderer}
-              state={this.state}
-              skills={selected}
-              project={project}
-              formatSkills={this.formatSkills}
-              isInvalid={this.isInvalid()}
-            />
-            <div style={{background: '#323638', padding: '25px 10px 10px', margin: '15px 0'}}>
-              <ImageUploader
-                project={project}
-                label='Project Screenshot'
-                buttonText='Upload Screenshot'
-                type='Screenshot'
-              />
-            </div>
-            <Button
-              className='btn-oval btn-oval__black btn-oval__danger'
-              onClick={this.handleDelete}
-            >
-              DELETE PROJECT
-            </Button>
-          </Col>
+          <h1 className={`EditProject-header fadeIn ${animated}`}>
+            EDIT PROJECT
+          </h1>
+          <ProjectFields
+            edit
+            handleSubmit={this.handleSubmit}
+            handleChange={this.handleChange}
+            selectSkill={this._selectSkill}
+            state={this.state}
+            skills={selected}
+            project={project}
+            formatSkills={this.formatSkills}
+            isInvalid={this.isInvalid()}
+            handleDelete={this.handleDelete}
+          />
         </Row>
       )
   }

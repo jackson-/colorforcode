@@ -6,6 +6,8 @@ import axios from 'axios'
 import PropTypes from 'prop-types'
 import SkillTypeaheadSelect from '../utilities/SkillTypeaheadSelect'
 import LoadingSpinner from '../utilities/LoadingSpinner'
+import RichTextarea from '../utilities/RichTextarea'
+import { createValueFromString, createEmptyValue } from 'react-rte'
 import '../auth/Form.css'
 
 export default class JobUpdateDisplay extends Component {
@@ -13,7 +15,7 @@ export default class JobUpdateDisplay extends Component {
     super(props)
     this.state = {
       title: this.props.job.title || '',
-      description: this.props.job.description || '',
+      description: createValueFromString(this.props.job.description, 'html') || createEmptyValue(),
       application_email: this.props.job.application_email || '',
       cc_email: this.props.job.cc_email || '',
       application_url: this.props.job.application_url || '',
@@ -63,7 +65,7 @@ export default class JobUpdateDisplay extends Component {
   }
 
   handleChange = type => event => {
-    let value = Array.isArray(event)
+    let value = type === 'skills' || type === 'description'
       ? event
       : event.target.value
     if (type === 'zip_code' && value.toString().length >= 5) {
@@ -86,7 +88,7 @@ export default class JobUpdateDisplay extends Component {
   clearForm = () => {
     this.setState({
       title: this.props.job.title || '',
-      description: this.props.job.description || '',
+      description: createValueFromString(this.props.job.description, 'html') || createEmptyValue(),
       application_email: this.props.job.application_email || '',
       cc_email: this.props.job.cc_email || '',
       application_url: this.props.job.application_url || '',
@@ -108,6 +110,7 @@ export default class JobUpdateDisplay extends Component {
     const {selected, updateJob, history, user} = this.props
     job.id = this.props.job.id
     job.employer_id = user.employer.id
+    job.description = job.description.toString('html')
     // change employment_types from Set to Array
     job.employment_types = [...this.state.employment_types]
     job.coords.crs = {type: 'name', properties: {name: 'EPSG:32661'}}
@@ -143,15 +146,11 @@ export default class JobUpdateDisplay extends Component {
                       label='KEY SKILLS'
                       handleChange={this.handleChange}
                     />
-                    <FormGroup controlId='description'>
-                      <ControlLabel>JOB DESCRIPTION</ControlLabel>
-                      <FormControl
-                        type='text'
-                        componentClass='textarea'
-                        value={this.state.description}
-                        onChange={this.handleChange('description')}
-                      />
-                    </FormGroup>
+                    <RichTextarea
+                      value={this.state.description}
+                      label='JOB DESCRIPTION'
+                      onChange={this.handleChange('description')}
+                    />
                     <FormGroup controlId='application_email'>
                       <ControlLabel>APPLICATION EMAIL</ControlLabel>
                       <FormControl
@@ -273,7 +272,7 @@ JobUpdateDisplay.propTypes = {
   job: PropTypes.object.isRequired,
   user: PropTypes.any.isRequired,
   history: PropTypes.object,
-  selected: PropTypes.array.isRequired, // selected skills
+  selected: PropTypes.arrayOf(PropTypes.object), // selected skills
   deleteJob: PropTypes.func.isRequired,
   updateJob: PropTypes.func.isRequired,
   handleNewSkills: PropTypes.func

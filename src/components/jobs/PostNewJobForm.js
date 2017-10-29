@@ -9,6 +9,8 @@ import PaymentModal from 'APP/src/components/utilities/PaymentModal'
 import { creatingNewJobs } from 'APP/src/reducers/actions/jobs'
 import { receiveSelectedSkills } from 'APP/src/reducers/actions/skills'
 import SkillTypeaheadSelect from '../utilities/SkillTypeaheadSelect'
+import RichTextarea from '../utilities/RichTextarea'
+import { createEmptyValue } from 'react-rte'
 import PropTypes from 'prop-types'
 import '../auth/Form.css'
 
@@ -17,7 +19,7 @@ class PostJobForm extends Component {
     super(props)
     this.state = {
       title: '',
-      description: '',
+      description: createEmptyValue(),
       application_email: '',
       cc_email: '',
       application_url: '',
@@ -73,7 +75,7 @@ class PostJobForm extends Component {
   }
 
   handleChange = type => event => {
-    let value = Array.isArray(event)
+    let value = type === 'skills' || type === 'description'
       ? event
       : event.target.value
     if (type === 'zip_code' && value.toString().length === 5) {
@@ -100,7 +102,7 @@ class PostJobForm extends Component {
   clearForm = () => {
     this.setState({
       title: '',
-      description: '',
+      description: createEmptyValue(),
       application_email: '',
       cc_email: '',
       application_url: '',
@@ -118,48 +120,53 @@ class PostJobForm extends Component {
       cvc: null,
       token: null,
       status: 'open',
-      app_method: 'email',
-      jobs: [],
-      skills: []
+      app_method: 'email'
     })
   }
 
+  handleClickAddJob = event => {
+    event.preventDefault()
+    let {jobs, skills, description, ...job} = this.state
+    job.employer_id = this.props.user.employer.id
+    job.employment_types = [...this.state.employment_types]
+    job.description = description.toString('html')
+    jobs.push(job)
+    skills.push(this.props.selected.map((s) => s.id))
+    this.props.receiveSelectedSkills([])
+    this.setState({jobs, skills})
+    this.clearForm()
+    window.scrollTo(0, 0)
+  }
 
   handleClickCheckout = event => {
     event.preventDefault()
-    let {user, receiveSelectedSkills, selected} = this.props
-    let {jobs, skills, ...job} = this.state
+    let {user, selected} = this.props
+    let {jobs, skills, description, ...job} = this.state
+    job.description = description.toString('html')
     job.employer_id = user.employer.id
     job.employment_types = [...this.state.employment_types]
-    this.clearForm()
     jobs.push(job)
     selected = selected.map(s => s.id)
     skills.push(selected)
-    receiveSelectedSkills([])
     this.setState({jobs, skills, modalShow: true})
   }
 
+  undoPushLastJob = jobs => {
+    jobs.pop()
+    return jobs
+  }
+
   dismissAlert = () => {
-    this.setState({modalShow: false})
+    // The form persists the last job post on clicking 'Checkout' (until 'Submit' is clicked in the payment modal). We want to undo pushing the job that's currently in the form if the payment modal is dismissed so that when they decide to click 'Checkout' again the job isn't duplicated.
+    const jobs = this.undoPushLastJob(this.state.jobs)
+    this.setState({jobs, modalShow: false})
   }
 
   createPosts = (jobs, skills) => () => {
     const {history, createJobPosts} = this.props
     this.setState({modalShow: false})
-    createJobPosts({jobs, skills}, history)
-  }
-
-  handleClickAddJob = event => {
-    event.preventDefault()
-    let {jobs, skills, ...job} = this.state
-    job.employer_id = this.props.user.employer.id
-    job.employment_types = [...this.state.employment_types]
-    this.clearForm()
-    jobs.push(job)
-    skills.push(this.props.selected.map((s) => s.id))
     this.props.receiveSelectedSkills([])
-    this.setState({jobs, skills})
-    window.scrollTo(0, 0)
+    createJobPosts({jobs, skills}, history)
   }
 
   // applyCoupon = code => {
@@ -187,15 +194,11 @@ class PostJobForm extends Component {
               />
             </FormGroup>
             <SkillTypeaheadSelect handleChange={this.handleChange} />
-            <FormGroup controlId='description'>
-              <ControlLabel>Job Description and Requirements</ControlLabel>
-              <FormControl
-                type='text'
-                componentClass='textarea'
-                value={this.state.description}
-                onChange={this.handleChange('description')}
-              />
-            </FormGroup>
+            <RichTextarea
+              value={this.state.description}
+              label='Job description'
+              onChange={this.handleChange('description')}
+            />
             <FormGroup controlId='application_email'>
               <ControlLabel>Application Email</ControlLabel>
               <FormControl
