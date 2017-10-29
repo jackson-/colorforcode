@@ -59,7 +59,7 @@ class JobInfoDisplay extends Component {
 
   render () {
     const {job, user} = this.props
-    let skills, employer, datePosted, saved, applied
+    let skills, employer, datePosted, saved, applied, payRate = ''
 
     if (job) {
       employer = job.employer
@@ -67,6 +67,9 @@ class JobInfoDisplay extends Component {
       if (job.skills) {
         skills = job.skills.map((skill, i) => skill.title)
       }
+      payRate = job.pay_rate && job.pay_rate.charAt(0) !== '$'
+        ? `$${job.pay_rate}`
+        : job.pay_rate
     }
 
     if (user && job) {
@@ -90,8 +93,8 @@ class JobInfoDisplay extends Component {
                     <h5 className='JobInfo--header-payrate'>
                       {
                         job.compensation_type === 'Hourly'
-                          ? `Pay: ${job.pay_rate}/hr`
-                          : `Pay: ${job.pay_rate}/yr`
+                          ? `Pay: ${payRate}/hr`
+                          : `Pay: ${payRate}`
                       }
                     </h5>
                   }

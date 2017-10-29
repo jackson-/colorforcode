@@ -15,6 +15,9 @@ const JobList = ({jobs, filtered, total}) => (
     }
     {
       jobs && jobs.map((job, i) => {
+        const payRate = job.pay_rate && job.pay_rate.charAt(0) !== '$'
+          ? `$${job.pay_rate}`
+          : job.pay_rate
         return (
           <LinkContainer className='JobCard' key={i} to={`/jobs/${job.id}`}>
             <Row>
@@ -27,9 +30,10 @@ const JobList = ({jobs, filtered, total}) => (
                   <Col xs={12} sm={6} md={6} lg={6}>
                     <h2 className='JobCard-payrate'>
                       {
+                        job.pay_rate &&
                         job.compensation_type === 'Hourly'
-                          ? `${job.pay_rate}/hr`
-                          : job.pay_rate
+                          ? `${payRate}/hr`
+                          : `${payRate}`
                       }
                     </h2>
                   </Col>
