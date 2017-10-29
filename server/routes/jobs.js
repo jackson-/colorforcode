@@ -151,7 +151,7 @@ module.exports = require('express').Router()
   })
 
   .post('/', (req, res, next) => {
-    // Extract out payment route
+    // TODO Extract out payment route
     const {jobs, skills} = req.body
     let amount = 0
     if (jobs.length >= 5) {
@@ -174,13 +174,13 @@ module.exports = require('express').Router()
       source: 'tok_visa',
       description: 'Charge for job stuff'
     }, (err, charge) => {
-      console.log('ERR', err)
+      console.log('STRIPE ERR', err)
     })
       .then(() => {
         return Promise.map(jobs, (job, i) => {
           return Job.create(job)
             .then((created) => {
-              return created.addSkills(skills[i])
+              return created.setSkills(skills[i])
             })
         })
       })
@@ -192,12 +192,7 @@ module.exports = require('express').Router()
   .get('/:id',
     (req, res, next) => {
       let job
-      Job.findOne({
-        where: {
-          id: req.params.id
-        },
-        include: [Employer, Skill]
-      })
+      Job.findOne({where: {id: req.params.id}, include: [Employer, Skill]})
         .then(foundJob => {
           job = foundJob
           return Skill.findAll()
@@ -214,7 +209,7 @@ module.exports = require('express').Router()
     })
       .spread((numJobsUpdated, updatedJobsArr) => {
         const updatedJob = updatedJobsArr[0]
-        return updatedJob.addSkills(skills)
+        return updatedJob.setSkills(skills)
       })
       .then(() => Job.findOne({where: {id: req.params.id}, include: [Skill, Employer]}))
       .then(updatedJob => res.status(200).json(updatedJob))

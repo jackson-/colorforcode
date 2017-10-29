@@ -2,6 +2,7 @@ import React from 'react'
 import {
   Col, FormGroup, ControlLabel, FormControl,
   Checkbox, HelpBlock, Button } from 'react-bootstrap'
+import RichTextarea from '../utilities/RichTextarea'
 import PropTypes from 'prop-types'
 
 const ApplicantRegisterFields = ({
@@ -135,14 +136,11 @@ const ApplicantRegisterFields = ({
             placeholder='e.g., Clean coder, fast runner.'
           />
         </FormGroup>
-        <FormGroup controlId='summary'>
-          <ControlLabel>Personal Summary</ControlLabel>
-          <FormControl
-            componentClass='textarea'
-            value={state.summary}
-            onChange={handleChange('summary')}
-          />
-        </FormGroup>
+        <RichTextarea
+          value={state.summary}
+          label='Personal summary'
+          onChange={handleChange('summary')}
+        />
         <FormGroup controlId='personal_site'>
           <ControlLabel>Personal Website (optional)</ControlLabel>
           <FormControl

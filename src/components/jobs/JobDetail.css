@@ -71,7 +71,8 @@
   height: auto;
 }
 
-.JobInfo--summary-section p {
+/* TODO switch back to p once live jobs have edited with the RTE */
+.JobInfo--summary-section > *:not(h2):not(.skill-chip) {
   font-family: Open Sans Regular;
 }
 

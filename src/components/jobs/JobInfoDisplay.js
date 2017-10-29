@@ -59,7 +59,7 @@ class JobInfoDisplay extends Component {
 
   render () {
     const {job, user} = this.props
-    let skills, employer, datePosted, saved, applied
+    let skills, employer, datePosted, saved, applied, payRate = ''
 
     if (job) {
       employer = job.employer
@@ -67,6 +67,9 @@ class JobInfoDisplay extends Component {
       if (job.skills) {
         skills = job.skills.map((skill, i) => skill.title)
       }
+      payRate = job.pay_rate && job.pay_rate.charAt(0) !== '$'
+        ? `$${job.pay_rate}`
+        : job.pay_rate
     }
 
     if (user && job) {
@@ -85,13 +88,16 @@ class JobInfoDisplay extends Component {
                   <p className='JobInfo--header-location'>{`${job.location}`}</p>
                 </Col>
                 <Col className='JobInfo__header-right' xs={12} sm={6} md={3} mdOffset={3} lg={3} lgOffset={3}>
-                  <h5 className='JobInfo--header-payrate'>
-                    {
-                      job.compensation_type === 'Hourly'
-                        ? `Pay: ${job.pay_rate}/hr`
-                        : `Pay: ${job.pay_rate}/yr`
-                    }
-                  </h5>
+                  {
+                    job.pay_rate &&
+                    <h5 className='JobInfo--header-payrate'>
+                      {
+                        job.compensation_type === 'Hourly'
+                          ? `Pay: ${payRate}/hr`
+                          : `Pay: ${payRate}`
+                      }
+                    </h5>
+                  }
                   {job.employment_types && job.employment_types.map((type, i) => (
                     <span key={i} className='JobInfo--header-type'>{type}</span>
                   ))}
@@ -107,7 +113,7 @@ class JobInfoDisplay extends Component {
                   <Col className='JobInfo--summary' xs={12} sm={7} md={8} lg={8}>
                     <section className='JobInfo--summary-section'>
                       <h2>Description</h2>
-                      <pre style={{"white-space":"pre-line"}}>{job.description}</pre>
+                      <div dangerouslySetInnerHTML={{__html: job.description}} />
                     </section>
                     <section className='JobInfo--summary-section'>
                       <h2>Key Skills</h2>

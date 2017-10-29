@@ -1,0 +1,19 @@
+.RichTextEditor__root___2QXK- {
+  border-radius: 4px !important;
+  min-height: 279px;
+  color: #000000;
+}
+
+.Dropdown__root___3ALmx select {
+  padding: 0 10px !important;
+  width: 150px !important;
+  font-size: 13px !important;
+  height: 30px !important;
+  border: 0 !important;
+}
+
+@media only screen and (min-width: 768px) {
+  .RichTextEditor__root___2QXK- {
+    max-width: 500px;
+  }
+}

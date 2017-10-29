@@ -51,6 +51,16 @@
   color: #333;
 }
 
+.Select-control {
+  height: 42px !important;
+  border-bottom: 2px solid #C2C2C2 !important;
+  transition: border 0.5s ease-in-out;
+}
+
 .Select-option.is-focused {
   background-color: rgba(1, 198, 136, 0.15) !important;
+}
+
+.Select-menu-outer {
+  z-index: 15;
 }

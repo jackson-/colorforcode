@@ -97,6 +97,10 @@
   cursor: pointer;
 }
 
+.navbar-brand img {
+  margin-top: 6px;
+}
+
 .navbar-default .navbar-toggle,
 .navbar-default .navbar-toggle:hover,
 .navbar-default .navbar-toggle:focus {
