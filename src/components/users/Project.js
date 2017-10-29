@@ -43,31 +43,55 @@ class Project extends Component {
             >
               <Panel
                 className='Project__detail-panel'
-                eventKey={1} header='Problem'
+                eventKey={1}
+                header='Problem'
                 onClick={this.handleSelect(1)}
+                onKeyUp={this.handleSelect(1)}
+                tabIndex={this.activeKey === 1 ? 1 : 0}
               >
-                <p className='Project__panel-content'>{project.problem}</p>
+                <div
+                  className='Project__panel-content'
+                  dangerouslySetInnerHTML={{__html: project.problem}}
+                />
               </Panel>
               <Panel
                 className='Project__detail-panel'
-                eventKey={2} header='Approach'
+                eventKey={2}
+                header='Approach'
                 onClick={this.handleSelect(2)}
+                onKeyUp={this.handleSelect(2)}
+                tabIndex={this.activeKey === 2 ? 1 : 0}
               >
-                <p className='Project__panel-content'>{project.approach}</p>
+                <div
+                  className='Project__panel-content'
+                  dangerouslySetInnerHTML={{__html: project.approach}}
+                />
               </Panel>
               <Panel
                 className='Project__detail-panel'
-                eventKey={3} header='Challenges'
+                eventKey={3}
+                header='Challenges'
                 onClick={this.handleSelect(3)}
+                onKeyUp={this.handleSelect(3)}
+                tabIndex={this.activeKey === 3 ? 1 : 0}
               >
-                <p className='Project__panel-content'>{project.challenges}</p>
+                <div
+                  className='Project__panel-content'
+                  dangerouslySetInnerHTML={{__html: project.challenges}}
+                />
               </Panel>
               <Panel
                 className='Project__detail-panel'
-                eventKey={4} header='Outcome'
+                eventKey={4}
+                header='Outcome'
                 onClick={this.handleSelect(4)}
+                onKeyUp={this.handleSelect(4)}
+                tabIndex={this.activeKey === 4 ? 1 : 0}
               >
-                <p className='Project__panel-content'>{project.outcome}</p>
+                <div
+                  className='Project__panel-content'
+                  dangerouslySetInnerHTML={{__html: project.outcome}}
+                />
               </Panel>
             </Accordion>
           </Col>

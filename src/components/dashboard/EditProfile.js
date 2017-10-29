@@ -5,6 +5,7 @@ import axios from 'axios'
 import EmployerFields from '../auth/EmployerRegisterFields'
 import ApplicantFields from '../auth/ApplicantRegisterFields'
 import ResumeUploader from '../dashboard/ResumeUploader'
+import { createValueFromString, createEmptyValue } from 'react-rte'
 import '../auth/Form.css'
 import './Dashboard.css'
 
@@ -20,7 +21,9 @@ class EditProfile extends Component {
       headline: this.props.user ? this.props.user.headline : '',
       is_looking: this.props.user ? this.props.user.is_looking : false,
       title: this.props.user ? this.props.user.title : '',
-      summary: this.props.user ? this.props.user.summary : '',
+      summary: this.props.user ? createValueFromString(this.props.user.summary, 'html') : createValueFromString(`<p>Expand on your tagline with a summary of your education or self-taught journey and experience.</p>
+<p>What are your specialities? What are you most interested in working on? What are you learning now?</p>
+<p>Give the employer a glimpse of who you are, both as a tech professional and as a human who cares about more than technology.</p>`, 'html'),
       first_name: this.props.user ? this.props.user.first_name : '',
       last_name: this.props.user ? this.props.user.last_name : '',
       zip_code: this.props.user ? this.props.user.zip_code : '',
@@ -67,7 +70,9 @@ class EditProfile extends Component {
   }
 
   handleChange = type => event => {
-    const {value} = event.target
+    let value = type === 'summary'
+      ? event
+      : event.target.value
     if (type === 'zip_code' && value.toString().length >= 5) {
       /* first we finish updating the state of the input, then we use the zip to find the rest of the location data by passing the callback to setState (an optional 2nd param) */
       this.setState({[type]: value}, this.handleLocation(value))
@@ -103,7 +108,7 @@ class EditProfile extends Component {
       headline: this.props.user ? this.props.user.headline : '',
       is_looking: this.props.user ? this.props.user.is_looking : false,
       title: this.props.user ? this.props.user.title : '',
-      summary: this.props.user ? this.props.user.summary : '',
+      summary: this.props.user ? createValueFromString(this.props.user.summary, 'html') : createEmptyValue(),
       first_name: this.props.user ? this.props.user.first_name : '',
       last_name: this.props.user ? this.props.user.last_name : '',
       zip_code: this.props.user ? this.props.user.zip_code : '',
@@ -171,6 +176,7 @@ class EditProfile extends Component {
     user.id = this.props.user.id
     // turn the set into an array (postgres rejects sets)
     user.employment_types = [...user.employment_types]
+    user.summary = user.summary.toString('html')
     this.clearForm()
     this.props.updateUser(user)
   }
