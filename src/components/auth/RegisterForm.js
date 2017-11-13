@@ -115,7 +115,8 @@ class RegisterForm extends Component {
 <p>Give the employer a glimpse of who you are, both as a tech professional and as a human who cares about more than technology.</p>`, 'html'),
       headline: '',
       title: '',
-      is_looking: true,
+      is_looking: false,
+      is_employer: false,
       first_name: '',
       last_name: '',
       zip_code: '',
@@ -137,12 +138,14 @@ class RegisterForm extends Component {
       this.setState({
         is_employer: false,
         showApplicant: true,
+        is_looking: true,
         showEmployer: false
       })
     } else {
       this.setState({
         is_employer: true,
         showEmployer: true,
+        is_looking: false,
         showApplicant: false
       })
     }
@@ -201,11 +204,7 @@ class RegisterForm extends Component {
     const {history, next, createUser} = this.props
     // turn the set into an array (postgres rejects sets)
     newUser.employment_types = [...newUser.employment_types]
-    newUser.is_employer = true
-    if (this.state.showApplicant) {
-      newUser.summary = newUser.summary.toString('html')
-      newUser.is_employer = false
-    }
+    newUser.summary = newUser.summary.toString('html')
     this.clearForm()
     createUser(newUser, history, next)
   }

@@ -62,6 +62,16 @@ const EmployerRegisterFields = ({
       </FormGroup>
     </Col>
     <Col className='form-fields-container--right' xs={12} sm={6} md={6} lg={6}>
+      {/* with zip_code we auto find user's city, state and country */}
+      <FormGroup controlId='zip_code'>
+        <ControlLabel>Zip Code</ControlLabel>
+        <FormControl
+          required
+          type='tel'
+          value={state.zip_code}
+          onChange={handleChange('zip_code')}
+        />
+      </FormGroup>
       <FormGroup controlId='company_name'>
         <ControlLabel>Company Name</ControlLabel>
         <FormControl
@@ -92,16 +102,6 @@ const EmployerRegisterFields = ({
           required
           value={state.company_site}
           onChange={handleChange('company_site')}
-        />
-      </FormGroup>
-      {/* with zip_code we auto find user's city, state and country */}
-      <FormGroup controlId='zip_code'>
-        <ControlLabel>Zip Code</ControlLabel>
-        <FormControl
-          required
-          type='tel'
-          value={state.zip_code}
-          onChange={handleChange('zip_code')}
         />
       </FormGroup>
       <Button
