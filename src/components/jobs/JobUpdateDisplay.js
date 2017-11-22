@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import {
-  Row, Col, FormGroup, ControlLabel,
+  Row, Col, FormGroup, ControlLabel, ButtonGroup,
   FormControl, Button, Checkbox } from 'react-bootstrap'
 import axios from 'axios'
 import PropTypes from 'prop-types'
@@ -31,9 +31,26 @@ export default class JobUpdateDisplay extends Component {
     }
   }
 
-  handleDelete = event => {
+  handleClose = event => {
     event.preventDefault()
-    this.props.deleteJob(this.props.job.id, this.props.history)
+    const {closeJob, receiveAlert, job, history} = this.props
+    receiveAlert({
+      type: 'danger confirmation',
+      style: 'danger',
+      title: 'Close?',
+      body: 'Are you sure you want to close this job?',
+      next: '',
+      footer: true,
+      footerActions: [
+        {
+          text: `Yes, close this job`,
+          action: () => { closeJob(job.id, history) }
+        },
+        {
+          text: `Cancel`
+        }
+      ]
+    })
   }
 
   handleLocation = zip_code => {
@@ -167,6 +184,8 @@ export default class JobUpdateDisplay extends Component {
                         onChange={this.handleChange('cc_email')}
                       />
                     </FormGroup>
+                  </Col>
+                  <Col xs={12} sm={6} md={6} lg={6}>
                     <FormGroup controlId='application_url'>
                       <ControlLabel>APPLICATION URL</ControlLabel>
                       <FormControl
@@ -175,8 +194,6 @@ export default class JobUpdateDisplay extends Component {
                         onChange={this.handleChange('application_url')}
                       />
                     </FormGroup>
-                  </Col>
-                  <Col xs={12} sm={6} md={4} mdOffset={2} lg={4} lgOffset={2}>
                     {/* with zip_code we auto find user's city, state, country and coords */}
                     <FormGroup controlId='zip_code'>
                       <ControlLabel>ZIP CODE</ControlLabel>
@@ -247,14 +264,12 @@ export default class JobUpdateDisplay extends Component {
                         <option value='100%'>100%</option>
                       </FormControl>
                     </FormGroup>
-                    <Button className='btn-oval' type='submit'>Update Job</Button>
-                    <Button
-                      className='btn-oval btn-oval__black btn-oval__danger'
-                      bsStyle='danger'
-                      onClick={this.handleDelete}
-                    >
-                      Delete Job
-                    </Button>
+                    <ButtonGroup justified>
+                      <Button type='submit' bsStyle='success'>Update Job</Button>
+                      <Button bsStyle='danger' onClick={this.handleClose}>
+                        Close Job
+                      </Button>
+                    </ButtonGroup>
                   </Col>
                 </form>
               </Row>
@@ -273,8 +288,9 @@ JobUpdateDisplay.propTypes = {
   user: PropTypes.any.isRequired,
   history: PropTypes.object,
   selected: PropTypes.arrayOf(PropTypes.object), // selected skills
-  deleteJob: PropTypes.func.isRequired,
+  closeJob: PropTypes.func.isRequired,
   updateJob: PropTypes.func.isRequired,
+  receiveAlert: PropTypes.func,
   handleNewSkills: PropTypes.func
   // ^creates new skills if user made any custom ones (class method of App.js)
 }

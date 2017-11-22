@@ -15,10 +15,10 @@ import {
   applyingToJob,
   gettingJobById,
   updatingJob,
-  deletingJob,
+  closingJob,
   savingJob,
   unsavingJob,
-  creatingNewJob,
+  creatingNewJobs,
   gettingAllJobs,
   filteringJobs,
   advancedFilteringJobs } from '../../reducers/actions/jobs'
@@ -130,7 +130,17 @@ class App extends Component {
         title: 'Not signed in',
         body: 'Welcome! Log in or register for an employer account, then we\'ll send you to your dashboard to post a new job.',
         next: '',
-        footer: true
+        footer: true,
+        footerActions: [
+          {
+            text: 'Log in',
+            next: '/login'
+          },
+          {
+            text: 'Register',
+            next: '/register'
+          }
+        ]
       })
     } else {
       history.push('/dashboard/post-new-job')
@@ -203,6 +213,7 @@ class App extends Component {
                     show={this.props.alert !== null}
                     next={alert.next}
                     footer={alert.footer ? alert.footer : false}
+                    footerActions={alert.footerActions}
                   />
                 }
                 <Grid fluid className='App'>
@@ -295,7 +306,6 @@ class App extends Component {
                         <Dashboard
                           getJob={getJob}
                           updateJob={updateJob}
-                          deleteJob={deleteJob}
                           applyToJob={applyToJob}
                           saveJob={saveJob}
                           unsaveJob={unsaveJob}
@@ -375,16 +385,15 @@ const mapDispatchToProps = dispatch => ({
   unsaveJob: (userId, savedJobs) => dispatch(unsavingJob(userId, savedJobs)),
   getJob: jobId => dispatch(gettingJobById(jobId)),
   updateJob: (job, history) => dispatch(updatingJob(job, history)),
-  deleteJob: (id, history) => dispatch(deletingJob(id, history)),
-  saveJob: (userId, savedJobs) => dispatch(savingJob(userId, savedJobs)),
+  saveJob: (userId, savedJobs, successAlert) => dispatch(savingJob(userId, savedJobs, successAlert)),
   getJobs: () => dispatch(gettingAllJobs()),
   getSkills: () => dispatch(gettingAllSkills()),
   createNewSkills: (skills, selected) => dispatch(creatingNewSkills(skills, selected)),
   receiveSelectedSkills: skills => dispatch(receiveSelectedSkills(skills)),
   filterJobs: query => dispatch(filteringJobs(query)),
   advancedFilterJobs: (body) => dispatch(advancedFilteringJobs(body)),
-  closeJob: (id, history) => dispatch(deletingJob(id, history)),
-  duplicateJob: (job, history) => dispatch(creatingNewJob(job, history)),
+  closeJob: (id, history) => dispatch(closingJob(id, history)),
+  duplicateJob: (data, history) => dispatch(creatingNewJobs(data, history)),
   updateUser: (user) => dispatch(updatingUser(user)),
   getUsers: post => dispatch(gettingAllUsers()),
   filterUsers: query => dispatch(filteringUsers(query)),

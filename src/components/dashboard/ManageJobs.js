@@ -21,11 +21,30 @@ export default class ManageJobs extends Component {
     delete job.created_at
     delete job.updated_at
     job.status = 'open'
-    this.props.duplicateJob({job, skills: job.skills}, this.props.history)
+    job.coords.crs = {type: 'name', properties: {name: 'EPSG:32661'}}
+    this.props.duplicateJob({jobs: [job], skills: [job.skills]}, this.props.history)
   }
 
   handleClose = id => () => {
-    this.props.closeJob(id, this.props.history)
+    event.preventDefault()
+    const {closeJob, receiveAlert, history} = this.props
+    receiveAlert({
+      type: 'danger confirmation',
+      style: 'danger',
+      title: 'Close?',
+      body: 'Are you sure you want to close this job?',
+      next: '',
+      footer: true,
+      footerActions: [
+        {
+          text: `Yes, close this job`,
+          action: () => { closeJob(id, history) }
+        },
+        {
+          text: `Cancel`
+        }
+      ]
+    })
   }
 
   render () {
@@ -98,6 +117,7 @@ export default class ManageJobs extends Component {
 ManageJobs.propTypes = {
   closeJob: PropTypes.func.isRequired,
   duplicateJob: PropTypes.func.isRequired,
+  receiveAlert: PropTypes.func.isRequired,
   jobs: PropTypes.array.isRequired,
   history: PropTypes.object,
   animated: PropTypes.string

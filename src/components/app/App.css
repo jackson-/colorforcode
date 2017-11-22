@@ -38,6 +38,14 @@
   border-color: #606B6D;
 }
 
+.btn-group-justified > .btn {
+  width: 50%;
+}
+
+.btn-success {
+  background: #01C688;
+}
+
 @media only screen and (min-width: 500px) {
   .container__flex {
     flex-direction: row;

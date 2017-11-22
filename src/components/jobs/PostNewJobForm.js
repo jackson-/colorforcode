@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import {
-  Row, Col, FormGroup, ControlLabel,
+  Row, Col, FormGroup, ControlLabel, ButtonGroup,
   FormControl, Button, Checkbox } from 'react-bootstrap'
 import axios from 'axios'
 import PaymentModal from 'APP/src/components/utilities/PaymentModal'
@@ -20,11 +20,11 @@ class PostJobForm extends Component {
     this.state = {
       title: '',
       description: createEmptyValue(),
-      application_email: '',
+      application_email: this.props.user.email,
       cc_email: '',
       application_url: '',
       location: '',
-      coords: '',
+      coords: null,
       zip_code: '',
       employment_types: new Set([]),
       pay_rate: '',
@@ -40,7 +40,7 @@ class PostJobForm extends Component {
       jobs: [],
       skills: [],
       modalShow: false,
-      modalStyle: 'success',
+      modalStyle: 'warning',
       modalTitle: '',
       modalBody: ''
     }
@@ -307,18 +307,25 @@ class PostJobForm extends Component {
               </FormControl>
             </FormGroup>
             {/* <CreditCardFormControls ref='card' /> */}
-            <Button className='primary' onClick={this.handleClickCheckout}>Checkout</Button>
-            <Button className='primary' onClick={this.handleClickAddJob}>Add another job</Button>
+
+            <ButtonGroup justified>
+              <Button bsStyle='default' onClick={this.handleClickAddJob}>
+                Add another job
+              </Button>
+              <Button bsStyle='success' onClick={this.handleClickCheckout}>
+                Confirm and post
+              </Button>
+            </ButtonGroup>
           </form>
         </Col>
-        <Col xs={12} sm={6} md={6} lg={6}>
+        {/* <Col xs={12} sm={6} md={6} lg={6}>
           <h2>Prices</h2>
           <ul>
             <li>1 post = $300</li>
             <li>2-4 posts = $270 each</li>
             <li>5+ posts = $225 each</li>
           </ul>
-        </Col>
+        </Col> */}
         {
           this.state.modalShow &&
             <PaymentModal

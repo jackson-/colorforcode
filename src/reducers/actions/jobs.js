@@ -1,8 +1,9 @@
 import axios from 'axios'
 import {
   RECEIVE_ALL_JOBS, RECEIVE_JOB, CREATE_JOBS, UPDATE_JOB, PAGINATE_JOBS,
-  DELETE_JOB, REQUEST_JOB, REQUEST_ALL_JOBS, RECEIVE_FILTERED_JOBS,
-  REQUEST_FILTERED_JOBS, APPLY_TO_JOB, APPLIED_TO_JOB } from '../constants'
+  CLOSE_JOB, REQUEST_JOB, REQUEST_ALL_JOBS, RECEIVE_FILTERED_JOBS,
+  REQUEST_FILTERED_JOBS, APPLY_TO_JOB, APPLIED_TO_JOB, SAVE_JOB, UNSAVE_JOB
+} from '../constants'
 import { whoami } from './auth'
 import { receiveAlert } from './alert'
 
@@ -51,8 +52,8 @@ export const updateJob = () => ({
   type: UPDATE_JOB
 })
 
-export const deleteJob = () => ({
-  type: DELETE_JOB
+export const closeJob = () => ({
+  type: CLOSE_JOB
 })
 
 export const applyToJob = () => ({
@@ -61,6 +62,14 @@ export const applyToJob = () => ({
 
 export const appliedToJob = () => ({
   type: APPLIED_TO_JOB
+})
+
+export const saveJob = () => ({
+  type: SAVE_JOB
+})
+
+export const unsaveJob = () => ({
+  type: UNSAVE_JOB
 })
 
 /* --------- ASYNC ACTION CREATORS (THUNKS) --------- */
@@ -102,7 +111,7 @@ export const applyingToJob = (user, job_id, history) => dispatch => {
         type: 'confirmation',
         style: 'success',
         title: 'Success!',
-        body: 'You\'ve applied to this job. If this recruiter is interested they will reach out to your email!',
+        body: `You've successfully applied to this job. We're rooting for you!`,
         next: '/dashboard/applications'
       }))
     })
@@ -160,8 +169,8 @@ export const updatingJob = (postData, history) => dispatch => {
     .catch(err => console.error(`Sorry, cuz. Couldn't update that job post...${err.stack}`))
 }
 
-export const deletingJob = (id, history) => dispatch => {
-  dispatch(deleteJob())
+export const closingJob = (id, history) => dispatch => {
+  dispatch(closeJob())
   axios.delete(`/api/jobs/${id}`)
     .then(() => {
       dispatch(whoami())
@@ -169,14 +178,15 @@ export const deletingJob = (id, history) => dispatch => {
         type: 'confirmation',
         style: 'success',
         title: 'Success!',
-        body: 'Job successfully deleted.',
+        body: 'Job successfully closed.',
         next: '/dashboard/manage-jobs'
       }))
     })
     .catch(err => console.error(`Sorry, cuz. Couldn't delete that job post...${err.stack}`))
 }
 
-export const savingJob = ({userId, savedJobsArr}) => dispatch => {
+export const savingJob = (userId, savedJobsArr, successAlert) => dispatch => {
+  dispatch(saveJob())
   if (!userId) {
     return dispatch(receiveAlert({
       status: null,
@@ -184,11 +194,15 @@ export const savingJob = ({userId, savedJobsArr}) => dispatch => {
     }))
   }
   axios.put(`/api/users/${userId}`, {savedJobsArr})
-    .then(() => dispatch(whoami()))
+    .then(() => {
+      dispatch(whoami())
+      dispatch(receiveAlert(successAlert))
+    })
     .catch(err => console.error(`Sorry, cuz. Couldn't save job for user ${userId}...${err.stack}`))
 }
 
 export const unsavingJob = ({userId, savedJobsArr}) => dispatch => {
+  dispatch(unsaveJob())
   axios.put(`/api/users/${userId}`, {savedJobsArr})
     .then(() => dispatch(whoami()))
     .catch(err => console.error(`Sorry, cuz. Couldn't unsave job for user ${userId}...${err.stack}`))

@@ -13,14 +13,25 @@ class AlertModal extends Component {
     if (next) history.push(next)
   }
 
-  handleClick = type => event => {
+  handleClick = ({action, next}) => event => {
+    event.preventDefault()
     const {history, dismissAlert} = this.props
+    action && action()
     dismissAlert()
-    history.push(`/${type}`)
+    // if users try to access private routes, an alert is dispatched
+    // with 'footer: true' so users select login or register.
+    // After they are logged in, they're sent back to do job task
+    // they'd attempted pre-login (job detail or post job form).
+
+    // if they click apply to job and are logged in,
+    // an alert pops up that confirms they're ready
+    // for us to email the employer about them or
+    // if they'd like to saves the job and check their profile
+    next && history.push(next)
   }
 
   render () {
-    const {body, footer, title, show, style} = this.props
+    const {title, show, style, body, footer, footerActions} = this.props
     const glyph = style === 'success' ? 'check' : 'exclamation-sign'
     return (
       <Modal
@@ -34,26 +45,26 @@ class AlertModal extends Component {
           </Modal.Title>
         </Modal.Header>
         <Alert className='AlertModal__alert' bsStyle={style}>
-          <p>{body}</p>
+          <div dangerouslySetInnerHTML={{__html: body}} />
         </Alert>
         { // if users try to access private routes, an alert is dispatched
-          // with 'footer: true' so user select login or register
+          // with 'footer: true' so users select login or register.
+          // After they are logged in, they're sent back to do job task
+          // they'd attempted pre-login (job detail or post job form)
           footer &&
           <Modal.Footer className={`modal-${style}`}>
-            <Button
-              bsSize='large'
-              onClick={this.handleClick('login')}
-              className={`btn-modal btn-modal-${style}`}
-            >
-              Login
-            </Button>
-            <Button
-              bsSize='large'
-              onClick={this.handleClick('register')}
-              className={`btn-modal btn-modal-${style}`}
-            >
-              Register
-            </Button>
+            {
+              footerActions.map((footerAction, i) => (
+                <Button
+                  key={i}
+                  bsSize='large'
+                  onClick={this.handleClick(footerAction)}
+                  className={`btn-modal btn-modal-${style}`}
+                >
+                  {footerAction.text}
+                </Button>
+              ))
+            }
           </Modal.Footer>
         }
       </Modal>
@@ -69,6 +80,7 @@ AlertModal.propTypes = {
   title: PropTypes.string,
   body: PropTypes.string,
   footer: PropTypes.bool,
+  footerActions: PropTypes.arrayOf(PropTypes.object), // footerActions have keys: 'text', 'next' and 'action'
   next: PropTypes.string,
   style: PropTypes.string, // success, warning, danger etc (Bootstrap)
   show: PropTypes.bool,

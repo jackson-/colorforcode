@@ -16,8 +16,26 @@ class SavedJobs extends Component {
   }
 
   applyToJob = id => () => {
-    const {user, applyToJob, history} = this.props
-    applyToJob(user, id, history)
+    const {user, applyToJob, history, receiveAlert} = this.props
+    receiveAlert({
+      type: 'warning confirmation',
+      style: 'warning',
+      title: 'Ready to apply?',
+      body: `<p>Applying through C4C is as easy as clicking a button! That's why we're double checking that you're ready for us to email this employer about how awesome you are.</p><ul><li>Is your profile complete?</li><li>Projects and resume up to date?</li>`,
+      next: '',
+      footer: true,
+      footerActions: [
+        {
+          text: `Yes, I'm ready to apply 👍🏿`,
+          action: () => { applyToJob(user, id, history) }
+        },
+        {
+          text: `Save job and check profile 👀`,
+          action: () => { this.saveJob() },
+          next: `/users/${user.id}`
+        }
+      ]
+    })
   }
 
   unsaveJob = id => () => {
@@ -103,7 +121,8 @@ SavedJobs.propTypes = {
   unsaveJob: PropTypes.func,
   jobs: PropTypes.array,
   history: PropTypes.object,
-  animated: PropTypes.string
+  animated: PropTypes.string,
+  receiveAlert: PropTypes.func
 }
 
 export default withRouter(SavedJobs)
