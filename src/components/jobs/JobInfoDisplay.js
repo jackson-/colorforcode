@@ -27,8 +27,30 @@ class JobInfoDisplay extends Component {
         next: '',
         footer: true
       })
+    } else if (job.application_url) {
+      history.push(job.application_url)
     } else {
-      applyToJob(user, job.id, history)
+      receiveAlert({
+        type: 'warning confirmation',
+        style: 'warning',
+        title: 'Ready to apply?',
+        body: `Applying through C4C is as easy as clicking a button! That's why we're double checking that you're ready for us to email this employer about how awesome you are.\nIs your profile complete? Projects and resume up to date?`,
+        next: '',
+        footer: true,
+        footerActions: [
+          {
+            text: `Yes, I'm ready to apply 👍🏿`,
+            action: () => { applyToJob(user, job.id, history) }
+          },
+          {
+            text: `Save this job and check profile 👀`,
+            action: () => {
+              this.saveJob()
+              history.push(`/users/${user.id}`)
+            }
+          }
+        ]
+      })
     }
   }
 
@@ -46,8 +68,28 @@ class JobInfoDisplay extends Component {
       })
     } else {
       let savedJobsArr = user.savedJobs.map(j => j.id)
+      if (savedJobsArr.includes(job.id)) return
       savedJobsArr.push(job.id)
       saveJob({userId: user.id, savedJobsArr})
+      receiveNext(`/jobs/${job.id}`)
+      receiveAlert({
+        type: 'confirmation',
+        style: 'success',
+        title: 'Job saved',
+        body: `Successfully added ${job.title} to your saved jobs!`,
+        next: '',
+        footer: true,
+        footerActions: [
+          {
+            text: `View saved jobs`,
+            func: () => { history.push(`/dashboard/saved-jobs`) }
+          },
+          {
+            text: `Continue job search`,
+            func: () => { history.push(`/`) }
+          }
+        ]
+      })
     }
   }
 

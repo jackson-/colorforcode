@@ -179,6 +179,7 @@ class JobBoard extends Component {
     const {allJobs, filteredJobs, filtered, savePagination, pageNum, offset} = this.props
     const total = filtered ? filteredJobs.length : allJobs.length
     const maxPageNum = this.toNearestTen(total) / 10
+    console.log('MAX PAGE NUM', maxPageNum)
     if (action === 'next' && (pageNum + 1 <= maxPageNum)) {
       return savePagination(offset + 10, pageNum + 1)
     } else if (action === 'back' && (pageNum - 1 > 0)) {
