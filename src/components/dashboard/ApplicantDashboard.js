@@ -30,7 +30,8 @@ const ApplicantDashboard = ({
   getJob,
   saveJob,
   match,
-  animated
+  animated,
+  receiveAlert
 }) => {
   return (
     <Router>
@@ -81,6 +82,7 @@ const ApplicantDashboard = ({
                 unsaveJob={unsaveJob}
                 applyToJob={applyToJob}
                 animated={animated}
+                receiveAlert={receiveAlert}
               />
             )} />
             <Route exact path='/dashboard/projects' component={() => (
@@ -98,6 +100,7 @@ const ApplicantDashboard = ({
                   getProject={getProject}
                   updateProject={updateProject}
                   deleteProject={deleteProject}
+                  receiveAlert={receiveAlert}
                   animated={animated}
                 />
               )
@@ -111,13 +114,13 @@ const ApplicantDashboard = ({
             )} />
             <Route exact path='/dashboard/saved-jobs/:id' component={({match, history}) => (
               <JobDetailPage
-                user={user}
                 getJob={getJob}
                 applyToJob={applyToJob}
                 saveJob={saveJob}
                 unsaveJob={unsaveJob}
                 match={match}
                 history={history}
+                receiveAlert={receiveAlert}
                 animated={animated}
               />
             )} />
@@ -130,6 +133,7 @@ const ApplicantDashboard = ({
                 unsaveJob={unsaveJob}
                 match={match}
                 history={history}
+                receiveAlert={receiveAlert}
                 animated={animated}
               />
             )} />
@@ -156,7 +160,9 @@ ApplicantDashboard.propTypes = {
   unsaveJob: PropTypes.func.isRequired,
   project: PropTypes.object,
   match: PropTypes.object,
-  animated: PropTypes.string
+  animated: PropTypes.string,
+  receiveNext: PropTypes.func,
+  receiveAlert: PropTypes.func
 }
 
 export default withRouter(ApplicantDashboard)

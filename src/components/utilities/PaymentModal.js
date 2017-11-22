@@ -32,9 +32,9 @@ class PaymentModal extends Component {
       const amount = this.calculatePrice(jobs, null)
       this.setState({
         amount,
-        title: 'Checkout',
+        title: 'Ready to post?',
         body: 'Creating jobs',
-        style: 'success'
+        style: 'warning'
       })
     }
   }
@@ -83,9 +83,9 @@ class PaymentModal extends Component {
   }
 
   render () {
-    const {show, style, jobs, skills, handleSubmit, applyCode} = this.props
-    const {amount, title, body} = this.state
-    const glyph = style === 'success' ? 'check' : 'exclamation-sign'
+    const {show, style, jobs, skills, handleSubmit} = this.props
+    const {title, body} = this.state
+    const glyph = 'exclamation-sign'
     return (
       <Modal
         className={`AlertModal`}
@@ -102,22 +102,26 @@ class PaymentModal extends Component {
           <ul>
             {jobs && jobs.map((job, i) => <li key={i}>{job.title}</li>)}
           </ul>
-          <Form inline className='AlertModal__form'>
-            <FormGroup controlId={'promo-code'} >
-              <FormControl
-                onChange={this.handleChange}
-                value={this.state.coupon}
-                placeholder='Enter promo code'
-              />
-            </FormGroup>
-            <Button
-              className={`btn-modal btn-modal-${style} btn-inline`}
-              onClick={applyCode}
-            >
-              Apply code
-            </Button>
-          </Form>
-          <p className='AlertModal__body-text'>{`Your total is $${amount}`}</p>
+          {/*
+              <Form inline className='AlertModal__form'>
+              <FormGroup controlId={'promo-code'} >
+                <FormControl
+                  onChange={this.handleChange}
+                  value={this.state.coupon}
+                  placeholder='Enter promo code'
+                />
+              </FormGroup>
+              <Button
+                className={`btn-modal btn-modal-${style} btn-inline`}
+                onClick={applyCode}
+              >
+                Apply code
+              </Button>
+            </Form>
+            <p className='AlertModal__body-text'>{`Your total is $${amount}`}</p>
+          */}
+        </Alert>
+        <Modal.Footer className={`modal-${style}`}>
           <Button
             bsSize='lg'
             className={`btn-modal btn-modal-${style}`}
@@ -125,7 +129,7 @@ class PaymentModal extends Component {
           >
             Create jobs
           </Button>
-        </Alert>
+        </Modal.Footer>
       </Modal>
     )
   }

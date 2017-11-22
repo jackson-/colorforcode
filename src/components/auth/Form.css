@@ -247,7 +247,7 @@ and (max-width: 767px) {
   .EditProfile,
   .PostJobForm,
   .UpdateJobForm {
-    padding: 10px 10px 25px 10px;
+    padding: 10px 0 25px;
   }
 
   .LoginForm-heading,

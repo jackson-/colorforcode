@@ -31,7 +31,7 @@ class JobDetailPage extends Component {
       history,
       applyToJob,
       updateJob,
-      deleteJob,
+      closeJob,
       saveJob,
       unsaveJob,
       handleNewSkills,
@@ -49,8 +49,9 @@ class JobDetailPage extends Component {
             selected={selected}
             job={job}
             updateJob={updateJob}
-            deleteJob={deleteJob}
+            closeJob={closeJob}
             history={history}
+            receiveAlert={receiveAlert}
             handleNewSkills={handleNewSkills}
           />
         )
@@ -94,7 +95,7 @@ JobDetailPage.propTypes = {
   applyToJob: PropTypes.func,
   unsaveJob: PropTypes.func,
   updateJob: PropTypes.func,
-  deleteJob: PropTypes.func,
+  closeJob: PropTypes.func,
   saveJob: PropTypes.func,
   getJob: PropTypes.func,
   selected: PropTypes.arrayOf(PropTypes.object), // selected skills

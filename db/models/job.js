@@ -9,16 +9,25 @@ module.exports = db => db.define('job', {
     type: TEXT,
     allowNull: false
   },
-  status: STRING,
+  status: {
+    type: STRING,
+    defaultValue: 'open'
+  },
   application_email: STRING,
   cc_email: STRING,
   application_url: STRING,
   coords: GEOMETRY('POINT', 32661),
   location: STRING,
   zip_code: STRING,
-  employment_types: ARRAY(STRING),
+  employment_types: {
+    type: ARRAY(STRING),
+    allowNull: false
+  },
   pay_rate: STRING,
-  compensation_type: STRING,
+  compensation_type: {
+    type: STRING,
+    defaultValue: 'Salary'
+  },
   travel_requirements: STRING
 })
 

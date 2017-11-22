@@ -31,10 +31,10 @@ class EmployerDashboard extends Component {
       updateUser,
       getJob,
       updateJob,
-      deleteJob,
       closeJob,
       duplicateJob,
-      animated
+      animated,
+      receiveAlert
     } = this.props
     const firstName = user ? user.first_name : ''
     const jobs = user && user.is_employer && [...user.employer.listings]
@@ -78,10 +78,11 @@ class EmployerDashboard extends Component {
                     user={user}
                     getJob={getJob}
                     updateJob={updateJob}
-                    deleteJob={deleteJob}
+                    closeJob={closeJob}
                     match={match}
                     history={history}
                     handleNewSkills={handleNewSkills}
+                    receiveAlert={receiveAlert}
                     animated={animated}
                   />
                 )} />
@@ -98,6 +99,7 @@ class EmployerDashboard extends Component {
                     duplicateJob={duplicateJob}
                     jobs={jobs}
                     animated={animated}
+                    receiveAlert={receiveAlert}
                   />
                 )} />
                 <Route exact path='/dashboard/users/:id' component={() => (
@@ -122,7 +124,8 @@ EmployerDashboard.propTypes = {
   closeJob: PropTypes.func.isRequired,
   duplicateJob: PropTypes.func.isRequired,
   updateUser: PropTypes.func.isRequired,
-  animated: PropTypes.string
+  animated: PropTypes.string,
+  receiveAlert: PropTypes.func
 }
 
 export default withRouter(EmployerDashboard)

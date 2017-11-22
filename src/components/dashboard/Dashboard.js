@@ -9,7 +9,6 @@ class Dashboard extends Component {
     const {
       user,
       updateJob,
-      deleteJob,
       getJob,
       saveJob,
       unsaveJob,
@@ -42,7 +41,6 @@ class Dashboard extends Component {
                     closeJob={closeJob}
                     duplicateJob={duplicateJob}
                     updateJob={updateJob}
-                    deleteJob={deleteJob}
                     getJob={getJob}
                     receiveAlert={receiveAlert}
                     receiveNext={receiveNext}
@@ -90,7 +88,6 @@ Dashboard.propTypes = {
   closeJob: PropTypes.func.isRequired,
   duplicateJob: PropTypes.func.isRequired,
   updateJob: PropTypes.func.isRequired,
-  deleteJob: PropTypes.func.isRequired,
   saveJob: PropTypes.func.isRequired,
   getJob: PropTypes.func.isRequired,
   updateProject: PropTypes.func.isRequired,
