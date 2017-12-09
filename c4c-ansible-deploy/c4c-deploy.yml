@@ -1,6 +1,6 @@
 ---
 # playbook for deploying colorforcode.com
-# ansible-playbook -i hosts c4c-deploy.yml -vvvv
+# ansible-playbook -i hosts c4c-deploy.yml
 #run in c4c-deploy folder
 
 - hosts: colorforcode
