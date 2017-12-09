@@ -19,15 +19,10 @@
       
       - name: Running NPM install
         npm: path={{webapps_dir}}/{{app_name}}
-        # register: npm_finished
-        # when: git_finished.changed
 
       - name: run npm build script (front-end)
         shell: npm run build
         args:
           chdir: ~/ColorForCode
       - name: restart nginx
-        service: name=nginx state=restarted 
-
-# - name: deploy to color for code
-# - git:
+        service: name=nginx state=restarted
