@@ -7,11 +7,11 @@
   sudo: yes
 
   vars:
-    app_name: ColorForCode
+    app_name: colorforcode.com
     repo_url: https://github.com/jackson-/colorforcode.git
     repo_remote: origin
     repo_version: master
-    webapps_dir: ~/
+    webapps_dir: /root/hireblack.io/
 
   tasks:
       - name: ping server
@@ -19,13 +19,17 @@
 
       - name: git pull project
         git: repo={{repo_url}} dest={{webapps_dir}}/{{app_name}} version=master
-      
-      - name: Running NPM install
-        npm: path={{webapps_dir}}/{{app_name}}
 
-      - name: run npm build script (front-end)
-        shell: npm run build
-        args:
-          chdir: ~/ColorForCode
+      # - name: Running NPM install
+      #   npm: path={{webapps_dir}}/{{app_name}}
+
+      - name: restart front end
+        command: pm2 restart front
+      
+      - name: restart api
+        command: pm2 restart server
+
       - name: restart nginx
         service: name=nginx state=restarted
+
+
