@@ -39,7 +39,9 @@
     "test-node-watch": "npm run test-node -- --watch --reporter=min",
     "seed": "node db/seed.js",
     "deploy-heroku": "bin/deploy-heroku.sh",
-    "prepush": "npm run test-node"
+    "prepush": "npm run test-node",
+    "upstream": "node c4c-ansible-deploy/ansible-deploy.js",
+    "postreceive": "npm run upstream"
   },
   "license": "MIT",
   "bugs": {
@@ -67,6 +69,7 @@
     "firebase": "^4.3.1",
     "homedir": "^0.6.0",
     "jquery": "^3.2.1",
+    "node-ansible": "^0.5.5",
     "nodemailer": "^4.0.1",
     "passport": "^0.3.2",
     "passport-linkedin": "^1.0.0",

@@ -4,7 +4,6 @@
 # run in c4c-deploy folder
 
 - hosts: colorforcode
-  sudo: yes
 
   vars:
     app_name: colorforcode.com
