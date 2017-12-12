@@ -1,0 +1,34 @@
+---
+# playbook for deploying colorforcode.com
+# ansible-playbook -i hosts c4c-deploy.yml
+# run in c4c-deploy folder
+
+- hosts: colorforcode
+
+  vars:
+    app_name: colorforcode.com
+    repo_url: https://github.com/jackson-/colorforcode.git
+    repo_remote: origin
+    repo_version: master
+    webapps_dir: /root/hireblack.io/
+
+  tasks:
+      - name: ping server
+        ping:
+
+      - name: git pull project
+        git: repo={{repo_url}} dest={{webapps_dir}}/{{app_name}} version=master
+
+      # - name: Running NPM install
+      #   npm: path={{webapps_dir}}/{{app_name}}
+
+      - name: restart front end
+        command: pm2 restart front
+      
+      - name: restart api
+        command: pm2 restart server
+
+      - name: restart nginx
+        service: name=nginx state=restarted
+
+
