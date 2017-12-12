@@ -41,7 +41,7 @@
     "deploy-heroku": "bin/deploy-heroku.sh",
     "prepush": "npm run test-node",
     "upstream": "node c4c-ansible-deploy/ansible-deploy.js",
-    "update": "npm run upstream"
+    "postcommit": "npm run upstream"
   },
   "license": "MIT",
   "bugs": {
@@ -54,6 +54,7 @@
     "bcrypt": "^1.0.3",
     "bcryptjs": "^2.4.3",
     "bluebird": "^3.5.0",
+    "bluebird-q": "^2.1.1",
     "body-parser": "^1.15.2",
     "chai": "^3.5.0",
     "chai-enzyme": "^0.5.2",
@@ -78,6 +79,7 @@
     "pg": "^6.1.0",
     "pretty-error": "^2.0.2",
     "prop-types": "^15.5.10",
+    "q": "^1.5.1",
     "react": "^15.3.2",
     "react-addons-css-transition-group": "^15.6.0",
     "react-bootstrap": "^0.31.0",
