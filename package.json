@@ -41,7 +41,7 @@
     "deploy-heroku": "bin/deploy-heroku.sh",
     "prepush": "npm run test-node",
     "upstream": "node c4c-ansible-deploy/ansible-deploy.js",
-    "update": "npm run upstream"
+    "prereceive": "npm run upstream"
   },
   "license": "MIT",
   "bugs": {
@@ -78,6 +78,7 @@
     "pg": "^6.1.0",
     "pretty-error": "^2.0.2",
     "prop-types": "^15.5.10",
+    "raven": "^2.3.0",
     "react": "^15.3.2",
     "react-addons-css-transition-group": "^15.6.0",
     "react-bootstrap": "^0.31.0",

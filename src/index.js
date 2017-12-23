@@ -6,6 +6,11 @@ import Container from './components/app/App'
 import store from './store'
 import './index.css'
 
+import Raven from 'raven-js';
+import { sentry_url } from '../config/sentry.js';
+
+Raven.config(sentry_url).install();
+
 const App = () => (
   <Provider store={store}>
     <Router>
