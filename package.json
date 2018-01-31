@@ -23,6 +23,7 @@
   },
   "proxy": "http://localhost:1337/",
   "scripts": {
+    "start-prod":"pushstate-server build 3000",
     "start-dev": "concurrently \"npm run serve-dev\" \"node scripts/start.js\"",
     "build": "node scripts/build.js",
     "test-react": "node scripts/test.js --env=jsdom",
