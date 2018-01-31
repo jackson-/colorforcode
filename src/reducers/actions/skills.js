@@ -2,6 +2,7 @@ import axios from 'axios'
 import {
   RECEIVE_SKILLS, RECEIVE_SELECTED_SKILLS,
   REQUEST_ALL_SKILLS, CREATE_SKILLS } from '../constants'
+  import {API_URL} from '../../keywords'
 
 /* --------- PURE ACTION CREATORS --------- */
 export const receiveSkills = skills => ({
@@ -27,7 +28,7 @@ export const createSkills = () => ({
 
 export const gettingAllSkills = () => dispatch => {
   dispatch(requestAllSkills())
-  axios.get('/api/skills')
+  axios.get(`${API_URL}/api/skills`)
     .then(res => res.data)
     .then(skills => dispatch(receiveSkills(skills)))
     .catch(err => console.error(`Mang, I couldn't find any skills! ${err.stack}`))
@@ -35,7 +36,7 @@ export const gettingAllSkills = () => dispatch => {
 
 export const creatingNewSkills = (newSkills, selected) => dispatch => {
   dispatch(createSkills())
-  axios.post('/api/skills', {skills: newSkills})
+  axios.post(`${API_URL}/api/skills`, {skills: newSkills})
     .then(res => res.data)
     .then(updatedSkills => {
       // map newSkills to a reference array of titles

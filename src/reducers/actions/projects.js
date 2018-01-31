@@ -6,6 +6,7 @@ import { beginUploading, doneUploading } from './users'
 import { whoami } from './auth'
 import { receiveAlert } from './alert'
 import storage from 'APP/firebase'
+import {API_URL} from '../../keywords'
 const storageRef = storage.ref()
 
 /* --------- PURE ACTION CREATORS --------- */
@@ -36,7 +37,7 @@ export const deleteProject = () => ({
 
 export const gettingProjectById = (id) => dispatch => {
   dispatch(requestProject())
-  axios.get(`/api/projects/${id}`)
+  axios.get(`${API_URL}/api/projects/${id}`)
     .then(res => res.data)
     .then(res => {
       const {skills, project} = res
@@ -49,7 +50,7 @@ export const creatingNewProject = ({project, skills}) => dispatch => {
   // set loading state to true to trigger UI changes
   dispatch(createNewProject())
   // create the new project
-  axios.post('/api/projects', {project, skills})
+  axios.post(`${API_URL}/api/projects`, {project, skills})
     .then(res => res.data)
   // if the project is successfully created, we receive the update to date
   // projects list by regrabbing the user (projects are eager loaded)
@@ -78,7 +79,7 @@ export const creatingNewProject = ({project, skills}) => dispatch => {
 
 export const updatingProject = (postData, screenshot) => dispatch => {
   dispatch(updateProject())
-  axios.put(`/api/projects/${postData.project.id}`, postData)
+  axios.put(`${API_URL}/api/projects/${postData.project.id}`, postData)
     .then(project => {
       dispatch(whoami())
       return dispatch(receiveProject(project, {selected: project.skills}))
@@ -131,7 +132,7 @@ export const uploadingScreenshot = (project, file) => dispatch => {
 
 export const deletingProject = (id, history) => dispatch => {
   dispatch(deleteProject())
-  axios.delete(`/api/projects/${id}`)
+  axios.delete(`${API_URL}/api/projects/${id}`)
     .then(() => {
       dispatch(whoami())
       dispatch(receiveAlert({

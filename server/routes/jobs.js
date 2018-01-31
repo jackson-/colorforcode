@@ -9,6 +9,7 @@ const job_application = require('APP/server/emails/job_application')
 module.exports = require('express').Router()
   // we use post instead of get so we can set the offset
   .get('/', (req, res, next) => {
+    console.log("COMING IN")
     Job.findAll({
       where: {
         not: {status: 'closed'}

@@ -358,7 +358,6 @@ App.propTypes = {
   closeJob: PropTypes.func.isRequired,
   duplicateJob: PropTypes.func.isRequired,
   updateJob: PropTypes.func.isRequired,
-  deleteJob: PropTypes.func.isRequired,
   saveJob: PropTypes.func.isRequired,
   getJob: PropTypes.func.isRequired,
   updateProject: PropTypes.func.isRequired,
