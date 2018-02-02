@@ -38,6 +38,7 @@ class RegisterForm extends Component {
       linkedin: '',
       twitter: '',
       work_auth: '',
+      ref_code:'',
       employment_types: new Set([])
     }
   }

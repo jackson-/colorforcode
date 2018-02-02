@@ -17,7 +17,7 @@ export const receiveEmployer = employer => ({
 
 export const gettingAllEmployers = () => dispatch => {
   dispatch(requestAllEmployers())
-  axios.get(`${API_URL}/api/employers`)
+  axios.get(`/api/employers`)
   .then(res => res.data)
   .then(employers => dispatch(receiveEmployers(employers)))
   .catch(err => console.log('We couldn\'t find the employers!'))
@@ -27,7 +27,7 @@ export const creatingNewEmployer = employer => dispatch => {
   //set loading state to true to trigger UI changes
   dispatch(createNewEmployer())
   // create the new job
-  axios.post(`${API_URL}/api/employers`, employer)
+  axios.post(`/api/employers`, employer)
   .then(res => res.data)
   // if the employer is successfully created, we receive the update to employers list
   .then(employers => dispatch(gettingAllEmployers()))
@@ -37,7 +37,7 @@ export const creatingNewEmployer = employer => dispatch => {
 
 export const authenticatingEmployer = employer => dispatch => {
   dispatch(authenticateEmployer())
-  axios.post(`${API_URL}/api/employers/login`, employer)
+  axios.post(`/api/employers/login`, employer)
   .then(res => {
     return res.data
   })

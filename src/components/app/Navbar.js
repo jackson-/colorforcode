@@ -54,6 +54,9 @@ const NavBar = props => {
           <LinkContainer eventKey={2} to='/about' isActive={props.onlyOneActiveMatch}>
             <NavItem>About</NavItem>
           </LinkContainer>
+          <LinkContainer eventKey={5} to='/referral' isActive={props.onlyOneActiveMatch}>
+            <NavItem>Referral Codes</NavItem>
+          </LinkContainer>
           {
             props.user
               ? (

@@ -173,6 +173,14 @@ const ApplicantRegisterFields = ({
             onChange={handleChange('twitter')}
           />
         </FormGroup>
+        <FormGroup controlId='twitter'>
+          <ControlLabel>Referral Code (optional)</ControlLabel>
+          <FormControl
+            type='text'
+            value={state.ref_code}
+            onChange={handleChange('ref_code')}
+          />
+        </FormGroup>
         <Button
           disabled={isInvalid}
           bsStyle='default'

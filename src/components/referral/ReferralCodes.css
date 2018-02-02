@@ -1,0 +1,281 @@
+@import url(../../fonts.css);
+
+/* ------ Misc (App-wide) ------ */
+
+.container__flex {
+  display: flex;
+  flex-direction: column;
+}
+
+.glyphicon {
+  padding-right: 5px;
+}
+
+.user-avatar {
+  max-width: 100px;
+  margin: auto;
+}
+
+.avatar-btn {
+  margin: 15px auto;
+  display: block;
+  color: #E4E4E4;
+  transition: all .2s ease-in-out;
+}
+
+.resume-btn {
+  background: #404648 !important;
+  border-color: #404648;
+  color: #E4E4E4;
+  display: inline-block;
+  margin: 0 10px 15px 0;
+  transition: all .2s ease-in-out;
+}
+
+.resume-btn:hover {
+  color: #E4E4E4;
+  background: #606B6D !important;
+  border-color: #606B6D;
+}
+
+.btn-group-justified > .btn {
+  width: 50%;
+}
+
+.btn-success {
+  background: #01C688;
+}
+
+@media only screen and (min-width: 500px) {
+  .container__flex {
+    flex-direction: row;
+  }
+}
+
+/* ------ Navbar ------ */
+
+.navbar {
+  background: #FFFFFF;
+  margin: 0;
+  height: 63px;
+}
+
+.nav a {
+  color: #333333;
+  font-family: Open Sans Bold;
+  font-size: 15px;
+  text-transform: uppercase;
+}
+
+.navbar-default .navbar-nav>li>a {
+  color: #333333;
+  margin-top: 6px;
+}
+
+.active, a:hover, a:focus,
+.navbar-default .navbar-nav>.active>a,
+.navbar-default .navbar-nav>.active>a:hover,
+.navbar-default .navbar-nav>.active>a:focus,
+.navbar-default .navbar-nav>li>a:hover,
+.navbar-default .navbar-nav>li:active a,
+.dropdown-menu>li.active a,
+.dropdown-menu>li.active a:hover,
+.dropdown-menu>li>a:hover,
+.dropdown-menu>li>:hover,
+.dropdown-menu>li>a:focus {
+  color: #01C688;
+  background: none;
+  transition: all 0.1s ease-in-out;
+  transition-duration: 0.2s;
+}
+
+.navbar-default .navbar-toggle .icon-bar {
+  background: #333333;
+  height: 3px;
+}
+
+.navbar-default {
+  background: #FFFFFF;
+  border: none;
+}
+
+.navbar-brand {
+  padding: 0;
+  margin: 6px 20px;
+  cursor: pointer;
+}
+
+.navbar-brand img {
+  margin-top: 6px;
+}
+
+.navbar-default .navbar-toggle,
+.navbar-default .navbar-toggle:hover,
+.navbar-default .navbar-toggle:focus {
+  margin: 14px;
+  border: none;
+  background: none;
+}
+
+.navbar-fixed-top .navbar-collapse {
+  text-align: center;
+  font-size: larger;
+  max-height: none;
+  width: inherit;
+  height: calc(100vh - 60px);
+  background: #FFFFFF;
+}
+
+.Dashboard-menuToggle span {
+  padding: 9px 10px;
+  margin: 11px 12px 12px 0;
+}
+
+.Dashboard-menuToggle {
+  width: auto;
+  float: right;
+  padding: 0;
+}
+
+.Dashboard-menu-collapse {
+  min-width: 180px;
+  background: #404648;
+  transition: all .65s ease-in-out;
+  z-index: 5;
+  position: relative;
+}
+
+.Dashboard-menu-collapse .nav>li>a {
+  transition: all .5s ease-in-out .5s
+}
+
+.dropdown-menu {
+  text-align: center;
+  min-width: 0;
+  border: none;
+}
+
+/* tablet & desktop only */
+@media only screen
+and (min-width: 768px) {
+  .dropdown:hover .dropdown-menu {
+    display: block;
+    transition: all 0.1s ease-in-out;
+    transition-duration: 0.2s;
+  }
+
+  .nav .open>a,
+  .nav .open>a:focus,
+  .nav .open>a:hover {
+    background: none;
+  }
+
+  .navbar-brand {
+    position: absolute;
+    left: 60px;
+  }
+
+  .nav-links {
+    position: absolute;
+    left: 100px;
+  }
+
+  .navbar-right {
+    margin-right: 0;
+  }
+
+  .nav-button-container {
+    position: absolute;
+    right: 30px;
+  }
+}
+
+.btn-inline {
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+  height: 42px;
+}
+
+.btn-oval {
+  margin: 8px 0;
+  padding: 12px 30px;
+  font-size: 13px;
+  font-family: Open Sans Bold;
+  border: solid 2px #01C688;
+  border-radius: 25px;
+  width: 100%;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-oval__black {
+  background: #000000;
+  border-color: #000000;
+  color: #FFFFFF;
+}
+
+.btn-oval__white {
+  color: #FFFFFF;
+  border-color: #FFFFFF;
+  font-size: .75em;
+}
+
+.btn-oval:hover,
+.btn-oval:focus,
+.btn-oval:active:focus,
+.btn-oval.active,
+.btn-oval.active:hover,
+.btn-oval.active:focus {
+  background: #01C688;
+  border: solid 2px #01C688;
+  color: #FFFFFF;
+  box-shadow: none;
+  transition: all 0.1s ease-in-out;
+  transition-duration: 0.2s;
+}
+
+.btn-oval__danger:hover,
+.btn-oval__danger:focus,
+.btn-oval__danger:active:focus {
+  background: #C33A3C;
+  border-color: #C33A3C;
+  color: #FFFFFF;
+}
+
+.btn-xs {
+  width: auto !important;
+  background: none;
+}
+
+.btn-xs--action {
+  margin: 2px;
+}
+
+.btn-xs.btn-danger {
+  background: #53585A !important;
+  border: solid 2px #53585A ;
+}
+
+.btn-xs.btn-danger:hover {
+  background: #C33A3C !important;
+  border-color: #C33A3C;
+  color: #FFFFFF;
+  transition: all 0.1s ease-in;
+  transition-duration: 0.1s;
+}
+
+.btn-xs.btn-primary {
+  background: #53585A !important;
+  border: solid 2px #53585A ;
+}
+
+.btn-xs.btn-primary:hover {
+  background: #01C688 !important;
+  border: solid 2px #01C688;
+  color: #FFFFFF;
+  transition: all 0.1s ease-in;
+  transition-duration: 0.1s;
+}
+
+.btn-default[disabled]:hover {
+  color: #000000;
+}

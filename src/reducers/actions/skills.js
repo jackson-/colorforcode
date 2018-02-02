@@ -28,7 +28,7 @@ export const createSkills = () => ({
 
 export const gettingAllSkills = () => dispatch => {
   dispatch(requestAllSkills())
-  axios.get(`${API_URL}/api/skills`)
+  axios.get(`/api/skills`)
     .then(res => res.data)
     .then(skills => dispatch(receiveSkills(skills)))
     .catch(err => console.error(`Mang, I couldn't find any skills! ${err.stack}`))
@@ -36,7 +36,7 @@ export const gettingAllSkills = () => dispatch => {
 
 export const creatingNewSkills = (newSkills, selected) => dispatch => {
   dispatch(createSkills())
-  axios.post(`${API_URL}/api/skills`, {skills: newSkills})
+  axios.post(`/api/skills`, {skills: newSkills})
     .then(res => res.data)
     .then(updatedSkills => {
       // map newSkills to a reference array of titles

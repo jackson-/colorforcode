@@ -45,6 +45,7 @@ import UserProfile from '../users/UserProfile'
 import JobDetailPage from '../jobs/JobDetailPage'
 import Dashboard from '../dashboard/Dashboard'
 import AlertModal from '../utilities/AlertModal'
+import ReferralCodes from '../referral/ReferralCodes'
 import NavCollapse from './NavCollapse'
 import LoadingSpinner from '../utilities/LoadingSpinner'
 import './App.css'
@@ -235,6 +236,9 @@ class App extends Component {
                   )} />
                   <Route exact path='/about' component={() => (
                     <About animated={anim} />
+                  )} />
+                  <Route exact path='/referral' component={() => (
+                    <ReferralCodes />
                   )} />
                   <Route exact path='/jobs/:id' component={({match, history}) => (
                     <JobDetailPage

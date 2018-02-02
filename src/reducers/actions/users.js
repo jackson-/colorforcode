@@ -64,7 +64,7 @@ export const doneUploading = () => ({
 
 export const gettingAllUsers = () => dispatch => {
   dispatch(requestAllUsers())
-  axios.get(`${API_URL}/api/users`)
+  axios.get(`/api/users`)
     .then(res => res.data)
     .then(users => dispatch(receiveAllUsers(users)))
     .catch(err => console.error(`Mang, I couldn't find any users! ${err.stack}`))
@@ -72,7 +72,7 @@ export const gettingAllUsers = () => dispatch => {
 
 export const gettingUserById = user_id => dispatch => {
   dispatch(requestUser())
-  axios.get(`${API_URL}/api/users/${user_id}`)
+  axios.get(`/api/users/${user_id}`)
     .then(res => res.data)
     .then(user => {
       dispatch(receiveUser(user))
@@ -82,7 +82,7 @@ export const gettingUserById = user_id => dispatch => {
 
 export const filteringUsers = ({query, advanced}) => dispatch => {
   dispatch(requestFilteredUsers({terms: query.split(' '), advanced}))
-  axios.post(`${API_URL}/api/users/search`, {query})
+  axios.post(`/api/users/search`, {query})
     .then(res => res.data)
     .then(users => dispatch(receiveFilteredUsers(users)))
     .catch(err => console.error(`Mang, I couldn't filter the users! ${err.stack}`))
@@ -90,14 +90,14 @@ export const filteringUsers = ({query, advanced}) => dispatch => {
 
 export const advancedFilteringUsers = body => dispatch => {
   dispatch(requestFilteredUsers(body))
-  axios.post(`${API_URL}/api/users/search/advanced`, body)
+  axios.post(`/api/users/search/advanced`, body)
     .then(res => res.data)
     .then(users => dispatch(receiveFilteredUsers(users)))
     .catch(err => console.error(`Mang, I couldn't advanced filter the users! ${err.stack}`))
 }
 
 export const creatingNewEmployer = employer => dispatch => {
-  axios.post(`${API_URL}/api/employers`, employer)
+  axios.post(`/api/employers`, employer)
     .then(res => res.data)
     .catch((err) => {
       console.error(err)
@@ -115,7 +115,7 @@ export const updatingUser = (user, savedJobs) => dispatch => {
   if (user.coords) {
     user.coords.crs = {type: 'name', properties: {name: 'EPSG:32661'}}
   }
-  axios.put(`${API_URL}/api/users/${user.id}`, {user, savedJobs})
+  axios.put(`/api/users/${user.id}`, {user, savedJobs})
     .then(res => res.data)
     // if the user is successfully updated, we reauthenticate to update the store
     .then(updatedUser => {

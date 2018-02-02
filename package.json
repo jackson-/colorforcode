@@ -23,7 +23,7 @@
   },
   "proxy": "http://localhost:1337/",
   "scripts": {
-    "start-prod":"pushstate-server build 3000",
+    "start-prod": "pushstate-server build 3000",
     "start-dev": "concurrently \"npm run serve-dev\" \"node scripts/start.js\"",
     "build": "node scripts/build.js",
     "test-react": "node scripts/test.js --env=jsdom",
@@ -42,7 +42,8 @@
     "deploy-heroku": "bin/deploy-heroku.sh",
     "prepush": "npm run test-node",
     "upstream": "node c4c-ansible-deploy/ansible-deploy.js",
-    "postcommit": "npm run upstream"
+    "postcommit": "npm run upstream",
+    "migrate": "sequelize db:migrate"
   },
   "license": "MIT",
   "bugs": {
@@ -100,6 +101,7 @@
     "redux-thunk": "^2.1.0",
     "sendmail": "^1.1.1",
     "sequelize": "^3.24.6",
+    "sequelize-cli": "^3.2.0",
     "stripe": "^4.19.0",
     "underscore": "^1.8.3"
   },

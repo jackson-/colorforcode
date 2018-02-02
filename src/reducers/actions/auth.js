@@ -22,7 +22,7 @@ export const createNewUser = () => ({
 
 export const whoami = (history, next, origin) => dispatch => {
   dispatch(authenticating())
-  axios.get(`${API_URL}/api/auth/whoami`)
+  axios.get(`/api/auth/whoami`)
     .then(response => {
       const user = response.data
       dispatch(authenticated(user))
@@ -51,7 +51,7 @@ export const whoami = (history, next, origin) => dispatch => {
 }
 
 export const login = (email, password, history, next) => dispatch => {
-  axios.post(`${API_URL}/api/auth/login/local`, {email, password})
+  axios.post(`/api/auth/login/local`, {email, password})
     .then(() => dispatch(whoami(history, next)))
     .catch(() => dispatch(whoami(null, null, 'login')))
 }
@@ -61,7 +61,7 @@ export const creatingNewUser = (user, history, next) => dispatch => {
   user.coords.crs = {type: 'name', properties: {name: 'EPSG:32661'}}
   dispatch(createNewUser())
   // create the new user
-  axios.post(`${API_URL}/api/users`, user)
+  axios.post(`/api/users`, user)
     .then(res => res.data)
     // if successfully created, we automatically log them in
     .then(newUser => {
@@ -81,7 +81,7 @@ export const creatingNewUser = (user, history, next) => dispatch => {
 }
 
 export const logout = () => dispatch => {
-  axios.post(`${API_URL}/api/auth/logout`)
+  axios.post(`/api/auth/logout`)
     .then(() => {
       dispatch(whoami())
     })

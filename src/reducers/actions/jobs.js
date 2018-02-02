@@ -1,5 +1,4 @@
 import axios from 'axios'
-import {API_URL} from '../../keywords'
 import {
   RECEIVE_ALL_JOBS, RECEIVE_JOB, CREATE_JOBS, UPDATE_JOB, PAGINATE_JOBS,
   CLOSE_JOB, REQUEST_JOB, REQUEST_ALL_JOBS, RECEIVE_FILTERED_JOBS,
@@ -7,6 +6,7 @@ import {
 } from '../constants'
 import { whoami } from './auth'
 import { receiveAlert } from './alert'
+import { API_URL } from '../../keywords';
 
 /* --------- PURE ACTION CREATORS --------- */
 

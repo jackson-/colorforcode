@@ -9,6 +9,7 @@ module.exports = api
   .use('/employers', require('./routes/employers'))
   .use('/jobs', require('./routes/jobs'))
   .use('/projects', require('./routes/projects'))
+  .use('/referralcodes', require('./routes/referralcodes'))
   .use('/skills', require('./routes/skills'))
   .use('/users', require('./routes/users'))
   .use((req, res) => res.status(404).end()) // No routes matched? 404.
