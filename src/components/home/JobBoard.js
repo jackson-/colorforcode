@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Row, Col, Button } from 'react-bootstrap'
+import { Row, Col, Button, Panel } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import axios from 'axios'
 import PropTypes from 'prop-types'
@@ -13,6 +13,7 @@ import './Home.css'
 class JobBoard extends Component {
   constructor (props) {
     super(props)
+
     this.state = {
       query: '',
       pendingTerms: [],
@@ -21,7 +22,7 @@ class JobBoard extends Component {
       zip_code: '',
       employment_types: new Set([]),
       coords: '',
-      loading: true
+      loading: true,
     }
   }
 
@@ -222,13 +223,35 @@ class JobBoard extends Component {
     this.clearFilter()()
   }
 
+  handleClickAdvanced = () => {
+    const {advancedExpanded} = this.state
+    this.setState({ advancedExpanded: !advancedExpanded })
+  }
+
   render () {
     const {allJobs, filteredJobs, filtered, fetching, offset, pageNum} = this.props
-    const {loading} = this.state
+    const {loading, advancedExpanded: expanded} = this.state
     const jobList = !filteredJobs || !filtered ? allJobs : filteredJobs
     const lastIndex = jobList ? jobList.length - 1 : 0
     const limit = 10
     let jobs = jobList ? jobList.slice(offset, (offset + limit)) : jobList
+
+    const searchAdvanced = (
+      <SearchAdvanced
+        filterJobs={this.advancedFilterJobs}
+        handleChange={this.handleChange}
+        toggleCheckbox={this.toggleJobTypes}
+        validate={this.getValidationState}
+        clearFilter={this.clearFilter}
+        isChecked={this.isChecked}
+        clearChip={this.clearChip}
+        filtered={this.props.filtered}
+        query={this.state.query}
+        terms={this.state.terms}
+        state={this.state}
+        ref={this.setSearchAdvanced}
+      />
+    )
     return (
       <Row className='JobBoard'>
         <SearchBar
@@ -240,9 +263,25 @@ class JobBoard extends Component {
           handleChange={this.handleChange('query')}
           labelText='Filter job listings by keyword'
           submitButtonText='Search jobs'
+          expanded={expanded}
+          onClickAdvanced={this.handleClickAdvanced}
+          ref={this.setSearchBar}
         />
+        <Panel
+          id="search-advanced"
+          className={`${expanded ? 'expanded' : ''}`}
+          eventKey="1"
+          expanded={expanded}
+          onToggle={this.handleClickAdvanced}
+        >
+          <Panel.Collapse>
+            <Panel.Body className='SearchAdvanced__container'>
+              {searchAdvanced}
+            </Panel.Body>
+          </Panel.Collapse>
+        </Panel>
         <div className='container__flex'>
-          <Col className='SearchAdvanced__container' xs={12} sm={3} md={3} lg={3}>
+          <Col className='SearchAdvanced__container' xsHidden sm={3} md={3} lg={3}>
             <SearchAdvanced
               filterJobs={this.advancedFilterJobs}
               handleChange={this.handleChange}
@@ -255,6 +294,8 @@ class JobBoard extends Component {
               query={this.state.query}
               terms={this.state.terms}
               state={this.state}
+              expanded={this.state.advancedExpanded}
+              handleClickAdvanced={this.handleClickAdvanced}
             />
           </Col>
           <Col xs={12} sm={9} md={9} lg={9}>

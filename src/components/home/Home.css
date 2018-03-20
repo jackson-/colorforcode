@@ -8,6 +8,8 @@
   transition: all 5s ease-in 1s;
   z-index: -4;
   background: #404648;
+  background-position: center;
+  background-size: cover;
   margin: 0;
 }
 
@@ -70,6 +72,12 @@
 .CandidateSearch {
   z-index: 2;
   padding: 0;
+}
+
+@media screen and (min-width: 500px) {
+  #search-advanced {
+    display: none;
+  }
 }
 
 .search-header {

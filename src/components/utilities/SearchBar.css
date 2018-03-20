@@ -4,6 +4,9 @@
   height: auto;
   background: #01C688;
   padding: 32px 10px;
+  position: sticky;
+  top: 63px;
+  z-index: 15;
 }
 
 .filter-label {

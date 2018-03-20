@@ -1,7 +1,5 @@
 #!/usr/bin/env node
 
-'use strict'
-
 // 'bin/setup' is a symlink pointing to this file, which makes a
 // symlink in your project's main node_modules folder that points to
 // the root of your project's directory.
