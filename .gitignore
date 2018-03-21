@@ -1,6 +1,8 @@
 # Ignore all node_modules
 node_modules/*
 
+public/*
+
 # ...except the symlink to ourselves.
 !node_modules/APP
 
