@@ -4,11 +4,19 @@ import { withRouter } from 'react-router-dom'
 import { LinkContainer } from 'react-router-bootstrap'
 import {
   Navbar, NavbarBrand, Nav, Glyphicon,
-  Col, NavItem, NavDropdown, MenuItem } from 'react-bootstrap'
+  Col, NavItem, MenuItem } from 'react-bootstrap'
 import './App.css'
-import navLogo from '../../img/c4c.png'
+import navLogo from '../../img/c4c-logo-full-text.png'
 
-const NavBar = props => {
+const NavBar = ({
+  user,
+  logOut,
+  showPostJob,
+  handleClickPostJob,
+  toggleDashMenu,
+  receiveLocation,
+  onlyOneActiveMatch,
+}) => {
   let dashLocs = {
     manage: {
       pathname: '/dashboard/manage-jobs',
@@ -26,19 +34,60 @@ const NavBar = props => {
     }
   }
 
+  const login = !user 
+    ? (
+      <LinkContainer to='/login' eventKey={3} isActive={onlyOneActiveMatch}>
+        <MenuItem>Log in</MenuItem>
+      </LinkContainer>
+    )
+    : null
+
+  const signup = !user 
+    ? (
+      <LinkContainer to='/register' eventKey={4} isActive={onlyOneActiveMatch}>
+        <MenuItem>Sign up</MenuItem>
+      </LinkContainer>
+    )
+    : null
+
+  const dashboard = user
+    ? (
+      <LinkContainer
+        to={
+          user.is_employer
+            ? '/dashboard/manage-jobs'
+            : '/dashboard/saved-jobs'
+        }
+        isActive={onlyOneActiveMatch}
+        onSelect={receiveLocation(dashLocs.manage)}
+        eventKey={3}
+      >
+        <MenuItem>Dashboard</MenuItem>
+      </LinkContainer>
+    )
+    : null
+
+  const logout = user
+    ? (
+      <LinkContainer to='#' eventKey={4} onClick={logOut()}>
+        <MenuItem >Logout</MenuItem>
+      </LinkContainer>
+    )
+    : null
+
   return (
     <Navbar fixedTop collapseOnSelect>
       <Navbar.Header>
         <NavbarBrand>
           <LinkContainer to='/'>
             <span>
-              <img src={navLogo} alt='Color for Code logo' height='40px' width='40px' />
+              <img src={navLogo} alt='Color for Code' />
             </span>
           </LinkContainer>
         </NavbarBrand>
         <Col
-          xsHidden={!props.user}
-          onClick={props.toggleDashMenu}
+          xsHidden={!user}
+          onClick={toggleDashMenu}
           className='Dashboard-menuToggle'
           xs={2} smHidden mdHidden lgHidden
         >
@@ -47,63 +96,29 @@ const NavBar = props => {
         <Navbar.Toggle />
       </Navbar.Header>
       <Navbar.Collapse>
-        <Nav className='nav-links'>
-          <LinkContainer eventKey={1} to='/' isActive={props.onlyOneActiveMatch}>
+        <Nav
+          pullRight
+          style={{display: showPostJob(user)}}
+        >
+          <LinkContainer eventKey={1} to='/' isActive={onlyOneActiveMatch}>
             <NavItem>Home</NavItem>
           </LinkContainer>
-          <LinkContainer eventKey={2} to='/about' isActive={props.onlyOneActiveMatch}>
+          <LinkContainer eventKey={2} to='/about' isActive={onlyOneActiveMatch}>
             <NavItem>About</NavItem>
           </LinkContainer>
-          <LinkContainer eventKey={5} to='/referral' isActive={props.onlyOneActiveMatch}>
+          {login}
+          {signup}
+          {dashboard}
+          {logout}
+          {/* <LinkContainer eventKey={5} to='/referral' isActive={onlyOneActiveMatch}>
             <NavItem>Referral Codes</NavItem>
-          </LinkContainer>
-          {
-            props.user
-              ? (
-                <LinkContainer to='#' eventKey={3} className='dropdown-hover'>
-                  <NavDropdown title='Account' id='account-dropdown'>
-                    <LinkContainer
-                      to={
-                        props.user.is_employer
-                          ? '/dashboard/manage-jobs'
-                          : '/dashboard/saved-jobs'
-                      }
-                      onSelect={props.receiveLocation(dashLocs.manage)}
-                      eventKey={3.1}
-                    >
-                      <MenuItem>Dashboard</MenuItem>
-                    </LinkContainer>
-                    <LinkContainer to='#' eventKey={3.1} onClick={props.logOut()}>
-                      <MenuItem >Logout</MenuItem>
-                    </LinkContainer>
-                  </NavDropdown>
-                </LinkContainer>
-              )
-
-              : (
-                <LinkContainer to='#' eventKey={3} className='dropdown-hover'>
-                  <NavDropdown title='Account' id='account-dropdown'>
-                    <LinkContainer to='/login' eventKey={3.1}>
-                      <MenuItem>Login</MenuItem>
-                    </LinkContainer>
-                    <LinkContainer to='/register' eventKey={3.2}>
-                      <MenuItem>Register</MenuItem>
-                    </LinkContainer>
-                  </NavDropdown>
-                </LinkContainer>
-              )
-          }
-        </Nav>
-        <Nav
-          className='nav-button-container'
-          pullRight
-          style={{display: props.showPostJob(props.user)}}
-        >
+          </LinkContainer> */}
           <LinkContainer
+            className='nav-button-container'
             to='/dashboard/post-new-job'
-            onSelect={props.handleClickPostJob}
+            onSelect={handleClickPostJob}
           >
-            <NavItem hidden={!props.user}>
+            <NavItem hidden={!user}>
               <span className='btn-oval'>Post a job</span>
             </NavItem>
           </LinkContainer>

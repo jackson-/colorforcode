@@ -1,6 +1,7 @@
 import React from 'react'
-import { Form, FormGroup, FormControl, ControlLabel, Button } from 'react-bootstrap'
+import { Form, FormGroup, FormControl, ControlLabel, Button, Col } from 'react-bootstrap'
 import PropTypes from 'prop-types'
+
 import './SearchBar.css'
 
 // see JobBoard container for example use of this component
@@ -20,6 +21,11 @@ const SearchBar = props => (
     <Button type='submit' className='filter-button'>
       {props.submitButtonText}
     </Button>
+    <Col xs={12} smHidden mdHidden lgHidden>
+      <Button aria-controls="search-advanced" bsStyle="link" onClick={props.onClickAdvanced}>
+        {props.expanded ? 'Hide advanced search' : 'Show advanced search'}
+      </Button>
+    </Col>
   </Form>
 )
 

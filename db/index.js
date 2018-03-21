@@ -2,10 +2,11 @@ const app = require('APP')
 const debug = require('debug')(`${app.name}:db`) // DEBUG=your_app_name:db
 const chalk = require('chalk')
 const Sequelize = require('sequelize')
+require('dotenv').config()
 
 const name = (app.env.DATABASE_NAME || app.name) + (app.isTesting ? '_test' : '')
 
-const url = process.env.DATABASE_URL || `postgres://postgres:blackity@localhost:5432/${name}`
+const url = process.env.DATABASE_URL
 
 debug(chalk.yellow(`Opening database connection to ${url}`))
 
