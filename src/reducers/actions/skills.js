@@ -2,7 +2,6 @@ import axios from 'axios'
 import {
   RECEIVE_SKILLS, RECEIVE_SELECTED_SKILLS,
   REQUEST_ALL_SKILLS, CREATE_SKILLS } from '../constants'
-  import {API_URL} from '../../keywords'
 
 /* --------- PURE ACTION CREATORS --------- */
 export const receiveSkills = skills => ({

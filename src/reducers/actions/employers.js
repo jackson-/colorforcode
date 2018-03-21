@@ -1,7 +1,6 @@
 import axios from 'axios'
 import { RECEIVE_USERS, RECEIVE_USER } from '../constants'
 import { authenticateEmployer, createNewEmployer, requestAllEmployers, doneLoading } from './loading'
-import {API_URL} from '../../keywords'
 /* --------- PURE ACTION CREATORS ---------*/
 export const receiveEmployers = employers => ({
   employers,

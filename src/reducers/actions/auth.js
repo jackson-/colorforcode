@@ -2,7 +2,6 @@ import axios from 'axios'
 import { AUTHENTICATED, AUTHENTICATING, CREATE_USER } from '../constants'
 import { receiveNextRoute } from '../routeReducer'
 import { receiveAlert } from './alert'
-import {API_URL} from '../../keywords'
 
 /* --------- PURE ACTION CREATORS --------- */
 export const authenticated = user => ({

@@ -6,7 +6,6 @@ import { whoami } from './auth'
 import { receiveAlert } from './alert'
 import storage from 'APP/firebase'
 const storageRef = storage.ref()
-import {API_URL} from  '../../keywords'
 
 /* --------- PURE ACTION CREATORS --------- */
 
