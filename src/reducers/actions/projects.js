@@ -6,7 +6,7 @@ import { beginUploading, doneUploading } from './users'
 import { whoami } from './auth'
 import { receiveAlert } from './alert'
 import storage from 'APP/firebase'
-import {API_URL} from '../../keywords'
+
 const storageRef = storage.ref()
 
 /* --------- PURE ACTION CREATORS --------- */
