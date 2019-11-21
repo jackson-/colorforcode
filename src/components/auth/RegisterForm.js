@@ -9,6 +9,10 @@ import ApplicantFields from './ApplicantRegisterFields'
 import { createValueFromString } from 'react-rte'
 import { withRouter } from 'react-router-dom'
 import './Form.css'
+require('dotenv').config()
+
+const CLIENT_KEY = process.env.REACT_APP_ZONES_KEY;
+console.log("PROCESS", process.env)
 
 class RegisterForm extends Component {
   constructor (props) {
@@ -44,26 +48,20 @@ class RegisterForm extends Component {
   }
 
   handleLocation = zip_code => {
-    axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${zip_code}`)
+    console.log("ZIP CODE", zip_code)
+    axios.get(`http://api.zippopotam.us/us/${zip_code}`)
       .then(res => res.data)
       .then(json => {
-        const address = json.results[0].address_components
-        const geometry = json.results[0].geometry.location
-        let city = address.filter(c => (
-          c.types.includes('sublocality') || c.types.includes('locality')
-        ))[0].long_name
-        let state = address.filter(c => (
-          c.types.includes('administrative_area_level_1')
-        ))[0].short_name
-        let country = address.filter(c => (
-          c.types.includes('country')
-        ))[0].long_name
+        console.log("JSON ", json)
+        let city = json.places[0].city
+        let state = json.places[0].state
+        let country = json.country
         const location = country === 'United States'
           ? `${city}, ${state}`
           : `${city}, ${state} ${country}`
         const coords = {
           type: 'Point', // GeoJSON requires longitude to be first!!
-          coordinates: [parseFloat(geometry.lng), parseFloat(geometry.lat)],
+          coordinates: [parseFloat(json.places[0].longitude), parseFloat(json.places[0].latitude)],
           crs: {type: 'name', properties: {name: 'EPSG:32661'}}
         }
         this.setState({coords, zip_code, location})
@@ -173,7 +171,7 @@ class RegisterForm extends Component {
       location,
       work_auth
     } = this.state
-
+    console.log("STATE", this.state)
     if (this.state.is_employer) {
       return password === passwordConfirm &&
         !(
